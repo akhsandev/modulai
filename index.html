@@ -682,6 +682,11 @@
             btnText.innerText = 'MENGIRIM DATA...';
             btnIcon.style.display = 'none';
 
+            // Mengambil dan menambahkan kutip 1 pada nomor HP agar tidak hilang angka 0 di depannya
+            const valHpSiswa = document.getElementById('hpSiswa').value;
+            const valHpAyah = document.getElementById('hpAyah').value;
+            const valHpIbu = document.getElementById('hpIbu').value;
+
             // Kumpulkan Data
             const formData = {
                 nama: document.getElementById('nama').value,
@@ -704,9 +709,9 @@
                 sekolahTerdekat3: nearestSchoolsData[2] || "-",
                 namaAyah: document.getElementById('namaAyah').value,
                 namaIbu: document.getElementById('namaIbu').value,
-                hpSiswa: document.getElementById('hpSiswa').value,
-                hpAyah: document.getElementById('hpAyah').value,
-                hpIbu: document.getElementById('hpIbu').value,
+                hpSiswa: valHpSiswa ? "'" + valHpSiswa : "",
+                hpAyah: valHpAyah ? "'" + valHpAyah : "",
+                hpIbu: valHpIbu ? "'" + valHpIbu : "",
                 adaPrestasi: document.getElementById('adaPrestasi').value,
                 deskripsiPrestasi: document.getElementById('deskripsiPrestasi') ? document.getElementById('deskripsiPrestasi').value : "",
                 filePrestasi: fileBase64,
