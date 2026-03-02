@@ -183,8 +183,13 @@
                         <i data-lucide="crosshair"></i> AMBIL KOORDINAT SEKARANG
                     </button>
 
-                    <!-- Wadah Peta (Hanya untuk melihat hasil, tidak bisa diklik) -->
+                    <!-- Wadah Peta -->
                     <div class="relative border-4 border-black shadow-[4px_4px_0_0_#000] text-left">
+                        <p id="manualHint" class="hidden absolute top-4 left-1/2 transform -translate-x-1/2 z-[500] bg-white border-4 border-black px-4 py-2 text-pink-600 font-black animate-pulse text-sm md:text-base whitespace-nowrap shadow-[4px_4px_0_0_#000]">
+                            👇 KLIK SENDIRI TITIK RUMAH TA' DI PETA 👇
+                        </p>
+                        
+                        <!-- Peta default pointer-events-none supaya nda bisa diklik sembarangan sebelum diizinkan -->
                         <div id="map" class="w-full h-[300px] md:h-[400px] z-0 bg-gray-300 pointer-events-none"></div>
                         
                         <!-- Koordinat Overlay -->
@@ -456,33 +461,58 @@
         }
 
         // ==========================================
-        // FITUR GPS OTOMATIS (Satu-satunya opsi)
+        // FITUR GPS & CADANGAN MANUAL
         // ==========================================
         document.getElementById('btnAmbilKoordinat').addEventListener('click', async () => {
             const isAtHome = await customDialog.show('Tunggu Dulu!', "Yakin ki' mau ambil koordinat sekarang? Pastikanki' lagi di rumah nah pas isi data, biar akurat ki' zonasi ta'!", 'confirm', 'map-pin');
             
             if (isAtHome) {
-                if (navigator.geolocation) {
-                    const btn = document.getElementById('btnAmbilKoordinat');
-                    const originalText = btn.innerHTML;
-                    btn.innerHTML = `<i data-lucide="loader" class="animate-spin"></i> MENGAMBIL KOORDINAT...`;
-                    lucide.createIcons();
+                const btn = document.getElementById('btnAmbilKoordinat');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = `<i data-lucide="loader" class="animate-spin"></i> MENGAMBIL KOORDINAT...`;
+                lucide.createIcons();
 
+                if (navigator.geolocation) {
+                    // Coba ambil GPS dengan timeout panjang (15 detik)
                     navigator.geolocation.getCurrentPosition(
-                        (position) => {
+                        async (position) => {
+                            // JIKA BERHASIL
                             updateUserLocation(position.coords.latitude, position.coords.longitude);
                             btn.innerHTML = originalText;
                             lucide.createIcons();
+                            await customDialog.show('Alhamdulillah!', "Berhasil mi didapat lokasi otomatis ta'. Cek mi peta di bawah nah!", 'alert', 'check-circle');
                         },
-                        (error) => {
-                            customDialog.show("Yah Gagal", "Aih, nda bisa ki' ambil lokasi. Cek ki' dulu GPS ta' nyala ji kah? Trus izinkan ki' browser ta' akses lokasi nah.", "alert", "map-pin-off");
+                        async (error) => {
+                            // JIKA GAGAL (Timeout / Di-block)
+                            console.warn("GPS Error:", error);
+                            
+                            await customDialog.show("Yah, GPS-nya Gagal!", "Aih, nda bisa ki' baca lokasi otomatis. Mungkin diblokir browser atau sinyal lagi jelek.\n\nNda papa, saya bukakan ki' akses manual. Silakan klik sendiri titik rumah ta' di peta nah!", "alert", "map-pin-off");
+                            
                             btn.innerHTML = originalText;
                             lucide.createIcons();
+
+                            // Buka gembok peta biar bisa diklik
+                            const mapContainer = document.getElementById('map');
+                            const manualHint = document.getElementById('manualHint');
+                            
+                            mapContainer.classList.remove('pointer-events-none');
+                            mapContainer.classList.add('cursor-crosshair');
+                            manualHint.classList.remove('hidden');
+
+                            // Pastikan event klik cuma ditambah 1 kali
+                            if (!window.mapClickAktif) {
+                                map.on('click', (e) => {
+                                    updateUserLocation(e.latlng.lat, e.latlng.lng);
+                                });
+                                window.mapClickAktif = true;
+                            }
                         },
-                        { enableHighAccuracy: true, timeout: 10000 }
+                        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
                     );
                 } else {
-                    customDialog.show("Aduh!", "Browser ta' nda dukung ki' fitur lokasi (GPS). Coba pakai browser lain nah.", "alert", "alert-triangle");
+                    await customDialog.show("Aduh!", "Browser ta' nda dukung ki' fitur lokasi (GPS).", "alert", "alert-triangle");
+                    btn.innerHTML = originalText;
+                    lucide.createIcons();
                 }
             }
         });
