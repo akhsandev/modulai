@@ -293,14 +293,14 @@
             </div>
             
             <div class="space-y-4 mt-4 font-bold text-lg text-center">
-                <p>Halo! Aku <span class="text-pink-600 font-black">Ara</span>, kang koding di balik layar web SPMB ini. 🧑‍💻✨</p>
+                <p>Halo! Aku <span class="text-pink-600 font-black">Pak Ara</span>, guruta' yang ngoding di balik layar web ini. slebew 🧑‍💻✨</p>
                 
                 <a href="https://instagram.com/_ara.v2" target="_blank" class="bg-pink-400 text-white border-4 border-black p-3 hover:bg-pink-300 hover:-translate-y-1 shadow-[4px_4px_0_0_#000] transition-all flex justify-center items-center gap-2 font-black">
                     <i data-lucide="instagram"></i> Follow IG @_ara.v2
                 </a>
                 
                 <div class="bg-cyan-200 border-4 border-black p-4 mt-6 transform rotate-1">
-                    <p class="mb-3 text-sm leading-tight">Kalau ngerasa web ini mulus, nda bikin pusing ki', dan ngebantu banget, boleh lho jajanin ka' es teh manis via DANA biar makin semangat ngodingnya! 🥤😎</p>
+                    <p class="mb-3 text-sm leading-tight">Kalau merasaki web ini mulus, nda bikin pusing, dan membantu, boleh bnget jajanin ka' es teh manis via DANA biar makin semangatka ngoding! 🥤😎</p>
                     
                     <div class="bg-white border-4 border-black p-2 font-black text-xl flex justify-between items-center shadow-[4px_4px_0_0_#000]">
                         <span class="tracking-widest">087717416198</span>
@@ -309,7 +309,7 @@
                         </button>
                     </div>
                     
-                    <p class="text-xs mt-4 text-gray-700 font-bold bg-white/50 p-2 border-2 border-dashed border-black">Tapi santai ji, nda maksa ja' tawwa! Kalau lagi bokek ki', doakan mi saja webnya nda error dan acaranya lancar jaya nah! 🙏🤣</p>
+                    <p class="text-xs mt-4 text-gray-700 font-bold bg-white/50 p-2 border-2 border-dashed border-black">Tapi santai ji, ini bukan pemaksaan nah, Kalau lagi bokek ki', doakan mi saja webnya nda error dan acaranya lancar jaya nah! 🙏🤣</p>
                 </div>
             </div>
         </div>
@@ -561,7 +561,7 @@
             if (file) {
                 // Cek ukuran file (Max 1MB)
                 if(file.size > 1024 * 1024) {
-                    await customDialog.show('Wah Kebesaran!', "Kebesaran ki' file ta', maksimal 1MB ji kapang. Coba kompres dulu nah!", 'alert', 'file-warning');
+                    await customDialog.show('Wah Kebesaran!', "Kebesaran file ta, maksimal 1MB ji. Coba kompres dulu nah!", 'alert', 'file-warning');
                     e.target.value = "";
                     return;
                 }
@@ -591,7 +591,7 @@
             if (file) {
                 // Cek ukuran file (Max 1MB)
                 if(file.size > 1024 * 1024) {
-                    await customDialog.show('Wah Kebesaran!', "Kebesaran ki' file ta', maksimal 1MB ji kapang. Coba kompres dulu nah!", 'alert', 'file-warning');
+                    await customDialog.show('Wah Kebesaran!', "Kebesaran file ta', maksimal 1MB ji. Coba kompres dulu nah!", 'alert', 'file-warning');
                     e.target.value = "";
                     return;
                 }
@@ -649,7 +649,7 @@
 
             // Validasi koordinat
             if (!document.getElementById('koordinat').value) {
-                await customDialog.show('Eh Tunggu!', "Weh, belum ki' ambil koordinat rumah ta'! Klik ki' dulu tombol 'Ambil Koordinat Sekarang'.", 'alert', 'map-pin');
+                await customDialog.show('Eh Tunggu!', "belumpki' ambil koordinat rumah ta'! Klik ki' dulu tombol 'Ambil Koordinat Sekarang'.", 'alert', 'map-pin');
                 return;
             }
 
@@ -660,7 +660,7 @@
                     return;
                 }
                 if (!fileBase64) {
-                    await customDialog.show('Lupa Ki\'', "Sertifikat prestasimu belum ki' upload. Jangan lupa nah!", 'alert', 'upload');
+                    await customDialog.show('Lupa Ki\'', "Sertifikat prestasimu belum diupload. Jangan lupa nah!", 'alert', 'upload');
                     return;
                 }
             }
@@ -682,10 +682,12 @@
             btnText.innerText = 'MENGIRIM DATA...';
             btnIcon.style.display = 'none';
 
-            // Mengambil dan menambahkan kutip 1 pada nomor HP agar tidak hilang angka 0 di depannya
+            // Mengambil dan menambahkan kutip 1 pada nomor HP, NIK, dan NISN agar tidak hilang angka 0 atau berubah format di Spreadsheet
             const valHpSiswa = document.getElementById('hpSiswa').value;
             const valHpAyah = document.getElementById('hpAyah').value;
             const valHpIbu = document.getElementById('hpIbu').value;
+            const valNik = document.getElementById('nik').value;
+            const valNisn = document.getElementById('nisn').value;
 
             // Kumpulkan Data
             const formData = {
@@ -693,8 +695,8 @@
                 jenisKelamin: document.getElementById('jenisKelamin').value,
                 tempatLahir: document.getElementById('tempatLahir').value,
                 tanggalLahir: document.getElementById('tanggalLahir').value,
-                nik: document.getElementById('nik').value,
-                nisn: document.getElementById('nisn').value,
+                nik: valNik ? "'" + valNik : "",
+                nisn: valNisn ? "'" + valNisn : "",
                 asalSekolah: document.getElementById('asalSekolah').value,
                 alamat: document.getElementById('alamat').value,
                 rt: document.getElementById('rt').value,
@@ -733,7 +735,7 @@
                 await customDialog.show('Suksesss!', "🎉 Mantap! Berhasil mi terkirim data pendaftaran ta'. Semoga lulus ki' nah!", 'alert', 'check-circle');
                 
             } catch (error) {
-                await customDialog.show('Yaaaah!', "Aduh, ada masalah ki' pas kirim data. Cek ki' jaringan ta' atau URL Apps Script-nya nah.", 'alert', 'alert-circle');
+                await customDialog.show('Yaaaah!', "Aduh, ada masalah mau dikirim data ta. Cek ki' jaringan ta' atau URL Apps Script-nya nah.", 'alert', 'alert-circle');
             } finally {
                 // Kembalikan tombol seperti semula
                 btn.disabled = false;
