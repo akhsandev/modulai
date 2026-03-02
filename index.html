@@ -1,441 +1,732 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AjarAI - Aplikasi Modul Ajar Otomatis (Lifetime)</title>
+    <title>SPMB SMAN 1 Soppeng</title>
     
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS (via CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <!-- AOS Animation Library -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        display: ['Outfit', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            orange: '#f97316',
-                            red: '#ea580c',
-                            dark: '#0a0a0a',
-                            card: '#171717',
-                            border: '#262626'
-                        }
-                    },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'glow': 'glow 2s ease-in-out infinite alternate',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        },
-                        glow: {
-                            'from': { boxShadow: '0 0 10px -5px #f97316' },
-                            'to': { boxShadow: '0 0 25px 5px #f97316' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        body {
-            background-color: #050505;
-            color: #ffffff;
-            overflow-x: hidden;
-        }
-        
-        /* Glass Effect */
-        .glass {
-            background: rgba(23, 23, 23, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        /* Custom map markers */
+        .custom-div-icon {
+            background: transparent;
+            border: none;
         }
 
-        /* Chat Bubble Styles */
-        .chat-bubble {
-            position: relative;
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            font-size: 0.95rem;
-            line-height: 1.5;
+        /* Animasi Tombol Rahasia */
+        @keyframes goyang-glowing {
+            0%, 100% { transform: rotate(0deg) scale(1); text-shadow: 0 0 5px rgba(236, 72, 153, 0.4); }
+            50% { transform: rotate(-3deg) scale(1.1); text-shadow: 0 0 15px rgba(236, 72, 153, 0.9), 0 0 20px rgba(236, 72, 153, 0.6); color: #db2777; }
         }
-        .chat-left {
-            background-color: #262626;
-            color: #e5e5e5;
-            border-bottom-left-radius: 2px;
-            margin-right: auto;
-        }
-        .chat-right {
-            background: linear-gradient(135deg, #f97316, #ea580c);
-            color: white;
-            border-bottom-right-radius: 2px;
-            margin-left: auto;
-        }
-
-        /* Floating WA Button */
-        .whatsapp-float {
-            position: fixed;
-            width: 60px;
-            height: 60px;
-            bottom: 30px;
-            right: 30px;
-            background-color: #25d366;
-            color: #FFF;
-            border-radius: 50px;
-            text-align: center;
-            font-size: 30px;
-            box-shadow: 2px 2px 3px #999;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .kasi-penasaran {
+            display: inline-block;
+            animation: goyang-glowing 2.5s infinite ease-in-out;
+            border-bottom: 2px dashed transparent;
             transition: all 0.3s;
-            animation: bounce 2s infinite;
+            font-weight: 900;
         }
-        .whatsapp-float:hover {
-            transform: scale(1.1);
-            background-color: #1ebd57;
-        }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-10px);}
-            60% {transform: translateY(-5px);}
+        .kasi-penasaran:hover {
+            border-bottom: 2px dashed #ec4899;
+            color: #be185d;
+            animation: none;
+            transform: scale(1.1) rotate(2deg);
         }
     </style>
 </head>
-<body class="antialiased selection:bg-orange-500 selection:text-white">
+<body class="min-h-screen bg-yellow-200 font-sans text-black pb-10 selection:bg-pink-400 selection:text-white relative">
 
-    <!-- BACKGROUND EFFECTS -->
-    <div class="fixed inset-0 z-[-1]">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-orange-600/20 rounded-full blur-[120px]"></div>
-        <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[100px]"></div>
-        <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150"></div>
-    </div>
-
-    <!-- NAVBAR -->
-    <nav class="fixed w-full z-50 glass border-b-0">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-orange-500/20">
-                        <i class="fa-solid fa-robot text-lg"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold font-display tracking-tight">Ajar<span class="text-orange-500">AI</span></h1>
-                        <p class="text-[10px] text-gray-400 font-mono tracking-widest uppercase">Deep Learning Gen</p>
-                    </div>
+    <!-- Header -->
+    <header class="bg-pink-400 border-b-8 border-black p-6 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-white border-4 border-black p-2 shadow-[4px_4px_0_0_#000] transform -rotate-6">
+                    <img src="https://arafx.vercel.app/logo.png" alt="Logo SMAN 1 Soppeng" class="w-12 h-12 object-contain" />
                 </div>
-                <a href="https://wa.me/6287717416198?text=Halo%20Admin%2C%20saya%20tertarik%20beli%20AjarAI%20seharga%2050K" class="bg-white text-black hover:bg-gray-200 px-6 py-2.5 rounded-full text-sm font-bold transition-all transform hover:scale-105 hidden md:flex items-center gap-2">
-                    <i class="fa-brands fa-whatsapp"></i> Beli Sekarang
-                </a>
+                <div>
+                    <h1 class="text-3xl md:text-5xl font-black uppercase tracking-tighter drop-shadow-[2px_2px_0_#fff]">SPMB Online</h1>
+                    <p class="font-bold text-lg">SMA Negeri 1 Soppeng</p>
+                </div>
+            </div>
+            <div class="bg-cyan-400 border-4 border-black px-4 py-2 font-black text-xl shadow-[4px_4px_0_0_#000] transform rotate-2">
+                TAHUN 2026
             </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- HERO SECTION -->
-    <section class="pt-32 pb-20 px-4">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <!-- Text Content -->
-            <div data-aos="fade-right">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-900/30 border border-orange-500/30 text-orange-400 text-xs font-bold mb-6">
-                    <span class="relative flex h-2 w-2">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
-                    </span>
-                    UPDATE V5.0: RIWAYAT & REGENERATE
+    <main class="max-w-5xl mx-auto mt-12 px-4">
+        <form id="spmbForm" class="space-y-8">
+            
+            <!-- Section 1: Data Diri -->
+            <div class="bg-[#a7f3d0] border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative">
+                <div class="absolute -top-5 -left-5 bg-black text-white px-4 py-1 text-xl font-black transform -rotate-3 border-4 border-black">
+                    1. DATA DIRI
                 </div>
-                <h1 class="text-5xl md:text-7xl font-bold font-display leading-[1.1] mb-6">
-                    Bikin Modul Ajar <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">Cuma 30 Detik!</span>
-                </h1>
-                <p class="text-gray-400 text-lg mb-8 leading-relaxed max-w-lg">
-                    Stop begadang mikirin RPP! Kini dilengkapi fitur <strong>Riwayat Otomatis</strong> (tidak takut file hilang) dan <strong>Regenerate</strong> (buat ulang instan jika hasil kurang pas).
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="#demo" class="px-8 py-4 bg-brand-card hover:bg-white/5 border border-brand-border rounded-xl font-bold text-white text-center transition-all flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-play"></i> Lihat Cara Kerja
-                    </a>
-                </div>
-            </div>
-
-            <!-- Product Image -->
-            <div class="relative" data-aos="zoom-in" data-aos-delay="200">
-                <div class="absolute -inset-1 bg-gradient-to-tr from-orange-500 to-blue-500 rounded-2xl blur-lg opacity-40 animate-pulse"></div>
-                <img src="https://arafx.vercel.app/ai/fotoproduk.jpg" alt="AjarAI Dashboard" class="relative rounded-2xl border border-brand-border shadow-2xl animate-float w-full object-cover">
                 
-                <!-- Floating Badge -->
-                <div class="absolute -bottom-6 -left-6 glass px-6 py-4 rounded-xl border border-orange-500/30 shadow-xl animate-bounce" style="animation-duration: 3s;">
-                    <p class="text-xs text-gray-400 uppercase font-bold mb-1">Status</p>
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-check-circle text-green-500"></i>
-                        <span class="font-bold text-white">Lifetime Access</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- NEW FEATURES HIGHLIGHT -->
-    <section class="py-12 bg-black/30 border-y border-brand-border/50">
-        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div data-aos="fade-up" data-aos-delay="0">
-                <div class="w-12 h-12 bg-indigo-900/50 text-indigo-400 rounded-lg flex items-center justify-center mx-auto mb-4 text-2xl">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                </div>
-                <h3 class="text-xl font-bold mb-2">Riwayat Modul</h3>
-                <p class="text-gray-400 text-sm">Modul tersimpan otomatis di browser. Buka kembali kapan saja tanpa perlu generate ulang (Hemat Kuota!).</p>
-            </div>
-            <div data-aos="fade-up" data-aos-delay="100">
-                <div class="w-12 h-12 bg-orange-900/50 text-orange-400 rounded-lg flex items-center justify-center mx-auto mb-4 text-2xl">
-                    <i class="fa-solid fa-rotate"></i>
-                </div>
-                <h3 class="text-xl font-bold mb-2">Regenerate Instan</h3>
-                <p class="text-gray-400 text-sm">Kurang sreg dengan hasilnya? Klik satu tombol, AI akan membuatkan variasi baru dalam sekejap.</p>
-            </div>
-            <div data-aos="fade-up" data-aos-delay="200">
-                <div class="w-12 h-12 bg-green-900/50 text-green-400 rounded-lg flex items-center justify-center mx-auto mb-4 text-2xl">
-                    <i class="fa-solid fa-list-check"></i>
-                </div>
-                <h3 class="text-xl font-bold mb-2">Asesmen Rapi</h3>
-                <p class="text-gray-400 text-sm">Soal Pilihan Ganda kini tersusun menurun (vertikal) otomatis. Tidak perlu edit manual lagi!</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- CHATBOX STORYTELLING SECTION -->
-    <section class="py-20 bg-brand-card/50 border-y border-brand-border overflow-hidden">
-        <div class="max-w-3xl mx-auto px-4">
-            <div class="text-center mb-10">
-                <h2 class="text-2xl font-bold font-display mb-2">Curhat Pak Guru Budi 😅</h2>
-                <p class="text-gray-400">Update Terbaru Makin Memanjakan Guru!</p>
-            </div>
-
-            <div class="glass rounded-3xl p-6 md:p-8 border border-white/5 relative">
-                <!-- Chat Interface Header -->
-                <div class="flex items-center gap-3 border-b border-white/10 pb-4 mb-6">
-                    <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
-                        <i class="fa-solid fa-user text-gray-400"></i>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                    <div>
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Nama Lengkap</label>
+                        <input required type="text" id="nama" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="NAMA SESUAI IJAZAH" />
                     </div>
                     <div>
-                        <h4 class="font-bold">Pak Budi (Guru SD)</h4>
-                        <p class="text-xs text-green-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Online</p>
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Jenis Kelamin</label>
+                        <select id="jenisKelamin" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all">
+                            <option value="L">Laki-laki (L)</option>
+                            <option value="P">Perempuan (P)</option>
+                        </select>
                     </div>
-                </div>
-
-                <!-- Chat Messages -->
-                <div class="space-y-4 font-sans">
-                    <div class="chat-bubble chat-left" data-aos="fade-up">
-                        Min, kalau saya udah buat modul, terus ketutup browsernya, ilang gak datanya? Capek kalau harus input ulang.. 😫
+                    <div>
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Tempat Lahir</label>
+                        <input required type="text" id="tempatLahir" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="KOTA KELAHIRAN" />
                     </div>
-                    
-                    <div class="chat-bubble chat-right" data-aos="fade-up" data-aos-delay="200">
-                        Tenang Pak Budi! Di versi terbaru <strong>AjarAI v5.0</strong>, udah ada fitur <strong>RIWAYAT (History)</strong>. Semua modul otomatis tersimpan! ✨
+                    <div>
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Tanggal Lahir</label>
+                        <input required type="date" id="tanggalLahir" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
                     </div>
-
-                    <div class="chat-bubble chat-left" data-aos="fade-up" data-aos-delay="400">
-                        Wah serius? Terus kalau misalnya hasil buatan AI-nya kurang cocok, gimana?
+                    <div>
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">NIK</label>
+                        <input required type="number" id="nik" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="16 DIGIT NIK" />
                     </div>
-
-                    <div class="chat-bubble chat-right" data-aos="fade-up" data-aos-delay="600">
-                        Gampang! Tinggal klik tombol <strong>REGENERATE</strong>. AI bakal mikir ulang dan kasih hasil yang beda. Gak perlu ketik ulang data dari awal. Canggih kan? 😎
+                    <div>
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">NISN</label>
+                        <input required type="number" id="nisn" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="NOMOR INDUK SISWA" />
                     </div>
-
-                    <div class="chat-bubble chat-left" data-aos="fade-up" data-aos-delay="800">
-                        Mantap banget! Jadi gak takut salah atau ilang data lagi. Harganya naik gak nih? 🥺
-                    </div>
-
-                    <div class="chat-bubble chat-right" data-aos="fade-up" data-aos-delay="1000">
-                        Masih sama Pak! Cuma <strong>Rp 50.000</strong> sekali bayar seumur hidup (Lifetime). Buruan sikat sebelum promo abis! 🔥
-                    </div>
-                    
-                    <div class="text-center mt-8" data-aos="zoom-in" data-aos-delay="1200">
-                        <a href="https://wa.me/6287717416198" class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-500 text-white rounded-full font-bold transition-colors shadow-lg shadow-green-500/20">
-                            <i class="fa-brands fa-whatsapp"></i> Saya Mau Dong Min!
-                        </a>
+                    <div class="md:col-span-2">
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Asal Sekolah (SMP/MTs)</label>
+                        <input required type="text" id="asalSekolah" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="NAMA SEKOLAH ASAL" />
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- HOW IT WORKS (SCREENSHOTS) -->
-    <section id="demo" class="py-20 px-4">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold font-display mb-4">Semudah 1-2-3-4</h2>
-                <p class="text-gray-400">Antarmuka Wizard yang memandu Anda langkah demi langkah.</p>
-            </div>
-
-            <!-- Step 1 -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-24">
-                <div class="order-2 lg:order-1" data-aos="fade-right">
-                    <div class="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center text-white font-bold text-xl mb-6">1</div>
-                    <h3 class="text-2xl font-bold mb-4">Isi Identitas & Materi</h3>
-                    <p class="text-gray-400 leading-relaxed mb-6">
-                        Masukkan data sekolah, jenjang (SD-SMA/SMK), mapel, dan topik yang ingin diajarkan. Anda juga bisa memasukkan Capaian Pembelajaran (CP) sendiri atau biarkan AI mencarikannya.
-                    </p>
-                    <ul class="space-y-3 text-sm text-gray-300">
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Support Kurikulum Merdeka</li>
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Semua Jenjang & Fase</li>
-                    </ul>
+            <!-- Section 2: Data Orang Tua & Kontak -->
+            <div class="bg-[#e9d5ff] border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative">
+                <div class="absolute -top-5 -right-5 bg-pink-500 text-white px-4 py-1 text-xl font-black transform rotate-3 border-4 border-black">
+                    2. KONTAK & ORTU
                 </div>
-                <div class="order-1 lg:order-2 relative group" data-aos="fade-left">
-                    <div class="absolute -inset-2 bg-orange-500/20 rounded-xl blur-lg group-hover:opacity-100 transition duration-500 opacity-0"></div>
-                    <img src="https://arafx.vercel.app/ai/isiidentitas.jpg" alt="Isi Identitas" class="relative rounded-xl border border-brand-border shadow-2xl w-full">
-                </div>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-24">
-                <div class="order-1" data-aos="fade-right">
-                    <div class="relative group">
-                        <div class="absolute -inset-2 bg-blue-500/20 rounded-xl blur-lg group-hover:opacity-100 transition duration-500 opacity-0"></div>
-                        <img src="https://arafx.vercel.app/ai/pemilihanmodelpembelajaran.jpg" alt="Pilih Model" class="relative rounded-xl border border-brand-border shadow-2xl w-full">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                    <div>
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Nama Ayah</label>
+                        <input required type="text" id="namaAyah" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
                     </div>
-                </div>
-                <div class="order-2" data-aos="fade-left">
-                    <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl mb-6">2</div>
-                    <h3 class="text-2xl font-bold mb-4">Pilih Model Pembelajaran</h3>
-                    <p class="text-gray-400 leading-relaxed mb-6">
-                        Sesuaikan strategi dengan kebutuhan murid. Tersedia berbagai model modern seperti <strong>PBL, PjBL, Inquiry, TaRL, hingga CRT</strong>.
-                    </p>
-                    <ul class="space-y-3 text-sm text-gray-300">
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Kustomisasi Karakteristik Murid</li>
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Auto-Media Suggestion</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Step 3 (Assessment) -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-24">
-                <div class="order-2 lg:order-1" data-aos="fade-right">
-                    <div class="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-xl mb-6">3</div>
-                    <h3 class="text-2xl font-bold mb-4">Atur Asesmen & Pertemuan</h3>
-                    <p class="text-gray-400 leading-relaxed mb-6">
-                        Kendalikan penuh modul ajar Anda. Tentukan <strong>jumlah pertemuan, durasi waktu</strong>, hingga <strong>jumlah soal asesmen</strong> (PG, Kompleks, Esai) yang ingin dibuatkan oleh AI secara presisi.
-                    </p>
-                    <ul class="space-y-3 text-sm text-gray-300">
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Kustom Jumlah Soal Evaluasi</li>
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Pilihan Ganda, Benar Salah, Esai</li>
-                    </ul>
-                </div>
-                <div class="order-1 lg:order-2 relative group" data-aos="fade-left">
-                    <div class="absolute -inset-2 bg-purple-500/20 rounded-xl blur-lg group-hover:opacity-100 transition duration-500 opacity-0"></div>
-                    <img src="https://arafx.vercel.app/ai/settingassesmen.jpg" alt="Setting Asesmen" class="relative rounded-xl border border-brand-border shadow-2xl w-full">
-                </div>
-            </div>
-
-            <!-- Step 4 (Result & History) -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="order-1" data-aos="fade-right">
-                    <div class="relative group">
-                        <div class="absolute -inset-2 bg-green-500/20 rounded-xl blur-lg group-hover:opacity-100 transition duration-500 opacity-0"></div>
-                        <img src="https://arafx.vercel.app/ai/hasilmodul.jpg" alt="Hasil Modul" class="relative rounded-xl border border-brand-border shadow-2xl w-full">
+                    <div>
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Nama Ibu</label>
+                        <input required type="text" id="namaIbu" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
                     </div>
-                </div>
-                <div class="order-2" data-aos="fade-left">
-                    <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center text-white font-bold text-xl mb-6">4</div>
-                    <h3 class="text-2xl font-bold mb-4">Generate, Simpan, Ulangi</h3>
-                    <p class="text-gray-400 leading-relaxed mb-6">
-                        Modul jadi dalam hitungan detik. Tersimpan otomatis di <strong>Menu Riwayat</strong> sehingga bisa dibuka kapan saja. Kurang puas? Klik tombol <strong>Regenerate</strong> untuk variasi baru!
-                    </p>
-                    <div class="bg-brand-card p-4 rounded-lg border border-brand-border">
-                        <p class="text-sm font-mono text-orange-400 mb-2">🔥 Fitur Unggulan:</p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-2 py-1 bg-black rounded text-xs border border-white/10">Simpan Riwayat</span>
-                            <span class="px-2 py-1 bg-black rounded text-xs border border-white/10">Regenerate Modul</span>
-                            <span class="px-2 py-1 bg-black rounded text-xs border border-white/10">Export Word</span>
-                            <span class="px-2 py-1 bg-black rounded text-xs border border-white/10">Dark Mode</span>
+                    <div>
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">No. HP Siswa</label>
+                        <input required type="tel" id="hpSiswa" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="08..." />
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">No. HP Ayah</label>
+                            <input type="tel" id="hpAyah" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
+                        </div>
+                        <div>
+                            <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">No. HP Ibu</label>
+                            <input type="tel" id="hpIbu" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- PRICING CTA -->
-    <section class="py-20 relative overflow-hidden">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-96 bg-orange-600/10 blur-[100px] rounded-full z-[-1]"></div>
-        
-        <div class="max-w-4xl mx-auto px-4 text-center">
-            <!-- Promo Badge & Price -->
-            <div class="inline-block px-4 py-1 rounded-full bg-red-500/20 text-red-400 font-bold text-sm mb-4 border border-red-500/50 animate-bounce">
-                🔥 PROMO SPESIAL (Hemat Rp 150.000)
-            </div>
-            
-            <h2 class="text-4xl md:text-6xl font-bold font-display mb-6 flex flex-col md:block items-center justify-center gap-2">
-                <span class="text-2xl md:text-4xl text-gray-500 line-through decoration-red-500 decoration-4 mr-0 md:mr-4 font-normal">Rp 200.000</span>
-                <span>Hanya <span class="text-orange-500">Rp 50.000</span></span>
-            </h2>
-            <p class="text-xl text-gray-300 mb-8">Sekali bayar. Akses Selamanya. Tanpa biaya tersembunyi.</p>
-            
-            <div class="glass p-8 rounded-3xl border border-orange-500/30 max-w-lg mx-auto mb-10 transform hover:scale-105 transition-all duration-300">
-                <ul class="space-y-4 text-left mb-8">
-                    <li class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-black text-xs"><i class="fa-solid fa-check"></i></div>
-                        <span>Aplikasi Ringan (HTML Single File)</span>
-                    </li>
-                    <li class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-black text-xs"><i class="fa-solid fa-check"></i></div>
-                        <span>Unlimited Generate & History</span>
-                    </li>
-                    <li class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-black text-xs"><i class="fa-solid fa-check"></i></div>
-                        <span>Gratis Update Fitur</span>
-                    </li>
-                    <li class="flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-black text-xs"><i class="fa-solid fa-check"></i></div>
-                        <span>Prompt Engineering Premium (Included)</span>
-                    </li>
-                </ul>
-                <a href="https://wa.me/6287717416198?text=Halo%2C%20saya%20mau%20beli%20aplikasi%20AjarAI.%20Apakah%20masih%20promo%2050rb%3F" class="block w-full py-4 bg-orange-600 hover:bg-orange-500 rounded-xl font-bold text-white text-lg shadow-xl shadow-orange-600/30 transition-all animate-pulse">
-                    <i class="fa-brands fa-whatsapp mr-2"></i> BELI SEKARANG
-                </a>
-                <p class="mt-4 text-xs text-gray-500">Garansi uang kembali jika aplikasi tidak berjalan.</p>
-            </div>
-        </div>
-    </section>
+            <!-- Section 3: Alamat & Zonasi Peta Lebar -->
+            <div class="bg-white border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative md:col-span-2">
+                <div class="absolute -top-5 -left-5 bg-cyan-400 text-black px-4 py-1 text-xl font-black transform -rotate-2 border-4 border-black">
+                    3. ALAMAT & KOORDINAT
+                </div>
 
-    <!-- FOOTER -->
-    <footer class="bg-brand-card border-t border-brand-border py-12 text-center">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex items-center justify-center gap-2 mb-4">
-                <i class="fa-solid fa-robot text-orange-500 text-2xl"></i>
-                <span class="text-2xl font-bold font-display">AjarAI</span>
+                <!-- Detail Alamat Surat -->
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                    <div class="md:col-span-4">
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Alamat Lengkap</label>
+                        <textarea required id="alamat" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all h-24" placeholder="NAMA JALAN / KAMPUNG SESUAI KK"></textarea>
+                    </div>
+                    <div>
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">RT</label>
+                        <input required type="text" id="rt" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
+                    </div>
+                    <div>
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">RW</label>
+                        <input required type="text" id="rw" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
+                    </div>
+                    <div>
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Kelurahan/Desa</label>
+                        <input required type="text" id="kelurahan" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
+                    </div>
+                    <div>
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Kecamatan</label>
+                        <input required type="text" id="kecamatan" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
+                    </div>
+                    
+                    <!-- Hidden inputs for Kabupaten & Provinsi -->
+                    <input type="hidden" id="kabupaten" value="Soppeng">
+                    <input type="hidden" id="provinsi" value="Sulawesi Selatan">
+                </div>
+
+                <!-- Peta Interaktif Lebar (Sederhana via GPS) -->
+                <div class="border-4 border-black p-6 bg-gray-100 mb-6 relative text-center">
+                    <h3 class="font-black text-2xl flex items-center justify-center gap-2 mb-2">
+                        <i data-lucide="map-pin" class="text-pink-400 fill-pink-400"></i> TITIK KOORDINAT RUMAH
+                    </h3>
+                    <p class="font-bold text-gray-700 mb-6">Untuk akurasi zonasi, koordinat wajib diambil otomatis menggunakan GPS perangkatmu!</p>
+
+                    <button type="button" id="btnAmbilKoordinat" class="bg-yellow-400 hover:bg-yellow-300 border-4 border-black px-8 py-4 font-black text-xl md:text-2xl inline-flex items-center gap-2 shadow-[6px_6px_0_0_#000] active:shadow-none active:translate-x-2 active:translate-y-2 transition-all mb-8">
+                        <i data-lucide="crosshair"></i> AMBIL KOORDINAT SEKARANG
+                    </button>
+
+                    <!-- Wadah Peta (Hanya untuk melihat hasil, tidak bisa diklik) -->
+                    <div class="relative border-4 border-black shadow-[4px_4px_0_0_#000] text-left">
+                        <div id="map" class="w-full h-[300px] md:h-[400px] z-0 bg-gray-300 pointer-events-none"></div>
+                        
+                        <!-- Koordinat Overlay -->
+                        <div class="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 z-[400] bg-white border-4 border-black p-3 shadow-[4px_4px_0_0_#000]">
+                            <label class="block font-black text-xs text-gray-500 uppercase">Koordinat Terpilih:</label>
+                            <input readonly type="text" id="koordinat" class="w-full bg-transparent font-mono font-bold text-lg md:text-xl text-black outline-none placeholder-gray-400" placeholder="Belum ada titik dipilih" required />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rekomendasi 3 Sekolah Terdekat (Muncul dinamis) -->
+                <div id="nearestSchoolsContainer" class="hidden bg-yellow-100 border-4 border-black p-6 shadow-[4px_4px_0_0_#000]">
+                    <h3 class="font-black text-2xl mb-4 flex items-center gap-2"><i data-lucide="school"></i> 3 SEKOLAH TERDEKAT DARI RUMAH:</h3>
+                    <div id="nearestSchoolsList" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Konten akan diisi oleh JavaScript -->
+                    </div>
+                </div>
             </div>
-            <p class="text-gray-500 mb-8">Membantu Guru Indonesia Mengajar Lebih Baik.</p>
-            <p class="text-gray-600 text-sm">&copy; 2024 AjarAI by Arafx. All rights reserved.</p>
-        </div>
+
+            <!-- Section 4: Prestasi -->
+            <div class="bg-[#fef08a] border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative">
+                <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-1 text-xl font-black border-4 border-black">
+                    4. PRESTASI (OPSIONAL)
+                </div>
+                
+                <div class="mt-4">
+                    <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Memiliki Prestasi Akademik/Non-Akademik?</label>
+                    <select id="adaPrestasi" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all">
+                        <option value="Tidak">Tidak</option>
+                        <option value="Ya">Ya, Saya Punya Prestasi</option>
+                    </select>
+
+                    <div id="prestasiUploadContainer" class="hidden mt-6 border-4 border-black p-6 bg-white border-dashed">
+                        <div class="mb-6">
+                            <label class="block font-extrabold text-lg mb-2 uppercase">Deskripsi Prestasi</label>
+                            <textarea id="deskripsiPrestasi" class="w-full bg-yellow-50 border-4 border-black p-3 font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000]" placeholder="Contoh: Juara 1 Lomba Pidato Bahasa Inggris Tingkat Kabupaten 2024" rows="3"></textarea>
+                        </div>
+                        <label class="flex flex-col items-center justify-center cursor-pointer pt-4 border-t-4 border-black border-dashed">
+                            <i data-lucide="award" class="text-pink-500 w-12 h-12 mb-2"></i>
+                            <span class="font-black text-xl mb-2">UPLOAD SERTIFIKAT</span>
+                            <span class="font-bold text-gray-500 text-center mb-4">Format: JPG/PNG/PDF (Max 1MB)</span>
+                            <input type="file" id="filePrestasi" accept=".jpg,.png,.pdf" class="block w-full text-sm text-slate-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:border-4 file:border-black
+                                file:text-sm file:font-black file:bg-cyan-400
+                                hover:file:bg-cyan-300 file:shadow-[4px_4px_0_0_#000] file:cursor-pointer transition-all" />
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 5: KIP/DTKS -->
+            <div class="bg-[#bae6fd] border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative">
+                <div class="absolute -top-5 -right-5 bg-orange-500 text-white px-6 py-1 text-xl font-black transform rotate-2 border-4 border-black">
+                    5. AFIRMASI (KIP/DTKS)
+                </div>
+                
+                <div class="mt-4">
+                    <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Apakah Anda terdaftar sebagai penerima KIP atau DTKS?</label>
+                    <select id="adaKip" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all">
+                        <option value="Tidak">Tidak</option>
+                        <option value="Ya">Ya, Saya Penerima KIP/DTKS</option>
+                    </select>
+
+                    <div id="kipUploadContainer" class="hidden mt-6 border-4 border-black p-6 bg-white border-dashed">
+                        <label class="flex flex-col items-center justify-center cursor-pointer">
+                            <i data-lucide="file-check-2" class="text-orange-500 w-12 h-12 mb-2"></i>
+                            <span class="font-black text-xl mb-2">UPLOAD BUKTI KIP/DTKS</span>
+                            <span class="font-bold text-gray-500 text-center mb-4">Format: JPG/PNG/PDF (Max 1MB)</span>
+                            <input type="file" id="fileKip" accept=".jpg,.png,.pdf" class="block w-full text-sm text-slate-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:border-4 file:border-black
+                                file:text-sm file:font-black file:bg-orange-400
+                                hover:file:bg-orange-300 file:shadow-[4px_4px_0_0_#000] file:cursor-pointer transition-all" />
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center pt-8">
+                <button type="submit" id="submitBtn" class="text-2xl font-black px-12 py-6 flex items-center justify-center gap-4 mx-auto border-4 border-black shadow-[8px_8px_0_0_#000] active:shadow-none active:translate-x-2 active:translate-y-2 transition-all bg-pink-500 hover:bg-pink-400 text-white">
+                    <span id="btnText">KIRIM FORMULIR PENDAFTARAN</span>
+                    <i data-lucide="send" id="btnIcon" class="w-8 h-8"></i>
+                </button>
+                <p class="mt-6 font-bold text-lg">Pastikan semua data sudah benar sebelum mengirim! 😉</p>
+            </div>
+
+        </form>
+    </main>
+
+    <!-- FOOTER RAHASIA -->
+    <footer class="mt-16 text-center text-gray-700 font-bold pb-8">
+        <p>&copy; 2026 SPMB SMAN 1 Soppeng.</p>
+        <p class="mt-1 text-sm"><span id="secretTrigger" class="kasi-penasaran cursor-pointer">dibuat oleh: @_ara.v2 🤫</span></p>
     </footer>
 
-    <!-- FLOATING WA BUTTON -->
-    <a href="https://wa.me/6287717416198?text=Halo%20Admin%2C%20saya%20butuh%20bantuan%20terkait%20AjarAI" class="whatsapp-float" target="_blank">
-        <i class="fa-brands fa-whatsapp"></i>
-    </a>
+    <!-- MODAL RAHASIA (EASTER EGG) -->
+    <div id="secretModal" class="fixed inset-0 bg-black/60 z-[1000] hidden flex-col items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-yellow-300 border-8 border-black p-6 md:p-8 max-w-md w-full shadow-[12px_12px_0_0_#000] transform rotate-1 relative">
+            <button id="closeSecretBtn" class="absolute -top-6 -right-6 bg-red-500 text-white border-4 border-black w-12 h-12 flex items-center justify-center font-black text-2xl hover:bg-red-400 hover:rotate-12 transition-transform shadow-[4px_4px_0_0_#000]">X</button>
+            
+            <div class="text-center">
+                <h2 class="text-3xl font-black uppercase mb-4 border-b-4 border-black pb-2 bg-white px-2 transform -rotate-2 inline-block">Sstt... Rahasia! 🤫</h2>
+            </div>
+            
+            <div class="space-y-4 mt-4 font-bold text-lg text-center">
+                <p>Halo! Aku <span class="text-pink-600 font-black">Ara</span>, kang koding di balik layar web SPMB ini. 🧑‍💻✨</p>
+                
+                <a href="https://instagram.com/_ara.v2" target="_blank" class="bg-pink-400 text-white border-4 border-black p-3 hover:bg-pink-300 hover:-translate-y-1 shadow-[4px_4px_0_0_#000] transition-all flex justify-center items-center gap-2 font-black">
+                    <i data-lucide="instagram"></i> Follow IG @_ara.v2
+                </a>
+                
+                <div class="bg-cyan-200 border-4 border-black p-4 mt-6 transform rotate-1">
+                    <p class="mb-3 text-sm leading-tight">Kalau ngerasa web ini mulus, nda bikin pusing ki', dan ngebantu banget, boleh lho jajanin ka' es teh manis via DANA biar makin semangat ngodingnya! 🥤😎</p>
+                    
+                    <div class="bg-white border-4 border-black p-2 font-black text-xl flex justify-between items-center shadow-[4px_4px_0_0_#000]">
+                        <span class="tracking-widest">087717416198</span>
+                        <button type="button" onclick="copyDanaNumber()" class="bg-yellow-400 border-2 border-black px-3 py-1 text-sm hover:bg-yellow-300 active:translate-y-1 flex items-center gap-1">
+                            <i data-lucide="copy" class="w-4 h-4"></i> COPY
+                        </button>
+                    </div>
+                    
+                    <p class="text-xs mt-4 text-gray-700 font-bold bg-white/50 p-2 border-2 border-dashed border-black">Tapi santai ji, nda maksa ja' tawwa! Kalau lagi bokek ki', doakan mi saja webnya nda error dan acaranya lancar jaya nah! 🙏🤣</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- CUSTOM POPUP MODAL (PENGGANTI ALERT/CONFIRM) -->
+    <div id="customDialogOverlay" class="fixed inset-0 bg-black/50 z-[2000] hidden flex-col items-center justify-center p-4 backdrop-blur-md transition-opacity">
+        <div class="bg-white border-8 border-black p-6 md:p-8 max-w-sm w-full shadow-[8px_8px_0_0_#000] transform -rotate-1 flex flex-col items-center text-center relative">
+            <div id="dialogIconContainer" class="mb-4 bg-yellow-300 border-4 border-black p-3 shadow-[4px_4px_0_0_#000] transform rotate-3">
+                <i data-lucide="bell" id="dialogIcon" class="w-8 h-8 text-black"></i>
+            </div>
+            <h3 id="dialogTitle" class="text-2xl font-black uppercase mb-2">Pemberitahuan</h3>
+            <p id="dialogMessage" class="font-bold text-gray-700 mb-6 text-lg">Pesan di sini</p>
+            <div id="dialogButtons" class="flex gap-4 w-full justify-center">
+                <!-- Tombol dinamis via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- KODE JAVASCRIPT -->
     <script>
-        AOS.init({
-            duration: 800,
-            once: true,
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // --- SISTEM CUSTOM DIALOG (PENGGANTI ALERT/CONFIRM) ---
+        const customDialog = {
+            show: function(title, message, type = 'alert', icon = 'bell') {
+                return new Promise((resolve) => {
+                    const overlay = document.getElementById('customDialogOverlay');
+                    const titleEl = document.getElementById('dialogTitle');
+                    const messageEl = document.getElementById('dialogMessage');
+                    const btnContainer = document.getElementById('dialogButtons');
+                    const iconEl = document.getElementById('dialogIcon');
+
+                    titleEl.innerText = title;
+                    messageEl.innerText = message;
+                    
+                    // Update icon using Lucide
+                    iconEl.setAttribute('data-lucide', icon);
+                    lucide.createIcons();
+
+                    btnContainer.innerHTML = ''; // Clear existing buttons
+
+                    if (type === 'confirm') {
+                        // Tombol Batal
+                        const btnBatal = document.createElement('button');
+                        btnBatal.className = "flex-1 bg-white border-4 border-black py-2 font-black hover:bg-gray-200 active:translate-y-1 shadow-[4px_4px_0_0_#000]";
+                        btnBatal.innerText = "Nda Jadi";
+                        btnBatal.onclick = () => {
+                            this.close();
+                            resolve(false);
+                        };
+
+                        // Tombol Ya
+                        const btnYa = document.createElement('button');
+                        btnYa.className = "flex-1 bg-pink-500 text-white border-4 border-black py-2 font-black hover:bg-pink-400 active:translate-y-1 shadow-[4px_4px_0_0_#000]";
+                        btnYa.innerText = "Iye, Yakin!";
+                        btnYa.onclick = () => {
+                            this.close();
+                            resolve(true);
+                        };
+
+                        btnContainer.appendChild(btnBatal);
+                        btnContainer.appendChild(btnYa);
+                    } else {
+                        // Tombol OK untuk Alert
+                        const btnOk = document.createElement('button');
+                        btnOk.className = "w-full bg-cyan-400 border-4 border-black py-2 font-black hover:bg-cyan-300 active:translate-y-1 shadow-[4px_4px_0_0_#000]";
+                        btnOk.innerText = "Okeee!";
+                        btnOk.onclick = () => {
+                            this.close();
+                            resolve(true);
+                        };
+                        btnContainer.appendChild(btnOk);
+                    }
+
+                    overlay.classList.remove('hidden');
+                    overlay.classList.add('flex');
+                });
+            },
+            close: function() {
+                const overlay = document.getElementById('customDialogOverlay');
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+            }
+        };
+
+        // Data Koordinat 8 SMA Negeri di Soppeng
+        const SCHOOL_DATA = [
+            { id: 1, name: "SMA Negeri 1 Soppeng", lat: -4.355669, lng: 119.882877 },
+            { id: 2, name: "SMA Negeri 2 Soppeng", lat: -4.370019, lng: 119.952451 },
+            { id: 3, name: "SMA Negeri 3 Soppeng", lat: -4.231768, lng: 119.887363 },
+            { id: 4, name: "SMA Negeri 4 Soppeng", lat: -4.357450, lng: 119.876160 },
+            { id: 5, name: "SMA Negeri 5 Soppeng", lat: -4.472203, lng: 119.946433 },
+            { id: 6, name: "SMA Negeri 6 Soppeng", lat: -4.129947, lng: 119.866200 },
+            { id: 7, name: "SMA Negeri 7 Soppeng", lat: -4.339186, lng: 119.998056 },
+            { id: 8, name: "SMA Negeri 8 Soppeng", lat: -4.343879, lng: 119.888527 },
+        ];
+
+        let map, userMarker;
+        let fileBase64 = "";
+        let fileKipBase64 = "";
+        let nearestSchoolsData = ["-", "-", "-"];
+
+        // Inisialisasi Peta setelah DOM diload
+        document.addEventListener("DOMContentLoaded", () => {
+            const defaultCenter = [-4.355669, 119.882877]; // Pusat SMAN 1 Soppeng
+            
+            map = L.map('map').setView(defaultCenter, 12);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Tambahkan marker sekolah
+            SCHOOL_DATA.forEach(school => {
+                const schoolIcon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div style="background-color: #22d3ee; border: 2px solid black; border-radius: 50%; width: 12px; height: 12px; box-shadow: 2px 2px 0px 0px black;"></div>`,
+                    iconSize: [12, 12]
+                });
+                L.marker([school.lat, school.lng], { icon: schoolIcon })
+                    .addTo(map)
+                    .bindPopup(`<b>${school.name}</b>`);
+            });
+        });
+
+        // Update lokasi pengguna di peta & form
+        function updateUserLocation(lat, lng) {
+            document.getElementById('koordinat').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+
+            if (userMarker) {
+                userMarker.setLatLng([lat, lng]);
+            } else {
+                const userIcon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div style="background-color: #f472b6; border: 3px solid black; border-radius: 50%; width: 20px; height: 20px; box-shadow: 3px 3px 0px 0px black; display: flex; align-items: center; justify-content: center; transform: translate(-50%, -50%);"><div style="width: 6px; height: 6px; background: white; border-radius: 50%;"></div></div>`,
+                });
+                userMarker = L.marker([lat, lng], { icon: userIcon }).addTo(map);
+            }
+            
+            // Zoom sedikit lebih dekat jika titik berubah
+            map.setView([lat, lng], 15);
+            calculateNearestSchools(lat, lng);
+        }
+
+        // ==========================================
+        // FITUR GPS OTOMATIS (Satu-satunya opsi)
+        // ==========================================
+        document.getElementById('btnAmbilKoordinat').addEventListener('click', async () => {
+            const isAtHome = await customDialog.show('Tunggu Dulu!', "Yakin ki' mau ambil koordinat sekarang? Pastikanki' lagi di rumah nah pas isi data, biar akurat ki' zonasi ta'!", 'confirm', 'map-pin');
+            
+            if (isAtHome) {
+                if (navigator.geolocation) {
+                    const btn = document.getElementById('btnAmbilKoordinat');
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = `<i data-lucide="loader" class="animate-spin"></i> MENGAMBIL KOORDINAT...`;
+                    lucide.createIcons();
+
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            updateUserLocation(position.coords.latitude, position.coords.longitude);
+                            btn.innerHTML = originalText;
+                            lucide.createIcons();
+                        },
+                        (error) => {
+                            customDialog.show("Yah Gagal", "Aih, nda bisa ki' ambil lokasi. Cek ki' dulu GPS ta' nyala ji kah? Trus izinkan ki' browser ta' akses lokasi nah.", "alert", "map-pin-off");
+                            btn.innerHTML = originalText;
+                            lucide.createIcons();
+                        },
+                        { enableHighAccuracy: true, timeout: 10000 }
+                    );
+                } else {
+                    customDialog.show("Aduh!", "Browser ta' nda dukung ki' fitur lokasi (GPS). Coba pakai browser lain nah.", "alert", "alert-triangle");
+                }
+            }
+        });
+
+        // ==========================================
+        // KALKULASI JARAK (HAVERSINE FORMULA)
+        // ==========================================
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        function calculateNearestSchools(lat, lng) {
+            let distances = SCHOOL_DATA.map(school => ({
+                ...school,
+                distance: calculateDistance(lat, lng, school.lat, school.lng)
+            }));
+            
+            distances.sort((a, b) => a.distance - b.distance);
+            const nearest = distances.slice(0, 3);
+            
+            // Simpan ke array untuk dikirim ke Google Sheets di 3 kolom terpisah
+            nearestSchoolsData = nearest.map(s => `${s.name} (${s.distance.toFixed(2)} km)`);
+
+            // Render ke UI
+            const container = document.getElementById('nearestSchoolsContainer');
+            const list = document.getElementById('nearestSchoolsList');
+            
+            list.innerHTML = nearest.map((school, index) => `
+                <div class="bg-white border-4 border-black p-4 flex flex-col justify-between transition-transform hover:-translate-y-1">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="bg-black text-white font-black text-xl px-2">${index + 1}</span>
+                    </div>
+                    <h4 class="font-black text-lg leading-tight">${school.name}</h4>
+                    <div class="mt-4 inline-block bg-pink-400 text-white font-black px-3 py-1 border-2 border-black rotate-2 w-max shadow-[2px_2px_0_0_#000]">
+                        ${school.distance.toFixed(2)} KM
+                    </div>
+                </div>
+            `).join('');
+            
+            container.classList.remove('hidden');
+        }
+
+        // Tampilkan/Sembunyikan Upload Prestasi
+        document.getElementById('adaPrestasi').addEventListener('change', (e) => {
+            const container = document.getElementById('prestasiUploadContainer');
+            if(e.target.value === 'Ya') {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+                fileBase64 = ""; // Reset
+                document.getElementById('filePrestasi').value = "";
+                document.getElementById('deskripsiPrestasi').value = "";
+            }
+        });
+
+        // Convert file Prestasi to Base64
+        document.getElementById('filePrestasi').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                // Cek ukuran file (Max 1MB)
+                if(file.size > 1024 * 1024) {
+                    await customDialog.show('Wah Kebesaran!', "Kebesaran ki' file ta', maksimal 1MB ji kapang. Coba kompres dulu nah!", 'alert', 'file-warning');
+                    e.target.value = "";
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    fileBase64 = reader.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Tampilkan/Sembunyikan Upload KIP
+        document.getElementById('adaKip').addEventListener('change', (e) => {
+            const container = document.getElementById('kipUploadContainer');
+            if(e.target.value === 'Ya') {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+                fileKipBase64 = ""; // Reset
+                document.getElementById('fileKip').value = "";
+            }
+        });
+
+        // Convert file KIP to Base64
+        document.getElementById('fileKip').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                // Cek ukuran file (Max 1MB)
+                if(file.size > 1024 * 1024) {
+                    await customDialog.show('Wah Kebesaran!', "Kebesaran ki' file ta', maksimal 1MB ji kapang. Coba kompres dulu nah!", 'alert', 'file-warning');
+                    e.target.value = "";
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    fileKipBase64 = reader.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ==========================================
+        // LOGIKA TOMBOL RAHASIA (EASTER EGG)
+        // ==========================================
+        const secretTrigger = document.getElementById('secretTrigger');
+        const secretModal = document.getElementById('secretModal');
+        const closeSecretBtn = document.getElementById('closeSecretBtn');
+
+        // Buka modal kalau diklik
+        secretTrigger.addEventListener('click', () => {
+            secretModal.classList.remove('hidden');
+            secretModal.classList.add('flex');
+        });
+
+        // Tutup modal
+        closeSecretBtn.addEventListener('click', () => {
+            secretModal.classList.add('hidden');
+            secretModal.classList.remove('flex');
+        });
+
+        // Tutup modal kalau klik di luar area kotak kuning
+        secretModal.addEventListener('click', (e) => {
+            if(e.target === secretModal) {
+                secretModal.classList.add('hidden');
+                secretModal.classList.remove('flex');
+            }
+        });
+
+        // Copy Nomor DANA (menggunakan execCommand untuk iframe compatibility)
+        async function copyDanaNumber() {
+            var tempInput = document.createElement("input");
+            tempInput.value = "087717416198";
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            await customDialog.show('Makasih Tawwa!', 'Yay! Berhasil mi di-copy nomor DANA-nya! Makasih banyak nah orang baik, sehat selalu ki\'! 💖', 'alert', 'heart');
+        }
+
+        // ==========================================
+        // SUBMIT FORM
+        // ==========================================
+        document.getElementById('spmbForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Validasi koordinat
+            if (!document.getElementById('koordinat').value) {
+                await customDialog.show('Eh Tunggu!', "Weh, belum ki' ambil koordinat rumah ta'! Klik ki' dulu tombol 'Ambil Koordinat Sekarang'.", 'alert', 'map-pin');
+                return;
+            }
+
+            // Validasi Prestasi
+            if (document.getElementById('adaPrestasi').value === 'Ya') {
+                if (!document.getElementById('deskripsiPrestasi').value.trim()) {
+                    await customDialog.show('Lupa Ki\'', "Isi ki' dulu deskripsi prestasi ta', jangan dikosongkan nah!", 'alert', 'pencil');
+                    return;
+                }
+                if (!fileBase64) {
+                    await customDialog.show('Lupa Ki\'', "Sertifikat prestasimu belum ki' upload. Jangan lupa nah!", 'alert', 'upload');
+                    return;
+                }
+            }
+
+            // Validasi KIP
+            if (document.getElementById('adaKip').value === 'Ya' && !fileKipBase64) {
+                await customDialog.show('Lupa Ki\'', "Bukti KIP atau DTKS ta' belum ada. Upload ki' dulu nah!", 'alert', 'upload');
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnIcon = document.getElementById('btnIcon');
+
+            // State Loading
+            btn.disabled = true;
+            btn.classList.add('bg-gray-400', 'cursor-not-allowed');
+            btn.classList.remove('bg-pink-500', 'hover:bg-pink-400');
+            btnText.innerText = 'MENGIRIM DATA...';
+            btnIcon.style.display = 'none';
+
+            // Kumpulkan Data
+            const formData = {
+                nama: document.getElementById('nama').value,
+                jenisKelamin: document.getElementById('jenisKelamin').value,
+                tempatLahir: document.getElementById('tempatLahir').value,
+                tanggalLahir: document.getElementById('tanggalLahir').value,
+                nik: document.getElementById('nik').value,
+                nisn: document.getElementById('nisn').value,
+                asalSekolah: document.getElementById('asalSekolah').value,
+                alamat: document.getElementById('alamat').value,
+                rt: document.getElementById('rt').value,
+                rw: document.getElementById('rw').value,
+                kelurahan: document.getElementById('kelurahan').value,
+                kecamatan: document.getElementById('kecamatan').value,
+                kabupaten: document.getElementById('kabupaten').value,
+                provinsi: document.getElementById('provinsi').value,
+                koordinat: document.getElementById('koordinat').value,
+                sekolahTerdekat1: nearestSchoolsData[0] || "-",
+                sekolahTerdekat2: nearestSchoolsData[1] || "-",
+                sekolahTerdekat3: nearestSchoolsData[2] || "-",
+                namaAyah: document.getElementById('namaAyah').value,
+                namaIbu: document.getElementById('namaIbu').value,
+                hpSiswa: document.getElementById('hpSiswa').value,
+                hpAyah: document.getElementById('hpAyah').value,
+                hpIbu: document.getElementById('hpIbu').value,
+                adaPrestasi: document.getElementById('adaPrestasi').value,
+                deskripsiPrestasi: document.getElementById('deskripsiPrestasi') ? document.getElementById('deskripsiPrestasi').value : "",
+                filePrestasi: fileBase64,
+                adaKip: document.getElementById('adaKip').value,
+                fileKip: fileKipBase64
+            };
+
+            try {
+                // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT KAMU
+                const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/GANTI_DENGAN_URL_DEPLOY_KAMU/exec'; 
+                
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
+
+                await customDialog.show('Suksesss!', "🎉 Mantap! Berhasil mi terkirim data pendaftaran ta'. Semoga lulus ki' nah!", 'alert', 'check-circle');
+                
+            } catch (error) {
+                await customDialog.show('Yaaaah!', "Aduh, ada masalah ki' pas kirim data. Cek ki' jaringan ta' atau URL Apps Script-nya nah.", 'alert', 'alert-circle');
+            } finally {
+                // Kembalikan tombol seperti semula
+                btn.disabled = false;
+                btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                btn.classList.add('bg-pink-500', 'hover:bg-pink-400');
+                btnText.innerText = 'KIRIM FORMULIR PENDAFTARAN';
+                btnIcon.style.display = 'block';
+            }
         });
     </script>
 </body>
