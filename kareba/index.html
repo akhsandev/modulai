@@ -95,12 +95,12 @@
         /* ========================================== */
         .cc_recenttracks_list { width: 100%; font-size: 11px; color: #94a3b8; text-align: left; }
         .cc_recenttracks_list table { width: 100%; border-collapse: collapse; }
-        .cc_recenttracks_list td { padding: 8px 0; border-bottom: 1px solid #3b414d; }
+        .cc_recenttracks_list td { padding: 6px 0; border-bottom: 1px solid #3b414d; }
         .cc_recenttracks_list tr:last-child td { border-bottom: none; } /* Hilangkan garis di item terakhir */
         .cc_recenttracks_list a { color: #e2e8f0; font-weight: 600; text-decoration: none; pointer-events: none; }
     </style>
 </head>
-<body class="flex items-start md:items-center justify-center min-h-screen pt-12 md:py-10 pb-32 px-4 relative">
+<body class="flex items-center justify-center min-h-[100dvh] py-6 px-4 relative">
 
     <!-- KONTAINER UTAMA -->
     <div class="max-w-md w-full flex flex-col items-center justify-center">
@@ -108,23 +108,23 @@
         <!-- ========================================== -->
         <!-- KONTROL RADIO & RECENT TRACKS              -->
         <!-- ========================================== -->
-        <div class="neu-flat rounded-[32px] p-8 w-full flex flex-col items-center justify-center">
+        <div class="neu-flat rounded-[32px] p-5 sm:p-8 w-full flex flex-col items-center justify-center">
             
-            <!-- Cover Album Putar -->
-            <div class="neu-flat rounded-full p-2 mb-8 w-56 h-56 flex items-center justify-center relative shrink-0">
-                <div class="absolute w-10 h-10 bg-[#2c313a] rounded-full z-10 neu-flat pointer-events-none"></div>
+            <!-- Cover Album Putar (Diperkecil di HP) -->
+            <div class="neu-flat rounded-full p-2 mb-4 sm:mb-8 w-36 h-36 sm:w-56 sm:h-56 flex items-center justify-center relative shrink-0">
+                <div class="absolute w-8 h-8 sm:w-10 sm:h-10 bg-[#2c313a] rounded-full z-10 neu-flat pointer-events-none"></div>
                 <div class="neu-pressed rounded-full w-full h-full overflow-hidden flex items-center justify-center p-1">
                     <img src="https://arafx.vercel.app/logo.png" class="cc_streaminfo w-full h-full object-cover rounded-full transition-all duration-500" data-type="trackimageurl" data-username="karebasoppeng" alt="Cover Album" id="albumArt" onerror="this.src='https://arafx.vercel.app/logo.png'">
                 </div>
             </div>
 
-            <h1 class="text-2xl font-bold text-gray-200 tracking-wide text-center uppercase">SUARA KAREBA</h1>
-            <p class="text-xs font-semibold text-gray-400 tracking-widest mt-1 mb-8 uppercase">SMAN 1 SOPPENG</p>
+            <h1 class="text-xl sm:text-2xl font-bold text-gray-200 tracking-wide text-center uppercase">SUARA KAREBA</h1>
+            <p class="text-[10px] sm:text-xs font-semibold text-gray-400 tracking-widest mt-1 mb-4 sm:mb-8 uppercase">SMAN 1 SOPPENG</p>
 
             <!-- Teks Berjalan (Now Playing) -->
-            <div class="w-full neu-pressed rounded-full px-5 py-3 mb-8 flex items-center shrink-0">
-                <i class="fas fa-music text-cyan-400 text-sm mr-4 animate-pulse"></i>
-                <div class="marquee-container text-sm font-semibold text-gray-300">
+            <div class="w-full neu-pressed rounded-full px-4 py-2 sm:px-5 sm:py-3 mb-4 sm:mb-8 flex items-center shrink-0">
+                <i class="fas fa-music text-cyan-400 text-xs sm:text-sm mr-3 sm:mr-4 animate-pulse"></i>
+                <div class="marquee-container text-xs sm:text-sm font-semibold text-gray-300">
                     <div class="marquee-content">
                         <a href="https://c4.siar.us:2199/tunein/karebasoppeng.pls" class="cc_streaminfo" data-type="song" data-username="karebasoppeng">Memuat data lagu...</a>
                     </div>
@@ -135,31 +135,32 @@
             <audio id="radioStream" src="https://c4.siar.us/proxy/karebasoppeng/stream" crossorigin="anonymous" preload="none"></audio>
 
             <!-- Kontrol Player & Stats -->
-            <div class="flex items-center justify-between w-full px-2 mb-6 shrink-0">
+            <div class="flex items-center justify-between w-full px-2 mb-4 sm:mb-6 shrink-0">
                 <div class="flex flex-col items-center">
-                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Pendengar</span>
-                    <span class="cc_streaminfo text-sm font-bold text-cyan-400 mt-1" data-type="listeners" data-username="karebasoppeng">0</span>
+                    <span class="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase tracking-wider">Pendengar</span>
+                    <span class="cc_streaminfo text-xs sm:text-sm font-bold text-cyan-400 mt-1" data-type="listeners" data-username="karebasoppeng">0</span>
                 </div>
                 
-                <!-- Tombol Play -->
-                <button id="playBtn" class="neu-flat neu-button w-24 h-24 rounded-full flex items-center justify-center text-cyan-400 cursor-pointer mx-4 transition-colors duration-300">
-                    <i class="fas fa-play text-3xl ml-1" id="playIcon"></i>
+                <!-- Tombol Play (Ukurannya disesuaikan) -->
+                <button id="playBtn" class="neu-flat neu-button w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center text-cyan-400 cursor-pointer mx-2 sm:mx-4 transition-colors duration-300">
+                    <i class="fas fa-play text-xl sm:text-2xl ml-1" id="playIcon"></i>
                 </button>
 
                 <div class="flex flex-col items-center">
-                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Status</span>
-                    <span class="cc_streaminfo text-sm font-bold text-cyan-400 mt-1 uppercase" data-type="server" data-username="karebasoppeng">-</span>
+                    <span class="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase tracking-wider">Status</span>
+                    <span class="cc_streaminfo text-xs sm:text-sm font-bold text-cyan-400 mt-1 uppercase" data-type="server" data-username="karebasoppeng">-</span>
                 </div>
             </div>
 
             <!-- RIWAYAT LAGU (RECENT TRACKS) -->
-            <div class="w-full mt-2 pt-6 border-t border-[#3b414d] shrink-0">
-                <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 flex items-center justify-center">
+            <div class="w-full mt-1 pt-4 sm:pt-6 border-t border-[#3b414d] shrink-0">
+                <h3 class="text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 sm:mb-3 flex items-center justify-center">
                     <i class="fas fa-history mr-2 text-cyan-400"></i> Riwayat Putaran
                 </h3>
-                <div class="neu-pressed w-full h-32 rounded-2xl p-4 overflow-y-auto no-scrollbar">
+                <!-- Ketinggian riwayat putaran disesuaikan untuk HP -->
+                <div class="neu-pressed w-full h-24 sm:h-32 rounded-2xl p-3 sm:p-4 overflow-y-auto no-scrollbar">
                     <div class="cc_recenttracks_list" data-username="karebasoppeng">
-                        <div class="text-center text-xs text-gray-500 italic mt-8">Memuat riwayat...</div>
+                        <div class="text-center text-[10px] sm:text-xs text-gray-500 italic mt-6">Memuat riwayat...</div>
                     </div>
                 </div>
             </div>
@@ -170,12 +171,12 @@
     <!-- ========================================== -->
     <!-- TOMBOL FLOATING CHAT (FAB)                 -->
     <!-- ========================================== -->
-    <button id="chatFab" class="fixed bottom-6 right-6 sm:bottom-10 sm:right-10 w-16 h-16 neu-flat rounded-full flex items-center justify-center text-cyan-400 z-[60] hover:text-cyan-300 transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 group">
-        <i class="fas fa-comment-dots text-2xl group-hover:animate-bounce"></i>
-        <span class="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full animate-pulse border-2 border-[#2c313a]"></span>
+    <button id="chatFab" class="fixed bottom-6 right-6 sm:bottom-10 sm:right-10 w-14 h-14 sm:w-16 sm:h-16 neu-flat rounded-full flex items-center justify-center text-cyan-400 z-[60] hover:text-cyan-300 transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 group">
+        <i class="fas fa-comment-dots text-xl sm:text-2xl group-hover:animate-bounce"></i>
+        <span class="absolute top-1 right-1 w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full animate-pulse border-2 border-[#2c313a]"></span>
         
         <!-- Hint Text Ceria -->
-        <div id="chatHint" class="absolute right-full mr-4 w-max bg-[#1d2127]/80 backdrop-blur-sm border border-[#3b414d] text-gray-300 text-[10px] sm:text-xs px-4 py-2.5 rounded-2xl shadow-lg pointer-events-none flex flex-col items-end animate-[bounce_2s_infinite] transition-opacity duration-300">
+        <div id="chatHint" class="absolute right-full mr-4 w-max bg-[#1d2127]/80 backdrop-blur-sm border border-[#3b414d] text-gray-300 text-[10px] sm:text-xs px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl shadow-lg pointer-events-none flex flex-col items-end animate-[bounce_2s_infinite] transition-opacity duration-300">
             <span>Request lagu? Kirim pesan?</span>
             <span class="text-cyan-400 font-bold mt-0.5">Klik di sini yah! <i class="fas fa-arrow-right ml-1"></i></span>
         </div>
@@ -184,34 +185,34 @@
     <!-- ========================================== -->
     <!-- FLOATING LIVE CHAT & REQUEST               -->
     <!-- ========================================== -->
-    <div id="floatingChatContainer" class="fixed bottom-28 right-6 sm:bottom-32 sm:right-10 w-[85vw] sm:w-[400px] h-[550px] max-h-[70vh] neu-flat rounded-[32px] p-6 flex flex-col z-50 transition-all duration-300 transform scale-0 opacity-0 pointer-events-none origin-bottom-right">
+    <div id="floatingChatContainer" class="fixed bottom-24 right-6 sm:bottom-32 sm:right-10 w-[85vw] sm:w-[400px] h-[500px] max-h-[75vh] neu-flat rounded-[32px] p-5 sm:p-6 flex flex-col z-50 transition-all duration-300 transform scale-0 opacity-0 pointer-events-none origin-bottom-right">
         
         <!-- Header Chat -->
-        <div class="w-full flex items-center justify-between mb-6 px-2 border-b border-[#3b414d] pb-4 shrink-0">
-            <h2 class="text-sm font-bold text-gray-300 tracking-wide uppercase"><i class="fas fa-comments text-cyan-400 mr-2"></i> Live Chat SMANSA</h2>
-            <div class="flex items-center gap-4">
-                <span class="text-[10px] text-cyan-400 font-bold tracking-widest uppercase animate-pulse flex items-center">
-                    <span class="w-2 h-2 rounded-full bg-cyan-400 mr-2"></span>Online
+        <div class="w-full flex items-center justify-between mb-4 sm:mb-6 px-2 border-b border-[#3b414d] pb-3 sm:pb-4 shrink-0">
+            <h2 class="text-xs sm:text-sm font-bold text-gray-300 tracking-wide uppercase"><i class="fas fa-comments text-cyan-400 mr-2"></i> Live Chat SMANSA</h2>
+            <div class="flex items-center gap-3 sm:gap-4">
+                <span class="text-[9px] sm:text-[10px] text-cyan-400 font-bold tracking-widest uppercase animate-pulse flex items-center">
+                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-cyan-400 mr-1.5 sm:mr-2"></span>Online
                 </span>
-                <button id="closeChatBtn" class="text-gray-400 hover:text-red-400 transition-colors cursor-pointer text-lg">
+                <button id="closeChatBtn" class="text-gray-400 hover:text-red-400 transition-colors cursor-pointer text-base sm:text-lg">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
         </div>
 
         <!-- Kotak Riwayat Pesan -->
-        <div id="chatBox" class="neu-pressed w-full flex-1 min-h-0 rounded-2xl p-5 mb-6 overflow-y-auto no-scrollbar flex flex-col gap-4 relative">
-            <p id="loadingChat" class="text-xs text-center text-gray-400 font-semibold italic my-auto">Menyambungkan ke studio...</p>
+        <div id="chatBox" class="neu-pressed w-full flex-1 min-h-0 rounded-2xl p-4 sm:p-5 mb-4 sm:mb-6 overflow-y-auto no-scrollbar flex flex-col gap-3 sm:gap-4 relative">
+            <p id="loadingChat" class="text-[10px] sm:text-xs text-center text-gray-400 font-semibold italic my-auto">Menyambungkan ke studio...</p>
             <!-- Balon chat akan muncul di sini via JS -->
         </div>
 
         <!-- Form Kirim Pesan -->
-        <div class="w-full flex flex-col gap-3 shrink-0">
-            <input type="text" id="inputNama" maxlength="25" placeholder="Namata' (Cth: Ara X.10)" class="neu-input w-full rounded-xl px-4 py-3 text-xs font-semibold placeholder-gray-400" />
-            <div class="flex gap-3">
-                <input type="text" id="inputPesan" maxlength="150" placeholder="Ketik pesan/request..." class="neu-input w-full rounded-xl px-4 py-3 text-xs placeholder-gray-400" />
-                <button id="btnKirim" class="neu-flat neu-button px-5 rounded-xl text-cyan-400 flex items-center justify-center cursor-pointer hover:text-cyan-300 transition-colors">
-                    <i class="fas fa-paper-plane text-lg"></i>
+        <div class="w-full flex flex-col gap-2 sm:gap-3 shrink-0">
+            <input type="text" id="inputNama" maxlength="25" placeholder="Namata' (Cth: Ara X.10)" class="neu-input w-full rounded-xl px-3 py-2.5 sm:px-4 sm:py-3 text-[10px] sm:text-xs font-semibold placeholder-gray-400" />
+            <div class="flex gap-2 sm:gap-3">
+                <input type="text" id="inputPesan" maxlength="150" placeholder="Ketik pesan/request..." class="neu-input w-full rounded-xl px-3 py-2.5 sm:px-4 sm:py-3 text-[10px] sm:text-xs placeholder-gray-400" />
+                <button id="btnKirim" class="neu-flat neu-button px-4 sm:px-5 rounded-xl text-cyan-400 flex items-center justify-center cursor-pointer hover:text-cyan-300 transition-colors">
+                    <i class="fas fa-paper-plane text-base sm:text-lg"></i>
                 </button>
             </div>
         </div>
@@ -337,13 +338,13 @@
             messages.forEach((data) => {
                 const timeString = new Date(data.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
                 const chatBubble = document.createElement('div');
-                chatBubble.className = "bg-[#2c313a] border border-[#3b414d] shadow-[2px_2px_5px_#1d2127,-2px_-2px_5px_#3b414d] rounded-xl p-4 text-left animate-[fadeIn_0.3s_ease-out]";
+                chatBubble.className = "bg-[#2c313a] border border-[#3b414d] shadow-[2px_2px_5px_#1d2127,-2px_-2px_5px_#3b414d] rounded-xl p-3 sm:p-4 text-left animate-[fadeIn_0.3s_ease-out]";
                 chatBubble.innerHTML = `
-                    <div class="flex justify-between items-baseline mb-2">
-                        <span class="text-xs font-bold text-cyan-400">${data.nama}</span>
-                        <span class="text-[10px] text-gray-400 font-semibold">${timeString}</span>
+                    <div class="flex justify-between items-baseline mb-1.5 sm:mb-2">
+                        <span class="text-[10px] sm:text-xs font-bold text-cyan-400">${data.nama}</span>
+                        <span class="text-[9px] sm:text-[10px] text-gray-400 font-semibold">${timeString}</span>
                     </div>
-                    <p class="text-xs text-gray-200 break-words leading-relaxed">${data.pesan}</p>
+                    <p class="text-[10px] sm:text-xs text-gray-200 break-words leading-relaxed">${data.pesan}</p>
                 `;
                 chatBox.appendChild(chatBubble);
             });
