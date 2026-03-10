@@ -91,13 +91,13 @@
         a.cc_streaminfo { text-decoration: none; color: inherit; pointer-events: none; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen py-10 px-4">
+<body class="flex items-center justify-center min-h-screen py-10 px-4 relative">
 
-    <!-- KONTAINER GRID UTAMA (Membagi 2 kolom di layar besar) -->
-    <div class="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+    <!-- KONTAINER UTAMA -->
+    <div class="max-w-md w-full flex flex-col items-center justify-center">
 
         <!-- ========================================== -->
-        <!-- KOLOM 1: KONTROL RADIO                     -->
+        <!-- KONTROL RADIO                              -->
         <!-- ========================================== -->
         <div class="neu-flat rounded-[32px] p-8 w-full flex flex-col items-center justify-center">
             
@@ -137,53 +137,102 @@
                 <button id="playBtn" class="neu-flat neu-button w-24 h-24 rounded-full flex items-center justify-center text-cyan-400 cursor-pointer mx-4 transition-colors duration-300">
                     <i class="fas fa-play text-3xl ml-1" id="playIcon"></i>
                 </button>
-                
+
                 <div class="flex flex-col items-center">
                     <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Status</span>
                     <span class="cc_streaminfo text-sm font-bold text-cyan-400 mt-1 uppercase" data-type="server" data-username="karebasoppeng">-</span>
                 </div>
             </div>
         </div>
+    </div> <!-- Akhir dari Kontainer Radio Utama -->
 
+    <!-- ========================================== -->
+    <!-- TOMBOL FLOATING CHAT (FAB)                 -->
+    <!-- ========================================== -->
+    <button id="chatFab" class="fixed bottom-6 right-6 sm:bottom-10 sm:right-10 w-16 h-16 neu-flat rounded-full flex items-center justify-center text-cyan-400 z-[60] hover:text-cyan-300 transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 group">
+        <i class="fas fa-comment-dots text-2xl group-hover:animate-bounce"></i>
+        <span class="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full animate-pulse border-2 border-[#2c313a]"></span>
+        
+        <!-- Hint Text Ceria -->
+        <div id="chatHint" class="absolute right-full mr-4 w-max bg-[#1d2127]/80 backdrop-blur-sm border border-[#3b414d] text-gray-300 text-[10px] sm:text-xs px-4 py-2.5 rounded-2xl shadow-lg pointer-events-none flex flex-col items-end animate-[bounce_2s_infinite] transition-opacity duration-300">
+            <span>Request lagu? Kirim pesan?</span>
+            <span class="text-cyan-400 font-bold mt-0.5">Klik di sini yah! <i class="fas fa-arrow-right ml-1"></i></span>
+        </div>
+    </button>
 
-        <!-- ========================================== -->
-        <!-- KOLOM 2: LIVE CHAT & REQUEST               -->
-        <!-- ========================================== -->
-        <div class="neu-flat rounded-[32px] p-8 w-full flex flex-col h-[600px]">
-            
-            <!-- Header Chat -->
-            <div class="w-full flex items-center justify-between mb-6 px-2 border-b border-[#3b414d] pb-4 shrink-0">
-                <h2 class="text-sm font-bold text-gray-300 tracking-wide uppercase"><i class="fas fa-comments text-cyan-400 mr-2"></i> Live Chat SMANSA</h2>
+    <!-- ========================================== -->
+    <!-- FLOATING LIVE CHAT & REQUEST               -->
+    <!-- ========================================== -->
+    <div id="floatingChatContainer" class="fixed bottom-28 right-6 sm:bottom-32 sm:right-10 w-[85vw] sm:w-[400px] h-[550px] max-h-[70vh] neu-flat rounded-[32px] p-6 flex flex-col z-50 transition-all duration-300 transform scale-0 opacity-0 pointer-events-none origin-bottom-right">
+        
+        <!-- Header Chat -->
+        <div class="w-full flex items-center justify-between mb-6 px-2 border-b border-[#3b414d] pb-4 shrink-0">
+            <h2 class="text-sm font-bold text-gray-300 tracking-wide uppercase"><i class="fas fa-comments text-cyan-400 mr-2"></i> Live Chat SMANSA</h2>
+            <div class="flex items-center gap-4">
                 <span class="text-[10px] text-cyan-400 font-bold tracking-widest uppercase animate-pulse flex items-center">
                     <span class="w-2 h-2 rounded-full bg-cyan-400 mr-2"></span>Online
                 </span>
-            </div>
-
-            <!-- Kotak Riwayat Pesan -->
-            <div id="chatBox" class="neu-pressed w-full flex-1 min-h-0 rounded-2xl p-5 mb-6 overflow-y-auto no-scrollbar flex flex-col gap-4 relative">
-                <p id="loadingChat" class="text-xs text-center text-gray-400 font-semibold italic my-auto">Menyambungkan ke studio...</p>
-                <!-- Balon chat akan muncul di sini via JS -->
-            </div>
-
-            <!-- Form Kirim Pesan -->
-            <div class="w-full flex flex-col gap-4 shrink-0">
-                <input type="text" id="inputNama" maxlength="25" placeholder="Namata' (Cth: Ara X.10)" class="neu-input w-full rounded-xl px-5 py-3.5 text-xs font-semibold placeholder-gray-400" />
-                <div class="flex gap-4">
-                    <input type="text" id="inputPesan" maxlength="150" placeholder="Pesan atau Request Lagu..." class="neu-input w-full rounded-xl px-5 py-3.5 text-xs placeholder-gray-400" />
-                    <button id="btnKirim" class="neu-flat neu-button px-6 rounded-xl text-cyan-400 flex items-center justify-center cursor-pointer hover:text-cyan-300 transition-colors">
-                        <i class="fas fa-paper-plane text-lg"></i>
-                    </button>
-                </div>
+                <button id="closeChatBtn" class="text-gray-400 hover:text-red-400 transition-colors cursor-pointer text-lg">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
         </div>
 
+        <!-- Kotak Riwayat Pesan -->
+        <div id="chatBox" class="neu-pressed w-full flex-1 min-h-0 rounded-2xl p-5 mb-6 overflow-y-auto no-scrollbar flex flex-col gap-4 relative">
+            <p id="loadingChat" class="text-xs text-center text-gray-400 font-semibold italic my-auto">Menyambungkan ke studio...</p>
+            <!-- Balon chat akan muncul di sini via JS -->
+        </div>
+
+        <!-- Form Kirim Pesan -->
+        <div class="w-full flex flex-col gap-3 shrink-0">
+            <input type="text" id="inputNama" maxlength="25" placeholder="Namata' (Cth: Ara X.10)" class="neu-input w-full rounded-xl px-4 py-3 text-xs font-semibold placeholder-gray-400" />
+            <div class="flex gap-3">
+                <input type="text" id="inputPesan" maxlength="150" placeholder="Ketik pesan/request..." class="neu-input w-full rounded-xl px-4 py-3 text-xs placeholder-gray-400" />
+                <button id="btnKirim" class="neu-flat neu-button px-5 rounded-xl text-cyan-400 flex items-center justify-center cursor-pointer hover:text-cyan-300 transition-colors">
+                    <i class="fas fa-paper-plane text-lg"></i>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Script Centova Cast -->
     <script language="javascript" type="text/javascript" src="https://c4.siar.us:2199/system/streaminfo.js"></script>
 
-    <!-- LOGIKA UI RADIO -->
+    <!-- LOGIKA UI RADIO & FLOATING CHAT -->
     <script>
+        // --- LOGIKA FLOATING CHAT ---
+        const chatFab = document.getElementById('chatFab');
+        const floatingChatContainer = document.getElementById('floatingChatContainer');
+        const closeChatBtn = document.getElementById('closeChatBtn');
+        const chatBoxUi = document.getElementById('chatBox');
+        const chatHint = document.getElementById('chatHint');
+
+        function toggleChat() {
+            const isClosed = floatingChatContainer.classList.contains('scale-0');
+            if (isClosed) {
+                // Animasi Buka Chat
+                floatingChatContainer.classList.remove('scale-0', 'opacity-0', 'pointer-events-none');
+                floatingChatContainer.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
+                
+                // Hilangkan dot merah di FAB dan Sembunyikan Hint selamanya
+                const notifDot = chatFab.querySelector('span.bg-red-500');
+                if (notifDot) notifDot.classList.add('hidden');
+                if (chatHint) chatHint.classList.add('opacity-0', 'hidden'); 
+                
+                // Pastikan scroll langsung ke paling bawah saat dibuka
+                setTimeout(() => { chatBoxUi.scrollTop = chatBoxUi.scrollHeight; }, 100);
+            } else {
+                // Animasi Tutup Chat
+                floatingChatContainer.classList.add('scale-0', 'opacity-0', 'pointer-events-none');
+                floatingChatContainer.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
+            }
+        }
+
+        chatFab.addEventListener('click', toggleChat);
+        closeChatBtn.addEventListener('click', toggleChat);
+
+        // --- LOGIKA AUDIO PLAYER ---
         const audio = document.getElementById('radioStream');
         const playBtn = document.getElementById('playBtn');
         const playIcon = document.getElementById('playIcon');
@@ -291,6 +340,13 @@
             // barulah kita perintahkan untuk scroll ke paling bawah! 🚀
             setTimeout(() => {
                 chatBox.scrollTop = chatBox.scrollHeight;
+                
+                // Cek kalau kotak chat sedang ditutup, nyalakan notif titik merah di tombol FAB!
+                const chatContainer = document.getElementById('floatingChatContainer');
+                const notifDot = document.querySelector('#chatFab span');
+                if (chatContainer.classList.contains('scale-0') && notifDot) {
+                    notifDot.classList.remove('hidden');
+                }
             }, 50);
 
         }, (error) => {
