@@ -182,7 +182,7 @@
                 </div>
             </div>
 
-            <!-- Baris 6 Fitur Ajaib: Love, Tema, Volume, Sleep, Share, Saweria -->
+            <!-- Baris 5 Fitur Ajaib: Love, Tema, Volume, Sleep, Share -->
             <div class="flex items-center justify-between w-full px-1 sm:px-2 mb-3 sm:mb-5 shrink-0 gap-1.5 sm:gap-2">
                 
                 <button id="btnHeart" class="relative neu-flat neu-button w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-red-500 shrink-0" title="Kirim Hati">
@@ -209,11 +209,6 @@
                 <!-- Tombol Share -->
                 <button id="btnShare" class="neu-flat neu-button w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-green-400 shrink-0" title="Bagikan Radio">
                     <i class="fas fa-share-alt text-xs sm:text-sm pointer-events-none"></i>
-                </button>
-
-                <!-- Tombol Saweria -->
-                <button id="btnSaweria" class="neu-flat neu-button w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-orange-400 shrink-0" title="Dukung via Saweria">
-                    <i class="fas fa-gift text-xs sm:text-sm pointer-events-none"></i>
                 </button>
             </div>
 
@@ -270,23 +265,6 @@
             
             <p id="timerStatus" class="text-[10px] text-indigo-400 font-bold hidden animate-pulse mb-4"></p>
             <button id="closeSleepBtn" class="w-full neu-flat neu-button py-2.5 rounded-xl text-gray-400 text-xs font-bold tracking-widest hover:text-red-400">TUTUP</button>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- MODAL POP-UP SAWERIA                       -->
-    <!-- ========================================== -->
-    <div id="saweriaModal" class="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300 opacity-0 pointer-events-none">
-        <div class="neu-flat border border-[#3b414d] rounded-[24px] p-5 w-full max-w-sm transform scale-90 transition-transform duration-300 text-center flex flex-col" id="saweriaCard">
-            <h3 class="text-orange-400 font-bold mb-1 text-sm uppercase tracking-wider"><i class="fas fa-gift mr-2"></i> Dukung Kami</h3>
-            <p class="text-[10px] sm:text-xs text-gray-400 mb-4">Scan QR Code di bawah untuk berdonasi via Saweria!</p>
-            
-            <div class="w-full bg-white rounded-xl overflow-hidden flex justify-center items-center mb-5 h-[320px] shadow-inner relative">
-                <!-- Iframe Saweria QR Code -->
-                <iframe src="https://saweria.co/widgets/qr?streamKey=40bb588079017ad5874193e2754a4283" width="100%" height="350" frameborder="0" scrolling="no" class="absolute top-0"></iframe>
-            </div>
-            
-            <button id="closeSaweriaBtn" class="w-full neu-flat neu-button py-2.5 rounded-xl text-gray-400 text-xs font-bold tracking-widest hover:text-red-400 mt-auto">TUTUP</button>
         </div>
     </div>
 
@@ -510,31 +488,6 @@
                     btnSleep.classList.add('text-indigo-400');
                 }, ms);
             });
-        });
-
-        // --- FITUR SAWERIA ---
-        const btnSaweria = document.getElementById('btnSaweria');
-        const saweriaModal = document.getElementById('saweriaModal');
-        const saweriaCard = document.getElementById('saweriaCard');
-        const closeSaweriaBtn = document.getElementById('closeSaweriaBtn');
-
-        function toggleSaweriaModal() {
-            const isHidden = saweriaModal.classList.contains('opacity-0');
-            if(isHidden){
-                saweriaModal.classList.remove('opacity-0', 'pointer-events-none');
-                saweriaCard.classList.remove('scale-90');
-                saweriaCard.classList.add('scale-100');
-            } else {
-                saweriaModal.classList.add('opacity-0', 'pointer-events-none');
-                saweriaCard.classList.remove('scale-100');
-                saweriaCard.classList.add('scale-90');
-            }
-        }
-        
-        btnSaweria.addEventListener('click', toggleSaweriaModal);
-        closeSaweriaBtn.addEventListener('click', toggleSaweriaModal);
-        saweriaModal.addEventListener('click', (e) => {
-            if(e.target === saweriaModal) toggleSaweriaModal();
         });
 
         // --- FITUR TOMBOL SHARE (BAGIKAN) DIPERBARUI ---
