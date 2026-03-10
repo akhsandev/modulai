@@ -111,9 +111,14 @@
         <div class="neu-flat rounded-[32px] p-5 sm:p-8 w-full flex flex-col items-center justify-center">
             
             <!-- Cover Album Putar (Diperkecil di HP) -->
-            <div class="neu-flat rounded-full p-2 mb-4 sm:mb-8 w-36 h-36 sm:w-56 sm:h-56 flex items-center justify-center relative shrink-0">
-                <div class="absolute w-8 h-8 sm:w-10 sm:h-10 bg-[#2c313a] rounded-full z-10 neu-flat pointer-events-none"></div>
-                <div class="neu-pressed rounded-full w-full h-full overflow-hidden flex items-center justify-center p-1">
+            <div class="neu-flat rounded-full p-1.5 sm:p-2 mb-4 sm:mb-8 w-36 h-36 sm:w-56 sm:h-56 flex items-center justify-center relative shrink-0">
+                <!-- Efek Gelombang Memancar dari luar CD -->
+                <div class="absolute inset-0 rounded-full border border-cyan-400 animate-ping opacity-30 pointer-events-none"></div>
+                <!-- Inti Lampu Neon (Steady Glow) di luar -->
+                <div class="absolute inset-0 rounded-full shadow-[0_0_20px_2px_rgba(34,211,238,0.4)] pointer-events-none"></div>
+                
+                <!-- Cover Album Tampil Utuh (Tanpa Lubang & Tanpa Sisa Putih) -->
+                <div class="neu-pressed rounded-full w-full h-full overflow-hidden flex items-center justify-center bg-[#2c313a]">
                     <img src="https://arafx.vercel.app/logo.png" class="cc_streaminfo w-full h-full object-cover rounded-full transition-all duration-500" data-type="trackimageurl" data-username="karebasoppeng" alt="Cover Album" id="albumArt" onerror="this.src='https://arafx.vercel.app/logo.png'">
                 </div>
             </div>
