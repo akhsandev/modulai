@@ -21,19 +21,19 @@
     <style>
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: #2c313a; /* Warna dasar baru: Slate Dark Grey yang lebih terang agar Neumorphism menonjol */
+            background-color: #2c313a; /* Warna dasar Slate Dark Grey */
             color: #e2e8f0; 
             overflow-x: hidden;
         }
 
-        /* Elemen Timbul Dark Mode (Outset Shadow) */
+        /* Elemen Timbul Dark Mode */
         .neu-flat {
             background: #2c313a;
             box-shadow: 8px 8px 16px #1d2127, 
                        -8px -8px 16px #3b414d;
         }
 
-        /* Elemen Tenggelam Dark Mode (Inset Shadow) */
+        /* Elemen Tenggelam Dark Mode */
         .neu-pressed {
             background: #2c313a;
             box-shadow: inset 6px 6px 10px #1d2127, 
@@ -83,12 +83,21 @@
         .spin-slow { animation: spin 8s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* Sembunyikan Scrollbar di Chat Box tapi tetap bisa di-scroll */
+        /* Sembunyikan Scrollbar tapi tetap bisa di-scroll */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Fix Widget Centova Cast */
+        /* Fix Widget Centova Cast Umum */
         a.cc_streaminfo { text-decoration: none; color: inherit; pointer-events: none; }
+
+        /* ========================================== */
+        /* STYLING KHUSUS RECENT TRACKS CENTOVA CAST  */
+        /* ========================================== */
+        .cc_recenttracks_list { width: 100%; font-size: 11px; color: #94a3b8; text-align: left; }
+        .cc_recenttracks_list table { width: 100%; border-collapse: collapse; }
+        .cc_recenttracks_list td { padding: 8px 0; border-bottom: 1px solid #3b414d; }
+        .cc_recenttracks_list tr:last-child td { border-bottom: none; } /* Hilangkan garis di item terakhir */
+        .cc_recenttracks_list a { color: #e2e8f0; font-weight: 600; text-decoration: none; pointer-events: none; }
     </style>
 </head>
 <body class="flex items-start md:items-center justify-center min-h-screen pt-12 md:py-10 pb-32 px-4 relative">
@@ -97,13 +106,12 @@
     <div class="max-w-md w-full flex flex-col items-center justify-center">
 
         <!-- ========================================== -->
-        <!-- KONTROL RADIO                              -->
+        <!-- KONTROL RADIO & RECENT TRACKS              -->
         <!-- ========================================== -->
         <div class="neu-flat rounded-[32px] p-8 w-full flex flex-col items-center justify-center">
             
             <!-- Cover Album Putar -->
-            <div class="neu-flat rounded-full p-2 mb-8 w-56 h-56 flex items-center justify-center relative">
-                <!-- Lubang tengah piringan hitam -->
+            <div class="neu-flat rounded-full p-2 mb-8 w-56 h-56 flex items-center justify-center relative shrink-0">
                 <div class="absolute w-10 h-10 bg-[#2c313a] rounded-full z-10 neu-flat pointer-events-none"></div>
                 <div class="neu-pressed rounded-full w-full h-full overflow-hidden flex items-center justify-center p-1">
                     <img src="https://arafx.vercel.app/logo.png" class="cc_streaminfo w-full h-full object-cover rounded-full transition-all duration-500" data-type="trackimageurl" data-username="karebasoppeng" alt="Cover Album" id="albumArt" onerror="this.src='https://arafx.vercel.app/logo.png'">
@@ -114,7 +122,7 @@
             <p class="text-xs font-semibold text-gray-400 tracking-widest mt-1 mb-8 uppercase">SMAN 1 SOPPENG</p>
 
             <!-- Teks Berjalan (Now Playing) -->
-            <div class="w-full neu-pressed rounded-full px-5 py-3 mb-8 flex items-center">
+            <div class="w-full neu-pressed rounded-full px-5 py-3 mb-8 flex items-center shrink-0">
                 <i class="fas fa-music text-cyan-400 text-sm mr-4 animate-pulse"></i>
                 <div class="marquee-container text-sm font-semibold text-gray-300">
                     <div class="marquee-content">
@@ -127,7 +135,7 @@
             <audio id="radioStream" src="https://c4.siar.us/proxy/karebasoppeng/stream" crossorigin="anonymous" preload="none"></audio>
 
             <!-- Kontrol Player & Stats -->
-            <div class="flex items-center justify-between w-full px-2">
+            <div class="flex items-center justify-between w-full px-2 mb-6 shrink-0">
                 <div class="flex flex-col items-center">
                     <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Pendengar</span>
                     <span class="cc_streaminfo text-sm font-bold text-cyan-400 mt-1" data-type="listeners" data-username="karebasoppeng">0</span>
@@ -143,8 +151,21 @@
                     <span class="cc_streaminfo text-sm font-bold text-cyan-400 mt-1 uppercase" data-type="server" data-username="karebasoppeng">-</span>
                 </div>
             </div>
+
+            <!-- RIWAYAT LAGU (RECENT TRACKS) -->
+            <div class="w-full mt-2 pt-6 border-t border-[#3b414d] shrink-0">
+                <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 flex items-center justify-center">
+                    <i class="fas fa-history mr-2 text-cyan-400"></i> Riwayat Putaran
+                </h3>
+                <div class="neu-pressed w-full h-32 rounded-2xl p-4 overflow-y-auto no-scrollbar">
+                    <div class="cc_recenttracks_list" data-username="karebasoppeng">
+                        <div class="text-center text-xs text-gray-500 italic mt-8">Memuat riwayat...</div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-    </div> <!-- Akhir dari Kontainer Radio Utama -->
+    </div> <!-- Akhir dari Kontainer Utama -->
 
     <!-- ========================================== -->
     <!-- TOMBOL FLOATING CHAT (FAB)                 -->
@@ -196,8 +217,9 @@
         </div>
     </div>
 
-    <!-- Script Centova Cast -->
+    <!-- Script Widget Centova Cast Utama & Recent Tracks -->
     <script language="javascript" type="text/javascript" src="https://c4.siar.us:2199/system/streaminfo.js"></script>
+    <script language="javascript" type="text/javascript" src="https://c4.siar.us:2199/system/recenttracks.js"></script>
 
     <!-- LOGIKA UI RADIO & FLOATING CHAT -->
     <script>
@@ -244,7 +266,7 @@
                 playIcon.classList.remove('fa-play', 'ml-1');
                 playIcon.classList.add('fa-pause');
                 albumArt.classList.add('spin-slow');
-                playBtn.classList.add('text-cyan-300'); // Sedikit lebih terang saat dimainkan
+                playBtn.classList.add('text-cyan-300');
             } else {
                 audio.pause();
                 playIcon.classList.remove('fa-pause');
@@ -257,11 +279,9 @@
 
     <!-- LOGIKA FIREBASE LIVE CHAT (Type Module) -->
     <script type="module">
-        // Menggunakan library khusus FIRESTORE, bukan Realtime DB
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // Config dari Bapak
         const firebaseConfig = {
             apiKey: "AIzaSyAyopuyvzjIXIZT-LE8_7bVP8vxVIlcQtU",
             authDomain: "apps-f1563.firebaseapp.com",
@@ -272,7 +292,6 @@
             measurementId: "G-TRS9JGPPX0"
         };
 
-        // Inisialisasi Firestore
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const chatCol = collection(db, 'kareba_chats');
@@ -285,10 +304,8 @@
         
         let isFirstLoad = true;
 
-        // FUNGSI 1: Cleanup Otomatis (30 Hari) dengan Firestore
         async function autoCleanupOldChats() {
             const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
-            
             try {
                 const snapshot = await getDocs(chatCol);
                 snapshot.forEach((docSnap) => {
@@ -303,28 +320,23 @@
         }
         autoCleanupOldChats();
 
-        // FUNGSI 2: Menampilkan Chat Realtime (Firestore Version)
         onSnapshot(chatCol, (snapshot) => {
             if (isFirstLoad && loadingChat) {
-                loadingChat.remove(); // Hapus teks loading
+                loadingChat.remove();
                 isFirstLoad = false;
             }
 
-            // Ambil semua pesan dan urutkan berdasarkan waktu paling lama ke terbaru
             const messages = [];
             snapshot.forEach((doc) => {
                 messages.push({ id: doc.id, ...doc.data() });
             });
             messages.sort((a, b) => a.timestamp - b.timestamp);
 
-            // Bersihkan kotak agar tidak dobel
             chatBox.innerHTML = '';
 
             messages.forEach((data) => {
                 const timeString = new Date(data.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-                
                 const chatBubble = document.createElement('div');
-                // Menggunakan kombinasi warna Neumorphism yang baru
                 chatBubble.className = "bg-[#2c313a] border border-[#3b414d] shadow-[2px_2px_5px_#1d2127,-2px_-2px_5px_#3b414d] rounded-xl p-4 text-left animate-[fadeIn_0.3s_ease-out]";
                 chatBubble.innerHTML = `
                     <div class="flex justify-between items-baseline mb-2">
@@ -336,12 +348,8 @@
                 chatBox.appendChild(chatBubble);
             });
             
-            // Trik Ajaib: Beri sedikit jeda agar browser selesai merender balon chat,
-            // barulah kita perintahkan untuk scroll ke paling bawah! 🚀
             setTimeout(() => {
                 chatBox.scrollTop = chatBox.scrollHeight;
-                
-                // Cek kalau kotak chat sedang ditutup, nyalakan notif titik merah di tombol FAB!
                 const chatContainer = document.getElementById('floatingChatContainer');
                 const notifDot = document.querySelector('#chatFab span');
                 if (chatContainer.classList.contains('scale-0') && notifDot) {
@@ -353,7 +361,6 @@
             console.error("Error mengambil chat: ", error);
         });
 
-        // FUNGSI 3: Kirim Chat ke Firestore (menyesuaikan Rules)
         async function kirimPesan() {
             const nama = inputNama.value.trim();
             const pesan = inputPesan.value.trim();
@@ -362,8 +369,6 @@
                 alert("Hei! Jangan lupa isi Nama dan Pesan/Request kamu ya!");
                 return;
             }
-            
-            // Validasi karakter sebelum dikirim agar sesuai dengan Rules Bapak
             if (nama.length > 25) {
                 alert("Nama terlalu panjang! Maksimal 25 karakter ya.");
                 return;
@@ -374,13 +379,11 @@
             }
 
             try {
-                // Mengirim dokumen ke Firestore
                 await addDoc(chatCol, {
                     nama: nama,
                     pesan: pesan,
                     timestamp: Date.now()
                 });
-                
                 inputPesan.value = '';
                 inputPesan.focus();
             } catch (error) {
