@@ -24,6 +24,7 @@
             background-color: #2c313a; /* Warna dasar Slate Dark Grey */
             color: #e2e8f0; 
             overflow-x: hidden;
+            overscroll-behavior-y: none; /* Mencegah pull-to-refresh di HP agar terasa seperti aplikasi asli */
         }
 
         /* Elemen Timbul Dark Mode */
@@ -45,7 +46,7 @@
         .neu-button:active {
             box-shadow: inset 4px 4px 8px #1d2127, 
                         inset -4px -4px 8px #3b414d;
-            transform: scale(0.98);
+            transform: scale(0.95);
         }
 
         /* Input Form Dark Mode */
@@ -63,15 +64,41 @@
                         inset -6px -6px 10px #3b414d;
         }
 
+        /* Styling Khusus Slider Volume Neumorphism */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+            width: 100%;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 14px;
+            width: 14px;
+            border-radius: 50%;
+            background: #2c313a;
+            box-shadow: 2px 2px 4px #1d2127, -2px -2px 4px #3b414d;
+            cursor: pointer;
+            margin-top: -5px; 
+            border: 2px solid #22d3ee; /* Aksen Cyan */
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #2c313a;
+            border-radius: 2px;
+            box-shadow: inset 2px 2px 4px #1d2127, inset -2px -2px 4px #3b414d;
+        }
+
         /* Marquee Text (Teks Berjalan) */
         .marquee-container {
             width: 100%;
             overflow: hidden;
             white-space: nowrap;
             position: relative;
-            padding: 4px 0;
-            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            padding: 2px 0;
+            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
         }
         .marquee-content {
             display: inline-block;
@@ -83,6 +110,19 @@
         .spin-slow { animation: spin 8s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
+        /* Animasi Audio Visualizer (Equalizer) */
+        @keyframes eqBounce {
+            0% { height: 3px; }
+            100% { height: 14px; }
+        }
+
+        /* Animasi Balon Hati Melayang */
+        @keyframes floatUp {
+            0% { transform: translate(0, 0) scale(0.8); opacity: 1; }
+            80% { opacity: 0.8; }
+            100% { transform: translate(var(--tx), -120px) scale(1.5) rotate(15deg); opacity: 0; }
+        }
+
         /* Sembunyikan Scrollbar tapi tetap bisa di-scroll */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -91,45 +131,58 @@
         a.cc_streaminfo { text-decoration: none; color: inherit; pointer-events: none; }
 
         /* ========================================== */
-        /* STYLING KHUSUS RECENT TRACKS CENTOVA CAST  */
+        /* KUNCI KHUSUS AGAR RECENT TRACKS TIDAK BOCOR */
         /* ========================================== */
-        .cc_recenttracks_list { width: 100%; font-size: 11px; color: #94a3b8; text-align: left; }
-        .cc_recenttracks_list table { width: 100%; border-collapse: collapse; }
-        .cc_recenttracks_list td { padding: 6px 0; border-bottom: 1px solid #3b414d; }
-        .cc_recenttracks_list tr:last-child td { border-bottom: none; } /* Hilangkan garis di item terakhir */
+        .cc_recenttracks_list { width: 100%; font-size: 10px; color: #94a3b8; text-align: left; overflow: hidden; }
+        @media (min-width: 640px) { .cc_recenttracks_list { font-size: 11px; } }
+        /* Paksa lebar tabel agar tidak melampaui layar (table-layout: fixed) */
+        .cc_recenttracks_list table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .cc_recenttracks_list td { padding: 4px 0; border-bottom: 1px solid #3b414d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
+        /* Atur ukuran kolom gambar agar tidak menguasai tempat */
+        .cc_recenttracks_list td:first-child { width: 36px; padding-right: 6px; } 
+        .cc_recenttracks_list img { width: 30px; height: 30px; min-width: 30px; border-radius: 4px; object-fit: cover; }
+        .cc_recenttracks_list tr:last-child td { border-bottom: none; }
         .cc_recenttracks_list a { color: #e2e8f0; font-weight: 600; text-decoration: none; pointer-events: none; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-[100dvh] py-6 px-4 relative">
+<body class="flex items-center justify-center min-h-[100dvh] py-4 sm:py-6 px-4 relative">
 
-    <!-- KONTAINER UTAMA -->
-    <div class="max-w-md w-full flex flex-col items-center justify-center">
+    <!-- KONTAINER UTAMA (Diperkecil margin/paddingnya agar muat di HP) -->
+    <div class="max-w-md w-full flex flex-col items-center justify-center relative z-10">
 
-        <!-- ========================================== -->
-        <!-- KONTROL RADIO & RECENT TRACKS              -->
-        <!-- ========================================== -->
-        <div class="neu-flat rounded-[32px] p-5 sm:p-8 w-full flex flex-col items-center justify-center">
+        <!-- KONTROL RADIO & FITUR BARU -->
+        <div class="neu-flat rounded-[32px] p-4 sm:p-8 w-full flex flex-col items-center justify-center relative">
             
-            <!-- Cover Album Putar (Diperkecil di HP) -->
-            <div class="neu-flat rounded-full p-1.5 sm:p-2 mb-4 sm:mb-8 w-36 h-36 sm:w-56 sm:h-56 flex items-center justify-center relative shrink-0">
+            <!-- Cover Album Putar -->
+            <div class="neu-flat rounded-full p-1.5 sm:p-2 mb-3 sm:mb-6 w-32 h-32 sm:w-52 sm:h-52 flex items-center justify-center relative shrink-0">
                 <!-- Efek Gelombang Memancar dari luar CD -->
-                <div class="absolute inset-0 rounded-full border border-cyan-400 animate-ping opacity-30 pointer-events-none"></div>
+                <div id="glowRing1" class="absolute inset-0 rounded-full border border-cyan-400 opacity-0 pointer-events-none transition-opacity duration-500"></div>
                 <!-- Inti Lampu Neon (Steady Glow) di luar -->
-                <div class="absolute inset-0 rounded-full shadow-[0_0_20px_2px_rgba(34,211,238,0.4)] pointer-events-none"></div>
+                <div id="glowRing2" class="absolute inset-0 rounded-full shadow-[0_0_20px_2px_rgba(34,211,238,0.4)] opacity-0 pointer-events-none transition-opacity duration-500"></div>
                 
-                <!-- Cover Album Tampil Utuh (Tanpa Lubang & Tanpa Sisa Putih) -->
+                <!-- Cover Album Tampil Utuh -->
                 <div class="neu-pressed rounded-full w-full h-full overflow-hidden flex items-center justify-center bg-[#2c313a]">
                     <img src="https://arafx.vercel.app/logo.png" class="cc_streaminfo w-full h-full object-cover rounded-full transition-all duration-500" data-type="trackimageurl" data-username="karebasoppeng" alt="Cover Album" id="albumArt" onerror="this.src='https://arafx.vercel.app/logo.png'">
                 </div>
             </div>
 
-            <h1 class="text-xl sm:text-2xl font-bold text-gray-200 tracking-wide text-center uppercase">SUARA KAREBA</h1>
-            <p class="text-[10px] sm:text-xs font-semibold text-gray-400 tracking-widest mt-1 mb-4 sm:mb-8 uppercase">SMAN 1 SOPPENG</p>
+            <h1 class="text-lg sm:text-2xl font-bold text-gray-200 tracking-wide text-center uppercase leading-tight">SUARA KAREBA</h1>
+            <p class="text-[9px] sm:text-xs font-semibold text-gray-400 tracking-widest mt-0.5 mb-3 sm:mb-6 uppercase">SMAN 1 SOPPENG</p>
 
-            <!-- Teks Berjalan (Now Playing) -->
-            <div class="w-full neu-pressed rounded-full px-4 py-2 sm:px-5 sm:py-3 mb-4 sm:mb-8 flex items-center shrink-0">
-                <i class="fas fa-music text-cyan-400 text-xs sm:text-sm mr-3 sm:mr-4 animate-pulse"></i>
-                <div class="marquee-container text-xs sm:text-sm font-semibold text-gray-300">
+            <!-- Teks Berjalan & Audio Visualizer -->
+            <div class="w-full neu-pressed rounded-full px-4 py-2 sm:px-5 sm:py-3 mb-3 sm:mb-5 flex items-center shrink-0 h-9 sm:h-11">
+                
+                <!-- Ikon Statis (Muncul saat Pause) -->
+                <i id="musicIconStatic" class="fas fa-music text-cyan-400 text-xs sm:text-sm mr-3 sm:mr-4"></i>
+                
+                <!-- Audio Visualizer Equalizer (Muncul saat Play) -->
+                <div id="visualizer" class="hidden flex items-end justify-center h-3.5 sm:h-4 gap-[2px] mr-3 sm:mr-4 w-4">
+                    <div class="w-1 bg-cyan-400 rounded-t-sm animate-[eqBounce_0.6s_ease-in-out_infinite_alternate]" style="animation-delay: 0.1s"></div>
+                    <div class="w-1 bg-cyan-400 rounded-t-sm animate-[eqBounce_0.6s_ease-in-out_infinite_alternate]" style="animation-delay: 0.4s"></div>
+                    <div class="w-1 bg-cyan-400 rounded-t-sm animate-[eqBounce_0.6s_ease-in-out_infinite_alternate]" style="animation-delay: 0.2s"></div>
+                </div>
+
+                <div class="marquee-container text-[11px] sm:text-sm font-semibold text-gray-300">
                     <div class="marquee-content">
                         <a href="https://c4.siar.us:2199/tunein/karebasoppeng.pls" class="cc_streaminfo" data-type="song" data-username="karebasoppeng">Memuat data lagu...</a>
                     </div>
@@ -139,33 +192,53 @@
             <!-- Audio Player (Tersembunyi) -->
             <audio id="radioStream" src="https://c4.siar.us/proxy/karebasoppeng/stream" crossorigin="anonymous" preload="none"></audio>
 
-            <!-- Kontrol Player & Stats -->
-            <div class="flex items-center justify-between w-full px-2 mb-4 sm:mb-6 shrink-0">
-                <div class="flex flex-col items-center">
-                    <span class="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase tracking-wider">Pendengar</span>
-                    <span class="cc_streaminfo text-xs sm:text-sm font-bold text-cyan-400 mt-1" data-type="listeners" data-username="karebasoppeng">0</span>
+            <!-- Baris Utama: Play & Stats -->
+            <div class="flex items-center justify-between w-full px-4 mb-3 sm:mb-5 shrink-0">
+                <div class="flex flex-col items-center w-12">
+                    <span class="text-[8px] sm:text-[9px] text-gray-400 font-bold uppercase tracking-wider">Pndngr</span>
+                    <span class="cc_streaminfo text-xs sm:text-sm font-bold text-cyan-400 mt-0.5" data-type="listeners" data-username="karebasoppeng">0</span>
                 </div>
                 
-                <!-- Tombol Play (Ukurannya disesuaikan) -->
-                <button id="playBtn" class="neu-flat neu-button w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center text-cyan-400 cursor-pointer mx-2 sm:mx-4 transition-colors duration-300">
-                    <i class="fas fa-play text-xl sm:text-2xl ml-1" id="playIcon"></i>
+                <!-- Tombol Play -->
+                <button id="playBtn" class="neu-flat neu-button w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center text-cyan-400 cursor-pointer mx-2 transition-colors duration-300 shrink-0">
+                    <i class="fas fa-play text-lg sm:text-xl ml-1" id="playIcon"></i>
                 </button>
 
-                <div class="flex flex-col items-center">
-                    <span class="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase tracking-wider">Status</span>
-                    <span class="cc_streaminfo text-xs sm:text-sm font-bold text-cyan-400 mt-1 uppercase" data-type="server" data-username="karebasoppeng">-</span>
+                <div class="flex flex-col items-center w-12">
+                    <span class="text-[8px] sm:text-[9px] text-gray-400 font-bold uppercase tracking-wider">Status</span>
+                    <span class="cc_streaminfo text-[10px] sm:text-xs font-bold text-cyan-400 mt-0.5 uppercase truncate w-full text-center" data-type="server" data-username="karebasoppeng">-</span>
                 </div>
             </div>
 
+            <!-- Baris Fitur Baru: Love, Volume, Jadwal, Share -->
+            <div class="flex items-center justify-between w-full px-2 mb-3 sm:mb-5 shrink-0 gap-2 sm:gap-3">
+                <!-- Tombol Heart -->
+                <button id="btnHeart" class="relative neu-flat neu-button w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-red-500 shrink-0">
+                    <i class="fas fa-heart text-xs sm:text-sm pointer-events-none"></i>
+                </button>
+                
+                <!-- Volume Slider Neumorphism -->
+                <div class="flex-1 flex items-center justify-center gap-2 px-1">
+                    <i class="fas fa-volume-down text-gray-500 text-[10px]"></i>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1" title="Atur Volume">
+                    <i class="fas fa-volume-up text-cyan-400 text-[10px]" id="volIconMax"></i>
+                </div>
+
+                <!-- Tombol Share -->
+                <button id="btnShare" class="neu-flat neu-button w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-green-400 shrink-0" title="Bagikan Radio">
+                    <i class="fas fa-share-alt text-xs sm:text-sm pointer-events-none"></i>
+                </button>
+            </div>
+
             <!-- RIWAYAT LAGU (RECENT TRACKS) -->
-            <div class="w-full mt-1 pt-4 sm:pt-6 border-t border-[#3b414d] shrink-0">
-                <h3 class="text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 sm:mb-3 flex items-center justify-center">
+            <div class="w-full pt-3 sm:pt-4 border-t border-[#3b414d] shrink-0">
+                <h3 class="text-[8px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center justify-center">
                     <i class="fas fa-history mr-2 text-cyan-400"></i> Riwayat Putaran
                 </h3>
-                <!-- Ketinggian riwayat putaran disesuaikan untuk HP -->
-                <div class="neu-pressed w-full h-24 sm:h-32 rounded-2xl p-3 sm:p-4 overflow-y-auto no-scrollbar">
+                <!-- Penambahan overflow-x-hidden untuk mencegah kebocoran horizontal -->
+                <div class="neu-pressed w-full h-24 sm:h-28 rounded-2xl p-2.5 sm:p-4 overflow-y-auto overflow-x-hidden no-scrollbar">
                     <div class="cc_recenttracks_list" data-username="karebasoppeng">
-                        <div class="text-center text-[10px] sm:text-xs text-gray-500 italic mt-6">Memuat riwayat...</div>
+                        <div class="text-center text-[9px] sm:text-xs text-gray-500 italic mt-4 sm:mt-6">Memuat riwayat...</div>
                     </div>
                 </div>
             </div>
@@ -176,13 +249,13 @@
     <!-- ========================================== -->
     <!-- TOMBOL FLOATING CHAT (FAB)                 -->
     <!-- ========================================== -->
-    <button id="chatFab" class="fixed bottom-6 right-6 sm:bottom-10 sm:right-10 w-14 h-14 sm:w-16 sm:h-16 neu-flat rounded-full flex items-center justify-center text-cyan-400 z-[60] hover:text-cyan-300 transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 group">
-        <i class="fas fa-comment-dots text-xl sm:text-2xl group-hover:animate-bounce"></i>
-        <span class="absolute top-1 right-1 w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full animate-pulse border-2 border-[#2c313a]"></span>
+    <button id="chatFab" class="fixed bottom-4 right-4 sm:bottom-10 sm:right-10 w-12 h-12 sm:w-16 sm:h-16 neu-flat rounded-full flex items-center justify-center text-cyan-400 z-[60] hover:text-cyan-300 transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 group">
+        <i class="fas fa-comment-dots text-lg sm:text-2xl group-hover:animate-bounce"></i>
+        <span class="absolute top-0 right-0 sm:top-1 sm:right-1 w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full animate-pulse border-2 border-[#2c313a]"></span>
         
         <!-- Hint Text Ceria -->
-        <div id="chatHint" class="absolute right-full mr-4 w-max bg-[#1d2127]/80 backdrop-blur-sm border border-[#3b414d] text-gray-300 text-[10px] sm:text-xs px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl shadow-lg pointer-events-none flex flex-col items-end animate-[bounce_2s_infinite] transition-opacity duration-300">
-            <span>Request lagu? Kirim pesan?</span>
+        <div id="chatHint" class="absolute right-full mr-3 sm:mr-4 w-max bg-[#1d2127]/80 backdrop-blur-sm border border-[#3b414d] text-gray-300 text-[9px] sm:text-xs px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-xl shadow-lg pointer-events-none flex flex-col items-end animate-[bounce_2s_infinite] transition-opacity duration-300">
+            <span>Titip salam? Request?</span>
             <span class="text-cyan-400 font-bold mt-0.5">Klik di sini yah! <i class="fas fa-arrow-right ml-1"></i></span>
         </div>
     </button>
@@ -190,34 +263,33 @@
     <!-- ========================================== -->
     <!-- FLOATING LIVE CHAT & REQUEST               -->
     <!-- ========================================== -->
-    <div id="floatingChatContainer" class="fixed bottom-24 right-6 sm:bottom-32 sm:right-10 w-[85vw] sm:w-[400px] h-[500px] max-h-[75vh] neu-flat rounded-[32px] p-5 sm:p-6 flex flex-col z-50 transition-all duration-300 transform scale-0 opacity-0 pointer-events-none origin-bottom-right">
+    <div id="floatingChatContainer" class="fixed bottom-20 right-4 sm:bottom-32 sm:right-10 w-[85vw] sm:w-[400px] h-[450px] sm:h-[500px] max-h-[70vh] neu-flat rounded-[28px] p-4 sm:p-6 flex flex-col z-[70] transition-all duration-300 transform scale-0 opacity-0 pointer-events-none origin-bottom-right border border-[#3b414d]/50">
         
         <!-- Header Chat -->
-        <div class="w-full flex items-center justify-between mb-4 sm:mb-6 px-2 border-b border-[#3b414d] pb-3 sm:pb-4 shrink-0">
-            <h2 class="text-xs sm:text-sm font-bold text-gray-300 tracking-wide uppercase"><i class="fas fa-comments text-cyan-400 mr-2"></i> Live Chat SMANSA</h2>
-            <div class="flex items-center gap-3 sm:gap-4">
+        <div class="w-full flex items-center justify-between mb-3 sm:mb-5 px-1 border-b border-[#3b414d] pb-3 shrink-0">
+            <h2 class="text-xs sm:text-sm font-bold text-gray-300 tracking-wide uppercase"><i class="fas fa-comments text-cyan-400 mr-2"></i> Chat SMANSA</h2>
+            <div class="flex items-center gap-3">
                 <span class="text-[9px] sm:text-[10px] text-cyan-400 font-bold tracking-widest uppercase animate-pulse flex items-center">
-                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-cyan-400 mr-1.5 sm:mr-2"></span>Online
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 mr-1.5"></span>On
                 </span>
-                <button id="closeChatBtn" class="text-gray-400 hover:text-red-400 transition-colors cursor-pointer text-base sm:text-lg">
+                <button id="closeChatBtn" class="text-gray-400 hover:text-red-400 transition-colors cursor-pointer text-base">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
         </div>
 
         <!-- Kotak Riwayat Pesan -->
-        <div id="chatBox" class="neu-pressed w-full flex-1 min-h-0 rounded-2xl p-4 sm:p-5 mb-4 sm:mb-6 overflow-y-auto no-scrollbar flex flex-col gap-3 sm:gap-4 relative">
+        <div id="chatBox" class="neu-pressed w-full flex-1 min-h-0 rounded-2xl p-3 sm:p-5 mb-3 sm:mb-5 overflow-y-auto no-scrollbar flex flex-col gap-3 relative">
             <p id="loadingChat" class="text-[10px] sm:text-xs text-center text-gray-400 font-semibold italic my-auto">Menyambungkan ke studio...</p>
-            <!-- Balon chat akan muncul di sini via JS -->
         </div>
 
         <!-- Form Kirim Pesan -->
-        <div class="w-full flex flex-col gap-2 sm:gap-3 shrink-0">
-            <input type="text" id="inputNama" maxlength="25" placeholder="Namata' (Cth: Ara X.10)" class="neu-input w-full rounded-xl px-3 py-2.5 sm:px-4 sm:py-3 text-[10px] sm:text-xs font-semibold placeholder-gray-400" />
-            <div class="flex gap-2 sm:gap-3">
-                <input type="text" id="inputPesan" maxlength="150" placeholder="Ketik pesan/request..." class="neu-input w-full rounded-xl px-3 py-2.5 sm:px-4 sm:py-3 text-[10px] sm:text-xs placeholder-gray-400" />
-                <button id="btnKirim" class="neu-flat neu-button px-4 sm:px-5 rounded-xl text-cyan-400 flex items-center justify-center cursor-pointer hover:text-cyan-300 transition-colors">
-                    <i class="fas fa-paper-plane text-base sm:text-lg"></i>
+        <div class="w-full flex flex-col gap-2 shrink-0">
+            <input type="text" id="inputNama" maxlength="25" placeholder="Namata' (Cth: Ara X.10)" class="neu-input w-full rounded-xl px-3 py-2.5 text-[10px] sm:text-xs font-semibold placeholder-gray-400" />
+            <div class="flex gap-2">
+                <input type="text" id="inputPesan" maxlength="150" placeholder="Pesan/Request..." class="neu-input w-full rounded-xl px-3 py-2.5 text-[10px] sm:text-xs placeholder-gray-400" />
+                <button id="btnKirim" class="neu-flat neu-button px-4 rounded-xl text-cyan-400 flex items-center justify-center cursor-pointer hover:text-cyan-300 transition-colors">
+                    <i class="fas fa-paper-plane text-sm sm:text-base"></i>
                 </button>
             </div>
         </div>
@@ -227,8 +299,98 @@
     <script language="javascript" type="text/javascript" src="https://c4.siar.us:2199/system/streaminfo.js"></script>
     <script language="javascript" type="text/javascript" src="https://c4.siar.us:2199/system/recenttracks.js"></script>
 
-    <!-- LOGIKA UI RADIO & FLOATING CHAT -->
+    <!-- LOGIKA UI (Radio, Fitur Baru & Floating Chat) -->
     <script>
+        // --- LOGIKA AUDIO PLAYER & VISUALIZER ---
+        const audio = document.getElementById('radioStream');
+        const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
+        const albumArt = document.getElementById('albumArt');
+        
+        const visualizer = document.getElementById('visualizer');
+        const musicIconStatic = document.getElementById('musicIconStatic');
+        const glowRing1 = document.getElementById('glowRing1');
+        const glowRing2 = document.getElementById('glowRing2');
+
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playIcon.classList.remove('fa-play', 'ml-1');
+                playIcon.classList.add('fa-pause');
+                albumArt.classList.add('spin-slow');
+                playBtn.classList.add('text-cyan-300');
+                
+                // Nyalakan Visualizer & Glow Effect
+                musicIconStatic.classList.add('hidden');
+                visualizer.classList.remove('hidden');
+                glowRing1.classList.remove('opacity-0');
+                glowRing1.classList.add('animate-ping');
+                glowRing2.classList.remove('opacity-0');
+            } else {
+                audio.pause();
+                playIcon.classList.remove('fa-pause');
+                playIcon.classList.add('fa-play', 'ml-1');
+                albumArt.classList.remove('spin-slow');
+                playBtn.classList.remove('text-cyan-300');
+                
+                // Matikan Visualizer & Glow Effect
+                visualizer.classList.add('hidden');
+                musicIconStatic.classList.remove('hidden');
+                glowRing1.classList.add('opacity-0');
+                glowRing1.classList.remove('animate-ping');
+                glowRing2.classList.add('opacity-0');
+            }
+        });
+
+        // --- FITUR 1: SLIDER VOLUME ---
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volIconMax = document.getElementById('volIconMax');
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value;
+            // Ubah warna ikon mengikuti besaran volume
+            if(e.target.value == 0) volIconMax.className = "fas fa-volume-mute text-gray-500 text-[10px]";
+            else if(e.target.value < 0.5) volIconMax.className = "fas fa-volume-down text-cyan-600 text-[10px]";
+            else volIconMax.className = "fas fa-volume-up text-cyan-400 text-[10px]";
+        });
+
+        // --- FITUR 2: TOMBOL HATI (LOVE ANIMATION) ---
+        const btnHeart = document.getElementById('btnHeart');
+        btnHeart.addEventListener('click', function() {
+            // Membuat elemen ikon hati baru
+            const heart = document.createElement('i');
+            heart.className = 'fas fa-heart text-red-500 absolute text-sm sm:text-base pointer-events-none z-50';
+            
+            // Memberikan variasi arah terbang (kiri/kanan sedikit)
+            const randomX = (Math.random() - 0.5) * 60; // Geser antara -30px sampai 30px
+            heart.style.setProperty('--tx', `${randomX}px`);
+            heart.style.animation = `floatUp 1.2s ease-out forwards`;
+            
+            this.appendChild(heart);
+            
+            // Efek klik pada tombol (merah sekejap)
+            this.classList.add('text-red-400');
+            setTimeout(() => this.classList.remove('text-red-400'), 200);
+
+            // Hapus elemen hati dari HTML setelah animasi selesai agar tidak menumpuk
+            setTimeout(() => heart.remove(), 1200);
+        });
+
+        // --- FITUR 4: TOMBOL SHARE (BAGIKAN) ---
+        const btnShare = document.getElementById('btnShare');
+        btnShare.addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Radio SUARA KAREBA SMANSA',
+                    text: 'Yuk dengerin siaran langsung Radio SMAN 1 Soppeng! Bisa request lagu dan titip salam lho. 📻🎧',
+                    url: window.location.href,
+                }).catch(console.error);
+            } else {
+                // Fallback jika browser tidak support Web Share API (misal di PC/Laptop lama)
+                const waText = encodeURIComponent(`Yuk dengerin siaran langsung Radio SMANSA! Bisa request lagu lho: ${window.location.href}`);
+                window.open(`https://api.whatsapp.com/send?text=${waText}`, '_blank');
+            }
+        });
+
         // --- LOGIKA FLOATING CHAT ---
         const chatFab = document.getElementById('chatFab');
         const floatingChatContainer = document.getElementById('floatingChatContainer');
@@ -239,51 +401,24 @@
         function toggleChat() {
             const isClosed = floatingChatContainer.classList.contains('scale-0');
             if (isClosed) {
-                // Animasi Buka Chat
                 floatingChatContainer.classList.remove('scale-0', 'opacity-0', 'pointer-events-none');
                 floatingChatContainer.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
                 
-                // Hilangkan dot merah di FAB dan Sembunyikan Hint selamanya
                 const notifDot = chatFab.querySelector('span.bg-red-500');
                 if (notifDot) notifDot.classList.add('hidden');
                 if (chatHint) chatHint.classList.add('opacity-0', 'hidden'); 
                 
-                // Pastikan scroll langsung ke paling bawah saat dibuka
                 setTimeout(() => { chatBoxUi.scrollTop = chatBoxUi.scrollHeight; }, 100);
             } else {
-                // Animasi Tutup Chat
                 floatingChatContainer.classList.add('scale-0', 'opacity-0', 'pointer-events-none');
                 floatingChatContainer.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
             }
         }
-
         chatFab.addEventListener('click', toggleChat);
         closeChatBtn.addEventListener('click', toggleChat);
-
-        // --- LOGIKA AUDIO PLAYER ---
-        const audio = document.getElementById('radioStream');
-        const playBtn = document.getElementById('playBtn');
-        const playIcon = document.getElementById('playIcon');
-        const albumArt = document.getElementById('albumArt');
-
-        playBtn.addEventListener('click', () => {
-            if (audio.paused) {
-                audio.play();
-                playIcon.classList.remove('fa-play', 'ml-1');
-                playIcon.classList.add('fa-pause');
-                albumArt.classList.add('spin-slow');
-                playBtn.classList.add('text-cyan-300');
-            } else {
-                audio.pause();
-                playIcon.classList.remove('fa-pause');
-                playIcon.classList.add('fa-play', 'ml-1');
-                albumArt.classList.remove('spin-slow');
-                playBtn.classList.remove('text-cyan-300');
-            }
-        });
     </script>
 
-    <!-- LOGIKA FIREBASE LIVE CHAT (Type Module) -->
+    <!-- LOGIKA FIREBASE LIVE CHAT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
