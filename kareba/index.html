@@ -559,6 +559,31 @@
         
         let isFirstLoad = true;
 
+        // --- FITUR FILTER KATA KOTOR (BAD WORDS) ---
+        const kataKotor = [
+            'anjing', 'kontol', 'babi', 'goblok', 'telaso', 'lessi', 'gblk', 'gblg', 
+            'memek', 'setan', 'colla', 'ajg', 'anjg', 'kntl', 'kintil', 'bbi', 'babii', 
+            'tlso', 'anjay', 'tolol', 'bangsat', 'bgsd', 'bgst', 'bjir', 'bangke', 'bgke', 
+            'njir', 'anjir', 'slbew', 'slebew', 'asu', 'asw', 'jancok', 'jancuk', 'peler', 
+            'pantek', 'tai', 'taik', 'bajingan', 'ngentot', 'ngewe', 'jembut', 'perek', 
+            'lonte', 'jablay', 'itil', 'peju', 'sange', 'bego', 'bge', 'bngst', 'kampret', 'jir'
+        ];
+
+        function cekKataKotor(teks) {
+            if (!teks) return false;
+            // Pecah kalimat menjadi kata per kata (mengabaikan spasi dan tanda baca)
+            const words = teks.toLowerCase().split(/[\s,.-?!_]+/);
+            for (let word of words) {
+                // Cek persis sesuai kata
+                if (kataKotor.includes(word)) return true;
+                
+                // Jurus Ampuh: Bersihkan huruf yang diulang-ulang (contoh: anjjjirrr jadi anjir)
+                let cleanedWord = word.replace(/(.)\1+/g, '$1'); 
+                if (kataKotor.includes(cleanedWord)) return true;
+            }
+            return false;
+        }
+
         async function autoCleanupOldChats() {
             const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
             try {
@@ -631,6 +656,12 @@
             if (pesan.length > 150) {
                 alert("Pesan terlalu panjang! Maksimal 150 karakter ya.");
                 return;
+            }
+
+            // Validasi Kata Kotor sebelum dikirim
+            if (cekKataKotor(nama) || cekKataKotor(pesan)) {
+                alert("Ups! 🙊 Tolong gunakan bahasa yang sopan dan baik ya kak. Pesan tidak dapat dikirim karena mengandung kata yang dilarang.");
+                return; // Berhenti di sini, jangan kirim ke Firebase
             }
 
             try {
