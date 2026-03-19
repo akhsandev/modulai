@@ -3,25 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPMB SMAN 1 Soppeng</title>
+    <title>Ditutup - SPMB SMAN 1 Soppeng</title>
     
     <!-- Tailwind CSS (via CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Leaflet CSS & JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* Custom map markers */
-        .custom-div-icon {
-            background: transparent;
-            border: none;
-        }
-
         /* Animasi Tombol Rahasia */
         @keyframes goyang-glowing {
             0%, 100% { transform: rotate(0deg) scale(1); text-shadow: 0 0 5px rgba(236, 72, 153, 0.4); }
@@ -40,9 +30,18 @@
             animation: none;
             transform: scale(1.1) rotate(2deg);
         }
+        
+        /* Animasi Gembok */
+        @keyframes gembok-goyang {
+            0%, 100% { transform: rotate(12deg); }
+            50% { transform: rotate(-5deg) scale(1.1); }
+        }
+        .gembok-animasi {
+            animation: gembok-goyang 3s infinite ease-in-out;
+        }
     </style>
 </head>
-<body class="min-h-screen bg-yellow-200 font-sans text-black pb-10 selection:bg-pink-400 selection:text-white relative">
+<body class="min-h-screen bg-yellow-200 font-sans text-black flex flex-col selection:bg-pink-400 selection:text-white relative">
 
     <!-- Header -->
     <header class="bg-pink-400 border-b-8 border-black p-6 sticky top-0 z-50">
@@ -62,228 +61,41 @@
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto mt-12 px-4">
-        <form id="spmbForm" class="space-y-8">
+    <!-- Konten Utama (Pendaftaran Ditutup) -->
+    <main class="flex-grow flex items-center justify-center px-4 py-12">
+        <div class="bg-red-500 border-8 border-black p-8 md:p-12 shadow-[16px_16px_0_0_#000] transform -rotate-1 text-center max-w-3xl w-full relative">
             
-            <!-- Section 1: Data Diri -->
-            <div class="bg-[#a7f3d0] border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative">
-                <div class="absolute -top-5 -left-5 bg-black text-white px-4 py-1 text-xl font-black transform -rotate-3 border-4 border-black">
-                    1. DATA DIRI
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Nama Lengkap</label>
-                        <input required type="text" id="nama" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="NAMA SESUAI IJAZAH" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Jenis Kelamin</label>
-                        <select id="jenisKelamin" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all">
-                            <option value="L">Laki-laki (L)</option>
-                            <option value="P">Perempuan (P)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Tempat Lahir</label>
-                        <input required type="text" id="tempatLahir" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="KOTA KELAHIRAN" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Tanggal Lahir</label>
-                        <input required type="date" id="tanggalLahir" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">NIK</label>
-                        <input required type="number" id="nik" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="16 DIGIT NIK" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">NISN</label>
-                        <input required type="number" id="nisn" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="NOMOR INDUK SISWA" />
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Asal Sekolah (SMP/MTs)</label>
-                        <input required type="text" id="asalSekolah" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="NAMA SEKOLAH ASAL" />
-                    </div>
-                </div>
+            <!-- Ikon Gembok Lucu -->
+            <div class="gembok-animasi absolute -top-8 -left-4 md:-left-8 bg-yellow-300 border-4 border-black p-4 shadow-[6px_6px_0_0_#000] z-10">
+                <i data-lucide="lock" class="w-10 h-10 md:w-16 md:h-16 text-black"></i>
             </div>
-
-            <!-- Section 2: Data Orang Tua & Kontak -->
-            <div class="bg-[#e9d5ff] border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative">
-                <div class="absolute -top-5 -right-5 bg-pink-500 text-white px-4 py-1 text-xl font-black transform rotate-3 border-4 border-black">
-                    2. KONTAK & ORTU
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Nama Ayah</label>
-                        <input required type="text" id="namaAyah" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Nama Ibu</label>
-                        <input required type="text" id="namaIbu" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">No. HP Siswa</label>
-                        <input required type="tel" id="hpSiswa" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="08..." />
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">No. HP Ayah</label>
-                            <input type="tel" id="hpAyah" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                        </div>
-                        <div>
-                            <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">No. HP Ibu</label>
-                            <input type="tel" id="hpIbu" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                        </div>
-                    </div>
-                </div>
+            
+            <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 text-white drop-shadow-[4px_4px_0_#000] leading-tight mt-4">
+                PERHATIAN!!
+            </h2>
+            
+            <div class="bg-white border-4 border-black p-6 transform rotate-1 shadow-[8px_8px_0_0_#000]">
+                <p class="font-black text-2xl md:text-3xl mb-4 text-black uppercase">
+                    Mohon Maaf 🙏
+                </p>
+                <div class="h-1 w-24 bg-pink-500 mx-auto mb-4 border-2 border-black transform -rotate-2"></div>
+                <p class="text-gray-800 font-bold text-lg md:text-xl leading-relaxed">
+                    Waktu pengisian link pra-pendaftaran SPMB SMAN 1 Soppeng sudah resmi <span class="bg-red-200 px-2 py-1 border-2 border-black transform inline-block rotate-2">DITUTUP</span>.
+                </p>
+                <p class="mt-4 text-gray-700 font-bold text-base md:text-lg bg-gray-100 p-4 border-2 border-dashed border-black">
+                    Terima kasih banyak atas antusiasmenya! Buat adik-adik yang sudah berhasil kirim data, silakan tunggu info dan pengumuman selanjutnya dari panitia nah. Semangat terus ki' belajarnya! 🔥🏫
+                </p>
             </div>
-
-            <!-- Section 3: Alamat & Zonasi Peta Lebar -->
-            <div class="bg-white border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative md:col-span-2">
-                <div class="absolute -top-5 -left-5 bg-cyan-400 text-black px-4 py-1 text-xl font-black transform -rotate-2 border-4 border-black">
-                    3. ALAMAT & KOORDINAT
-                </div>
-
-                <!-- Detail Alamat Surat -->
-                <div class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                    <div class="md:col-span-4">
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Alamat Lengkap</label>
-                        <textarea required id="alamat" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all h-24" placeholder="NAMA JALAN / KAMPUNG SESUAI KK"></textarea>
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">RT</label>
-                        <input required type="text" id="rt" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">RW</label>
-                        <input required type="text" id="rw" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Kelurahan/Desa</label>
-                        <input required type="text" id="kelurahan" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Kecamatan</label>
-                        <input required type="text" id="kecamatan" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                    </div>
-                    
-                    <div class="md:col-span-2">
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Kabupaten</label>
-                        <input required type="text" id="kabupaten" value="" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Provinsi</label>
-                        <input required type="text" id="provinsi" value="" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                    </div>
-                </div>
-
-                <!-- Peta Interaktif Lebar (Sederhana via GPS) -->
-                <div class="border-4 border-black p-6 bg-gray-100 mb-6 relative text-center">
-                    <h3 class="font-black text-2xl flex items-center justify-center gap-2 mb-2">
-                        <i data-lucide="map-pin" class="text-pink-400 fill-pink-400"></i> TITIK KOORDINAT RUMAH
-                    </h3>
-                    <p class="font-bold text-gray-700 mb-6">Untuk akurasi zonasi, koordinat wajib diambil otomatis menggunakan GPS perangkatmu!</p>
-
-                    <button type="button" id="btnAmbilKoordinat" class="bg-yellow-400 hover:bg-yellow-300 border-4 border-black px-8 py-4 font-black text-xl md:text-2xl inline-flex items-center gap-2 shadow-[6px_6px_0_0_#000] active:shadow-none active:translate-x-2 active:translate-y-2 transition-all mb-8">
-                        <i data-lucide="crosshair"></i> AMBIL KOORDINAT SEKARANG
-                    </button>
-
-                    <!-- Wadah Peta -->
-                    <div class="relative border-4 border-black shadow-[4px_4px_0_0_#000] text-left">
-                        <!-- Peta default pointer-events-none supaya nda bisa diklik sembarangan sebelum diizinkan -->
-                        <div id="map" class="w-full h-[300px] md:h-[400px] z-0 bg-gray-300 pointer-events-none"></div>
-                        
-                        <!-- Koordinat Overlay -->
-                        <div class="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 z-[400] bg-white border-4 border-black p-3 shadow-[4px_4px_0_0_#000]">
-                            <label class="block font-black text-xs text-gray-500 uppercase">Koordinat Terpilih:</label>
-                            <input readonly type="text" id="koordinat" class="w-full bg-transparent font-mono font-bold text-lg md:text-xl text-black outline-none placeholder-gray-400" placeholder="Belum ada titik dipilih" required />
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Rekomendasi 3 Sekolah Terdekat (Muncul dinamis) -->
-                <div id="nearestSchoolsContainer" class="hidden bg-yellow-100 border-4 border-black p-6 shadow-[4px_4px_0_0_#000]">
-                    <h3 class="font-black text-2xl mb-4 flex items-center gap-2"><i data-lucide="school"></i> 3 SEKOLAH TERDEKAT DARI RUMAH:</h3>
-                    <div id="nearestSchoolsList" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <!-- Konten akan diisi oleh JavaScript -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 4: Prestasi -->
-            <div class="bg-[#fef08a] border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative">
-                <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 md:px-6 py-1 text-base md:text-xl font-black border-4 border-black whitespace-nowrap">
-                    4. PRESTASI (OPSIONAL)
-                </div>
-                
-                <div class="mt-8 md:mt-4">
-                    <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Memiliki Prestasi Akademik/Non-Akademik?</label>
-                    <select id="adaPrestasi" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all">
-                        <option value="Tidak">Tidak</option>
-                        <option value="Ya">Ya, Saya Punya Prestasi</option>
-                    </select>
-
-                    <div id="prestasiUploadContainer" class="hidden mt-6 border-4 border-black p-6 bg-white border-dashed">
-                        <div class="mb-6">
-                            <label class="block font-extrabold text-lg mb-2 uppercase">Deskripsi Prestasi</label>
-                            <textarea id="deskripsiPrestasi" class="w-full bg-yellow-50 border-4 border-black p-3 font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000]" placeholder="Contoh: Juara 1 Lomba Pidato Bahasa Inggris Tingkat Kabupaten 2024" rows="3"></textarea>
-                        </div>
-                        <label class="flex flex-col items-center justify-center cursor-pointer pt-4 border-t-4 border-black border-dashed">
-                            <i data-lucide="award" class="text-pink-500 w-12 h-12 mb-2"></i>
-                            <span class="font-black text-xl mb-2">UPLOAD SERTIFIKAT</span>
-                            <span class="font-bold text-gray-500 text-center mb-4">Format: JPG/PNG/PDF (Max 1MB)</span>
-                            <input type="file" id="filePrestasi" accept=".jpg,.png,.pdf" class="block w-full text-sm text-slate-500
-                                file:mr-4 file:py-2 file:px-4
-                                file:border-4 file:border-black
-                                file:text-sm file:font-black file:bg-cyan-400
-                                hover:file:bg-cyan-300 file:shadow-[4px_4px_0_0_#000] file:cursor-pointer transition-all" />
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 5: KIP/DTKS -->
-            <div class="bg-[#bae6fd] border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative">
-                <div class="absolute -top-5 right-auto md:-right-5 left-4 md:left-auto bg-orange-500 text-white px-4 md:px-6 py-1 text-base md:text-xl font-black transform md:rotate-2 border-4 border-black whitespace-nowrap z-10">
-                    5. AFIRMASI (KIP/DTKS)
-                </div>
-                
-                <div class="mt-8 md:mt-4">
-                    <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Apakah Anda terdaftar sebagai penerima KIP atau DTKS?</label>
-                    <select id="adaKip" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all">
-                        <option value="Tidak">Tidak</option>
-                        <option value="Ya">Ya, Saya Penerima KIP/DTKS</option>
-                    </select>
-
-                    <div id="kipUploadContainer" class="hidden mt-6 border-4 border-black p-6 bg-white border-dashed">
-                        <label class="flex flex-col items-center justify-center cursor-pointer">
-                            <i data-lucide="file-check-2" class="text-orange-500 w-12 h-12 mb-2"></i>
-                            <span class="font-black text-xl mb-2">UPLOAD BUKTI KIP/DTKS</span>
-                            <span class="font-bold text-gray-500 text-center mb-4">Format: JPG/PNG/PDF (Max 1MB)</span>
-                            <input type="file" id="fileKip" accept=".jpg,.png,.pdf" class="block w-full text-sm text-slate-500
-                                file:mr-4 file:py-2 file:px-4
-                                file:border-4 file:border-black
-                                file:text-sm file:font-black file:bg-orange-400
-                                hover:file:bg-orange-300 file:shadow-[4px_4px_0_0_#000] file:cursor-pointer transition-all" />
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="text-center pt-8">
-                <button type="submit" id="submitBtn" class="text-2xl font-black px-12 py-6 flex items-center justify-center gap-4 mx-auto border-4 border-black shadow-[8px_8px_0_0_#000] active:shadow-none active:translate-x-2 active:translate-y-2 transition-all bg-pink-500 hover:bg-pink-400 text-white">
-                    <span id="btnText">KIRIM FORMULIR PENDAFTARAN</span>
-                    <i data-lucide="send" id="btnIcon" class="w-8 h-8"></i>
-                </button>
-                <p class="mt-6 font-bold text-lg">Pastikan semua data sudah benar sebelum mengirim! 😉</p>
-            </div>
-
-        </form>
+            
+            <!-- Bisa diganti link instagram sekolah / website resmi sekolah -->
+            <a href="https://instagram.com/sman1soppeng" target="_blank" class="inline-flex mt-10 bg-cyan-400 border-4 border-black px-6 py-4 font-black text-xl md:text-2xl uppercase shadow-[6px_6px_0_0_#000] hover:bg-cyan-300 hover:shadow-[2px_2px_0_0_#000] active:translate-y-2 active:translate-x-2 transition-all items-center gap-3 text-black">
+                <i data-lucide="instagram" class="w-8 h-8"></i> Info IG Sekolah
+            </a>
+        </div>
     </main>
 
-    <!-- FOOTER RAHASIA -->
-    <footer class="mt-16 text-center text-gray-700 font-bold pb-8">
+    <!-- FOOTER RAHASIA (TETAP AMAN 😎) -->
+    <footer class="mt-auto text-center text-gray-700 font-bold pb-8 pt-4">
         <p>&copy; 2026 SPMB SMAN 1 Soppeng.</p>
         <p class="mt-1 text-sm"><span id="secretTrigger" class="kasi-penasaran cursor-pointer">dibuat oleh: @_ara.v2 🤫</span></p>
     </footer>
@@ -298,7 +110,7 @@
             </div>
             
             <div class="space-y-4 mt-4 font-bold text-lg text-center">
-                <p>Halo! Aku <span class="text-pink-600 font-black">Ara</span>, Guruta yang ngoding di balik layar web ini. Slebew🧑‍💻✨</p>
+                <p>Halo! Aku <span class="text-pink-600 font-black">Pak Ara</span>, guruta' yang ngoding di balik layar web ini. slebew 🧑‍💻✨</p>
                 
                 <a href="https://instagram.com/_ara.v2" target="_blank" class="bg-pink-400 text-white border-4 border-black p-3 hover:bg-pink-300 hover:-translate-y-1 shadow-[4px_4px_0_0_#000] transition-all flex justify-center items-center gap-2 font-black">
                     <i data-lucide="instagram"></i> Follow IG @_ara.v2
@@ -320,7 +132,7 @@
         </div>
     </div>
 
-    <!-- CUSTOM POPUP MODAL (PENGGANTI ALERT/CONFIRM) -->
+    <!-- CUSTOM POPUP MODAL -->
     <div id="customDialogOverlay" class="fixed inset-0 bg-black/50 z-[2000] hidden flex-col items-center justify-center p-4 backdrop-blur-md transition-opacity">
         <div class="bg-white border-8 border-black p-6 md:p-8 max-w-sm w-full shadow-[8px_8px_0_0_#000] transform -rotate-1 flex flex-col items-center text-center relative">
             <div id="dialogIconContainer" class="mb-4 bg-yellow-300 border-4 border-black p-3 shadow-[4px_4px_0_0_#000] transform rotate-3">
@@ -339,7 +151,7 @@
         // Initialize Lucide Icons
         lucide.createIcons();
 
-        // --- SISTEM CUSTOM DIALOG (PENGGANTI ALERT/CONFIRM) ---
+        // --- SISTEM CUSTOM DIALOG (Untuk Dana Copy) ---
         const customDialog = {
             show: function(title, message, type = 'alert', icon = 'bell') {
                 return new Promise((resolve) => {
@@ -352,44 +164,19 @@
                     titleEl.innerText = title;
                     messageEl.innerText = message;
                     
-                    // Update icon using Lucide
                     iconEl.setAttribute('data-lucide', icon);
                     lucide.createIcons();
 
-                    btnContainer.innerHTML = ''; // Clear existing buttons
+                    btnContainer.innerHTML = ''; 
 
-                    if (type === 'confirm') {
-                        // Tombol Batal
-                        const btnBatal = document.createElement('button');
-                        btnBatal.className = "flex-1 bg-white border-4 border-black py-2 font-black hover:bg-gray-200 active:translate-y-1 shadow-[4px_4px_0_0_#000]";
-                        btnBatal.innerText = "Nda Jadi";
-                        btnBatal.onclick = () => {
-                            this.close();
-                            resolve(false);
-                        };
-
-                        // Tombol Ya
-                        const btnYa = document.createElement('button');
-                        btnYa.className = "flex-1 bg-pink-500 text-white border-4 border-black py-2 font-black hover:bg-pink-400 active:translate-y-1 shadow-[4px_4px_0_0_#000]";
-                        btnYa.innerText = "Iye, Yakin!";
-                        btnYa.onclick = () => {
-                            this.close();
-                            resolve(true);
-                        };
-
-                        btnContainer.appendChild(btnBatal);
-                        btnContainer.appendChild(btnYa);
-                    } else {
-                        // Tombol OK untuk Alert
-                        const btnOk = document.createElement('button');
-                        btnOk.className = "w-full bg-cyan-400 border-4 border-black py-2 font-black hover:bg-cyan-300 active:translate-y-1 shadow-[4px_4px_0_0_#000]";
-                        btnOk.innerText = "Okeee!";
-                        btnOk.onclick = () => {
-                            this.close();
-                            resolve(true);
-                        };
-                        btnContainer.appendChild(btnOk);
-                    }
+                    const btnOk = document.createElement('button');
+                    btnOk.className = "w-full bg-cyan-400 border-4 border-black py-2 font-black hover:bg-cyan-300 active:translate-y-1 shadow-[4px_4px_0_0_#000]";
+                    btnOk.innerText = "Okeee!";
+                    btnOk.onclick = () => {
+                        this.close();
+                        resolve(true);
+                    };
+                    btnContainer.appendChild(btnOk);
 
                     overlay.classList.remove('hidden');
                     overlay.classList.add('flex');
@@ -401,212 +188,6 @@
                 overlay.classList.remove('flex');
             }
         };
-
-        // Data Koordinat 8 SMA Negeri di Soppeng
-        const SCHOOL_DATA = [
-            { id: 1, name: "SMA Negeri 1 Soppeng", lat: -4.355669, lng: 119.882877 },
-            { id: 2, name: "SMA Negeri 2 Soppeng", lat: -4.370019, lng: 119.952451 },
-            { id: 3, name: "SMA Negeri 3 Soppeng", lat: -4.231768, lng: 119.887363 },
-            { id: 4, name: "SMA Negeri 4 Soppeng", lat: -4.357450, lng: 119.876160 },
-            { id: 5, name: "SMA Negeri 5 Soppeng", lat: -4.472203, lng: 119.946433 },
-            { id: 6, name: "SMA Negeri 6 Soppeng", lat: -4.129947, lng: 119.866200 },
-            { id: 7, name: "SMA Negeri 7 Soppeng", lat: -4.339186, lng: 119.998056 },
-            { id: 8, name: "SMA Negeri 8 Soppeng", lat: -4.343879, lng: 119.888527 },
-        ];
-
-        let map, userMarker;
-        let fileBase64 = "";
-        let fileKipBase64 = "";
-        let nearestSchoolsData = ["-", "-", "-"];
-
-        // Inisialisasi Peta setelah DOM diload
-        document.addEventListener("DOMContentLoaded", () => {
-            const defaultCenter = [-4.355669, 119.882877]; // Pusat SMAN 1 Soppeng
-            
-            map = L.map('map').setView(defaultCenter, 12);
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
-
-            // Tambahkan marker sekolah
-            SCHOOL_DATA.forEach(school => {
-                const schoolIcon = L.divIcon({
-                    className: 'custom-div-icon',
-                    html: `<div style="background-color: #22d3ee; border: 2px solid black; border-radius: 50%; width: 12px; height: 12px; box-shadow: 2px 2px 0px 0px black;"></div>`,
-                    iconSize: [12, 12]
-                });
-                L.marker([school.lat, school.lng], { icon: schoolIcon })
-                    .addTo(map)
-                    .bindPopup(`<b>${school.name}</b>`);
-            });
-        });
-
-        // Update lokasi pengguna di peta & form
-        function updateUserLocation(lat, lng) {
-            document.getElementById('koordinat').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-
-            if (userMarker) {
-                userMarker.setLatLng([lat, lng]);
-            } else {
-                const userIcon = L.divIcon({
-                    className: 'custom-div-icon',
-                    html: `<div style="background-color: #f472b6; border: 3px solid black; border-radius: 50%; width: 20px; height: 20px; box-shadow: 3px 3px 0px 0px black; display: flex; align-items: center; justify-content: center; transform: translate(-50%, -50%);"><div style="width: 6px; height: 6px; background: white; border-radius: 50%;"></div></div>`,
-                });
-                userMarker = L.marker([lat, lng], { icon: userIcon }).addTo(map);
-            }
-            
-            // Zoom sedikit lebih dekat jika titik berubah
-            map.setView([lat, lng], 15);
-            calculateNearestSchools(lat, lng);
-        }
-
-        // ==========================================
-        // FITUR GPS STRICT
-        // ==========================================
-        document.getElementById('btnAmbilKoordinat').addEventListener('click', async () => {
-            const isAtHome = await customDialog.show('Tunggu Dulu!', "Yakin ki' mau ambil koordinat sekarang? Pastikanki' lagi di rumah nah pas isi data, biar akurat ki' zonasi ta'!", 'confirm', 'map-pin');
-            
-            if (isAtHome) {
-                const btn = document.getElementById('btnAmbilKoordinat');
-                const originalText = btn.innerHTML;
-                btn.innerHTML = `<i data-lucide="loader" class="animate-spin"></i> MENGAMBIL KOORDINAT...`;
-                lucide.createIcons();
-
-                if (navigator.geolocation) {
-                    // Coba ambil GPS dengan timeout panjang (15 detik)
-                    navigator.geolocation.getCurrentPosition(
-                        async (position) => {
-                            // JIKA BERHASIL
-                            updateUserLocation(position.coords.latitude, position.coords.longitude);
-                            btn.innerHTML = originalText;
-                            lucide.createIcons();
-                            await customDialog.show('Alhamdulillah!', "Berhasil mi didapat lokasi otomatis ta'. Cek mki peta di bawah nah!", 'alert', 'check-circle');
-                        },
-                        async (error) => {
-                            // JIKA GAGAL (Timeout / Di-block)
-                            console.warn("GPS Error:", error);
-                            
-                            await customDialog.show("Yah, GPS-nya Gagal!", "Aih, nda bisa ki' baca lokasi otomatis. Coba ki' keluar rumah sedikit cari tempat terbuka biar satelitnya gampang dapat sinyal. Pastikan juga GPS ta' nyala dan diizinkan ki' di browser nah!", "alert", "map-pin-off");
-                            
-                            btn.innerHTML = originalText;
-                            lucide.createIcons();
-                        },
-                        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-                    );
-                } else {
-                    await customDialog.show("Aduh!", "Browser ta' nda dukung ki' fitur lokasi (GPS).", "alert", "alert-triangle");
-                    btn.innerHTML = originalText;
-                    lucide.createIcons();
-                }
-            }
-        });
-
-        // ==========================================
-        // KALKULASI JARAK (HAVERSINE FORMULA)
-        // ==========================================
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; // km
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                      Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
-        }
-
-        function calculateNearestSchools(lat, lng) {
-            let distances = SCHOOL_DATA.map(school => ({
-                ...school,
-                distance: calculateDistance(lat, lng, school.lat, school.lng)
-            }));
-            
-            distances.sort((a, b) => a.distance - b.distance);
-            const nearest = distances.slice(0, 3);
-            
-            // Simpan ke array untuk dikirim ke Google Sheets di 3 kolom terpisah
-            nearestSchoolsData = nearest.map(s => `${s.name} (${s.distance.toFixed(2)} km)`);
-
-            // Render ke UI
-            const container = document.getElementById('nearestSchoolsContainer');
-            const list = document.getElementById('nearestSchoolsList');
-            
-            list.innerHTML = nearest.map((school, index) => `
-                <div class="bg-white border-4 border-black p-4 flex flex-col justify-between transition-transform hover:-translate-y-1">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="bg-black text-white font-black text-xl px-2">${index + 1}</span>
-                    </div>
-                    <h4 class="font-black text-lg leading-tight">${school.name}</h4>
-                    <div class="mt-4 inline-block bg-pink-400 text-white font-black px-3 py-1 border-2 border-black rotate-2 w-max shadow-[2px_2px_0_0_#000]">
-                        ${school.distance.toFixed(2)} KM
-                    </div>
-                </div>
-            `).join('');
-            
-            container.classList.remove('hidden');
-        }
-
-        // Tampilkan/Sembunyikan Upload Prestasi
-        document.getElementById('adaPrestasi').addEventListener('change', (e) => {
-            const container = document.getElementById('prestasiUploadContainer');
-            if(e.target.value === 'Ya') {
-                container.classList.remove('hidden');
-            } else {
-                container.classList.add('hidden');
-                fileBase64 = ""; // Reset
-                document.getElementById('filePrestasi').value = "";
-                document.getElementById('deskripsiPrestasi').value = "";
-            }
-        });
-
-        // Convert file Prestasi to Base64
-        document.getElementById('filePrestasi').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                // Cek ukuran file (Max 1MB)
-                if(file.size > 1024 * 1024) {
-                    await customDialog.show('Wah Kebesaran!', "Kebesaran ki' file ta', maksimal 1MB. Coba kompres dulu nah!", 'alert', 'file-warning');
-                    e.target.value = "";
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    fileBase64 = reader.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Tampilkan/Sembunyikan Upload KIP
-        document.getElementById('adaKip').addEventListener('change', (e) => {
-            const container = document.getElementById('kipUploadContainer');
-            if(e.target.value === 'Ya') {
-                container.classList.remove('hidden');
-            } else {
-                container.classList.add('hidden');
-                fileKipBase64 = ""; // Reset
-                document.getElementById('fileKip').value = "";
-            }
-        });
-
-        // Convert file KIP to Base64
-        document.getElementById('fileKip').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                // Cek ukuran file (Max 1MB)
-                if(file.size > 1024 * 1024) {
-                    await customDialog.show('Wah Kebesaran!', "Kebesaran ki' file ta', maksimal 1MB. Coba kompres dulu nah!", 'alert', 'file-warning');
-                    e.target.value = "";
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    fileKipBase64 = reader.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
 
         // ==========================================
         // LOGIKA TOMBOL RAHASIA (EASTER EGG)
@@ -635,7 +216,7 @@
             }
         });
 
-        // Copy Nomor DANA (menggunakan execCommand untuk iframe compatibility)
+        // Copy Nomor DANA
         async function copyDanaNumber() {
             var tempInput = document.createElement("input");
             tempInput.value = "087717416198";
@@ -645,111 +226,7 @@
             document.body.removeChild(tempInput);
             await customDialog.show('Makasih Tawwa!', 'Yay! Berhasil mi di-copy nomor DANA-nya! Makasih banyak nah orang baik, sehat selalu ki\'! 💖', 'alert', 'heart');
         }
-
-        // ==========================================
-        // SUBMIT FORM
-        // ==========================================
-        document.getElementById('spmbForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            // Validasi koordinat
-            if (!document.getElementById('koordinat').value) {
-                await customDialog.show('Eh Tunggu!', "Belum pki' ambil koordinat rumah ta'! Klik ki' dulu tombol 'Ambil Koordinat Sekarang'.", 'alert', 'map-pin');
-                return;
-            }
-
-            // Validasi Prestasi
-            if (document.getElementById('adaPrestasi').value === 'Ya') {
-                if (!document.getElementById('deskripsiPrestasi').value.trim()) {
-                    await customDialog.show('Lupa Ki\'', "Isi ki' dulu deskripsi prestasi ta', jangan dikosongkan nah!", 'alert', 'pencil');
-                    return;
-                }
-                if (!fileBase64) {
-                    await customDialog.show('Lupa Ki\'', "Sertifikat prestasita belum diupload. Jangan lupa nah!", 'alert', 'upload');
-                    return;
-                }
-            }
-
-            // Validasi KIP
-            if (document.getElementById('adaKip').value === 'Ya' && !fileKipBase64) {
-                await customDialog.show('Lupa Ki\'', "Bukti KIP atau DTKS ta' belum ada. Upload ki' dulu nah!", 'alert', 'upload');
-                return;
-            }
-
-            const btn = document.getElementById('submitBtn');
-            const btnText = document.getElementById('btnText');
-            const btnIcon = document.getElementById('btnIcon');
-
-            // State Loading
-            btn.disabled = true;
-            btn.classList.add('bg-gray-400', 'cursor-not-allowed');
-            btn.classList.remove('bg-pink-500', 'hover:bg-pink-400');
-            btnText.innerText = 'MENGIRIM DATA...';
-            btnIcon.style.display = 'none';
-
-            // Mengambil dan menambahkan kutip 1 pada nomor HP, NIK, dan NISN agar tidak hilang angka 0 atau berubah format di Spreadsheet
-            const valHpSiswa = document.getElementById('hpSiswa').value;
-            const valHpAyah = document.getElementById('hpAyah').value;
-            const valHpIbu = document.getElementById('hpIbu').value;
-            const valNik = document.getElementById('nik').value;
-            const valNisn = document.getElementById('nisn').value;
-
-            // Kumpulkan Data
-            const formData = {
-                nama: document.getElementById('nama').value,
-                jenisKelamin: document.getElementById('jenisKelamin').value,
-                tempatLahir: document.getElementById('tempatLahir').value,
-                tanggalLahir: document.getElementById('tanggalLahir').value,
-                nik: valNik ? "'" + valNik : "",
-                nisn: valNisn ? "'" + valNisn : "",
-                asalSekolah: document.getElementById('asalSekolah').value,
-                alamat: document.getElementById('alamat').value,
-                rt: document.getElementById('rt').value,
-                rw: document.getElementById('rw').value,
-                kelurahan: document.getElementById('kelurahan').value,
-                kecamatan: document.getElementById('kecamatan').value,
-                kabupaten: document.getElementById('kabupaten').value,
-                provinsi: document.getElementById('provinsi').value,
-                koordinat: document.getElementById('koordinat').value,
-                sekolahTerdekat1: nearestSchoolsData[0] || "-",
-                sekolahTerdekat2: nearestSchoolsData[1] || "-",
-                sekolahTerdekat3: nearestSchoolsData[2] || "-",
-                namaAyah: document.getElementById('namaAyah').value,
-                namaIbu: document.getElementById('namaIbu').value,
-                hpSiswa: valHpSiswa ? "'" + valHpSiswa : "",
-                hpAyah: valHpAyah ? "'" + valHpAyah : "",
-                hpIbu: valHpIbu ? "'" + valHpIbu : "",
-                adaPrestasi: document.getElementById('adaPrestasi').value,
-                deskripsiPrestasi: document.getElementById('deskripsiPrestasi') ? document.getElementById('deskripsiPrestasi').value : "",
-                filePrestasi: fileBase64,
-                adaKip: document.getElementById('adaKip').value,
-                fileKip: fileKipBase64
-            };
-
-            try {
-                // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT KAMU
-                const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby6LCPPgNL-uH6pq9_8LhDNpadZ2ddc-5n3a4M7lGsWnT1f_cnq4Ae_GlULD2Dsr3yfdw/exec'; 
-                
-                await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData),
-                });
-
-                await customDialog.show('Suksesss!', "🎉 Mantap! Berhasil mi terkirim data pendaftaran ta'. Semoga lulus ki' nah!", 'alert', 'check-circle');
-                
-            } catch (error) {
-                await customDialog.show('Yaaaah!', "Aduh, ada masalah pas kirim data. Cek ki' jaringan ta' atau URL Apps Script-nya nah.", 'alert', 'alert-circle');
-            } finally {
-                // Kembalikan tombol seperti semula
-                btn.disabled = false;
-                btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                btn.classList.add('bg-pink-500', 'hover:bg-pink-400');
-                btnText.innerText = 'KIRIM FORMULIR PENDAFTARAN';
-                btnIcon.style.display = 'block';
-            }
-        });
     </script>
 </body>
 </html>
+
