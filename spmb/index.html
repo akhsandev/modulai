@@ -23,19 +23,22 @@
         }
 
         /* Animasi Tombol Rahasia */
-        @keyframes goyang-dikit {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(-2deg) scale(1.05); }
+        @keyframes goyang-glowing {
+            0%, 100% { transform: rotate(0deg) scale(1); text-shadow: 0 0 5px rgba(236, 72, 153, 0.4); }
+            50% { transform: rotate(-3deg) scale(1.1); text-shadow: 0 0 15px rgba(236, 72, 153, 0.9), 0 0 20px rgba(236, 72, 153, 0.6); color: #db2777; }
         }
         .kasi-penasaran {
             display: inline-block;
-            animation: goyang-dikit 3s infinite ease-in-out;
-            border-bottom: 1px dashed transparent;
+            animation: goyang-glowing 2.5s infinite ease-in-out;
+            border-bottom: 2px dashed transparent;
             transition: all 0.3s;
+            font-weight: 900;
         }
         .kasi-penasaran:hover {
-            border-bottom: 1px dashed #ec4899;
-            color: #ec4899;
+            border-bottom: 2px dashed #ec4899;
+            color: #be185d;
+            animation: none;
+            transform: scale(1.1) rotate(2deg);
         }
     </style>
 </head>
@@ -164,9 +167,14 @@
                         <input required type="text" id="kecamatan" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
                     </div>
                     
-                    <!-- Hidden inputs for Kabupaten & Provinsi -->
-                    <input type="hidden" id="kabupaten" value="Soppeng">
-                    <input type="hidden" id="provinsi" value="Sulawesi Selatan">
+                    <div class="md:col-span-2">
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Kabupaten</label>
+                        <input required type="text" id="kabupaten" value="" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Provinsi</label>
+                        <input required type="text" id="provinsi" value="" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
+                    </div>
                 </div>
 
                 <!-- Peta Interaktif Lebar (Sederhana via GPS) -->
@@ -180,8 +188,9 @@
                         <i data-lucide="crosshair"></i> AMBIL KOORDINAT SEKARANG
                     </button>
 
-                    <!-- Wadah Peta (Hanya untuk melihat hasil, tidak bisa diklik) -->
+                    <!-- Wadah Peta -->
                     <div class="relative border-4 border-black shadow-[4px_4px_0_0_#000] text-left">
+                        <!-- Peta default pointer-events-none supaya nda bisa diklik sembarangan sebelum diizinkan -->
                         <div id="map" class="w-full h-[300px] md:h-[400px] z-0 bg-gray-300 pointer-events-none"></div>
                         
                         <!-- Koordinat Overlay -->
@@ -203,11 +212,11 @@
 
             <!-- Section 4: Prestasi -->
             <div class="bg-[#fef08a] border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative">
-                <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-1 text-xl font-black border-4 border-black">
+                <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 md:px-6 py-1 text-base md:text-xl font-black border-4 border-black whitespace-nowrap">
                     4. PRESTASI (OPSIONAL)
                 </div>
                 
-                <div class="mt-4">
+                <div class="mt-8 md:mt-4">
                     <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Memiliki Prestasi Akademik/Non-Akademik?</label>
                     <select id="adaPrestasi" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all">
                         <option value="Tidak">Tidak</option>
@@ -235,11 +244,11 @@
 
             <!-- Section 5: KIP/DTKS -->
             <div class="bg-[#bae6fd] border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative">
-                <div class="absolute -top-5 -right-5 bg-orange-500 text-white px-6 py-1 text-xl font-black transform rotate-2 border-4 border-black">
+                <div class="absolute -top-5 right-auto md:-right-5 left-4 md:left-auto bg-orange-500 text-white px-4 md:px-6 py-1 text-base md:text-xl font-black transform md:rotate-2 border-4 border-black whitespace-nowrap z-10">
                     5. AFIRMASI (KIP/DTKS)
                 </div>
                 
-                <div class="mt-4">
+                <div class="mt-8 md:mt-4">
                     <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Apakah Anda terdaftar sebagai penerima KIP atau DTKS?</label>
                     <select id="adaKip" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all">
                         <option value="Tidak">Tidak</option>
@@ -408,7 +417,7 @@
         let map, userMarker;
         let fileBase64 = "";
         let fileKipBase64 = "";
-        let finalNearestSchoolsString = "";
+        let nearestSchoolsData = ["-", "-", "-"];
 
         // Inisialisasi Peta setelah DOM diload
         document.addEventListener("DOMContentLoaded", () => {
@@ -453,33 +462,42 @@
         }
 
         // ==========================================
-        // FITUR GPS OTOMATIS (Satu-satunya opsi)
+        // FITUR GPS STRICT
         // ==========================================
         document.getElementById('btnAmbilKoordinat').addEventListener('click', async () => {
             const isAtHome = await customDialog.show('Tunggu Dulu!', "Yakin ki' mau ambil koordinat sekarang? Pastikanki' lagi di rumah nah pas isi data, biar akurat ki' zonasi ta'!", 'confirm', 'map-pin');
             
             if (isAtHome) {
-                if (navigator.geolocation) {
-                    const btn = document.getElementById('btnAmbilKoordinat');
-                    const originalText = btn.innerHTML;
-                    btn.innerHTML = `<i data-lucide="loader" class="animate-spin"></i> MENGAMBIL KOORDINAT...`;
-                    lucide.createIcons();
+                const btn = document.getElementById('btnAmbilKoordinat');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = `<i data-lucide="loader" class="animate-spin"></i> MENGAMBIL KOORDINAT...`;
+                lucide.createIcons();
 
+                if (navigator.geolocation) {
+                    // Coba ambil GPS dengan timeout panjang (15 detik)
                     navigator.geolocation.getCurrentPosition(
-                        (position) => {
+                        async (position) => {
+                            // JIKA BERHASIL
                             updateUserLocation(position.coords.latitude, position.coords.longitude);
                             btn.innerHTML = originalText;
                             lucide.createIcons();
+                            await customDialog.show('Alhamdulillah!', "Berhasil mi didapat lokasi otomatis ta'. Cek mi peta di bawah nah!", 'alert', 'check-circle');
                         },
-                        (error) => {
-                            customDialog.show("Yah Gagal", "Aih, nda bisa ki' ambil lokasi. Cek ki' dulu GPS ta' nyala ji kah? Trus izinkan ki' browser ta' akses lokasi nah.", "alert", "map-pin-off");
+                        async (error) => {
+                            // JIKA GAGAL (Timeout / Di-block)
+                            console.warn("GPS Error:", error);
+                            
+                            await customDialog.show("Yah, GPS-nya Gagal!", "Aih, nda bisa ki' baca lokasi otomatis. Coba ki' keluar rumah sedikit cari tempat terbuka biar satelitnya gampang dapat sinyal. Pastikan juga GPS ta' nyala dan diizinkan ki' di browser nah!", "alert", "map-pin-off");
+                            
                             btn.innerHTML = originalText;
                             lucide.createIcons();
                         },
-                        { enableHighAccuracy: true, timeout: 10000 }
+                        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
                     );
                 } else {
-                    customDialog.show("Aduh!", "Browser ta' nda dukung ki' fitur lokasi (GPS). Coba pakai browser lain nah.", "alert", "alert-triangle");
+                    await customDialog.show("Aduh!", "Browser ta' nda dukung ki' fitur lokasi (GPS).", "alert", "alert-triangle");
+                    btn.innerHTML = originalText;
+                    lucide.createIcons();
                 }
             }
         });
@@ -507,8 +525,8 @@
             distances.sort((a, b) => a.distance - b.distance);
             const nearest = distances.slice(0, 3);
             
-            // Simpan ke string untuk dikirim ke Google Sheets
-            finalNearestSchoolsString = nearest.map((s, i) => `${i+1}. ${s.name} (${s.distance.toFixed(2)} km)`).join('\n');
+            // Simpan ke array untuk dikirim ke Google Sheets di 3 kolom terpisah
+            nearestSchoolsData = nearest.map(s => `${s.name} (${s.distance.toFixed(2)} km)`);
 
             // Render ke UI
             const container = document.getElementById('nearestSchoolsContainer');
@@ -669,14 +687,21 @@
             btnText.innerText = 'MENGIRIM DATA...';
             btnIcon.style.display = 'none';
 
+            // Mengambil dan menambahkan kutip 1 pada nomor HP, NIK, dan NISN agar tidak hilang angka 0 atau berubah format di Spreadsheet
+            const valHpSiswa = document.getElementById('hpSiswa').value;
+            const valHpAyah = document.getElementById('hpAyah').value;
+            const valHpIbu = document.getElementById('hpIbu').value;
+            const valNik = document.getElementById('nik').value;
+            const valNisn = document.getElementById('nisn').value;
+
             // Kumpulkan Data
             const formData = {
                 nama: document.getElementById('nama').value,
                 jenisKelamin: document.getElementById('jenisKelamin').value,
                 tempatLahir: document.getElementById('tempatLahir').value,
                 tanggalLahir: document.getElementById('tanggalLahir').value,
-                nik: document.getElementById('nik').value,
-                nisn: document.getElementById('nisn').value,
+                nik: valNik ? "'" + valNik : "",
+                nisn: valNisn ? "'" + valNisn : "",
                 asalSekolah: document.getElementById('asalSekolah').value,
                 alamat: document.getElementById('alamat').value,
                 rt: document.getElementById('rt').value,
@@ -686,12 +711,14 @@
                 kabupaten: document.getElementById('kabupaten').value,
                 provinsi: document.getElementById('provinsi').value,
                 koordinat: document.getElementById('koordinat').value,
-                sekolahTerdekat: finalNearestSchoolsString,
+                sekolahTerdekat1: nearestSchoolsData[0] || "-",
+                sekolahTerdekat2: nearestSchoolsData[1] || "-",
+                sekolahTerdekat3: nearestSchoolsData[2] || "-",
                 namaAyah: document.getElementById('namaAyah').value,
                 namaIbu: document.getElementById('namaIbu').value,
-                hpSiswa: document.getElementById('hpSiswa').value,
-                hpAyah: document.getElementById('hpAyah').value,
-                hpIbu: document.getElementById('hpIbu').value,
+                hpSiswa: valHpSiswa ? "'" + valHpSiswa : "",
+                hpAyah: valHpAyah ? "'" + valHpAyah : "",
+                hpIbu: valHpIbu ? "'" + valHpIbu : "",
                 adaPrestasi: document.getElementById('adaPrestasi').value,
                 deskripsiPrestasi: document.getElementById('deskripsiPrestasi') ? document.getElementById('deskripsiPrestasi').value : "",
                 filePrestasi: fileBase64,
@@ -701,7 +728,7 @@
 
             try {
                 // GANTI URL DI BAWAH INI DENGAN URL WEB APP APPS SCRIPT KAMU
-                const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby6LCPPgNL-uH6pq9_8LhDNpadZ2ddc-5n3a4M7lGsWnT1f_cnq4Ae_GlULD2Dsr3yfdw/exec'; 
+                const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/GANTI_DENGAN_URL_DEPLOY_KAMU/exec'; 
                 
                 await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
