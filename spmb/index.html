@@ -3,25 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPMB SMAN 1 Soppeng</title>
+    <title>Ditutup - SPMB SMAN 1 Soppeng</title>
     
     <!-- Tailwind CSS (via CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Leaflet CSS & JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* Custom map markers */
-        .custom-div-icon {
-            background: transparent;
-            border: none;
-        }
-
         /* Animasi Tombol Rahasia */
         @keyframes goyang-glowing {
             0%, 100% { transform: rotate(0deg) scale(1); text-shadow: 0 0 5px rgba(236, 72, 153, 0.4); }
@@ -39,10 +29,22 @@
             color: #be185d;
             animation: none;
             transform: scale(1.1) rotate(2deg);
+<<<<<<< HEAD
+=======
+        }
+        
+        /* Animasi Gembok */
+        @keyframes gembok-goyang {
+            0%, 100% { transform: rotate(12deg); }
+            50% { transform: rotate(-5deg) scale(1.1); }
+        }
+        .gembok-animasi {
+            animation: gembok-goyang 3s infinite ease-in-out;
+>>>>>>> dbf1f14d845ba897e7bbf3e46730e67607c2ceeb
         }
     </style>
 </head>
-<body class="min-h-screen bg-yellow-200 font-sans text-black pb-10 selection:bg-pink-400 selection:text-white relative">
+<body class="min-h-screen bg-yellow-200 font-sans text-black flex flex-col selection:bg-pink-400 selection:text-white relative">
 
     <!-- Header -->
     <header class="bg-pink-400 border-b-8 border-black p-6 sticky top-0 z-50">
@@ -62,81 +64,32 @@
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto mt-12 px-4">
-        <form id="spmbForm" class="space-y-8">
+    <!-- Konten Utama (Pendaftaran Ditutup) -->
+    <main class="flex-grow flex items-center justify-center px-4 py-12">
+        <div class="bg-red-500 border-8 border-black p-8 md:p-12 shadow-[16px_16px_0_0_#000] transform -rotate-1 text-center max-w-3xl w-full relative">
             
-            <!-- Section 1: Data Diri -->
-            <div class="bg-[#a7f3d0] border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative">
-                <div class="absolute -top-5 -left-5 bg-black text-white px-4 py-1 text-xl font-black transform -rotate-3 border-4 border-black">
-                    1. DATA DIRI
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Nama Lengkap</label>
-                        <input required type="text" id="nama" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="NAMA SESUAI IJAZAH" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Jenis Kelamin</label>
-                        <select id="jenisKelamin" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all">
-                            <option value="L">Laki-laki (L)</option>
-                            <option value="P">Perempuan (P)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Tempat Lahir</label>
-                        <input required type="text" id="tempatLahir" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="KOTA KELAHIRAN" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Tanggal Lahir</label>
-                        <input required type="date" id="tanggalLahir" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">NIK</label>
-                        <input required type="number" id="nik" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="16 DIGIT NIK" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">NISN</label>
-                        <input required type="number" id="nisn" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="NOMOR INDUK SISWA" />
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Asal Sekolah (SMP/MTs)</label>
-                        <input required type="text" id="asalSekolah" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="NAMA SEKOLAH ASAL" />
-                    </div>
-                </div>
+            <!-- Ikon Gembok Lucu -->
+            <div class="gembok-animasi absolute -top-8 -left-4 md:-left-8 bg-yellow-300 border-4 border-black p-4 shadow-[6px_6px_0_0_#000] z-10">
+                <i data-lucide="lock" class="w-10 h-10 md:w-16 md:h-16 text-black"></i>
             </div>
-
-            <!-- Section 2: Data Orang Tua & Kontak -->
-            <div class="bg-[#e9d5ff] border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative">
-                <div class="absolute -top-5 -right-5 bg-pink-500 text-white px-4 py-1 text-xl font-black transform rotate-3 border-4 border-black">
-                    2. KONTAK & ORTU
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Nama Ayah</label>
-                        <input required type="text" id="namaAyah" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">Nama Ibu</label>
-                        <input required type="text" id="namaIbu" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                    </div>
-                    <div>
-                        <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">No. HP Siswa</label>
-                        <input required type="tel" id="hpSiswa" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" placeholder="08..." />
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">No. HP Ayah</label>
-                            <input type="tel" id="hpAyah" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                        </div>
-                        <div>
-                            <label class="block font-extrabold text-xl mb-2 uppercase tracking-wide">No. HP Ibu</label>
-                            <input type="tel" id="hpIbu" class="w-full bg-white border-4 border-black p-3 text-lg font-bold placeholder-gray-500 focus:outline-none focus:ring-0 shadow-[4px_4px_0_0_#000] focus:shadow-[6px_6px_0_0_#000] focus:-translate-y-1 transition-all" />
-                        </div>
-                    </div>
-                </div>
+            
+            <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 text-white drop-shadow-[4px_4px_0_#000] leading-tight mt-4">
+                Perhatian!
+            </h2>
+            
+            <div class="bg-white border-4 border-black p-6 transform rotate-1 shadow-[8px_8px_0_0_#000]">
+                <p class="font-black text-2xl md:text-3xl mb-4 text-black uppercase">
+                    Terimakasih Atas Antusiasmenya 🙏
+                </p>
+                <div class="h-1 w-24 bg-pink-500 mx-auto mb-4 border-2 border-black transform -rotate-2"></div>
+                <p class="text-gray-800 font-bold text-lg md:text-xl leading-relaxed">
+                    Waktu pengisian link pra-pendaftaran SPMB SMAN 1 Soppeng sudah resmi <span class="bg-red-200 px-2 py-1 border-2 border-black transform inline-block rotate-2">DITUTUP</span>.
+                </p>
+                <p class="mt-4 text-gray-700 font-bold text-base md:text-lg bg-gray-100 p-4 border-2 border-dashed border-black">
+                    Terima kasih banyak atas antusiasmenya! Buat adik-adik yang sudah berhasil kirim data, silakan tunggu info dan pengumuman selanjutnya dari panitia nah. Semangat terus ki' belajarnya! 🔥🏫
+                </p>
             </div>
+<<<<<<< HEAD
 
             <!-- Section 3: Alamat & Zonasi Peta Lebar -->
             <div class="bg-white border-4 border-black p-6 shadow-[8px_8px_0_0_#000] relative md:col-span-2">
@@ -280,10 +233,18 @@
             </div>
 
         </form>
+=======
+            
+            <!-- Bisa diganti link instagram sekolah / website resmi sekolah -->
+            <a href="https://instagram.com/sman1soppeng" target="_blank" class="inline-flex mt-10 bg-cyan-400 border-4 border-black px-6 py-4 font-black text-xl md:text-2xl uppercase shadow-[6px_6px_0_0_#000] hover:bg-cyan-300 hover:shadow-[2px_2px_0_0_#000] active:translate-y-2 active:translate-x-2 transition-all items-center gap-3 text-black">
+                <i data-lucide="instagram" class="w-8 h-8"></i> Info IG Sekolah
+            </a>
+        </div>
+>>>>>>> dbf1f14d845ba897e7bbf3e46730e67607c2ceeb
     </main>
 
-    <!-- FOOTER RAHASIA -->
-    <footer class="mt-16 text-center text-gray-700 font-bold pb-8">
+    <!-- FOOTER RAHASIA (TETAP AMAN 😎) -->
+    <footer class="mt-auto text-center text-gray-700 font-bold pb-8 pt-4">
         <p>&copy; 2026 SPMB SMAN 1 Soppeng.</p>
         <p class="mt-1 text-sm"><span id="secretTrigger" class="kasi-penasaran cursor-pointer">dibuat oleh: @_ara.v2 🤫</span></p>
     </footer>
@@ -298,14 +259,14 @@
             </div>
             
             <div class="space-y-4 mt-4 font-bold text-lg text-center">
-                <p>Halo! Aku <span class="text-pink-600 font-black">Ara</span>, kang koding di balik layar web SPMB ini. 🧑‍💻✨</p>
+                <p>Halo! Aku <span class="text-pink-600 font-black">Pak Ara</span>, guruta' yang ngoding di balik layar web ini. slebew 🧑‍💻✨</p>
                 
                 <a href="https://instagram.com/_ara.v2" target="_blank" class="bg-pink-400 text-white border-4 border-black p-3 hover:bg-pink-300 hover:-translate-y-1 shadow-[4px_4px_0_0_#000] transition-all flex justify-center items-center gap-2 font-black">
                     <i data-lucide="instagram"></i> Follow IG @_ara.v2
                 </a>
                 
                 <div class="bg-cyan-200 border-4 border-black p-4 mt-6 transform rotate-1">
-                    <p class="mb-3 text-sm leading-tight">Kalau ngerasa web ini mulus, nda bikin pusing ki', dan ngebantu banget, boleh lho jajanin ka' es teh manis via DANA biar makin semangat ngodingnya! 🥤😎</p>
+                    <p class="mb-3 text-sm leading-tight">Kalau merasaki web ini mulus, nda bikin pusing, dan membantu, boleh bnget jajanin ka' es teh manis via DANA biar makin semangatka ngoding! 🥤😎</p>
                     
                     <div class="bg-white border-4 border-black p-2 font-black text-xl flex justify-between items-center shadow-[4px_4px_0_0_#000]">
                         <span class="tracking-widest">087717416198</span>
@@ -314,13 +275,13 @@
                         </button>
                     </div>
                     
-                    <p class="text-xs mt-4 text-gray-700 font-bold bg-white/50 p-2 border-2 border-dashed border-black">Tapi santai ji, nda maksa ja' tawwa! Kalau lagi bokek ki', doakan mi saja webnya nda error dan acaranya lancar jaya nah! 🙏🤣</p>
+                    <p class="text-xs mt-4 text-gray-700 font-bold bg-white/50 p-2 border-2 border-dashed border-black">Tapi santai ji, ini bukan pemaksaan nah, Kalau lagi bokek ki', doakan mi saja webnya nda error dan acaranya lancar jaya nah! 🙏🤣</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- CUSTOM POPUP MODAL (PENGGANTI ALERT/CONFIRM) -->
+    <!-- CUSTOM POPUP MODAL -->
     <div id="customDialogOverlay" class="fixed inset-0 bg-black/50 z-[2000] hidden flex-col items-center justify-center p-4 backdrop-blur-md transition-opacity">
         <div class="bg-white border-8 border-black p-6 md:p-8 max-w-sm w-full shadow-[8px_8px_0_0_#000] transform -rotate-1 flex flex-col items-center text-center relative">
             <div id="dialogIconContainer" class="mb-4 bg-yellow-300 border-4 border-black p-3 shadow-[4px_4px_0_0_#000] transform rotate-3">
@@ -339,7 +300,7 @@
         // Initialize Lucide Icons
         lucide.createIcons();
 
-        // --- SISTEM CUSTOM DIALOG (PENGGANTI ALERT/CONFIRM) ---
+        // --- SISTEM CUSTOM DIALOG (Untuk Dana Copy) ---
         const customDialog = {
             show: function(title, message, type = 'alert', icon = 'bell') {
                 return new Promise((resolve) => {
@@ -352,44 +313,19 @@
                     titleEl.innerText = title;
                     messageEl.innerText = message;
                     
-                    // Update icon using Lucide
                     iconEl.setAttribute('data-lucide', icon);
                     lucide.createIcons();
 
-                    btnContainer.innerHTML = ''; // Clear existing buttons
+                    btnContainer.innerHTML = ''; 
 
-                    if (type === 'confirm') {
-                        // Tombol Batal
-                        const btnBatal = document.createElement('button');
-                        btnBatal.className = "flex-1 bg-white border-4 border-black py-2 font-black hover:bg-gray-200 active:translate-y-1 shadow-[4px_4px_0_0_#000]";
-                        btnBatal.innerText = "Nda Jadi";
-                        btnBatal.onclick = () => {
-                            this.close();
-                            resolve(false);
-                        };
-
-                        // Tombol Ya
-                        const btnYa = document.createElement('button');
-                        btnYa.className = "flex-1 bg-pink-500 text-white border-4 border-black py-2 font-black hover:bg-pink-400 active:translate-y-1 shadow-[4px_4px_0_0_#000]";
-                        btnYa.innerText = "Iye, Yakin!";
-                        btnYa.onclick = () => {
-                            this.close();
-                            resolve(true);
-                        };
-
-                        btnContainer.appendChild(btnBatal);
-                        btnContainer.appendChild(btnYa);
-                    } else {
-                        // Tombol OK untuk Alert
-                        const btnOk = document.createElement('button');
-                        btnOk.className = "w-full bg-cyan-400 border-4 border-black py-2 font-black hover:bg-cyan-300 active:translate-y-1 shadow-[4px_4px_0_0_#000]";
-                        btnOk.innerText = "Okeee!";
-                        btnOk.onclick = () => {
-                            this.close();
-                            resolve(true);
-                        };
-                        btnContainer.appendChild(btnOk);
-                    }
+                    const btnOk = document.createElement('button');
+                    btnOk.className = "w-full bg-cyan-400 border-4 border-black py-2 font-black hover:bg-cyan-300 active:translate-y-1 shadow-[4px_4px_0_0_#000]";
+                    btnOk.innerText = "Okeee!";
+                    btnOk.onclick = () => {
+                        this.close();
+                        resolve(true);
+                    };
+                    btnContainer.appendChild(btnOk);
 
                     overlay.classList.remove('hidden');
                     overlay.classList.add('flex');
@@ -402,6 +338,7 @@
             }
         };
 
+<<<<<<< HEAD
         // Data Koordinat 8 SMA Negeri di Soppeng
         const SCHOOL_DATA = [
             { id: 1, name: "SMA Negeri 1 Soppeng", lat: -4.355669, lng: 119.882877 },
@@ -608,6 +545,8 @@
             }
         });
 
+=======
+>>>>>>> dbf1f14d845ba897e7bbf3e46730e67607c2ceeb
         // ==========================================
         // LOGIKA TOMBOL RAHASIA (EASTER EGG)
         // ==========================================
@@ -635,7 +574,7 @@
             }
         });
 
-        // Copy Nomor DANA (menggunakan execCommand untuk iframe compatibility)
+        // Copy Nomor DANA
         async function copyDanaNumber() {
             var tempInput = document.createElement("input");
             tempInput.value = "087717416198";
@@ -645,6 +584,7 @@
             document.body.removeChild(tempInput);
             await customDialog.show('Makasih Tawwa!', 'Yay! Berhasil mi di-copy nomor DANA-nya! Makasih banyak nah orang baik, sehat selalu ki\'! 💖', 'alert', 'heart');
         }
+<<<<<<< HEAD
 
         // ==========================================
         // SUBMIT FORM
@@ -750,6 +690,9 @@
                 btnIcon.style.display = 'block';
             }
         });
+=======
+>>>>>>> dbf1f14d845ba897e7bbf3e46730e67607c2ceeb
     </script>
 </body>
 </html>
+
