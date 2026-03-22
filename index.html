@@ -608,44 +608,7 @@
             }
         });
 
-        // ==========================================
-        // LOGIKA TOMBOL RAHASIA (EASTER EGG)
-        // ==========================================
-        const secretTrigger = document.getElementById('secretTrigger');
-        const secretModal = document.getElementById('secretModal');
-        const closeSecretBtn = document.getElementById('closeSecretBtn');
-
-        // Buka modal kalau diklik
-        secretTrigger.addEventListener('click', () => {
-            secretModal.classList.remove('hidden');
-            secretModal.classList.add('flex');
-        });
-
-        // Tutup modal
-        closeSecretBtn.addEventListener('click', () => {
-            secretModal.classList.add('hidden');
-            secretModal.classList.remove('flex');
-        });
-
-        // Tutup modal kalau klik di luar area kotak kuning
-        secretModal.addEventListener('click', (e) => {
-            if(e.target === secretModal) {
-                secretModal.classList.add('hidden');
-                secretModal.classList.remove('flex');
-            }
-        });
-
-        // Copy Nomor DANA (menggunakan execCommand untuk iframe compatibility)
-        async function copyDanaNumber() {
-            var tempInput = document.createElement("input");
-            tempInput.value = "087717416198";
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempInput);
-            await customDialog.show('Makasih Tawwa!', 'Yay! Berhasil mi di-copy nomor DANA-nya! Makasih banyak nah orang baik, sehat selalu ki\'! 💖', 'alert', 'heart');
-        }
-
+       
         // ==========================================
         // SUBMIT FORM
         // ==========================================
