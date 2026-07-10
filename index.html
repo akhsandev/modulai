@@ -1,689 +1,736 @@
-<!DOCTYPE html>
-<html lang="id">
+<!doctype html>
+<html lang="id" data-bs-theme="auto">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SUARA KAREBA SMANSA</title>
-    
-    <!-- Meta Tags untuk Preview WhatsApp & Sosial Media -->
-    <meta property="og:title" content="SUARA KAREBA SMANSA" />
-    <meta property="og:description" content="Dengarkan siaran langsung Radio SMAN 1 Soppeng. Puterin lagu-lagu hits kekinian, bisa request lagu dan titip salam sekarang!" />
-    <meta property="og:image" content="https://arafx.vercel.app/logo.png" />
-    <meta property="og:type" content="website" />
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter untuk kesan minimalis dan profesional -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        /* Variabel CSS Dinamis untuk Fitur Ganti Tema Warna */
-        :root {
-            --theme-color: #22d3ee; /* Default: Cyan-400 */
-            --theme-glow: rgba(34, 211, 238, 0.4);
-        }
+    <!-- Common Tag -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Website Undangan Pernikahan Wahyu dan Riski Secara Online</title>
 
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #2c313a; 
-            color: #e2e8f0; 
-            overflow-x: hidden;
-            overscroll-behavior-y: none; 
-        }
+    <!-- SEO Tag -->
+    <meta name="author" content="dewanakl">
+    <meta name="language" content="id">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="googlebot" content="index, follow, max-image-preview:large">
+    <meta name="title" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online">
+    <meta name="description" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online">
+    <meta name="keywords" content="undangan, wedding, undangan digital, undangan online, wedding invitation, template undangan, template undangan pernikahan, undangan pernikahan, template undangan online, wedding invitation github, template website, template website undangan pernikahan">
+    <meta property="og:title" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online">
+    <meta property="og:description" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online">
+    <meta property="og:keywords" content="undangan, wedding, undangan digital, undangan online, wedding invitation, template undangan, template undangan pernikahan, undangan pernikahan, template undangan online, wedding invitation github, template website, template website undangan pernikahan">
+    <meta property="og:image" content="https://ulems.my.id/assets/images/bg.webp">
+    <meta property="og:image:secure_url" content="https://ulems.my.id/assets/images/bg.webp">
+    <meta property="og:image:type" content="image/webp">
+    <meta property="og:image:alt" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online">
+    <meta property="og:image:width" content="980">
+    <meta property="og:image:height" content="980">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:url" content="https://ulems.my.id">
+    <meta property="og:site_name" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online">
 
-        /* Class Custom untuk Tema */
-        .text-theme { color: var(--theme-color) !important; transition: color 0.4s ease; }
-        .bg-theme { background-color: var(--theme-color) !important; transition: background-color 0.4s ease; }
-        .border-theme { border-color: var(--theme-color) !important; transition: border-color 0.4s ease; }
+    <!-- Appearance -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online">
+    <meta name="theme-color" content="#000000">
+    <meta name="color-scheme" content="dark light">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="canonical" href="https://ulems.my.id/">
+    <link rel="shortcut icon" type="image/x-icon" href="https://ulems.my.id/assets/favicon.ico">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://ulems.my.id/assets/images/icon-192x192.png">
+    <link rel="icon" type="image/x-icon" href="https://ulems.my.id/assets/favicon.ico">
 
-        /* Elemen Timbul & Tenggelam Dark Mode */
-        .neu-flat { background: #2c313a; box-shadow: 8px 8px 16px #1d2127, -8px -8px 16px #3b414d; }
-        .neu-pressed { background: #2c313a; box-shadow: inset 6px 6px 10px #1d2127, inset -6px -6px 10px #3b414d; }
+    <!-- Preconnect CDN -->
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 
-        /* Tombol & Interaksi */
-        .neu-button { transition: all 0.2s ease-in-out; }
-        .neu-button:active { box-shadow: inset 4px 4px 8px #1d2127, inset -4px -4px 8px #3b414d; transform: scale(0.95); }
+    <!-- Preload Resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic&display=swap" as="style">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" integrity="sha256-zRgmWB5PK4CvTx4FiXsxbHaYRBBjz/rvu97sOC7kzXI=" crossorigin="anonymous" as="style">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous" as="style">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha256-NfRUfZNkERrKSFA0c1a8VmCplPDYtpTYj5lQmKe1R/o=" crossorigin="anonymous" as="script">
 
-        /* Input Form Dark Mode */
-        .neu-input {
-            background: #2c313a;
-            box-shadow: inset 4px 4px 8px #1d2127, inset -4px -4px 8px #3b414d;
-            border: none; outline: none; transition: all 0.2s ease; color: #e2e8f0;
-        }
-        .neu-input:focus { box-shadow: inset 6px 6px 10px #1d2127, inset -6px -6px 10px #3b414d; }
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic&display=swap">
 
-        /* Styling Khusus Slider Volume Neumorphism */
-        input[type=range] { -webkit-appearance: none; background: transparent; width: 100%; }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 14px; width: 14px; border-radius: 50%;
-            background: #2c313a; box-shadow: 2px 2px 4px #1d2127, -2px -2px 4px #3b414d;
-            cursor: pointer; margin-top: -5px; 
-            border: 2px solid var(--theme-color); /* Warna pinggiran dinamis */
-            transition: border-color 0.4s ease;
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 4px; cursor: pointer; background: #2c313a;
-            border-radius: 2px; box-shadow: inset 2px 2px 4px #1d2127, inset -2px -2px 4px #3b414d;
-        }
+    <!-- Dependencies CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" integrity="sha256-zRgmWB5PK4CvTx4FiXsxbHaYRBBjz/rvu97sOC7kzXI=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/guest.css">
 
-        /* Marquee Text (Teks Berjalan) */
-        .marquee-container {
-            width: 100%; overflow: hidden; white-space: nowrap; position: relative; padding: 2px 0;
-            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-            -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-        }
-        .marquee-content { display: inline-block; animation: marquee 15s linear infinite; }
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-        /* Animasi */
-        .spin-slow { animation: spin 8s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes eqBounce { 0% { height: 3px; } 100% { height: 14px; } }
-        @keyframes floatUp {
-            0% { transform: translate(0, 0) scale(0.8); opacity: 1; }
-            80% { opacity: 0.8; }
-            100% { transform: translate(var(--tx), -120px) scale(1.5) rotate(15deg); opacity: 0; }
-        }
-
-        /* Sembunyikan Scrollbar */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        a.cc_streaminfo { text-decoration: none; color: inherit; pointer-events: none; }
-
-        /* RECENT TRACKS CENTOVA CAST */
-        .cc_recenttracks_list { width: 100%; font-size: 10px; color: #94a3b8; text-align: left; overflow: hidden; }
-        @media (min-width: 640px) { .cc_recenttracks_list { font-size: 11px; } }
-        .cc_recenttracks_list table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        .cc_recenttracks_list td { padding: 4px 0; border-bottom: 1px solid #3b414d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
-        .cc_recenttracks_list td:first-child { width: 36px; padding-right: 6px; } 
-        .cc_recenttracks_list img { width: 30px; height: 30px; min-width: 30px; border-radius: 4px; object-fit: cover; }
-        .cc_recenttracks_list tr:last-child td { border-bottom: none; }
-        .cc_recenttracks_list a { color: #e2e8f0; font-weight: 600; text-decoration: none; pointer-events: none; }
-    </style>
+    <!-- Dependencies JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha256-NfRUfZNkERrKSFA0c1a8VmCplPDYtpTYj5lQmKe1R/o=" crossorigin="anonymous"></script>
+    <script src="./dist/guest.js"></script>
 </head>
-<body class="flex items-center justify-center min-h-[100dvh] py-4 sm:py-6 px-4 pb-28 relative">
 
-    <!-- ========================================== -->
-    <!-- SPLASH SCREEN (LOADING LAYAR PENUH)        -->
-    <!-- ========================================== -->
-    <div id="loadingScreen" class="fixed inset-0 z-[100] bg-[#2c313a] flex flex-col items-center justify-center transition-opacity duration-[1000ms]">
-        <div class="relative w-28 h-28 sm:w-32 sm:h-32 mb-8 flex items-center justify-center">
-            <!-- Cincin Loading Berputar -->
-            <div class="absolute inset-0 rounded-full border-4 border-[#3b414d] border-t-cyan-400 border-b-cyan-400 animate-spin"></div>
-            <!-- Efek Nyala di Belakang Logo -->
-            <div class="absolute inset-3 bg-cyan-400 rounded-full animate-pulse opacity-40 blur-lg"></div>
-            <!-- Logo SMANSA -->
-            <img src="https://arafx.vercel.app/logo.png" alt="Loading Logo" class="absolute inset-2 w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-full p-1.5 bg-[#2c313a] z-10">
-        </div>
-        <h2 class="text-cyan-400 font-bold tracking-widest uppercase animate-pulse text-sm sm:text-base text-center px-4">Menyiapkan Frekuensi...</h2>
-        <p class="text-gray-400 text-[10px] sm:text-xs mt-3 font-medium text-center px-6">Memuat lagu-lagu hits kekinian SMANSA <i class="fas fa-headphones-alt ml-1"></i></p>
-    </div>
+<!-- Jika tidak menggunakan komentar, hapus atribut data-key dan data-url, serta abaikan file dashboard.html. -->
+<!-- If you're not using comments, remove the data-key and data-url attributes, and ignore dashboard.html. -->
 
-    <!-- KONTAINER UTAMA -->
-    <div class="max-w-md w-full flex flex-col items-center justify-center relative z-10">
+<!-- Jika tidak menggunakan lagu, hapus atribut data-audio. -->
+<!-- If you're not using a song, remove the data-audio attribute. -->
 
-        <!-- KONTROL RADIO & FITUR BARU -->
-        <div class="neu-flat rounded-[32px] p-4 sm:p-8 w-full flex flex-col items-center justify-center relative">
-            
-            <!-- Cover Album Putar -->
-            <div class="neu-flat rounded-full p-1.5 sm:p-2 mb-3 sm:mb-6 w-32 h-32 sm:w-52 sm:h-52 flex items-center justify-center relative shrink-0">
-                <!-- Efek Gelombang Memancar (Theme Enabled) -->
-                <div id="glowRing1" class="absolute inset-0 rounded-full border border-theme opacity-0 pointer-events-none transition-opacity duration-500"></div>
-                <!-- Inti Lampu Neon (Theme Enabled) -->
-                <div id="glowRing2" class="absolute inset-0 rounded-full opacity-0 pointer-events-none transition-opacity duration-500" style="box-shadow: 0 0 20px 2px var(--theme-glow);"></div>
-                
-                <div class="neu-pressed rounded-full w-full h-full overflow-hidden flex items-center justify-center bg-[#2c313a]">
-                    <img src="https://arafx.vercel.app/logo.png" class="cc_streaminfo w-full h-full object-cover rounded-full transition-all duration-500" data-type="trackimageurl" data-username="karebasoppeng" alt="Cover Album" id="albumArt" onerror="this.src='https://arafx.vercel.app/logo.png'">
-                </div>
-            </div>
+<!-- Ubah atribut time menjadi time-data (mengikuti format yang ditentukan). -->
+<!-- Change the time attribute to time-data (follow the required format). -->
 
-            <h1 class="text-lg sm:text-2xl font-bold text-gray-200 tracking-wide text-center uppercase leading-tight">SUARA KAREBA</h1>
-            <p class="text-[9px] sm:text-xs font-semibold text-gray-400 tracking-widest mt-0.5 mb-3 sm:mb-6 uppercase">SMAN 1 SOPPENG</p>
+<!-- Atur data-confetti ke 'false' jika tidak ingin menggunakan konfeti. Hanya berfungsi saat komentar dimatikan. -->
+<!-- Set data-confetti to 'false' if you don't want confetti. Only works when comments are disabled. -->
 
-            <!-- Teks Berjalan & Audio Visualizer -->
-            <div class="w-full neu-pressed rounded-full px-4 py-2 sm:px-5 sm:py-3 mb-3 sm:mb-5 flex items-center shrink-0 h-9 sm:h-11">
-                <i id="musicIconStatic" class="fas fa-music text-theme text-xs sm:text-sm mr-3 sm:mr-4"></i>
-                
-                <!-- Audio Visualizer Equalizer (Theme Enabled) -->
-                <div id="visualizer" class="hidden flex items-end justify-center h-3.5 sm:h-4 gap-[2px] mr-3 sm:mr-4 w-4">
-                    <div class="w-1 bg-theme rounded-t-sm animate-[eqBounce_0.6s_ease-in-out_infinite_alternate]" style="animation-delay: 0.1s"></div>
-                    <div class="w-1 bg-theme rounded-t-sm animate-[eqBounce_0.6s_ease-in-out_infinite_alternate]" style="animation-delay: 0.4s"></div>
-                    <div class="w-1 bg-theme rounded-t-sm animate-[eqBounce_0.6s_ease-in-out_infinite_alternate]" style="animation-delay: 0.2s"></div>
-                </div>
+<!-- Kamu bisa langsung gunakan file rilis GitHub (guest.css, guest.js, admin.css, admin.js) tanpa perlu build. -->
+<!-- You can use GitHub release files (guest.css, guest.js, admin.css, admin.js) directly without compiling. -->
 
-                <div class="marquee-container text-[11px] sm:text-sm font-semibold text-gray-300">
-                    <div class="marquee-content">
-                        <a href="https://c4.siar.us:2199/tunein/karebasoppeng.pls" class="cc_streaminfo" data-type="song" data-username="karebasoppeng">Memuat data lagu...</a>
+<!-- Disarankan menggunakan 'data-src' pada tag <img> -->
+<!-- It's recommended to use 'data-src' in the <img> tag -->
+
+<!-- <html lang="id" data-bs-theme="auto"> ['auto', 'dark', 'light'] -->
+
+<body data-key="201153d27808b454e8ec715d62cb1e7a7b0aed6b422075ee32" data-url="https://script.google.com/macros/s/AKfycbziJlhzDuTlPuAMd8O-y8zUy11H8zj-7q8cGqpOVlNJhD9YnbwKXMkI9AM-t0A9s0Sb1w/exec" data-audio="./assets/music/pure-love-304010.mp3" data-confetti="true" data-time="2024-01-01 09:30:00">
+
+    <!-- Root Invitation -->
+    <div class="row m-0 p-0 opacity-0" id="root">
+
+        <!-- Desktop mode -->
+        <div class="sticky-top vh-100 d-none d-sm-block col-sm-5 col-md-6 col-lg-7 col-xl-8 col-xxl-9 overflow-y-hidden m-0 p-0">
+            <div class="position-relative bg-white-black d-flex justify-content-center align-items-center vh-100">
+                <div class="d-flex position-absolute w-100 h-100">
+                    <div class="position-relative overflow-hidden vw-100">
+                        <div class="position-absolute h-100 w-100 slide-desktop" style="opacity: 0;">
+                            <img src="./assets/images/placeholder.webp" data-src="https://picsum.photos/1000/1000?random=7" alt="bg" class="bg-cover-home" style="mask-image: none; opacity: 30%;">
+                        </div>
+                        <div class="position-absolute h-100 w-100 slide-desktop" style="opacity: 0;">
+                            <img src="./assets/images/placeholder.webp" data-src="https://picsum.photos/1000/1000?random=8" alt="bg" class="bg-cover-home" style="mask-image: none; opacity: 30%;">
+                        </div>
+                        <div class="position-absolute h-100 w-100 slide-desktop" style="opacity: 0;">
+                            <img src="./assets/images/placeholder.webp" data-src="https://picsum.photos/1000/1000?random=9" alt="bg" class="bg-cover-home" style="mask-image: none; opacity: 30%;">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Audio Player (Tersembunyi) -->
-            <audio id="radioStream" src="https://c4.siar.us/proxy/karebasoppeng/stream" crossorigin="anonymous" preload="none"></audio>
-
-            <!-- Baris Utama: Play & Stats -->
-            <div class="flex items-center justify-between w-full px-4 mb-3 sm:mb-5 shrink-0">
-                <div class="flex flex-col items-center w-12">
-                    <span class="text-[8px] sm:text-[9px] text-gray-400 font-bold uppercase tracking-wider">Pndngr</span>
-                    <span class="cc_streaminfo text-xs sm:text-sm font-bold text-theme mt-0.5" data-type="listeners" data-username="karebasoppeng">0</span>
-                </div>
-                
-                <!-- Tombol Play -->
-                <button id="playBtn" class="neu-flat neu-button w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center text-theme cursor-pointer mx-2 transition-colors duration-300 shrink-0">
-                    <i class="fas fa-play text-lg sm:text-xl ml-1" id="playIcon"></i>
-                </button>
-
-                <div class="flex flex-col items-center w-12">
-                    <span class="text-[8px] sm:text-[9px] text-gray-400 font-bold uppercase tracking-wider">Status</span>
-                    <span class="cc_streaminfo text-[10px] sm:text-xs font-bold text-theme mt-0.5 uppercase truncate w-full text-center" data-type="server" data-username="karebasoppeng">-</span>
+                <div class="text-center p-4 bg-overlay-auto rounded-5">
+                    <h2 class="font-esthetic mb-4" style="font-size: 2rem;">Wahyu &amp; Riski</h2>
+                    <p class="m-0" style="font-size: 1rem;">Rabu, 15 Maret 2023</p>
                 </div>
             </div>
+        </div>
 
-            <!-- Baris 5 Fitur Ajaib: Love, Tema, Volume, Sleep, Share -->
-            <div class="flex items-center justify-between w-full px-1 sm:px-2 mb-3 sm:mb-5 shrink-0 gap-1.5 sm:gap-2">
-                
-                <button id="btnHeart" class="relative neu-flat neu-button w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-red-500 shrink-0" title="Kirim Hati">
-                    <i class="fas fa-heart text-xs sm:text-sm pointer-events-none"></i>
-                </button>
-                
-                <!-- Fitur Ganti Tema Warna -->
-                <button id="btnTheme" class="neu-flat neu-button w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-theme shrink-0" title="Ganti Warna">
-                    <i class="fas fa-palette text-xs sm:text-sm pointer-events-none"></i>
-                </button>
-                
-                <!-- Volume Slider -->
-                <div class="flex-1 flex items-center justify-center gap-1.5 px-1">
-                    <i class="fas fa-volume-down text-gray-500 text-[9px] sm:text-[10px]"></i>
-                    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1" title="Atur Volume">
-                    <i class="fas fa-volume-up text-theme text-[9px] sm:text-[10px]" id="volIconMax"></i>
-                </div>
+        <!-- Smartphone mode -->
+        <div class="col-sm-7 col-md-6 col-lg-5 col-xl-4 col-xxl-3 m-0 p-0">
+            <!-- Main Content -->
+            <main data-bs-spy="scroll" data-bs-target="#navbar-menu" data-bs-root-margin="25% 0% 0% 0%" data-bs-smooth-scroll="true" tabindex="0">
 
-                <!-- Fitur Sleep Timer -->
-                <button id="btnSleep" class="neu-flat neu-button w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-indigo-400 shrink-0" title="Timer Tidur">
-                    <i class="fas fa-moon text-xs sm:text-sm pointer-events-none"></i>
-                </button>
+                <!-- Home -->
+                <section id="home" class="bg-light-dark position-relative overflow-hidden p-0 m-0">
+                    <img src="./assets/images/placeholder.webp" data-src="./assets/images/bg.webp" alt="bg" class="position-absolute opacity-25 top-50 start-50 translate-middle bg-cover-home">
 
-                <!-- Tombol Share -->
-                <button id="btnShare" class="neu-flat neu-button w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-green-400 shrink-0" title="Bagikan Radio">
-                    <i class="fas fa-share-alt text-xs sm:text-sm pointer-events-none"></i>
-                </button>
-            </div>
+                    <div class="position-relative text-center bg-overlay-auto" style="background-color: unset;">
+                        <h1 class="font-esthetic pt-5 pb-4 fw-medium" style="font-size: 2.25rem;">Undangan Pernikahan</h1>
 
-            <!-- RIWAYAT LAGU -->
-            <div class="w-full pt-3 sm:pt-4 border-t border-[#3b414d] shrink-0">
-                <h3 class="text-[8px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center justify-center">
-                    <i class="fas fa-history mr-2 text-theme"></i> Riwayat Putaran
-                </h3>
-                <div class="neu-pressed w-full h-24 sm:h-28 rounded-2xl p-2.5 sm:p-4 overflow-y-auto overflow-x-hidden no-scrollbar">
-                    <div class="cc_recenttracks_list" data-username="karebasoppeng">
-                        <div class="text-center text-[9px] sm:text-xs text-gray-500 italic mt-4 sm:mt-6">Memuat riwayat...</div>
+                        <img src="./assets/images/placeholder.webp" data-src="./assets/images/bg.webp" alt="bg" onclick="undangan.guest.modal(this)" class="img-center-crop rounded-circle border border-3 border-light shadow my-4 mx-auto cursor-pointer">
+
+                        <h2 class="font-esthetic my-4" style="font-size: 2.25rem;">Wahyu &amp; Riski</h2>
+                        <p class="my-2" style="font-size: 1.25rem;">Rabu, 15 Maret 2023</p>
+
+                        <button class="btn btn-outline-auto btn-sm shadow rounded-pill px-3 py-1" style="font-size: 0.825rem;">
+                            <i class="fa-solid fa-calendar-check me-2"></i>Save Google Calendar
+                        </button>
+
+                        <div class="d-flex justify-content-center align-items-center mt-4 mb-2">
+                            <div class="mouse-animation border border-secondary border-2 rounded-5 px-2 py-1 opacity-50">
+                                <div class="scroll-animation rounded-4 bg-secondary"></div>
+                            </div>
+                        </div>
+
+                        <p class="pb-4 m-0 text-secondary" style="font-size: 0.825rem;">Scroll Down</p>
                     </div>
+                </section>
+
+                <!-- Wave Separator -->
+                <div class="svg-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="color-theme-svg no-gap-bottom">
+                        <path fill="currentColor" fill-opacity="1" d="M0,160L48,144C96,128,192,96,288,106.7C384,117,480,171,576,165.3C672,160,768,96,864,96C960,96,1056,160,1152,154.7C1248,149,1344,75,1392,37.3L1440,0L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                    </svg>
                 </div>
-            </div>
-        </div>
 
-        <!-- ========================================== -->
-        <!-- PINTASAN SOSMED & CREDIT PANDU DIGITAL     -->
-        <!-- ========================================== -->
-        <div class="mt-5 sm:mt-6 flex flex-col items-center justify-center text-center w-full shrink-0">
-            <p class="text-[9px] sm:text-[10px] text-gray-400 mb-2.5 font-medium tracking-wide">
-                Dibuat dengan <i class="fas fa-heart text-red-500 mx-0.5 animate-pulse"></i> oleh <br>
-                <span class="font-bold text-gray-200 block mt-1">Pandu Digital SMAN 1 Soppeng</span>
-            </p>
-            <div class="flex gap-4">
-                <a href="https://instagram.com/pandudigitalsmansaspg" target="_blank" class="neu-flat w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-pink-400 transition-colors cursor-pointer" title="Instagram SMANSA">
-                    <i class="fab fa-instagram text-sm"></i>
-                </a>
-                <a href="https://www.tiktok.com/@pandudigitalsmansaspg" target="_blank" class="neu-flat w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer" title="TikTok SMANSA">
-                    <i class="fab fa-tiktok text-sm"></i>
-                </a>
-                <a href="https://sman1soppeng.sch.id" target="_blank" class="neu-flat w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-blue-400 transition-colors cursor-pointer" title="Website SMANSA">
-                    <i class="fas fa-globe text-sm"></i>
-                </a>
-            </div>
-        </div>
+                <!-- Bride -->
+                <section class="bg-white-black text-center" id="bride">
+                    <h2 class="font-arabic py-4 m-0" style="font-size: 2rem;">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</h2>
+                    <h2 class="font-esthetic py-4 m-0" style="font-size: 2rem;">Assalamualaikum Warahmatullahi Wabarakatuh</h2>
+                    <p class="pb-4 px-2 m-0" style="font-size: 0.95rem;">Tanpa mengurangi rasa hormat, kami mengundang Anda untuk berkenan menghadiri acara pernikahan kami:</p>
 
-    </div> <!-- Akhir dari Kontainer Utama -->
+                    <div class="overflow-x-hidden pb-4">
 
-    <!-- ========================================== -->
-    <!-- MODAL POP-UP SLEEP TIMER                   -->
-    <!-- ========================================== -->
-    <div id="sleepModal" class="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300 opacity-0 pointer-events-none">
-        <div class="neu-flat border border-[#3b414d] rounded-[24px] p-6 w-full max-w-xs transform scale-90 transition-transform duration-300 text-center" id="sleepCard">
-            <h3 class="text-indigo-400 font-bold mb-2 text-sm uppercase tracking-wider"><i class="fas fa-moon mr-2"></i> Timer Tidur</h3>
-            <p class="text-[10px] sm:text-xs text-gray-400 mb-5">Radio akan mati otomatis dalam:</p>
-            
-            <div class="grid grid-cols-2 gap-3 mb-4">
-                <button class="timer-btn neu-pressed text-gray-300 py-2.5 rounded-xl text-xs hover:text-indigo-400 transition-colors" data-time="15">15 Menit</button>
-                <button class="timer-btn neu-pressed text-gray-300 py-2.5 rounded-xl text-xs hover:text-indigo-400 transition-colors" data-time="30">30 Menit</button>
-                <button class="timer-btn neu-pressed text-gray-300 py-2.5 rounded-xl text-xs hover:text-indigo-400 transition-colors" data-time="60">1 Jam</button>
-                <button class="timer-btn neu-pressed text-red-400 py-2.5 rounded-xl text-xs hover:text-red-300 transition-colors" data-time="0">Matikan Timer</button>
-            </div>
-            
-            <p id="timerStatus" class="text-[10px] text-indigo-400 font-bold hidden animate-pulse mb-4"></p>
-            <button id="closeSleepBtn" class="w-full neu-flat neu-button py-2.5 rounded-xl text-gray-400 text-xs font-bold tracking-widest hover:text-red-400">TUTUP</button>
+                        <div class="position-relative">
+                            <!-- Love animation -->
+                            <div class="position-absolute" style="top: 0%; right: 5%;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="opacity-50" data-time="500" data-class="animate-love" viewBox="0 0 16 16">
+                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
+                                </svg>
+                            </div>
+
+                            <div data-aos="fade-right" data-aos-duration="2000" class="pb-1">
+                                <img src="./assets/images/placeholder.webp" data-src="./assets/images/cowo.webp" alt="cowo" onclick="undangan.guest.modal(this)" class="img-center-crop rounded-circle border border-3 border-light shadow my-4 mx-auto cursor-pointer">
+                                <h2 class="font-esthetic m-0" style="font-size: 2.125rem;">Nama Wahyu Siapa</h2>
+                                <p class="mt-3 mb-1" style="font-size: 1.25rem;">Putra ke-1</p>
+                                <p class="mb-0" style="font-size: 0.95rem;">Bapak lorem ipsum</p>
+                                <p class="mb-0" style="font-size: 0.95rem;">dan</p>
+                                <p class="mb-0" style="font-size: 0.95rem;">Ibu lorem ipsum</p>
+                            </div>
+
+                            <!-- Love animation -->
+                            <div class="position-absolute" style="top: 90%; left: 5%;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="opacity-50" data-time="2000" data-class="animate-love" viewBox="0 0 16 16">
+                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <h2 class="font-esthetic mt-4" style="font-size: 4.5rem;">&amp;</h2>
+
+                        <div class="position-relative">
+                            <!-- Love animation -->
+                            <div class="position-absolute" style="top: 0%; right: 5%;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="opacity-50" data-time="3000" data-class="animate-love" viewBox="0 0 16 16">
+                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
+                                </svg>
+                            </div>
+
+                            <div data-aos="fade-left" data-aos-duration="2000" class="pb-1">
+                                <img src="./assets/images/placeholder.webp" data-src="./assets/images/cewe.webp" alt="cewe" onclick="undangan.guest.modal(this)" class="img-center-crop rounded-circle border border-3 border-light shadow my-4 mx-auto cursor-pointer">
+                                <h2 class="font-esthetic m-0" style="font-size: 2.125rem;">Nama Riski Siapa</h2>
+                                <p class="mt-3 mb-1" style="font-size: 1.25rem;">Putri ke-2</p>
+                                <p class="mb-0" style="font-size: 0.95rem;">Bapak lorem ipsum</p>
+                                <p class="mb-0" style="font-size: 0.95rem;">dan</p>
+                                <p class="mb-0" style="font-size: 0.95rem;">Ibu lorem ipsum</p>
+                            </div>
+
+                            <!-- Love animation -->
+                            <div class="position-absolute" style="top: 90%; left: 5%;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="opacity-50" data-time="2500" data-class="animate-love" viewBox="0 0 16 16">
+                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Wave Separator -->
+                <div class="svg-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="color-theme-svg no-gap-bottom">
+                        <path fill="currentColor" fill-opacity="1" d="M0,192L40,181.3C80,171,160,149,240,149.3C320,149,400,171,480,165.3C560,160,640,128,720,128C800,128,880,160,960,186.7C1040,213,1120,235,1200,218.7C1280,203,1360,149,1400,122.7L1440,96L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z"></path>
+                    </svg>
+                </div>
+
+                <!-- Firman Allah Subhanahu Wa Ta'ala -->
+                <section class="bg-light-dark pt-2 pb-4">
+                    <div class="container text-center">
+                        <h2 class="font-esthetic pt-2 pb-1 m-0" style="font-size: 2rem;">Allah Subhanahu Wa Ta'ala berfirman</h2>
+
+                        <div class="bg-theme-auto mt-4 p-3 shadow rounded-4" data-aos="fade-down" data-aos-duration="2000">
+                            <p class="p-1 mb-2" style="font-size: 0.95rem;">Dan segala sesuatu Kami ciptakan berpasang-pasangan agar kamu mengingat (kebesaran Allah).</p>
+                            <p class="m-0 p-0 text-theme-auto" style="font-size: 0.95rem;">QS. Adh-Dhariyat: 49</p>
+                        </div>
+
+                        <div class="bg-theme-auto mt-4 p-3 shadow rounded-4" data-aos="fade-down" data-aos-duration="2000">
+                            <p class="p-1 mb-2" style="font-size: 0.95rem;">dan sesungguhnya Dialah yang menciptakan pasangan laki-laki dan perempuan,</p>
+                            <p class="m-0 p-0 text-theme-auto" style="font-size: 0.95rem;">QS. An-Najm: 45</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Love Story -->
+                <section class="bg-light-dark pt-2 pb-4">
+                    <div class="container">
+                        <div class="bg-theme-auto rounded-5 shadow p-3">
+                            <h2 class="font-esthetic text-center py-2 mb-2" style="font-size: 2.125rem;">Kisah Cinta</h2>
+
+                            <!-- Jika tidak ingin menggunakan video, hapus seluruh tag dengan id="video-love-story" di bawah ini. -->
+                            <!-- If you don't want to use the video, remove the entire tag with id="video-love-story" below. -->
+
+                            <div id="video-love-stroy" class="position-relative rounded-4 mb-1 pb-0" data-src="./assets/video/265501_tiny.mp4" data-vid-class="w-100 rounded-4 shadow-sm m-0 p-0">
+                                <div class="position-absolute d-flex flex-column justify-content-center align-items-center top-50 start-50 translate-middle w-100 h-100 bg-overlay-auto rounded-4 z-3" id="video-love-stroy-loading">
+                                    <div class="progress w-25" role="progressbar" style="height: 0.5rem;" aria-label="progress bar">
+                                        <div class="progress-bar" id="progress-bar-video-love-stroy" style="width: 0%;"></div>
+                                    </div>
+                                    <small class="mt-1 text-theme-auto bg-theme-auto py-0 px-2 rounded-4" id="progress-info-video-love-stroy" style="font-size: 0.7rem;"></small>
+                                </div>
+                            </div>
+
+                            <div class="position-relative">
+                                <div class="position-absolute d-flex justify-content-center align-items-center top-50 start-50 translate-middle w-100 h-100 bg-overlay-auto z-3" style="opacity: 100%; background-color: unset;">
+                                    <button class="btn btn-outline-auto btn-sm rounded-4 shadow-sm" onclick="undangan.guest.showStory(this.parentNode)"><i class="fa-solid fa-heart fa-bounce me-2"></i>Lihat Story</button>
+                                </div>
+
+                                <div class="overflow-y-scroll overflow-x-hidden p-2 with-scrollbar" style="height: 15rem;">
+                                    <div class="row">
+                                        <div class="col-auto position-relative">
+                                            <p class="position-relative d-flex justify-content-center align-items-center bg-theme-auto border border-secondary border-2 opacity-100 rounded-circle m-0 p-0 z-1" style="width: 2rem; height: 2rem;">1</p>
+                                            <hr class="position-absolute top-0 start-50 translate-middle-x border border-secondary h-100 z-0 opacity-100 m-0 rounded-4 shadow-none">
+                                        </div>
+                                        <div class="col mt-1 mb-3 ps-0">
+                                            <p class="fw-bold mb-2">💼 Awal Pertemuan Sederhana</p>
+                                            <p class="small mb-0">
+                                                Pada Januari 2025, Wahyu, seorang desainer grafis berusia 28 tahun, bertemu Riski, copywriter yang dikenal cerdas dan pendiam, dalam proyek branding perusahaan. Interaksi mereka di ruang rapat terbatas pada urusan kerja, penuh adab dan profesional. Tanpa Wahyu ketahui, Riski sebenarnya pernah melihat karya desain Wahyu di lomba nasional dua tahun lalu dan kagum dengan bakatnya. Namun, sesuai prinsipnya, Riski menjaga jarak dan hanya fokus pada tugas, menghindari interaksi yang tidak perlu.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-auto position-relative">
+                                            <p class="position-relative d-flex justify-content-center align-items-center bg-theme-auto border border-secondary border-2 opacity-100 rounded-circle m-0 p-0 z-1" style="width: 2rem; height: 2rem;">2</p>
+                                            <hr class="position-absolute top-0 start-50 translate-middle-x border border-secondary h-100 z-0 opacity-100 m-0 rounded-4 shadow-none">
+                                        </div>
+                                        <div class="col mt-1 mb-3 ps-0">
+                                            <p class="fw-bold mb-2">💞 Benih Cinta dalam Ujian</p>
+                                            <p class="small mb-0">
+                                                Memasuki Februari 2025, proyek mereka menghadapi krisis: klien menolak konsep awal dan mengancam membatalkan kontrak. Di tengah tekanan, Riski tampil dengan solusi kreatif yang menyelamatkan proyek, membuat Wahyu terkesan dengan ketenangan dan kecerdasannya. Diam-diam, Wahyu mulai memperhatikan Riski lebih dalam, terutama melalui unggahan media sosialnya yang penuh dengan nilai keimanan dan kesabaran. Merasa ada kesamaan visi, Wahyu beristikharah dan memutuskan memulai taaruf. Ia menghubungi seorang ustaz terpercaya sebagai perantara. Kejutan muncul saat Riski mengaku bahwa ia juga telah lama memperhatikan Wahyu, namun menahan diri hingga ada niat yang jelas, sebuah pengakuan yang membuat hati Wahyu hangat.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-auto position-relative">
+                                            <p class="position-relative d-flex justify-content-center align-items-center bg-theme-auto border border-secondary border-2 opacity-100 rounded-circle m-0 p-0 z-1" style="width: 2rem; height: 2rem;">3</p>
+                                            <hr class="position-absolute top-0 start-50 translate-middle-x border border-secondary h-100 z-0 opacity-100 m-0 rounded-4 shadow-none">
+                                        </div>
+                                        <div class="col mt-1 mb-3 ps-0">
+                                            <p class="fw-bold mb-2">💍 Langkah Menuju Ridha Allah</p>
+                                            <p class="small mb-0">
+                                                Proses taaruf berjalan penuh keikhlasan, dengan pendamping yang memastikan setiap langkah sesuai syariat. Wahyu dan Riski saling terbuka tentang impian membangun keluarga yang diridhai Allah. Namun, sebuah ujian datang: keluarga Riski ragu karena latar belakang ekonomi Wahyu yang sederhana. Di sinilah plot twist terungkap—Wahyu mempresentasikan rencana usaha sosial berbasis seni yang telah ia kembangkan diam-diam, menunjukkan visinya untuk memberi manfaat bagi umat. Presentasi itu meluluhkan hati keluarga Riski. Pada Maret 2025, setelah istikharah dan mendapat restu keluarga, Wahyu melamar Riski dalam acara sederhana namun penuh makna. Dengan niat tulus, mereka melangkah menuju pernikahan, yakin bahwa Allah telah merajut kisah mereka dengan indah.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Wave Separator -->
+                <div class="svg-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="color-theme-svg no-gap-bottom">
+                        <path fill="currentColor" fill-opacity="1" d="M0,96L30,106.7C60,117,120,139,180,154.7C240,171,300,181,360,186.7C420,192,480,192,540,181.3C600,171,660,149,720,154.7C780,160,840,192,900,208C960,224,1020,224,1080,208C1140,192,1200,160,1260,138.7C1320,117,1380,107,1410,101.3L1440,96L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z"></path>
+                    </svg>
+                </div>
+
+                <!-- Wedding Date -->
+                <section class="bg-white-black pb-2" id="wedding-date">
+                    <div class="container text-center">
+                        <h2 class="font-esthetic py-4 m-0" style="font-size: 2.25rem;">Moment Bahagia</h2>
+
+                        <div class="border rounded-pill shadow py-2 px-4 mt-2 mb-4">
+                            <div class="row justify-content-center">
+                                <div class="col-3 p-1">
+                                    <p class="d-inline m-0 p-0" style="font-size: 1.25rem;" id="day">0</p><small class="ms-1 me-0 my-0 p-0 d-inline">Hari</small>
+                                </div>
+                                <div class="col-3 p-1">
+                                    <p class="d-inline m-0 p-0" style="font-size: 1.25rem;" id="hour">0</p><small class="ms-1 me-0 my-0 p-0 d-inline">Jam</small>
+                                </div>
+                                <div class="col-3 p-1">
+                                    <p class="d-inline m-0 p-0" style="font-size: 1.25rem;" id="minute">0</p><small class="ms-1 me-0 my-0 p-0 d-inline">Menit</small>
+                                </div>
+                                <div class="col-3 p-1">
+                                    <p class="d-inline m-0 p-0" style="font-size: 1.25rem;" id="second">0</p><small class="ms-1 me-0 my-0 p-0 d-inline">Detik</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="py-2 m-0" style="font-size: 0.95rem;">Dengan memohon rahmat dan ridho Allah Subhanahu Wa Ta'ala, insyaAllah kami akan menyelenggarakan acara:</p>
+
+                        <!-- Love animation -->
+                        <div class="position-relative">
+                            <div class="position-absolute" style="top: 0%; right: 5%;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="opacity-50" data-time="3000" data-class="animate-love" viewBox="0 0 16 16">
+                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-hidden">
+                            <div class="py-2" data-aos="fade-right" data-aos-duration="1500">
+                                <h2 class="font-esthetic m-0 py-2" style="font-size: 2rem;">Akad</h2>
+                                <p style="font-size: 0.95rem;">Pukul 10.00 WIB - Selesai</p>
+                            </div>
+
+                            <div class="py-2" data-aos="fade-left" data-aos-duration="1500">
+                                <h2 class="font-esthetic m-0 py-2" style="font-size: 2rem;">Resepsi</h2>
+                                <p style="font-size: 0.95rem;">Pukul 13.00 WIB - Selesai</p>
+                            </div>
+                        </div>
+
+                        <p class="py-2 m-0" style="font-size: 0.95rem;">Demi kehangatan bersama, kami memohon kesediaan Anda untuk mengenakan dress code berikut:</p>
+
+                        <!-- Love animation -->
+                        <div class="position-relative">
+                            <div class="position-absolute" style="top: 0%; left: 5%;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="opacity-50" data-time="2000" data-class="animate-love" viewBox="0 0 16 16">
+                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="py-2" data-aos="fade-down" data-aos-duration="1500">
+                            <div class="d-flex justify-content-center align-items-center mb-3">
+                                <div class="shadow rounded-circle border border-secondary" style="width: 3rem; height: 3rem; background-color: white;"></div>
+                                <div class="shadow rounded-circle border border-secondary" style="width: 3rem; height: 3rem; background-color: aquamarine; margin-left: -1rem;"></div>
+                                <div class="shadow rounded-circle border border-secondary" style="width: 3rem; height: 3rem; background-color: limegreen; margin-left: -1rem;"></div>
+                            </div>
+                            <p style="font-size: 0.95rem;">Busana batik dan bersepatu.</p>
+                        </div>
+
+                        <div class="py-2" data-aos="fade-down" data-aos-duration="1500">
+                            <a href="https://goo.gl/maps/ALZR6FJZU3kxVwN86" target="_blank" class="btn btn-outline-auto btn-sm rounded-pill shadow mb-2 px-3"><i class="fa-solid fa-map-location-dot me-2"></i>Lihat Google Maps</a>
+                            <small class="d-block my-1">RT 10 RW 02, Desa Pajerukan, Kec. Kalibagor, Kab. Banyumas, Jawa Tengah 53191.</small>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Gallery -->
+                <section class="bg-white-black pb-5 pt-3" id="gallery">
+                    <div class="container">
+                        <div class="border rounded-5 shadow p-3">
+
+                            <h2 class="font-esthetic text-center py-2 m-0" style="font-size: 2.25rem;">Galeri</h2>
+
+                            <div id="carousel-image-one" data-aos="fade-up" data-aos-duration="1500" class="carousel slide mt-4" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+                                    <button type="button" data-bs-target="#carousel-image-one" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                                    <button type="button" data-bs-target="#carousel-image-one" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                                    <button type="button" data-bs-target="#carousel-image-one" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                                </div>
+
+                                <div class="carousel-inner rounded-4">
+                                    <div class="carousel-item active">
+                                        <img src="./assets/images/placeholder.webp" data-src="https://picsum.photos/1280/720?random=1" alt="image 1" class="d-block img-fluid cursor-pointer" onclick="undangan.guest.modal(this)">
+                                    </div>
+                                    <div class="carousel-item">
+                                        <img src="./assets/images/placeholder.webp" data-src="https://picsum.photos/1280/720?random=2" alt="image 2" class="d-block img-fluid cursor-pointer" onclick="undangan.guest.modal(this)">
+                                    </div>
+                                    <div class="carousel-item">
+                                        <img src="./assets/images/placeholder.webp" data-src="https://picsum.photos/1280/720?random=3" alt="image 3" class="d-block img-fluid cursor-pointer" onclick="undangan.guest.modal(this)">
+                                    </div>
+                                </div>
+
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-image-one" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+
+                                <button class="carousel-control-next" type="button" data-bs-target="#carousel-image-one" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+
+                            <div id="carousel-image-two" data-aos="fade-up" data-aos-duration="1500" class="carousel slide mt-4" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+                                    <button type="button" data-bs-target="#carousel-image-two" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                                    <button type="button" data-bs-target="#carousel-image-two" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                                    <button type="button" data-bs-target="#carousel-image-two" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                                </div>
+
+                                <div class="carousel-inner rounded-4">
+                                    <div class="carousel-item active">
+                                        <img src="./assets/images/placeholder.webp" data-src="https://picsum.photos/1280/720?random=4" alt="image 4" class="d-block img-fluid cursor-pointer" onclick="undangan.guest.modal(this)">
+                                    </div>
+                                    <div class="carousel-item">
+                                        <img src="./assets/images/placeholder.webp" data-src="https://picsum.photos/1280/720?random=5" alt="image 5" class="d-block img-fluid cursor-pointer" onclick="undangan.guest.modal(this)">
+                                    </div>
+                                    <div class="carousel-item">
+                                        <img src="./assets/images/placeholder.webp" data-src="https://picsum.photos/1280/720?random=6" alt="image 6" class="d-block img-fluid cursor-pointer" onclick="undangan.guest.modal(this)">
+                                    </div>
+                                </div>
+
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-image-two" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+
+                                <button class="carousel-control-next" type="button" data-bs-target="#carousel-image-two" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Wave Separator -->
+                <div class="svg-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="color-theme-svg no-gap-bottom">
+                        <path fill="currentColor" fill-opacity="1" d="M0,96L30,106.7C60,117,120,139,180,154.7C240,171,300,181,360,186.7C420,192,480,192,540,181.3C600,171,660,149,720,154.7C780,160,840,192,900,208C960,224,1020,224,1080,208C1140,192,1200,160,1260,138.7C1320,117,1380,107,1410,101.3L1440,96L1440,0L1410,0C1380,0,1320,0,1260,0C1200,0,1140,0,1080,0C1020,0,960,0,900,0C840,0,780,0,720,0C660,0,600,0,540,0C480,0,420,0,360,0C300,0,240,0,180,0C120,0,60,0,30,0L0,0Z"></path>
+                    </svg>
+                </div>
+
+                <!-- Love Gift -->
+                <section class="bg-light-dark pb-3">
+                    <div class="container text-center">
+                        <h2 class="font-esthetic pt-3 mb-4" style="font-size: 2.25rem;">Love Gift</h2>
+                        <p class="mb-1" style="font-size: 0.95rem;">Dengan hormat, bagi Anda yang ingin memberikan tanda kasih kepada kami, dapat melalui:</p>
+
+                        <div class="bg-theme-auto rounded-4 shadow p-3 mx-4 mt-4 text-start" data-aos="fade-up" data-aos-duration="2500">
+                            <i class="fa-solid fa-money-bill-transfer"></i>
+                            <p class="d-inline">Transfer</p>
+
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <p class="m-0 p-0" style="font-size: 0.95rem;"><i class="fa-regular fa-user fa-sm me-1"></i>Riski Siapa?</p>
+                                <button class="btn btn-outline-auto btn-sm shadow-sm rounded-4 py-0" style="font-size: 0.75rem;" data-bs-toggle="collapse" data-bs-target="#collapseTf"><i class="fa-solid fa-circle-info fa-sm me-1"></i>Info</button>
+                            </div>
+
+                            <div class="collapse" id="collapseTf">
+                                <hr class="my-2 py-1">
+                                <p class="m-0" style="font-size: 0.9rem;"><i class="fa-solid fa-building-columns me-1"></i>Bank Central Asia</p>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <p class="m-0 p-0" style="font-size: 0.85rem;"><i class="fa-solid fa-credit-card me-1"></i>1234567891234</p>
+                                    <!-- Ubah juga data-copy sesuai dengan no rekening -->
+                                    <button class="btn btn-outline-auto btn-sm shadow-sm rounded-4 py-0" style="font-size: 0.75rem;" data-copy="1234567891234" onclick="undangan.util.copy(this)"><i class="fa-solid fa-copy"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-theme-auto rounded-4 shadow p-3 mx-4 mt-4 text-start" data-aos="fade-up" data-aos-duration="2500">
+                            <i class="fa-solid fa-qrcode fa-lg"></i>
+                            <p class="d-inline">Qris</p>
+
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <p class="m-0 p-0" style="font-size: 0.95rem;"><i class="fa-regular fa-user fa-sm me-1"></i>Wahyu Siapa?</p>
+                                <button class="btn btn-outline-auto btn-sm shadow-sm rounded-4 py-0" style="font-size: 0.75rem;" data-bs-toggle="collapse" data-bs-target="#collapseQris"><i class="fa-solid fa-circle-info fa-sm me-1"></i>Info</button>
+                            </div>
+
+                            <div class="collapse" id="collapseQris">
+                                <hr class="my-2 py-1">
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <img src="./assets/images/placeholder.webp" data-src="./assets/images/donate.png" alt="donate" class="img-fluid rounded-3 mx-auto bg-white">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-theme-auto rounded-4 shadow p-3 mx-4 mt-4 text-start" data-aos="fade-up" data-aos-duration="2500">
+                            <i class="fa-solid fa-gift fa-lg"></i>
+                            <p class="d-inline">Gift</p>
+
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <p class="m-0 p-0" style="font-size: 0.95rem;"><i class="fa-regular fa-user fa-sm me-1"></i>Wahyu Siapa?</p>
+                                <button class="btn btn-outline-auto btn-sm shadow-sm rounded-4 py-0" style="font-size: 0.75rem;" data-bs-toggle="collapse" data-bs-target="#collapseGift"><i class="fa-solid fa-circle-info fa-sm me-1"></i>Info</button>
+                            </div>
+
+                            <div class="collapse" id="collapseGift">
+                                <hr class="my-2 py-1">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <p class="m-0 p-0" style="font-size: 0.85rem;"><i class="fa-solid fa-phone-volume me-1"></i>0812345678</p>
+                                    <!-- Ubah juga data-copy sesuai dengan no hp -->
+                                    <button class="btn btn-outline-auto btn-sm shadow-sm rounded-4 py-0" style="font-size: 0.75rem;" data-copy="0812345678" onclick="undangan.util.copy(this)"><i class="fa-solid fa-copy"></i></button>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="my-0 p-0 text-truncate me-2" style="font-size: 0.85rem;"><i class="fa-solid fa-location-dot me-1"></i>RT 10 RW 02, Desa Pajerukan, Kec. Kalibagor, Kab. Banyumas, Jawa Tengah 53191.</p>
+                                    <!-- Ubah juga data-copy sesuai dengan alamat -->
+                                    <button class="btn btn-outline-auto btn-sm shadow-sm rounded-4 py-0" style="font-size: 0.75rem;" data-copy="RT 10 RW 02, Desa Pajerukan, Kec. Kalibagor, Kab. Banyumas, Jawa Tengah 53191." onclick="undangan.util.copy(this)"><i class="fa-solid fa-copy"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Comment -->
+                <section class="bg-light-dark my-0 pb-0 pt-3" id="comment">
+                    <div class="container">
+                        <div class="border rounded-5 shadow p-3 mb-2">
+                            <h2 class="font-esthetic text-center mt-2 mb-4" style="font-size: 2.25rem;">Ucapan &amp; Doa</h2>
+
+                            <div class="mb-3">
+                                <label for="form-name" class="form-label my-1"><i class="fa-solid fa-person me-2"></i>Nama</label>
+                                <input type="text" class="form-control shadow-sm rounded-4" id="form-name" minlength="2" maxlength="50" placeholder="Isikan Nama Anda" autocomplete="name" data-offline-disabled="false">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="form-presence" class="form-label my-1"><i class="fa-solid fa-person-circle-question me-2"></i>Presensi</label>
+                                <select class="form-select shadow-sm rounded-4" id="form-presence" autocomplete="off" data-offline-disabled="false">
+                                    <option value="0" selected>Konfirmasi Presensi</option>
+                                    <option value="1">&#9989; Datang</option>
+                                    <option value="2">&#10060; Berhalangan</option>
+                                </select>
+                            </div>
+
+                            <div class="d-block mb-3" id="comment-form-default">
+                                <div id="information" class="alert alert-info alert-dismissible fade show rounded-4" role="alert">
+                                    <button type="button" class="btn-close rounded-4 p-3" data-bs-dismiss="alert" aria-label="Close" onclick="undangan.guest.closeInformation()"></button>
+
+                                    <p style="font-size: 1.5rem;">Bestieee!!!</p>
+                                    <p class="m-0">Cobain like seperti Instagram, dengan tap tap bagian komentarnya</p>
+                                    <hr class="my-2">
+                                    <p class="m-0">Sama bisa format text seperti Whatsapp lohh... cobainn jugaaa, makaciwww bestieee</p>
+                                </div>
+
+                                <label for="form-comment" class="form-label my-1"><i class="fa-solid fa-comment me-2"></i>Ucapan &amp; Doa</label>
+                                <div class="position-relative">
+                                    <button class="btn btn-secondary btn-sm rounded-4 shadow-sm me-1 my-1 position-absolute bottom-0 end-0" onclick="undangan.comment.gif.open(undangan.comment.gif.default)" aria-label="button gif" data-offline-disabled="false"><i class="fa-solid fa-photo-film"></i></button>
+                                    <textarea class="form-control shadow-sm rounded-4" id="form-comment" rows="4" minlength="1" maxlength="1000" placeholder="Tulis Ucapan dan Doa" autocomplete="off" data-offline-disabled="false"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="d-none mb-3" id="gif-form-default"></div>
+
+                            <div class="d-grid">
+                                <button class="btn btn-primary btn-sm rounded-4 shadow m-1" onclick="undangan.comment.send(this)" data-offline-disabled="false">
+                                    <i class="fa-solid fa-paper-plane me-2"></i>Send
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Comments -->
+                        <div class="py-3" id="comments" data-loading="false"></div>
+
+                        <!-- Pagination -->
+                        <nav class="d-flex d-none justify-content-center mt-1 mb-0" id="pagination"></nav>
+                    </div>
+                </section>
+
+                <!-- Wave Separator -->
+                <div class="svg-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="color-theme-svg no-gap-bottom">
+                        <path fill="currentColor" fill-opacity="1" d="M0,224L34.3,234.7C68.6,245,137,267,206,266.7C274.3,267,343,245,411,234.7C480,224,549,224,617,213.3C685.7,203,754,181,823,197.3C891.4,213,960,267,1029,266.7C1097.1,267,1166,213,1234,192C1302.9,171,1371,181,1406,186.7L1440,192L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"></path>
+                    </svg>
+                </div>
+
+                <!-- End Of Invitation -->
+                <section class="bg-white-black py-2 no-gap-bottom">
+                    <div class="container text-center">
+                        <p class="pb-2 pt-4" style="font-size: 0.95rem;">Terima kasih atas perhatian dan doa restu Anda, yang menjadi kebahagiaan serta kehormatan besar bagi kami.</p>
+
+                        <h2 class="font-esthetic" style="font-size: 2rem;">Wassalamualaikum Warahmatullahi Wabarakatuh</h2>
+                        <h2 class="font-arabic pt-4" style="font-size: 2rem;">اَلْحَمْدُ لِلّٰهِ رَبِّ الْعٰلَمِيْنَۙ</h2>
+
+                        <hr class="my-3">
+
+                        <div class="row align-items-center justify-content-between flex-column pb-3">
+                            <div class="col-auto">
+                                <small>Build with<i class="fa-solid fa-heart mx-1"></i>Dewanakl</small>
+                            </div>
+                            <div class="col-auto">
+                                <small><i class="fa-brands fa-github me-1"></i><a target="_blank" href="https://github.com/dewanakl/undangan">github</a></small>
+                                <small><i class="fa-solid fa-chart-simple me-1"></i><a target="_blank" href="https://status.ulems.my.id">status</a></small>
+                                <small><i class="fa-solid fa-music me-1"></i><a target="_blank" href="https://pixabay.com/music/modern-classical-pure-love-304010">music</a></small>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- Navbar Bottom -->
+            <nav class="navbar navbar-expand sticky-bottom rounded-top-4 border-top p-0" id="navbar-menu">
+                <ul class="navbar-nav nav-justified w-100 align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">
+                            <i class="fa-solid fa-house"></i>
+                            <span class="d-block" style="font-size: 0.7rem;">Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#bride">
+                            <i class="fa-solid fa-user-group"></i>
+                            <span class="d-block" style="font-size: 0.7rem;">Mempelai</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#wedding-date">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            <span class="d-block" style="font-size: 0.7rem;">Tanggal</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#gallery">
+                            <i class="fa-solid fa-images"></i>
+                            <span class="d-block" style="font-size: 0.7rem;">Galeri</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#comment">
+                            <i class="fa-solid fa-comments"></i>
+                            <span class="d-block" style="font-size: 0.7rem;">Ucapan</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- TOMBOL FLOATING CHAT (FAB)                 -->
-    <!-- ========================================== -->
-    <button id="chatFab" class="fixed bottom-4 right-4 sm:bottom-10 sm:right-10 w-12 h-12 sm:w-16 sm:h-16 neu-flat rounded-full flex items-center justify-center text-theme z-[60] transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 group">
-        <i class="fas fa-comment-dots text-lg sm:text-2xl group-hover:animate-bounce"></i>
-        <span class="absolute top-0 right-0 sm:top-1 sm:right-1 w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full animate-pulse border-2 border-[#2c313a]"></span>
-        
-        <!-- Hint Text Ceria -->
-        <div id="chatHint" class="absolute right-full mr-3 sm:mr-4 w-max bg-[#1d2127]/80 backdrop-blur-sm border border-[#3b414d] text-gray-300 text-[9px] sm:text-xs px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-xl shadow-lg pointer-events-none flex flex-col items-end animate-[bounce_2s_infinite] transition-opacity duration-300">
-            <span>Titip salam? Request?</span>
-            <span class="text-theme font-bold mt-0.5">Klik di sini yah! <i class="fas fa-arrow-right ml-1"></i></span>
-        </div>
-    </button>
+    <!-- Welcome Page -->
+    <div class="loading-page bg-white-black" id="welcome" style="opacity: 0;">
+        <div class="d-flex justify-content-center align-items-center vh-100 overflow-y-auto">
+            <div class="d-flex flex-column text-center">
+                <h2 class="font-esthetic mb-4" style="font-size: 2.25rem;">The Wedding Of</h2>
 
-    <!-- ========================================== -->
-    <!-- FLOATING LIVE CHAT & REQUEST               -->
-    <!-- ========================================== -->
-    <div id="floatingChatContainer" class="fixed bottom-20 right-4 sm:bottom-32 sm:right-10 w-[85vw] sm:w-[400px] h-[450px] sm:h-[500px] max-h-[70vh] neu-flat rounded-[28px] p-4 sm:p-6 flex flex-col z-[70] transition-all duration-300 transform scale-0 opacity-0 pointer-events-none origin-bottom-right border border-[#3b414d]/50">
-        
-        <!-- Header Chat -->
-        <div class="w-full flex items-center justify-between mb-3 sm:mb-5 px-1 border-b border-[#3b414d] pb-3 shrink-0">
-            <h2 class="text-xs sm:text-sm font-bold text-gray-300 tracking-wide uppercase"><i class="fas fa-comments text-theme mr-2"></i> Chat SMANSA</h2>
-            <div class="flex items-center gap-3">
-                <span class="text-[9px] sm:text-[10px] text-theme font-bold tracking-widest uppercase animate-pulse flex items-center">
-                    <span class="w-1.5 h-1.5 rounded-full bg-theme mr-1.5"></span>On
-                </span>
-                <button id="closeChatBtn" class="text-gray-400 hover:text-red-400 transition-colors cursor-pointer text-base">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
+                <img src="./assets/images/placeholder.webp" data-src="./assets/images/bg.webp" alt="background" class="img-center-crop rounded-circle border border-3 border-light shadow mb-4 mx-auto">
 
-        <!-- Kotak Riwayat Pesan -->
-        <div id="chatBox" class="neu-pressed w-full flex-1 min-h-0 rounded-2xl p-3 sm:p-5 mb-3 sm:mb-5 overflow-y-auto no-scrollbar flex flex-col gap-3 relative">
-            <p id="loadingChat" class="text-[10px] sm:text-xs text-center text-gray-400 font-semibold italic my-auto">Menyambungkan ke studio...</p>
-        </div>
+                <h2 class="font-esthetic mb-4" style="font-size: 2.25rem;">Wahyu &amp; Riski</h2>
+                <div id="guest-name" data-message="Kepada Yth Bapak/Ibu/Saudara/i"></div>
 
-        <!-- Form Kirim Pesan -->
-        <div class="w-full flex flex-col gap-2 shrink-0">
-            <input type="text" id="inputNama" maxlength="25" placeholder="Namata' (Cth: Ara X.10)" class="neu-input w-full rounded-xl px-3 py-2.5 text-[10px] sm:text-xs font-semibold placeholder-gray-400" />
-            <div class="flex gap-2">
-                <input type="text" id="inputPesan" maxlength="150" placeholder="Pesan/Request..." class="neu-input w-full rounded-xl px-3 py-2.5 text-[10px] sm:text-xs placeholder-gray-400" />
-                <button id="btnKirim" class="neu-flat neu-button px-4 rounded-xl text-theme flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity">
-                    <i class="fas fa-paper-plane text-sm sm:text-base"></i>
-                </button>
+                <button type="button" class="btn btn-light shadow rounded-4 mt-3 mx-auto" onclick="undangan.guest.open(this)"><i class="fa-solid fa-envelope-open fa-bounce me-2"></i>Open Invitation</button>
             </div>
         </div>
     </div>
 
-    <!-- Script Widget Centova Cast Utama & Recent Tracks -->
-    <script language="javascript" type="text/javascript" src="https://c4.siar.us:2199/system/streaminfo.js"></script>
-    <script language="javascript" type="text/javascript" src="https://c4.siar.us:2199/system/recenttracks.js"></script>
+    <!-- Button Group -->
+    <div class="d-flex position-fixed flex-column" style="bottom: 10vh; right: 2vh; z-index: 1030;">
+        <!-- Theme Button -->
+        <button type="button" id="button-theme" class="btn bg-light-dark border btn-sm rounded-circle d-none btn-transparent shadow-sm mt-3" aria-label="Change theme" onclick="undangan.theme.change()">
+            <i class="fa-solid fa-circle-half-stroke"></i>
+        </button>
 
-    <!-- LOGIKA UI (Loading, Radio, Fitur Baru & Floating Chat) -->
-    <script>
-        // --- LOGIKA LOADING SCREEN (SPLASH SCREEN) ---
-        // Memastikan semua aset termasuk script Centova selesai di-load dulu
-        window.addEventListener('load', () => {
-            // Memberikan waktu tambahan 2 detik agar efek estetiknya terasa
-            setTimeout(() => {
-                const loader = document.getElementById('loadingScreen');
-                loader.classList.add('opacity-0');
-                // Hapus total elemen dari HTML setelah animasi fade-out selesai
-                setTimeout(() => loader.remove(), 1000); 
-            }, 2000);
-        });
+        <!-- Audio Button -->
+        <button type="button" id="button-music" class="btn bg-light-dark border btn-sm rounded-circle d-none btn-transparent shadow-sm mt-3" aria-label="Change audio" data-offline-disabled="false">
+            <i class="fa-solid fa-circle-pause spin-button"></i>
+        </button>
+    </div>
 
-        // --- LOGIKA AUDIO PLAYER & VISUALIZER ---
-        const audio = document.getElementById('radioStream');
-        const playBtn = document.getElementById('playBtn');
-        const playIcon = document.getElementById('playIcon');
-        const albumArt = document.getElementById('albumArt');
-        
-        const visualizer = document.getElementById('visualizer');
-        const musicIconStatic = document.getElementById('musicIconStatic');
-        const glowRing1 = document.getElementById('glowRing1');
-        const glowRing2 = document.getElementById('glowRing2');
+    <!-- Loading Page -->
+    <div class="loading-page bg-white-black" id="loading" style="opacity: 1;">
+        <div class="d-flex justify-content-center align-items-center vh-100 overflow-y-auto">
+            <div class="d-flex flex-column width-loading text-center">
+                <img src="./assets/images/placeholder.webp" data-src="./assets/images/icon-192x192.png" data-fetch-img="high" class="img-fluid mb-3 mx-auto object-fit-cover opacity-0" alt="icon" style="width: 3.5rem; height: 3.5rem;">
+                <div class="progress" role="progressbar" style="height: 0.5rem;" aria-label="progress bar">
+                    <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+                </div>
+                <small class="d-none mt-1 text-theme-auto" id="progress-info" style="font-size: 0.8rem;">Booting application...</small>
+                <noscript>
+                    <small class="mt-1 text-danger">Sorry, this invitation requires javascript to work</small>
+                </noscript>
+            </div>
+        </div>
+        <div class="text-center position-fixed w-100" style="bottom: 8%; left: 0;">
+            <div class="d-flex flex-column">
+                <small class="text-secondary">from</small>
+                <small class="text-theme-auto"><i class="fa-brands fa-github me-1"></i>dewanakl</small>
+            </div>
+        </div>
+    </div>
 
-        playBtn.addEventListener('click', () => {
-            if (audio.paused) {
-                audio.play();
-                playIcon.classList.remove('fa-play', 'ml-1');
-                playIcon.classList.add('fa-pause');
-                albumArt.classList.add('spin-slow');
-                
-                // Nyalakan Visualizer & Glow Effect
-                musicIconStatic.classList.add('hidden');
-                visualizer.classList.remove('hidden');
-                glowRing1.classList.remove('opacity-0');
-                glowRing1.classList.add('animate-ping');
-                glowRing2.classList.remove('opacity-0');
-            } else {
-                audio.pause();
-                playIcon.classList.remove('fa-pause');
-                playIcon.classList.add('fa-play', 'ml-1');
-                albumArt.classList.remove('spin-slow');
-                
-                // Matikan Visualizer & Glow Effect
-                visualizer.classList.add('hidden');
-                musicIconStatic.classList.remove('hidden');
-                glowRing1.classList.add('opacity-0');
-                glowRing1.classList.remove('animate-ping');
-                glowRing2.classList.add('opacity-0');
-            }
-        });
-
-        // --- FITUR GANTI TEMA WARNA ---
-        const themes = [
-            { color: '#22d3ee', glow: 'rgba(34,211,238,0.4)' }, // Cyan (Default)
-            { color: '#f472b6', glow: 'rgba(244,114,182,0.4)' }, // Pink
-            { color: '#4ade80', glow: 'rgba(74,222,128,0.4)' }, // Green TikTok
-            { color: '#facc15', glow: 'rgba(250,204,21,0.4)' }, // Yellow Gold
-            { color: '#c084fc', glow: 'rgba(192,132,252,0.4)' }  // Purple
-        ];
-        let currentTheme = 0;
-        const btnTheme = document.getElementById('btnTheme');
-        
-        btnTheme.addEventListener('click', () => {
-            currentTheme = (currentTheme + 1) % themes.length;
-            document.documentElement.style.setProperty('--theme-color', themes[currentTheme].color);
-            document.documentElement.style.setProperty('--theme-glow', themes[currentTheme].glow);
-            // Perbarui warna shadow inline pada glowRing2 secara langsung
-            glowRing2.style.boxShadow = `0 0 20px 2px ${themes[currentTheme].glow}`;
-        });
-
-        // --- FITUR SLIDER VOLUME ---
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volIconMax = document.getElementById('volIconMax');
-        volumeSlider.addEventListener('input', (e) => {
-            audio.volume = e.target.value;
-            if(e.target.value == 0) volIconMax.className = "fas fa-volume-mute text-gray-500 text-[10px]";
-            else if(e.target.value < 0.5) volIconMax.className = "fas fa-volume-down text-theme opacity-80 text-[10px]";
-            else volIconMax.className = "fas fa-volume-up text-theme text-[10px]";
-        });
-
-        // --- FITUR TOMBOL HATI (LOVE ANIMATION) ---
-        const btnHeart = document.getElementById('btnHeart');
-        btnHeart.addEventListener('click', function() {
-            const heart = document.createElement('i');
-            heart.className = 'fas fa-heart text-red-500 absolute text-sm sm:text-base pointer-events-none z-50';
-            
-            const randomX = (Math.random() - 0.5) * 60; 
-            heart.style.setProperty('--tx', `${randomX}px`);
-            heart.style.animation = `floatUp 1.2s ease-out forwards`;
-            
-            this.appendChild(heart);
-            this.classList.add('text-red-400');
-            setTimeout(() => this.classList.remove('text-red-400'), 200);
-            setTimeout(() => heart.remove(), 1200);
-        });
-
-        // --- FITUR SLEEP TIMER ---
-        const btnSleep = document.getElementById('btnSleep');
-        const sleepModal = document.getElementById('sleepModal');
-        const sleepCard = document.getElementById('sleepCard');
-        const closeSleepBtn = document.getElementById('closeSleepBtn');
-        const timerStatus = document.getElementById('timerStatus');
-        
-        let sleepTimerId = null;
-        let sleepIntervalId = null;
-        let sleepEndTime = null;
-
-        function toggleSleepModal() {
-            const isHidden = sleepModal.classList.contains('opacity-0');
-            if(isHidden){
-                sleepModal.classList.remove('opacity-0', 'pointer-events-none');
-                sleepCard.classList.remove('scale-90');
-                sleepCard.classList.add('scale-100');
-            } else {
-                sleepModal.classList.add('opacity-0', 'pointer-events-none');
-                sleepCard.classList.remove('scale-100');
-                sleepCard.classList.add('scale-90');
-            }
-        }
-        
-        btnSleep.addEventListener('click', toggleSleepModal);
-        closeSleepBtn.addEventListener('click', toggleSleepModal);
-        sleepModal.addEventListener('click', (e) => {
-            if(e.target === sleepModal) toggleSleepModal();
-        });
-
-        document.querySelectorAll('.timer-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const minutes = parseInt(e.target.getAttribute('data-time'));
-                clearTimeout(sleepTimerId);
-                clearInterval(sleepIntervalId);
-                
-                if (minutes === 0) {
-                    timerStatus.classList.add('hidden');
-                    btnSleep.classList.remove('text-red-400');
-                    btnSleep.classList.add('text-indigo-400');
-                    return;
-                }
-                
-                const ms = minutes * 60 * 1000;
-                sleepEndTime = Date.now() + ms;
-                timerStatus.classList.remove('hidden');
-                
-                // Ubah ikon tombol utama jadi merah (tanda timer aktif)
-                btnSleep.classList.remove('text-indigo-400');
-                btnSleep.classList.add('text-red-400');
-                
-                const updateStatus = () => {
-                    const remaining = Math.max(0, sleepEndTime - Date.now());
-                    const m = Math.floor(remaining / 60000);
-                    const s = Math.floor((remaining % 60000) / 1000);
-                    timerStatus.innerText = `Mematikan siaran dalam ${m}m ${s}s`;
-                    if(remaining <= 0) clearInterval(sleepIntervalId);
-                };
-                
-                updateStatus();
-                sleepIntervalId = setInterval(updateStatus, 1000);
-                
-                sleepTimerId = setTimeout(() => {
-                    if(!audio.paused) playBtn.click(); // Otomatis klik pause
-                    timerStatus.classList.add('hidden');
-                    btnSleep.classList.remove('text-red-400');
-                    btnSleep.classList.add('text-indigo-400');
-                }, ms);
-            });
-        });
-
-        // --- FITUR TOMBOL SHARE (BAGIKAN) DIPERBARUI ---
-        const btnShare = document.getElementById('btnShare');
-        btnShare.addEventListener('click', () => {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Radio SUARA KAREBA SMANSA',
-                    text: 'Yuk dengerin siaran langsung Radio SMAN 1 Soppeng! Dengerin lagu-lagu hits kekinian, bisa request lagu dan titip salam juga lho! 📻🎧✨',
-                    url: window.location.href,
-                }).catch(console.error);
-            } else {
-                const waText = encodeURIComponent(`Yuk dengerin siaran langsung Radio SMANSA! Dengerin lagu-lagu hits kekinian, bisa request lagu dan titip salam juga lho: ${window.location.href}`);
-                window.open(`https://api.whatsapp.com/send?text=${waText}`, '_blank');
-            }
-        });
-
-        // --- LOGIKA FLOATING CHAT ---
-        const chatFab = document.getElementById('chatFab');
-        const floatingChatContainer = document.getElementById('floatingChatContainer');
-        const closeChatBtn = document.getElementById('closeChatBtn');
-        const chatBoxUi = document.getElementById('chatBox');
-        const chatHint = document.getElementById('chatHint');
-
-        function toggleChat() {
-            const isClosed = floatingChatContainer.classList.contains('scale-0');
-            if (isClosed) {
-                floatingChatContainer.classList.remove('scale-0', 'opacity-0', 'pointer-events-none');
-                floatingChatContainer.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
-                
-                const notifDot = chatFab.querySelector('span.bg-red-500');
-                if (notifDot) notifDot.classList.add('hidden');
-                if (chatHint) chatHint.classList.add('opacity-0', 'hidden'); 
-                
-                setTimeout(() => { chatBoxUi.scrollTop = chatBoxUi.scrollHeight; }, 100);
-            } else {
-                floatingChatContainer.classList.add('scale-0', 'opacity-0', 'pointer-events-none');
-                floatingChatContainer.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
-            }
-        }
-        chatFab.addEventListener('click', toggleChat);
-        closeChatBtn.addEventListener('click', toggleChat);
-    </script>
-
-    <!-- LOGIKA FIREBASE LIVE CHAT -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAyopuyvzjIXIZT-LE8_7bVP8vxVIlcQtU",
-            authDomain: "apps-f1563.firebaseapp.com",
-            projectId: "apps-f1563",
-            storageBucket: "apps-f1563.firebasestorage.app",
-            messagingSenderId: "330620144262",
-            appId: "1:330620144262:web:8ad8a32685b352ec0edf07",
-            measurementId: "G-TRS9JGPPX0"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const chatCol = collection(db, 'kareba_chats');
-
-        const chatBox = document.getElementById('chatBox');
-        const inputNama = document.getElementById('inputNama');
-        const inputPesan = document.getElementById('inputPesan');
-        const btnKirim = document.getElementById('btnKirim');
-        const loadingChat = document.getElementById('loadingChat');
-        
-        let isFirstLoad = true;
-
-        // --- FITUR FILTER KATA KOTOR (BAD WORDS) ---
-        const kataKotor = [
-            'anjing', 'kontol', 'babi', 'goblok', 'telaso', 'lessi', 'gblk', 'gblg', 
-            'memek', 'setan', 'colla', 'ajg', 'anjg', 'kntl', 'kintil', 'bbi', 'babii', 
-            'tlso', 'anjay', 'tolol', 'bangsat', 'bgsd', 'bgst', 'bjir', 'bangke', 'bgke', 
-            'njir', 'anjir', 'slbew', 'slebew', 'asu', 'asw', 'jancok', 'jancuk', 'peler', 
-            'pantek', 'tai', 'taik', 'bajingan', 'ngentot', 'ngewe', 'jembut', 'perek', 
-            'lonte', 'jablay', 'itil', 'peju', 'sange', 'bego', 'bge', 'bngst', 'kampret', 'jir'
-        ];
-
-        function cekKataKotor(teks) {
-            if (!teks) return false;
-            // Pecah kalimat menjadi kata per kata (mengabaikan spasi dan tanda baca)
-            const words = teks.toLowerCase().split(/[\s,.-?!_]+/);
-            for (let word of words) {
-                // Cek persis sesuai kata
-                if (kataKotor.includes(word)) return true;
-                
-                // Jurus Ampuh: Bersihkan huruf yang diulang-ulang (contoh: anjjjirrr jadi anjir)
-                let cleanedWord = word.replace(/(.)\1+/g, '$1'); 
-                if (kataKotor.includes(cleanedWord)) return true;
-            }
-            return false;
-        }
-
-        async function autoCleanupOldChats() {
-            const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
-            try {
-                const snapshot = await getDocs(chatCol);
-                snapshot.forEach((docSnap) => {
-                    const data = docSnap.data();
-                    if (data.timestamp < thirtyDaysAgo) {
-                        deleteDoc(doc(db, 'kareba_chats', docSnap.id));
-                    }
-                });
-            } catch (error) {
-                console.log("Cleanup error: ", error);
-            }
-        }
-        autoCleanupOldChats();
-
-        onSnapshot(chatCol, (snapshot) => {
-            if (isFirstLoad && loadingChat) {
-                loadingChat.remove();
-                isFirstLoad = false;
-            }
-
-            const messages = [];
-            snapshot.forEach((doc) => {
-                messages.push({ id: doc.id, ...doc.data() });
-            });
-            messages.sort((a, b) => a.timestamp - b.timestamp);
-
-            chatBox.innerHTML = '';
-
-            messages.forEach((data) => {
-                const timeString = new Date(data.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-                const chatBubble = document.createElement('div');
-                chatBubble.className = "bg-[#2c313a] border border-[#3b414d] shadow-[2px_2px_5px_#1d2127,-2px_-2px_5px_#3b414d] rounded-xl p-3 sm:p-4 text-left animate-[fadeIn_0.3s_ease-out]";
-                chatBubble.innerHTML = `
-                    <div class="flex justify-between items-baseline mb-1.5 sm:mb-2">
-                        <span class="text-[10px] sm:text-xs font-bold text-theme">${data.nama}</span>
-                        <span class="text-[9px] sm:text-[10px] text-gray-400 font-semibold">${timeString}</span>
+    <!-- Modal Image -->
+    <div class="modal fade" id="modal-image" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border border-0">
+                <div class="modal-body p-0">
+                    <div class="d-flex position-absolute top-0 end-0">
+                        <a class="btn d-flex justify-content-center align-items-center bg-overlay-auto p-2 m-1 rounded-circle border shadow-sm z-1" role="button" target="_blank" href="./assets/images/placeholder.webp" id="button-modal-click">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                        <button class="btn d-flex justify-content-center align-items-center bg-overlay-auto p-2 m-1 rounded-circle border shadow-sm z-1" id="button-modal-download">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                        <button class="btn d-flex justify-content-center align-items-center bg-overlay-auto p-2 m-1 rounded-circle border shadow-sm z-1" data-bs-dismiss="modal">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        </button>
                     </div>
-                    <p class="text-[10px] sm:text-xs text-gray-200 break-words leading-relaxed">${data.pesan}</p>
-                `;
-                chatBox.appendChild(chatBubble);
-            });
-            
-            setTimeout(() => {
-                chatBox.scrollTop = chatBox.scrollHeight;
-                const chatContainer = document.getElementById('floatingChatContainer');
-                const notifDot = document.querySelector('#chatFab span');
-                if (chatContainer.classList.contains('scale-0') && notifDot) {
-                    notifDot.classList.remove('hidden');
-                }
-            }, 50);
 
-        }, (error) => {
-            console.error("Error mengambil chat: ", error);
-        });
-
-        async function kirimPesan() {
-            const nama = inputNama.value.trim();
-            const pesan = inputPesan.value.trim();
-
-            if (nama === '' || pesan === '') {
-                alert("Hei! Jangan lupa isi Nama dan Pesan/Request kamu ya!");
-                return;
-            }
-            if (nama.length > 25) {
-                alert("Nama terlalu panjang! Maksimal 25 karakter ya.");
-                return;
-            }
-            if (pesan.length > 150) {
-                alert("Pesan terlalu panjang! Maksimal 150 karakter ya.");
-                return;
-            }
-
-            // Validasi Kata Kotor sebelum dikirim
-            if (cekKataKotor(nama) || cekKataKotor(pesan)) {
-                alert("Ups! 🙊 Tolong gunakan bahasa yang sopan dan baik ya kak. Pesan tidak dapat dikirim karena mengandung kata yang dilarang.");
-                return; // Berhenti di sini, jangan kirim ke Firebase
-            }
-
-            try {
-                await addDoc(chatCol, {
-                    nama: nama,
-                    pesan: pesan,
-                    timestamp: Date.now()
-                });
-                inputPesan.value = '';
-                inputPesan.focus();
-            } catch (error) {
-                console.error("Gagal mengirim pesan: ", error);
-                alert("Waduh, pesan gagal terkirim. Pastikan tidak ada karakter terlarang ya!");
-            }
-        }
-
-        btnKirim.addEventListener('click', kirimPesan);
-        inputPesan.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                kirimPesan();
-            }
-        });
-    </script>
+                    <img src="./assets/images/placeholder.webp" class="img-fluid w-100 rounded-4 cursor-pointer" alt="image" id="show-modal-image">
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
