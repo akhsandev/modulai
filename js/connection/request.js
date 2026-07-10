@@ -128,8 +128,6 @@ export const request = (method, path) => {
     const req = {
         signal: ac.signal,
         credential: 'include',
-        credentials: 'omit',   // GAS tidak butuh cookies, omit agar tidak trigger preflight
-        redirect: 'follow',    // GAS redirect ke URL final, harus di-follow
         headers: new Headers(defaultJSON),
         method: String(method).toUpperCase(),
     };
@@ -163,56 +161,6 @@ export const request = (method, path) => {
      * @returns {Promise<Response>}
      */
     const baseFetch = (input) => {
-
-        // ── Google Apps Script CORS fix ───────────────────────────
-        // GAS Web App hanya support GET tanpa preflight CORS.
-        // Semua request di-konversi ke GET:
-        //   - method asli dikirim via ?_method=
-        //   - body JSON dikirim via ?_body= (base64)
-        //   - path API dikirim via ?_path= (karena GAS tidak support pathInfo)
-        const gasBase = document.body.getAttribute('data-url') || '';
-        const isGAS = gasBase.includes('script.google.com');
-        if (isGAS) {
-            const url = input instanceof URL ? input : new URL(input);
-            // Ekstrak path API dari URL yang sudah di-build
-            // Contoh: https://script.google.com/macros/s/xxx/exec/api/session
-            //         → apiPath = "api/session"
-            // Atau kalau sudah ada ?_path dari sebelumnya, pakai itu
-            const execIndex = url.pathname.indexOf('/exec');
-            const apiPath = execIndex >= 0
-                ? url.pathname.slice(execIndex + 5).replace(/^\/+/, '')
-                : url.searchParams.get('_path') || '';
-            // Bangun URL bersih: hanya sampai /exec
-            const cleanExec = url.origin + url.pathname.slice(0, execIndex >= 0 ? execIndex + 5 : undefined);
-            const baseExec = new URL(cleanExec);
-            // Copy existing non-private search params
-            url.searchParams.forEach((v, k) => { if (!k.startsWith('_')) baseExec.searchParams.set(k, v); });
-            if (apiPath) baseExec.searchParams.set('_path', apiPath);
-            if (req.method !== HTTP_GET) {
-                baseExec.searchParams.set('_method', req.method);
-            }
-            if (req.body) {
-                // encodeURIComponent + btoa untuk handle karakter non-ASCII (UTF-8 safe)
-                baseExec.searchParams.set('_body', btoa(unescape(encodeURIComponent(req.body))));
-                delete req.body;
-            }
-            req.method = HTTP_GET;
-            // Hapus Content-Type agar tidak trigger preflight
-            req.headers.delete('Content-Type');
-            // Pindahkan Authorization ke query param (header custom juga bisa trigger preflight)
-            const authHeader = req.headers.get('Authorization') || req.headers.get('authorization');
-            const accessKey  = req.headers.get('x-access-key');
-            if (authHeader) {
-                baseExec.searchParams.set('_token', authHeader.replace(/^Bearer\s+/i, ''));
-                req.headers.delete('Authorization');
-            }
-            if (accessKey) {
-                baseExec.searchParams.set('_key', accessKey);
-                req.headers.delete('x-access-key');
-            }
-            input = baseExec;
-        }
-        // ────────────────────────────────────────────────────────
 
         /**
          * @returns {Promise<Response>}
