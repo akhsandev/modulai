@@ -1,4 +1,3 @@
-import './connection/gas.js';
 import { guest } from './app/guest/guest.js';
 
 ((w) => {

@@ -132,6 +132,9 @@ export const request = (method, path) => {
         method: String(method).toUpperCase(),
     };
 
+    // Simpan method asli sebelum mungkin dikonversi ke GET oleh GAS adapter
+    const originalMethod = String(method).toUpperCase();
+
     window.addEventListener('offline', () => ac.abort(), { once: true });
     window.addEventListener('popstate', () => ac.abort(), { once: true });
 
@@ -170,39 +173,115 @@ export const request = (method, path) => {
             /**
              * @returns {Promise<Response>}
              */
-            const wrapperFetch = () => window.fetch(input, req).then(async (res) => {
-                if (!res.ok || !callbackFunc) {
-                    return res;
-                }
-
-                const contentLength = parseInt(res.headers.get('Content-Length') ?? 0);
-                if (contentLength === 0) {
-                    return res;
-                }
-
-                const chunks = [];
-                let receivedLength = 0;
-                const reader = res.body.getReader();
-
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) {
-                        break;
+            const wrapperFetch = () => {
+                // ── GAS intercept ─────────────────────────────────────────
+                const gasBase = (document.body?.getAttribute('data-url') || '');
+                if (gasBase.includes('script.google.com')) {
+                    // Hanya intercept jika input URL mengandung gasBase atau adalah path API
+                    // Aset lokal (./assets/...) tidak boleh diintercept
+                    let url;
+                    try {
+                        url = input instanceof URL ? input : new URL(String(input), window.location.href);
+                    } catch (_) {
+                        url = null;
                     }
 
-                    chunks.push(value);
-                    receivedLength += value.length;
+                    const isGasRequest = url && (
+                        url.href.includes('script.google.com') ||
+                        url.pathname.includes('/api/')
+                    );
 
-                    await callbackFunc(receivedLength, contentLength, window.structuredClone ? window.structuredClone(chunks) : chunks);
+                    if (isGasRequest) {
+                        const m   = req.method;
+                        const rel = url.pathname
+                            .replace(/\/macros\/s\/[^/]+\/exec\/?/, '')
+                            .replace(/^\/+/, '');
+
+                        const actionMap = {
+                            'POST:api/session'    : { action: 'login' },
+                            'GET:api/user'        : { action: 'getUser' },
+                            'PATCH:api/user'      : { action: 'patchUser' },
+                            'GET:api/v2/config'   : { action: 'getConfig' },
+                            'GET:api/stats'       : { action: 'getStats' },
+                            'GET:api/v2/comment'  : { action: 'getComments' },
+                            'POST:api/comment'    : { action: 'postComment' },
+                            'PUT:api/key'         : { action: 'regenerateKey' },
+                            'GET:api/download'    : { action: 'download' },
+                        };
+
+                        let mapped = actionMap[`${m}:${rel}`];
+                        if (!mapped) {
+                            const cm = rel.match(/^api\/comment\/([^/?]+)$/);
+                            if (cm) {
+                                const id = cm[1];
+                                if (m === 'PUT')    mapped = { action: 'updateComment', own: id };
+                                if (m === 'DELETE') mapped = { action: 'deleteComment', own: id };
+                                if (m === 'POST')   mapped = { action: 'likeComment',   uuid: id };
+                                if (m === 'PATCH')  mapped = { action: 'unlikeComment', own: id };
+                            }
+                        }
+
+                        if (mapped) {
+                            const out = new URL(gasBase.replace(/\/$/, ''));
+                            Object.entries(mapped).forEach(([k, v]) => out.searchParams.set(k, v));
+                            url.searchParams.forEach((v, k) => out.searchParams.set(k, v));
+
+                            const auth = req.headers.get('authorization');
+                            if (auth) out.searchParams.set('token', auth.replace(/^Bearer\s+/i, ''));
+                            const xKey = req.headers.get('x-access-key');
+                            if (xKey) out.searchParams.set('key', xKey);
+
+                            if (req.body) {
+                                try {
+                                    const obj = JSON.parse(req.body);
+                                    Object.entries(obj).forEach(([k, v]) => {
+                                        if (v !== null && v !== undefined) {
+                                            out.searchParams.set(k, String(v));
+                                        }
+                                    });
+                                } catch (_) { /* skip non-JSON body */ }
+                            }
+
+                            return window.fetch(out.toString(), { method: 'GET', redirect: 'follow', signal: req.signal });
+                        }
+                    }
                 }
+                // ──────────────────────────────────────────────────────────
 
-                const contentType = res.headers.get('Content-Type') ?? 'application/octet-stream';
-                return new Response(new Blob(chunks, { type: contentType }), {
-                    status: res.status,
-                    statusText: res.statusText,
-                    headers: new Headers(res.headers),
+                return window.fetch(input, req).then(async (res) => {
+                    if (!res.ok || !callbackFunc) {
+                        return res;
+                    }
+
+                    const contentLength = parseInt(res.headers.get('Content-Length') ?? 0);
+                    if (contentLength === 0) {
+                        return res;
+                    }
+
+                    const chunks = [];
+                    let receivedLength = 0;
+                    const reader = res.body.getReader();
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) {
+                            break;
+                        }
+
+                        chunks.push(value);
+                        receivedLength += value.length;
+
+                        await callbackFunc(receivedLength, contentLength, window.structuredClone ? window.structuredClone(chunks) : chunks);
+                    }
+
+                    const contentType = res.headers.get('Content-Type') ?? 'application/octet-stream';
+                    return new Response(new Blob(chunks, { type: contentType }), {
+                        status: res.status,
+                        statusText: res.statusText,
+                        headers: new Headers(res.headers),
+                    });
                 });
-            });
+            };
 
             if (reqTtl === 0 || !window.isSecureContext) {
                 return wrapperFetch();
@@ -318,6 +397,14 @@ export const request = (method, path) => {
 
                     if (transform) {
                         json.data = transform(json.data);
+                    }
+
+                    // Setelah mutasi berhasil, hapus cache agar list komentar
+                    // langsung fresh saat di-fetch ulang
+                    const isMutation = originalMethod !== HTTP_GET;
+                    const isSuccess  = res.status >= 200 && res.status < 300;
+                    if (isMutation && isSuccess && window.isSecureContext) {
+                        removeCache();
                     }
 
                     return Object.assign(json, { code: res.status });

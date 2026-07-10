@@ -1,122 +1,116 @@
 /**
- * GAS Adapter – mendeteksi apakah backend adalah Google Apps Script
- * dan mengubah semua request ke format GET ?action=xxx
- *
- * Cara kerja:
- *  - Kalau data-url mengandung "script.google.com" → GAS mode aktif
- *  - Semua fetch() di-intercept, dikonversi ke GET + query params
- *  - Body JSON dikirim sebagai individual query params (bukan JSON blob)
- *  - Authorization header dipindah ke ?token=
- *  - x-access-key dipindah ke ?key=
- *
- * Mapping endpoint lama → action GAS baru:
- *  POST   /api/session              → ?action=login
- *  GET    /api/user                 → ?action=getUser
- *  PATCH  /api/user                 → ?action=patchUser
- *  GET    /api/v2/config            → ?action=getConfig
- *  GET    /api/stats                → ?action=getStats
- *  GET    /api/v2/comment           → ?action=getComments
- *  POST   /api/comment              → ?action=postComment
- *  PUT    /api/comment/:own         → ?action=updateComment&own=:own
- *  DELETE /api/comment/:own         → ?action=deleteComment&own=:own
- *  POST   /api/comment/:uuid        → ?action=likeComment&uuid=:uuid
- *  PATCH  /api/comment/:own         → ?action=unlikeComment&own=:own
- *  PUT    /api/key                  → ?action=regenerateKey
- *  GET    /api/download             → ?action=download
+ * GAS Adapter
+ * Intercept semua window.fetch() dan redirect ke GAS ?action= format
+ * jika data-url di <body> mengandung script.google.com
  */
 
-const GAS_BASE = (() => {
-    const url = document.body?.getAttribute('data-url') || '';
-    return url.includes('script.google.com') ? url : null;
-})();
+const _origFetch = window.fetch.bind(window);
 
-if (GAS_BASE) {
-    const _origFetch = window.fetch.bind(window);
+/**
+ * Ambil GAS base URL — dipanggil lazy saat fetch pertama kali
+ * sehingga document.body sudah pasti ada
+ */
+let _gasBase = undefined;
+const _getGasBase = () => {
+    if (_gasBase === undefined) {
+        const url = document.body.getAttribute('data-url') || '';
+        _gasBase = url.includes('script.google.com') ? url.replace(/\/$/, '') : null;
+        if (_gasBase) console.info('[GAS Adapter] aktif →', _gasBase);
+    }
+    return _gasBase;
+};
 
-    /**
-     * Petakan path + method → action GAS
-     */
-    const _mapAction = (method, pathname) => {
-        // Normalize path: buang base GAS URL, ambil hanya /api/...
-        const rel = pathname
-            .replace(/.*\/exec\/?/, '')  // buang prefix GAS
-            .replace(/^\/+/, '');        // buang leading slash
+const _mapAction = (method, path) => {
+    // Bersihkan path dari prefix GAS exec
+    const rel = path.replace(/\/macros\/s\/[^/]+\/exec\/?/, '').replace(/^\/+/, '');
 
-        if (method === 'POST'   && rel === 'api/session')           return { action: 'login' };
-        if (method === 'GET'    && rel === 'api/user')              return { action: 'getUser' };
-        if (method === 'PATCH'  && rel === 'api/user')              return { action: 'patchUser' };
-        if (method === 'GET'    && rel === 'api/v2/config')         return { action: 'getConfig' };
-        if (method === 'GET'    && rel === 'api/stats')             return { action: 'getStats' };
-        if (method === 'GET'    && rel.startsWith('api/v2/comment')) return { action: 'getComments' };
-        if (method === 'POST'   && rel === 'api/comment')           return { action: 'postComment' };
-        if (method === 'PUT'    && rel === 'api/key')               return { action: 'regenerateKey' };
-        if (method === 'GET'    && rel === 'api/download')          return { action: 'download' };
+    if (method === 'POST'   && rel.startsWith('api/session'))       return { action: 'login' };
+    if (method === 'GET'    && rel.startsWith('api/user'))          return { action: 'getUser' };
+    if (method === 'PATCH'  && rel.startsWith('api/user'))          return { action: 'patchUser' };
+    if (method === 'PUT'    && rel.startsWith('api/user'))          return { action: 'patchUser' };
+    if (method === 'GET'    && rel.startsWith('api/v2/config'))     return { action: 'getConfig' };
+    if (method === 'GET'    && rel.startsWith('api/stats'))         return { action: 'getStats' };
+    if (method === 'GET'    && rel.startsWith('api/v2/comment'))    return { action: 'getComments' };
+    if (method === 'POST'   && rel === 'api/comment')               return { action: 'postComment' };
+    if (method === 'PUT'    && rel.startsWith('api/key'))           return { action: 'regenerateKey' };
+    if (method === 'GET'    && rel.startsWith('api/download'))      return { action: 'download' };
 
-        // /api/comment/:id – bedakan berdasarkan method
-        const cmtMatch = rel.match(/^api\/comment\/([^/]+)$/);
-        if (cmtMatch) {
-            const id = cmtMatch[1];
-            if (method === 'PUT')    return { action: 'updateComment', own: id };
-            if (method === 'DELETE') return { action: 'deleteComment', own: id };
-            if (method === 'POST')   return { action: 'likeComment',   uuid: id };
-            if (method === 'PATCH')  return { action: 'unlikeComment', own: id };
-        }
+    const m = rel.match(/^api\/comment\/([^/?]+)/);
+    if (m) {
+        const id = m[1];
+        if (method === 'PUT')    return { action: 'updateComment', own: id };
+        if (method === 'DELETE') return { action: 'deleteComment', own: id };
+        if (method === 'POST')   return { action: 'likeComment',   uuid: id };
+        if (method === 'PATCH')  return { action: 'unlikeComment', own: id };
+    }
+    return null;
+};
 
-        return null;
-    };
+window.fetch = (input, init = {}) => {
+    const gasBase = _getGasBase();
 
-    /**
-     * Override window.fetch untuk GAS
-     */
-    window.fetch = async (input, init = {}) => {
-        const url    = input instanceof Request ? new URL(input.url) : new URL(String(input), GAS_BASE);
-        const method = (init.method || (input instanceof Request ? input.method : 'GET')).toUpperCase();
+    // Kalau bukan GAS, langsung forward ke fetch asli
+    if (!gasBase) return _origFetch(input, init);
 
-        // Hanya intercept request ke GAS URL
-        if (!url.href.includes('script.google.com') && !url.href.startsWith(location.origin)) {
-            return _origFetch(input, init);
-        }
-        // Kalau bukan ke GAS URL, bypass
-        if (!url.href.includes('script.google.com')) {
-            return _origFetch(input, init);
-        }
+    // Bangun URL dari input
+    let reqUrl;
+    try {
+        reqUrl = input instanceof Request
+            ? new URL(input.url)
+            : new URL(String(input), gasBase);
+    } catch (_) {
+        return _origFetch(input, init);
+    }
 
-        const mapped = _mapAction(method, url.pathname + url.search);
-        if (!mapped) return _origFetch(input, init);
+    // Kalau URL tidak mengarah ke GAS (misal: external CDN, Tenor, dll.) — bypass
+    if (!reqUrl.href.includes('script.google.com')) {
+        return _origFetch(input, init);
+    }
 
-        // Bangun URL GAS baru dengan semua params sebagai query string
-        const gasUrl = new URL(GAS_BASE);
+    const method = (
+        init.method ||
+        (input instanceof Request ? input.method : 'GET')
+    ).toUpperCase();
 
-        // Tambahkan action dan params dari mapped
-        Object.entries(mapped).forEach(([k, v]) => gasUrl.searchParams.set(k, v));
+    // Gabungkan pathname + search untuk mapping
+    const fullPath = reqUrl.pathname + reqUrl.search;
+    const mapped   = _mapAction(method, fullPath);
 
-        // Copy semua query params dari URL asli
-        url.searchParams.forEach((v, k) => gasUrl.searchParams.set(k, v));
+    if (!mapped) return _origFetch(input, init);
 
-        // Pindahkan Authorization header → ?token=
-        const headers = init.headers
-            ? (init.headers instanceof Headers ? init.headers : new Headers(init.headers))
-            : new Headers();
+    // Bangun URL GAS baru
+    const out = new URL(gasBase);
 
-        const auth = headers.get('authorization') || headers.get('Authorization');
-        if (auth) gasUrl.searchParams.set('token', auth.replace(/^Bearer\s+/i, ''));
+    // 1. Tambahkan action dan extra params dari mapping
+    Object.entries(mapped).forEach(([k, v]) => out.searchParams.set(k, v));
 
-        const accessKey = headers.get('x-access-key');
-        if (accessKey) gasUrl.searchParams.set('key', accessKey);
+    // 2. Copy query params dari URL asli (per, next, lang, key, k, dll.)
+    reqUrl.searchParams.forEach((v, k) => out.searchParams.set(k, v));
 
-        // Flatten body JSON → individual query params
-        if (init.body) {
-            try {
-                const bodyObj = typeof init.body === 'string' ? JSON.parse(init.body) : init.body;
-                Object.entries(bodyObj).forEach(([k, v]) => {
-                    if (v !== null && v !== undefined) gasUrl.searchParams.set(k, String(v));
-                });
-            } catch (_) { /* body bukan JSON, skip */ }
-        }
+    // 3. Pindahkan Authorization header → ?token=
+    const headers = init.headers instanceof Headers
+        ? init.headers
+        : new Headers(init.headers || {});
 
-        // Kirim sebagai GET biasa – simple request, tidak ada preflight
-        return _origFetch(gasUrl.toString(), { method: 'GET', redirect: 'follow' });
-    };
+    const auth = headers.get('authorization');
+    if (auth) out.searchParams.set('token', auth.replace(/^Bearer\s+/i, ''));
 
-    console.info('[GAS Adapter] aktif →', GAS_BASE);
-}
+    const xKey = headers.get('x-access-key');
+    if (xKey) out.searchParams.set('key', xKey);
+
+    // 4. Flatten body JSON → individual query params
+    const rawBody = init.body || (input instanceof Request ? null : null);
+    if (rawBody) {
+        try {
+            const obj = typeof rawBody === 'string' ? JSON.parse(rawBody) : rawBody;
+            Object.entries(obj).forEach(([k, v]) => {
+                if (v !== null && v !== undefined) out.searchParams.set(k, String(v));
+            });
+        } catch (_) { /* bukan JSON, skip */ }
+    }
+
+    console.debug('[GAS]', method, fullPath, '→', out.toString());
+
+    // 5. Kirim sebagai plain GET — tidak ada preflight, tidak ada CORS error
+    return _origFetch(out.toString(), { method: 'GET', redirect: 'follow' });
+};
