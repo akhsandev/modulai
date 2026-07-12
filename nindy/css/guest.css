@@ -483,6 +483,47 @@ html[data-bs-theme="dark"] .gift-card {
     display: flex;
     align-items: center;
     gap: 0.625rem;
+    border-radius: var(--r-md) var(--r-md) 0 0;
+    transition: background 150ms ease;
+}
+.gift-card-header:hover {
+    background: linear-gradient(135deg, rgba(201,160,154,.2), rgba(196,163,90,.12));
+}
+.gift-card-header:active {
+    background: linear-gradient(135deg, rgba(201,160,154,.28), rgba(196,163,90,.18));
+}
+
+/* Expand button — chevron yang rotate */
+.gift-expand-btn {
+    background: rgba(201,160,154,.18);
+    border: 1px solid rgba(201,160,154,.35);
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background 150ms ease, transform 150ms ease;
+    padding: 0;
+}
+.gift-expand-btn:hover {
+    background: rgba(201,160,154,.32);
+}
+.gift-expand-icon {
+    font-size: .65rem;
+    color: var(--c-rose-dark);
+    transition: transform 300ms cubic-bezier(.4,0,.2,1);
+}
+/* Rotate chevron saat collapse terbuka */
+.gift-card-header[aria-expanded="true"] .gift-expand-icon,
+.collapse.show + * .gift-expand-icon {
+    transform: rotate(180deg);
+}
+/* Karena aria-expanded ada di header bukan button, target lewat Bootstrap attribute */
+[data-bs-toggle="collapse"][aria-expanded="true"] .gift-expand-icon {
+    transform: rotate(180deg);
 }
 
 /* ── Desktop side panel ──────────────────────────────────────────── */
