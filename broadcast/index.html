@@ -53,12 +53,9 @@ body{background:linear-gradient(135deg,#fdf8f2 0%,#f5ede6 100%);font-family:'Seg
         <p class="fhint">Parameter <code>?to=NamaTamu</code> ditambahkan otomatis. Contoh hasil: <span id="urlExample" style="color:var(--crd);word-break:break-all;">-</span></p>
       </div>
       <div class="col-md-4">
-        <label class="form-label">Template Pesan WA</label>
-        <select class="form-select" id="msgTemplate">
-          <option value="formal">Formal (Bapak/Ibu)</option>
-          <option value="casual">Kasual (Hei!)</option>
-          <option value="link-only">Link saja</option>
-        </select>
+        <label class="form-label">Nama Pengirim</label>
+        <input type="text" class="form-control" id="senderName" value="Akhsan Rian Anugrah, S.Pd., Gr. &amp; Aslinda Putri, S.Pd., Gr." placeholder="Nama Mempelai...">
+        <p class="fhint">Muncul di bagian akhir pesan sebagai hormat kami.</p>
       </div>
     </div>
   </div>
@@ -140,7 +137,7 @@ document.getElementById('baseUrl').addEventListener('input', () => {
   refreshTable();
   updateUrlExample();
 });
-document.getElementById('msgTemplate').addEventListener('change', refreshTable);
+document.getElementById('senderName').addEventListener('input', refreshTable);
 
 updateUrlExample();
 
@@ -212,12 +209,26 @@ function buildLink(name) {
 }
 
 function buildMessage(name, link) {
-  const tpl = document.getElementById('msgTemplate').value;
-  if (tpl === 'link-only') return link;
-  if (tpl === 'casual')
-    return `Hei *${name}* 👋\n\nKami mengundangmu di acara pernikahan kami 🎊\n\nYuk buka undangan digitalnya:\n${link}\n\n_Nindy & Ansar_`;
-  // formal (default)
-  return `Assalamualaikum Wr. Wb.\n\nKepada Yth. *${name}*\n\nDengan penuh kebahagiaan, kami mengundang Bapak/Ibu/Saudara/i untuk berkenan hadir dalam acara pernikahan kami.\n\n🔗 Undangan Digital:\n${link}\n\nMerupakan suatu kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.\n\nWassalamualaikum Wr. Wb.\n\n_Nindy & Ansar_`;
+  const sender = document.getElementById('senderName').value.trim() || 'Kami';
+  return `Assalamualaikum Warahmatullahi Wabarakatuh.
+
+Tanpa mengurangi rasa hormat, kami memohon restu dan mengundang Bapak/Ibu/Saudara/i:
+*${name}*
+untuk hadir dalam acara pernikahan kami yang Insya Allah akan diselenggarakan.
+
+Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+
+Informasi lengkap mengenai detail acara, lokasi, dan galeri dapat diakses melalui tautan undangan digital kami di bawah ini:
+${link}
+
+Mohon maaf jika terdapat kesalahan dalam penulisan nama atau gelar.
+
+Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.
+
+Wassalamualaikum Warahmatullahi Wabarakatuh.
+
+Hormat kami,
+*${sender}*`;
 }
 
 // ── Render table ──────────────────────────────────────
