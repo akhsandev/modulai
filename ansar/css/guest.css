@@ -1,0 +1,683 @@
+@import url("common.css");
+@import url("animation.css");
+
+/* ================================================================
+   DESIGN SYSTEM — Romantic Luxury Islamic Wedding
+   Palette  : Ivory · Dusty Rose · Deep Sage · Warm Gold
+   Type     : Cormorant Garamond (display) · Plus Jakarta Sans (body)
+   Style    : Soft Minimalism + Floral details
+   ================================================================ */
+
+/* ── CSS Custom Properties ─────────────────────────────────────── */
+:root {
+    /* Brand colors */
+    --c-ivory       : #fdf8f2;
+    --c-rose        : #c9a09a;
+    --c-rose-light  : #e8cdc9;
+    --c-rose-dark   : #9e6b64;
+    --c-sage        : #5c7a62;
+    --c-sage-light  : #a8c4ac;
+    --c-gold        : #c4a35a;
+    --c-gold-light  : #e2cc92;
+    --c-warm-dark   : #2d2420;
+    --c-warm-mid    : #6b5a52;
+    --c-warm-light  : #f5ede6;
+
+    /* Semantic */
+    --surface-1     : var(--c-ivory);
+    --surface-2     : var(--c-warm-light);
+    --text-primary  : var(--c-warm-dark);
+    --text-secondary: var(--c-warm-mid);
+    --accent        : var(--c-rose);
+    --accent-alt    : var(--c-gold);
+
+    /* Spacing scale — 8pt grid */
+    --sp-1: 0.5rem;
+    --sp-2: 1rem;
+    --sp-3: 1.5rem;
+    --sp-4: 2rem;
+    --sp-5: 3rem;
+    --sp-6: 4rem;
+
+    /* Typography */
+    --font-display : 'Cormorant Garamond', 'Georgia', serif;
+    --font-body    : 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+    --font-arabic  : 'Noto Naskh Arabic', serif;
+
+    /* Radius */
+    --r-sm  : 0.75rem;
+    --r-md  : 1.25rem;
+    --r-lg  : 2rem;
+    --r-pill: 100px;
+
+    /* Shadow */
+    --shadow-sm : 0 1px 4px rgba(45,36,32,.08);
+    --shadow-md : 0 4px 16px rgba(45,36,32,.12);
+    --shadow-lg : 0 8px 32px rgba(45,36,32,.16);
+}
+
+html[data-bs-theme="dark"] {
+    --surface-1     : #1a1410;
+    --surface-2     : #231d18;
+    --text-primary  : #f0e8e0;
+    --text-secondary: #a89488;
+    --c-ivory       : #1a1410;
+    --c-warm-light  : #231d18;
+    --shadow-sm     : 0 1px 4px rgba(0,0,0,.25);
+    --shadow-md     : 0 4px 16px rgba(0,0,0,.35);
+    --shadow-lg     : 0 8px 32px rgba(0,0,0,.45);
+}
+
+/* ── Base ───────────────────────────────────────────────────────── */
+html {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+.with-scrollbar {
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(201,160,154,.4) transparent !important;
+    -ms-overflow-style: auto !important;
+}
+.with-scrollbar::-webkit-scrollbar { width: 4px; }
+.with-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.with-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(201,160,154,.4);
+    border-radius: 4px;
+}
+
+/* ── Typography ─────────────────────────────────────────────────── */
+.font-esthetic {
+    font-family: var(--font-display) !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.01em;
+}
+
+.font-arabic {
+    font-family: var(--font-arabic) !important;
+    line-height: 1.8 !important;
+}
+
+.section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: 600;
+    color: var(--c-rose-dark);
+    letter-spacing: 0.02em;
+    margin-bottom: var(--sp-3);
+}
+
+.section-subtitle {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+/* ── Colors / Surfaces ──────────────────────────────────────────── */
+html[data-bs-theme="light"] .bg-light-dark  { background-color: var(--c-ivory); }
+html[data-bs-theme="dark"]  .bg-light-dark  { background-color: var(--surface-1); }
+html[data-bs-theme="light"] .bg-white-black { background-color: var(--c-warm-light); }
+html[data-bs-theme="dark"]  .bg-white-black { background-color: var(--surface-2); }
+html[data-bs-theme="light"] .bg-theme-auto  { background-color: #fff; }
+html[data-bs-theme="dark"]  .bg-theme-auto  { background-color: var(--surface-2); }
+html[data-bs-theme="light"] .text-theme-auto { color: var(--text-primary); }
+html[data-bs-theme="dark"]  .text-theme-auto { color: var(--text-primary); }
+
+/* ── SVG Separators ─────────────────────────────────────────────── */
+html[data-bs-theme="light"] .color-theme-svg {
+    background-color: var(--c-ivory) !important;
+}
+html[data-bs-theme="dark"] .color-theme-svg {
+    background-color: var(--surface-1) !important;
+}
+
+.svg-wrapper {
+    overflow: hidden !important;
+    line-height: 0 !important;
+    display: block;
+    position: relative;
+    /* -2px overlap agar tidak ada gap sub-pixel antar section */
+    margin-top: -1px;
+    margin-bottom: -1px;
+}
+
+.svg-wrapper svg {
+    display: block;
+    width: 100%;
+    /* geometricPrecision untuk curve mulus, crispEdges bisa buat gap */
+    shape-rendering: geometricPrecision;
+    /* Extend sedikit ke bawah untuk cover gap */
+    margin-bottom: -2px;
+}
+
+/* Helper: background wrapper match section di atas */
+.svg-from-white  { background-color: var(--c-warm-light); }
+.svg-from-ivory  { background-color: var(--c-ivory); }
+
+html[data-bs-theme="dark"] .svg-from-white { background-color: var(--surface-2); }
+html[data-bs-theme="dark"] .svg-from-ivory { background-color: var(--surface-1); }
+
+.no-gap-bottom { margin-bottom: -2px !important; }
+
+/* ── Overlay ────────────────────────────────────────────────────── */
+html[data-bs-theme="light"] .bg-overlay-auto {
+    background-color: rgba(253,248,242,.7);
+    backdrop-filter: blur(10px) saturate(1.5);
+}
+html[data-bs-theme="dark"] .bg-overlay-auto {
+    background-color: rgba(26,20,16,.7);
+    backdrop-filter: blur(10px) saturate(1.5);
+}
+
+/* ── Navbar ───────────────────────────────────────────────────────── */
+html[data-bs-theme="light"] .navbar {
+    background-color: rgba(253,248,242,.9) !important;
+    backdrop-filter: blur(16px) saturate(1.6) !important;
+    border-top-color: rgba(201,160,154,.2) !important;
+    box-shadow: 0 -1px 0 rgba(201,160,154,.15);
+}
+html[data-bs-theme="dark"] .navbar {
+    background-color: rgba(26,20,16,.9) !important;
+    backdrop-filter: blur(16px) saturate(1.6) !important;
+    border-top-color: rgba(201,160,154,.12) !important;
+    box-shadow: 0 -1px 0 rgba(0,0,0,.2);
+}
+
+.navbar .nav-link {
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 150ms ease;
+    padding-bottom: 0.375rem !important;
+}
+html[data-bs-theme="light"] .nav-link { color: rgba(45,36,32,.45); }
+html[data-bs-theme="dark"]  .nav-link { color: rgba(240,232,224,.4); }
+.nav-link.active {
+    color: var(--c-rose-dark) !important;
+    font-weight: 700;
+}
+.nav-link i { transition: transform 150ms ease; }
+.nav-link.active i { transform: scale(1.15); }
+
+/* ── btn-outline-auto ────────────────────────────────────────────── */
+.btn-outline-auto {
+    --bs-btn-color: var(--c-rose-dark);
+    --bs-btn-border-color: var(--c-rose-dark);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--c-rose-dark);
+    --bs-btn-hover-border-color: var(--c-rose-dark);
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--c-rose-dark);
+    --bs-btn-active-border-color: var(--c-rose-dark);
+    --bs-btn-focus-shadow-rgb: 158, 107, 100;
+    --bs-btn-disabled-color: var(--c-rose);
+    --bs-btn-disabled-border-color: var(--c-rose);
+}
+html[data-bs-theme="dark"] .btn-outline-auto {
+    --bs-btn-color: var(--c-rose-light);
+    --bs-btn-border-color: var(--c-rose-light);
+    --bs-btn-hover-color: var(--c-warm-dark);
+    --bs-btn-hover-bg: var(--c-rose-light);
+    --bs-btn-hover-border-color: var(--c-rose-light);
+}
+
+/* ── Cards ───────────────────────────────────────────────────────── */
+.card-elegant {
+    background-color: #fff;
+    border: 1px solid rgba(201,160,154,.25);
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-md);
+    transition: box-shadow 200ms ease, transform 200ms ease;
+}
+html[data-bs-theme="dark"] .card-elegant {
+    background-color: var(--surface-2);
+    border-color: rgba(201,160,154,.15);
+}
+.card-elegant:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-1px);
+}
+
+/* Verse card */
+.verse-card {
+    border-left: 3px solid var(--c-gold);
+    background: linear-gradient(135deg, rgba(196,163,90,.07) 0%, transparent 60%);
+    border-radius: 0 var(--r-md) var(--r-md) 0;
+    padding: var(--sp-3);
+    transition: border-left-color 200ms ease;
+}
+.verse-card:hover { border-left-color: var(--c-rose); }
+
+/* ── Buttons ─────────────────────────────────────────────────────── */
+.btn-wedding {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--c-rose) 0%, var(--c-rose-dark) 100%);
+    color: #fff !important;
+    border: none;
+    border-radius: var(--r-pill);
+    padding: 0.65rem 1.85rem;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    box-shadow: 0 4px 14px rgba(158,107,100,.3);
+    transition: transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.btn-wedding:hover, .btn-wedding:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 20px rgba(158,107,100,.42);
+    color: #fff !important;
+    outline: none;
+}
+.btn-wedding:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(158,107,100,.3); }
+.btn-wedding:disabled { opacity: .65; pointer-events: none; }
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+.hero-name {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.15;
+}
+
+.hero-date {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.hero-title {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--c-gold);
+    font-weight: 700;
+}
+
+/* ── Portrait photos ─────────────────────────────────────────────── */
+.img-portrait {
+    width: 8.5rem;
+    height: 8.5rem;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid var(--c-rose-light);
+    box-shadow: 0 0 0 6px rgba(201,160,154,.12), var(--shadow-md);
+    transition: transform 250ms ease, box-shadow 250ms ease;
+}
+.img-portrait:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 0 8px rgba(201,160,154,.18), var(--shadow-lg);
+}
+
+.img-center-crop {
+    width: 10rem;
+    height: 10rem;
+    max-width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid var(--c-rose-light);
+    box-shadow: 0 0 0 6px rgba(201,160,154,.12), var(--shadow-md);
+    transition: transform 250ms ease;
+}
+.img-center-crop:hover { transform: scale(1.03); }
+
+/* ── Countdown ───────────────────────────────────────────────────── */
+.countdown-box {
+    background: linear-gradient(160deg, rgba(201,160,154,.1) 0%, rgba(196,163,90,.07) 100%);
+    border: 1px solid rgba(201,160,154,.25);
+    border-radius: var(--r-md);
+    padding: 0.875rem 0.75rem;
+    min-width: 4.75rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 200ms ease;
+}
+.countdown-box:hover { transform: translateY(-2px); }
+
+.countdown-number {
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    font-weight: 600;
+    color: var(--c-rose-dark);
+    line-height: 1;
+    display: block;
+}
+
+.countdown-label {
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-top: 0.35rem;
+    display: block;
+    font-weight: 600;
+}
+
+/* ── Timeline (Love Story) ───────────────────────────────────────── */
+.timeline-dot {
+    width: 2.25rem;
+    height: 2.25rem;
+    min-width: 2.25rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--c-rose) 0%, var(--c-rose-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(158,107,100,.35);
+    position: relative;
+    z-index: 1;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 2.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    background: linear-gradient(to bottom, rgba(201,160,154,.5), transparent);
+    z-index: 0;
+    flex: 1;
+    min-height: 1rem;
+}
+
+/* ── Divider ornament ────────────────────────────────────────────── */
+.divider-ornament {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    margin: var(--sp-3) auto;
+    max-width: 14rem;
+}
+.divider-ornament::before,
+.divider-ornament::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(201,160,154,.5), transparent);
+}
+.divider-ornament-icon {
+    color: var(--c-gold);
+    font-size: 0.7rem;
+    opacity: .9;
+}
+
+/* ── Forms ───────────────────────────────────────────────────────── */
+.form-control, .form-select {
+    font-family: var(--font-body) !important;
+    font-size: 0.875rem !important;
+    border-color: rgba(201,160,154,.35) !important;
+    border-radius: var(--r-sm) !important;
+    background-color: var(--surface-1) !important;
+    color: var(--text-primary) !important;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+    line-height: 1.5;
+}
+.form-control:focus, .form-select:focus {
+    border-color: var(--c-rose) !important;
+    box-shadow: 0 0 0 3px rgba(201,160,154,.18) !important;
+    outline: none;
+    background-color: var(--surface-1) !important;
+}
+.form-label {
+    color: var(--text-secondary) !important;
+    font-family: var(--font-body);
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+}
+
+/* ── Dress code swatches ─────────────────────────────────────────── */
+.swatch {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.85);
+    box-shadow: var(--shadow-sm);
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* ── Gift cards ──────────────────────────────────────────────────── */
+.gift-card {
+    border: 1px solid rgba(201,160,154,.25);
+    border-radius: var(--r-md);
+    background-color: #fff;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: box-shadow 200ms ease;
+}
+html[data-bs-theme="dark"] .gift-card {
+    background-color: var(--surface-2);
+    border-color: rgba(201,160,154,.15);
+}
+.gift-card:hover { box-shadow: var(--shadow-md); }
+
+.gift-card-header {
+    background: linear-gradient(135deg, rgba(201,160,154,.12), rgba(196,163,90,.07));
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(201,160,154,.18);
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    border-radius: var(--r-md) var(--r-md) 0 0;
+    transition: background 150ms ease;
+}
+.gift-card-header:hover {
+    background: linear-gradient(135deg, rgba(201,160,154,.2), rgba(196,163,90,.12));
+}
+.gift-card-header:active {
+    background: linear-gradient(135deg, rgba(201,160,154,.28), rgba(196,163,90,.18));
+}
+
+/* Expand button — chevron yang rotate */
+.gift-expand-btn {
+    background: rgba(201,160,154,.18);
+    border: 1px solid rgba(201,160,154,.35);
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background 150ms ease, transform 150ms ease;
+    padding: 0;
+}
+.gift-expand-btn:hover {
+    background: rgba(201,160,154,.32);
+}
+.gift-expand-icon {
+    font-size: .65rem;
+    color: var(--c-rose-dark);
+    transition: transform 300ms cubic-bezier(.4,0,.2,1);
+}
+/* Rotate chevron saat collapse terbuka */
+.gift-card-header[aria-expanded="true"] .gift-expand-icon,
+.collapse.show + * .gift-expand-icon {
+    transform: rotate(180deg);
+}
+/* Karena aria-expanded ada di header bukan button, target lewat Bootstrap attribute */
+[data-bs-toggle="collapse"][aria-expanded="true"] .gift-expand-icon {
+    transform: rotate(180deg);
+}
+
+/* ── Desktop side panel ──────────────────────────────────────────── */
+/* 
+ * Panel kiri desktop: gambar slideshow fullheight 
+ * Gambar di-load via image.js menggunakan data-src normal (getByFetch)
+ * Slideshow background harus pakai contain/cover dengan absolute positioning
+ */
+.desktop-side-panel {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    contain: strict;       /* isolasi paint & layout — performa scroll */
+}
+
+.desktop-slide-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Tidak pakai mask-image agar gambar tampil penuh */
+    opacity: 0;            /* dikontrol JS */
+    transition: opacity 1.2s ease;
+    will-change: opacity;  /* hanya opacity, bukan semua properti */
+}
+
+/* ── Loading page ────────────────────────────────────────────────── */
+.loading-page {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1056;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.width-loading { width: 25%; }
+@media (max-width: 992px) { .width-loading { width: 50%; } }
+@media (max-width: 576px) { .width-loading { width: 75%; } }
+
+/* ── Welcome screen ──────────────────────────────────────────────── */
+.welcome-label {
+    font-family: var(--font-body);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--c-gold);
+    margin: 0;
+}
+
+.welcome-names {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 9vw, 3.75rem);
+    font-weight: 500;
+    color: var(--c-rose-light);
+    line-height: 1.15;
+    letter-spacing: .02em;
+    margin: 0;
+}
+
+.welcome-divider {
+    display: flex;
+    align-items: center;
+    gap: .875rem;
+    width: 100%;
+    max-width: 12rem;
+}
+.welcome-divider::before,
+.welcome-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(196,163,90,.4), transparent);
+}
+
+/* Foto dalam lingkaran */
+.welcome-photo-wrap {
+    position: relative;
+    width: min(55vw, 14rem);
+    height: min(55vw, 14rem);
+    flex-shrink: 0;
+}
+
+.welcome-photo-ring {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(201,160,154,.5);
+    box-shadow:
+        0 0 0 4px rgba(201,160,154,.08),
+        0 0 30px rgba(201,160,154,.15);
+    animation: welcome-ring-pulse 3s ease-in-out infinite;
+}
+
+@keyframes welcome-ring-pulse {
+    0%, 100% { border-color: rgba(201,160,154,.4); box-shadow: 0 0 0 4px rgba(201,160,154,.06), 0 0 20px rgba(201,160,154,.1); }
+    50%       { border-color: rgba(196,163,90,.6);  box-shadow: 0 0 0 6px rgba(196,163,90,.08), 0 0 35px rgba(196,163,90,.2); }
+}
+
+.welcome-photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid rgba(201,160,154,.3);
+    display: block;
+}
+
+/* ── Background cover ────────────────────────────────────────────── */
+.bg-cover-home {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ── Misc ────────────────────────────────────────────────────────── */
+.cursor-pointer { cursor: pointer; }
+
+/* Hilangkan outline biru Bootstrap scroll-spy pada main */
+main[data-bs-spy="scroll"] {
+    outline: none !important;
+}
+
+.btn-transparent {
+    background-color: rgba(253,248,242,.65) !important;
+    backdrop-filter: blur(8px);
+}
+html[data-bs-theme="dark"] .btn-transparent {
+    background-color: rgba(26,20,16,.65) !important;
+}
+
+/* Thin separator line */
+hr.ornament {
+    border: none;
+    border-top: 1px solid rgba(201,160,154,.25);
+    margin: 1.5rem auto;
+    max-width: 5rem;
+}
+
+/* ── Responsive tweaks ───────────────────────────────────────────── */
+@media (max-width: 576px) {
+    .countdown-box   { min-width: 3.75rem; padding: 0.625rem 0.5rem; }
+    .countdown-number { font-size: 1.75rem; }
+    .countdown-label  { font-size: 0.55rem; }
+    .img-center-crop { width: 8.5rem; height: 8.5rem; }
+    .img-portrait    { width: 7.5rem; height: 7.5rem; }
+    .btn-wedding     { font-size: 0.8rem; padding: 0.6rem 1.5rem; }
+}
+
+/* ── Utility ─────────────────────────────────────────────────────── */
+.opacity-0  { opacity: 0 !important; }
+.opacity-40 { opacity: .4 !important; }

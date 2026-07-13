@@ -1,0 +1,233 @@
+@keyframes pulse {
+    0%, 100% { opacity: .6; }
+    50%       { opacity: .3; }
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateY(1rem);
+        opacity: 0;
+    }
+
+    10% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 0;
+    }
+}
+
+.mouse-animation>.scroll-animation {
+    width: 0.25rem;
+    height: 0.625rem;
+    animation: scroll 3s linear infinite;
+}
+
+.mouse-animation {
+    height: 2rem;
+    box-sizing: content-box;
+}
+
+@keyframes spin-icon {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spin-button {
+    animation: spin-icon 5s linear infinite;
+}
+
+@keyframes love {
+    50% {
+        transform: translateY(1rem);
+    }
+}
+
+.animate-love {
+    animation: love 5s ease-in-out infinite;
+}
+
+/* Slideshow desktop — scale zoom efek Ken Burns */
+/* opacity dikontrol oleh JS (changeOpacity / requestAnimationFrame) */
+/* transform dikontrol CSS — aktif saat class .slide-desktop-active ditambah */
+.slide-desktop {
+    transform: scale(1);
+    transition: transform 8000ms linear;
+    will-change: opacity, transform;
+}
+
+.slide-desktop-active {
+    transform: scale(1.08);
+}
+
+
+/* ════════════════════════════════════════════════════════
+   LOADING SCREEN — Seamless Floating Hearts
+   ════════════════════════════════════════════════════════ */
+
+/* ── Partikel hati terbang ──────────────────────────────── */
+.loading-particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.lp {
+    position: absolute;
+    color: var(--c-rose-light, #e8cdc9);
+    font-size: 1rem;
+    opacity: 0;
+    animation: lp-float 6s ease-in-out infinite;
+    user-select: none;
+}
+
+/* Posisi & delay berbeda untuk tiap partikel */
+.lp1 { left:8%;  font-size:.7rem;  animation-delay:0s;    animation-duration:7s; }
+.lp2 { left:20%; font-size:1.2rem; animation-delay:1.2s;  animation-duration:6s; }
+.lp3 { left:38%; font-size:.6rem;  animation-delay:2.4s;  animation-duration:8s; }
+.lp4 { left:55%; font-size:.9rem;  animation-delay:.6s;   animation-duration:6.5s; }
+.lp5 { left:70%; font-size:1.4rem; animation-delay:1.8s;  animation-duration:7.5s; }
+.lp6 { left:82%; font-size:.75rem; animation-delay:3s;    animation-duration:6s; }
+.lp7 { left:92%; font-size:1rem;   animation-delay:.3s;   animation-duration:9s; }
+
+@keyframes lp-float {
+    0%   { transform: translateY(110vh) rotate(-15deg) scale(.6); opacity: 0; }
+    10%  { opacity: .35; }
+    80%  { opacity: .2; }
+    100% { transform: translateY(-10vh) rotate(20deg) scale(1.1); opacity: 0; }
+}
+
+/* ── Cincin pulsa ────────────────────────────────────────── */
+.loading-center {
+    position: relative;
+    width: 6rem;
+    height: 6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    animation: ring-pulse 2.4s ease-out infinite;
+}
+
+.loading-ring-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1.5px solid var(--c-rose-light, #e8cdc9);
+    opacity: .5;
+    animation: ring-expand 2.4s ease-out infinite;
+}
+
+@keyframes ring-pulse {
+    0%, 100% { transform: scale(1); opacity: .6; }
+    50%       { transform: scale(1.15); opacity: .2; }
+}
+@keyframes ring-expand {
+    0%   { transform: scale(.7); opacity: .7; }
+    100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Cincin kedua — offset phase */
+.loading-ring::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(196,163,90,.4);
+    animation: ring-expand 2.4s ease-out .8s infinite;
+}
+
+/* ── Hati utama ──────────────────────────────────────────── */
+.loading-heart-wrap {
+    position: relative;
+    z-index: 2;
+}
+
+.loading-heart-icon {
+    font-size: 2.25rem;
+    color: var(--c-rose, #c9a09a);
+    animation: heart-beat 1.6s ease-in-out infinite;
+    display: block;
+    filter: drop-shadow(0 0 12px rgba(201,160,154,.5));
+}
+
+@keyframes heart-beat {
+    0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 8px rgba(201,160,154,.4)); }
+    15%       { transform: scale(1.18); filter: drop-shadow(0 0 18px rgba(201,160,154,.7)); }
+    30%       { transform: scale(.96); }
+    45%       { transform: scale(1.08); filter: drop-shadow(0 0 14px rgba(201,160,154,.55)); }
+    60%       { transform: scale(1); }
+}
+
+/* ── Shimmer text ────────────────────────────────────────── */
+.loading-shimmer-text {
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+    font-size: clamp(1.75rem, 6vw, 2.5rem);
+    font-weight: 500;
+    letter-spacing: .04em;
+    /* Shimmer gradient sweep */
+    background: linear-gradient(
+        90deg,
+        rgba(201,160,154,.4) 0%,
+        rgba(201,160,154,.9) 30%,
+        rgba(253,248,242,1) 50%,
+        rgba(196,163,90,.9) 70%,
+        rgba(201,160,154,.4) 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer-sweep 2.8s ease-in-out infinite;
+    margin: 0;
+}
+
+@keyframes shimmer-sweep {
+    0%   { background-position: 200% center; }
+    100% { background-position: -200% center; }
+}
+
+.loading-brand {
+    font-size: .65rem;
+    color: rgba(201,160,154,.4);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-top: .75rem;
+    margin-bottom: 0;
+}
+
+.loading-brand strong {
+    color: rgba(158,107,100,.7);
+    font-weight: 600;
+}
+
+/* ── Loading wait text ───────────────────────────────────── */
+.loading-wait {
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+    font-size: .72rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(201,160,154,.55);
+    margin-top: .5rem;
+    margin-bottom: 0;
+    animation: wait-fade 2s ease-in-out infinite;
+}
+
+@keyframes wait-fade {
+    0%, 100% { opacity: .4; }
+    50%       { opacity: .9; }
+}
