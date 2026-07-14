@@ -6,6 +6,7 @@
 <title>Generator Link Undangan WA</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root{--cr:#c9a09a;--crd:#9e6b64;--crl:#e8cdc9;--cg:#c4a35a;--ci:#fdf8f2;--cw:#f5ede6;}
 *{box-sizing:border-box;}
@@ -62,16 +63,16 @@ body{background:linear-gradient(135deg,#fdf8f2 0%,#f5ede6 100%);font-family:'Seg
 
   <!-- Upload -->
   <div class="card-s">
-    <div class="card-hd"><i class="fa-solid fa-file-csv" style="color:var(--cg);"></i><h6>Upload Daftar Tamu (CSV)</h6></div>
+    <div class="card-hd"><i class="fa-solid fa-file-excel" style="color:var(--cg);"></i><h6>Upload Daftar Tamu (Excel/CSV)</h6></div>
     <div class="card-bd">
       <div class="upload-zone" id="uploadZone">
         <i class="fa-solid fa-cloud-arrow-up" style="font-size:2rem;color:var(--cr);display:block;margin-bottom:.5rem;"></i>
-        <p style="margin:0 0 .25rem;font-weight:600;color:var(--crd);">Klik atau seret file CSV ke sini</p>
+        <p style="margin:0 0 .25rem;font-weight:600;color:var(--crd);">Klik atau seret file Excel (.xlsx) atau CSV ke sini</p>
         <p style="margin:0;font-size:.78rem;color:#6b5a52;">Kolom: Nomor WA, Nama</p>
       </div>
-      <input type="file" id="csvFile" accept=".csv" style="display:none;">
+      <input type="file" id="csvFile" accept=".csv,.xlsx,.xls" style="display:none;">
       <div style="margin-top:1rem;display:flex;gap:.625rem;flex-wrap:wrap;">
-        <button class="btn-outline" onclick="downloadTemplate()"><i class="fa-solid fa-download"></i>Template CSV</button>
+        <button class="btn-outline" onclick="downloadTemplate()"><i class="fa-solid fa-file-excel"></i>Template Excel (.xlsx)</button>
         <button class="btn-outline" onclick="loadExample()"><i class="fa-solid fa-lightbulb"></i>Contoh Data</button>
       </div>
       <p class="fhint">Format nomor: +62 823-4444-5555 · 081232323232 · 62812xxx (dinormalisasi otomatis)</p>
@@ -94,7 +95,7 @@ body{background:linear-gradient(135deg,#fdf8f2 0%,#f5ede6 100%);font-family:'Seg
         </div>
         <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
           <button class="btn-outline" onclick="downloadCSV()"><i class="fa-solid fa-file-csv"></i>Download CSV</button>
-          <button class="btn-green" onclick="downloadExcel()"><i class="fa-solid fa-file-excel"></i>Download Excel</button>
+          <button class="btn-green" onclick="downloadExcel()"><i class="fa-solid fa-file-excel"></i>Download Excel (.xlsx)</button>
         </div>
       </div>
       <div style="overflow-x:auto;">
@@ -128,7 +129,7 @@ uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag
 uploadZone.addEventListener('drop', e => {
   e.preventDefault(); uploadZone.classList.remove('dragover');
   const f = e.dataTransfer.files[0];
-  if (f) handleFile(f); else alert('Hanya file CSV!');
+  if (f) handleFile(f); else alert('Hanya file CSV atau Excel!');
 });
 csvFile.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
 
@@ -146,31 +147,51 @@ function updateUrlExample() {
   ex.textContent = buildLink('Akhsan Rian Anugrah, S.Pd., Gr.');
 }
 
-// ── File handling ────────────────────────────────────
+// ── File handling ─────────────────────────────────────
 function handleFile(file) {
   uploadZone.innerHTML = `<i class="fa-solid fa-check-circle" style="font-size:2rem;color:#5c7a62;display:block;margin-bottom:.5rem;"></i>
     <p style="margin:0 0 .2rem;font-weight:600;color:#4a6350;">${escHtml(file.name)}</p>
     <p style="margin:0;font-size:.75rem;color:#6b5a52;">${(file.size/1024).toFixed(1)} KB — klik untuk ganti</p>`;
-  const reader = new FileReader();
-  reader.onload = e => parseCSV(e.target.result);
-  reader.readAsText(file);
+
+  const isExcel = /\.xlsx?$/i.test(file.name);
+
+  if (isExcel) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const data = new Uint8Array(e.target.result);
+      const wb = XLSX.read(data, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { header: 1, raw: false, defval: '' });
+      parseRows(rows);
+    };
+    reader.readAsArrayBuffer(file);
+  } else {
+    const reader = new FileReader();
+    reader.onload = e => parseCSV(e.target.result);
+    reader.readAsText(file);
+  }
 }
 
 function parseCSV(text) {
   const lines = text.split(/\r?\n/).filter(l => l.trim());
+  const rows = lines.map(splitCSVLine);
+  parseRows(rows);
+}
+
+function parseRows(rows) {
   guestData = [];
+  if (!rows.length) return;
 
   // Detect & skip header
   let start = 0;
-  const h = lines[0].replace(/"/g,'').toLowerCase();
+  const h = String(rows[0][0] || '').toLowerCase() + ' ' + String(rows[0][1] || '').toLowerCase();
   if (h.includes('nomor') || h.includes('nama') || h.includes('phone') || h.includes('no')) start = 1;
 
-  for (let i = start; i < lines.length; i++) {
-    // Support quoted CSV: split by comma but respect quotes
-    const cols = splitCSVLine(lines[i]);
-    if (cols.length < 2) continue;
-    const rawPhone = cols[0].trim();
-    const name     = cols.slice(1).join(',').trim();
+  for (let i = start; i < rows.length; i++) {
+    const cols = rows[i];
+    if (!cols || cols.length < 2) continue;
+    const rawPhone = String(cols[0]).trim();
+    const name     = String(cols.slice(1).join(',')).trim();
     if (!rawPhone || !name) continue;
     const phone = normalizePhone(rawPhone);
     guestData.push({ name, rawPhone, phone, valid: !!phone });
@@ -310,7 +331,7 @@ function downloadCSV() {
   download(bom + csv, 'daftar_undangan.csv', 'text/csv;charset=utf-8;');
 }
 
-// ── Download Excel (HTML table trick) ────────────────
+// ── Download Excel (real .xlsx via SheetJS) ──────────
 function downloadExcel() {
   const rows = [['No', 'Nama', 'Nomor WA', 'Link Undangan', 'Link WA Kirim']];
   guestData.forEach((g, i) => {
@@ -320,13 +341,11 @@ function downloadExcel() {
     rows.push([i + 1, g.name, g.phone || g.rawPhone, link, waUrl]);
   });
 
-  let html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8"></head><body><table>';
-  rows.forEach((r, ri) => {
-    html += '<tr>' + r.map(c => ri === 0 ? `<th>${escHtml(String(c))}</th>` : `<td>${escHtml(String(c))}</td>`).join('') + '</tr>';
-  });
-  html += '</table></body></html>';
-  const bom = '\uFEFF';
-  download(bom + html, 'daftar_undangan.xls', 'application/vnd.ms-excel;charset=utf-8;');
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{ wch: 5 }, { wch: 28 }, { wch: 16 }, { wch: 45 }, { wch: 60 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Daftar Undangan');
+  XLSX.writeFile(wb, 'daftar_undangan.xlsx');
 }
 
 function download(content, filename, mime) {
@@ -338,17 +357,33 @@ function download(content, filename, mime) {
   URL.revokeObjectURL(a.href);
 }
 
-// ── Template CSV ──────────────────────────────────────
+// ── Template Excel (real .xlsx via SheetJS) ──────────
 function downloadTemplate() {
-  const csv = `"Nomor WA","Nama"\r\n"+62 823-4444-5555","Akhsan Rian Anugrah, S.Pd., Gr."\r\n"081232323232","Budi Santoso"\r\n"62812-3456-7890","Siti Rahayu, SE"\r\n"0856 1234 5678","Muhammad Rizky"\r\n"08123456789","Dewi Permatasari, S.Kep"`;
-  download('\uFEFF' + csv, 'template_tamu.csv', 'text/csv;charset=utf-8;');
+  const rows = [
+    ['Nomor WA', 'Nama'],
+    ['+62 823-4444-5555', 'Akhsan Rian Anugrah, S.Pd., Gr.'],
+    ['081232323232', 'Budi Santoso'],
+    ['62812-3456-7890', 'Siti Rahayu, SE'],
+    ['0856 1234 5678', 'Muhammad Rizky'],
+    ['08123456789', 'Dewi Permatasari, S.Kep'],
+  ];
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{ wch: 20 }, { wch: 32 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Template Tamu');
+  XLSX.writeFile(wb, 'template_tamu.xlsx');
 }
 
 function loadExample() {
-  const csv = `"Nomor WA","Nama"\r\n"+62 823-4444-5555","Akhsan Rian Anugrah, S.Pd., Gr."\r\n"081232323232","Budi Santoso"\r\n"0856 1234 5678","Siti Rahayu, SE"`;
-  parseCSV(csv);
+  const rows = [
+    ['Nomor WA', 'Nama'],
+    ['+62 823-4444-5555', 'Akhsan Rian Anugrah, S.Pd., Gr.'],
+    ['081232323232', 'Budi Santoso'],
+    ['0856 1234 5678', 'Siti Rahayu, SE'],
+  ];
+  parseRows(rows);
   uploadZone.innerHTML = `<i class="fa-solid fa-check-circle" style="font-size:2rem;color:#5c7a62;display:block;margin-bottom:.5rem;"></i>
-    <p style="margin:0 0 .2rem;font-weight:600;color:#4a6350;">contoh-data.csv</p>
+    <p style="margin:0 0 .2rem;font-weight:600;color:#4a6350;">contoh-data.xlsx</p>
     <p style="margin:0;font-size:.75rem;color:#6b5a52;">3 baris contoh — klik untuk ganti file</p>`;
 }
 
