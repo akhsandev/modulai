@@ -735,13 +735,22 @@
       <div class="page-header">
         <div>
           <h2 class="page-title">Data Pohon</h2>
-          <p class="page-subtitle">Kelola seluruh tanaman di sekolah</p>
+          <p class="page-subtitle" id="pohonSubtitle">Kelola seluruh tanaman di sekolah</p>
         </div>
-        <button class="btn btn-primary" onclick="openModalAddPohon()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span class="btn-text">Tambah Pohon</span>
-        </button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-outline" onclick="openModalAddPohon()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span class="btn-text">Tambah Pohon</span>
+          </button>
+          <button class="btn btn-primary" onclick="openModalMultiLokasi()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8"/><line x1="12" y1="3" x2="12" y2="7"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></svg>
+            <span class="btn-text">Import Multi-Lokasi</span>
+          </button>
+        </div>
       </div>
+
+      <!-- Summary akumulasi per jenis -->
+      <div id="pohonSummaryBar" style="display:none;margin-bottom:16px"></div>
 
       <div class="toolbar">
         <div class="search-wrap">
@@ -758,10 +767,15 @@
           <option value="Sakit">Sakit</option>
           <option value="Mati">Mati</option>
         </select>
+        <!-- Toggle view -->
+        <button class="btn btn-outline btn-sm" id="btnToggleGrouped" onclick="toggleGroupedView()" title="Toggle tampilan grouped/flat">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Per Jenis
+        </button>
       </div>
 
       <div class="glass-card table-wrap">
-        <table aria-label="Tabel data pohon">
+        <table aria-label="Tabel data pohon" id="pohonTable">
           <thead>
             <tr>
               <th>Nama Pohon</th>
@@ -1000,6 +1014,68 @@
       <button class="btn btn-outline" onclick="closeModal('modalPohon')">Batal</button>
       <button class="btn btn-primary" id="btnSavePohon" onclick="savePohon()">
         <span class="btn-text">Simpan</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Import Multi-Lokasi -->
+<div class="modal-backdrop" id="modalMultiLokasi" role="dialog" aria-modal="true" aria-labelledby="modalMultiLokasiTitle">
+  <div class="modal" style="max-width:640px">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modalMultiLokasiTitle">Import Pohon Multi-Lokasi</h3>
+      <button class="modal-close" onclick="closeModal('modalMultiLokasi')" aria-label="Tutup modal">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:.83rem;color:var(--text-muted);margin-bottom:16px;background:rgba(46,125,50,0.07);padding:10px 14px;border-radius:10px;border-left:3px solid var(--secondary)">
+        Masukkan nama &amp; jenis pohon sekali, lalu tambahkan beberapa lokasi tanam berbeda. Setiap lokasi tersimpan terpisah tapi terakumulasi sebagai satu jenis di ringkasan.
+      </p>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="mlNama">Nama Pohon <span class="required" aria-hidden="true">*</span></label>
+          <input class="form-control" id="mlNama" type="text" placeholder="contoh: Pohon Mangga" />
+          <div class="form-error" id="errMlNama">Nama pohon wajib diisi</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="mlJenis">Jenis <span class="required" aria-hidden="true">*</span></label>
+          <input class="form-control" id="mlJenis" type="text" placeholder="contoh: Mangga Arumanis" />
+          <div class="form-error" id="errMlJenis">Jenis wajib diisi</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="mlTglTanam">Tanggal Tanam <span class="required" aria-hidden="true">*</span></label>
+          <input class="form-control" id="mlTglTanam" type="date" />
+          <div class="form-error" id="errMlTgl">Tanggal wajib diisi</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="mlStatus">Status</label>
+          <select class="form-control" id="mlStatus">
+            <option value="Sehat">Sehat</option>
+            <option value="Perlu Perawatan">Perlu Perawatan</option>
+            <option value="Sakit">Sakit</option>
+            <option value="Mati">Mati</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:16px 0 10px">
+        <label class="form-label" style="margin:0">Daftar Lokasi <span class="required" aria-hidden="true">*</span>
+          <span id="mlLokasiCount" style="font-weight:400;color:var(--text-muted);font-size:.78rem;margin-left:6px">(0 lokasi)</span>
+        </label>
+        <button class="btn btn-outline btn-sm" onclick="addLokasiRow()" type="button">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Tambah Lokasi
+        </button>
+      </div>
+      <div id="mlLokasiList" style="display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;padding-right:4px"></div>
+      <div class="form-error" id="errMlLokasi" style="margin-top:6px">Minimal satu lokasi wajib diisi</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modalMultiLokasi')">Batal</button>
+      <button class="btn btn-primary" id="btnSaveMultiLokasi" onclick="saveMultiLokasi()">
+        <span class="btn-text">Simpan Semua</span>
       </button>
     </div>
   </div>
@@ -1557,6 +1633,8 @@ function openLightbox(url, caption) {
 // ============================================================
 // DATA POHON
 // ============================================================
+let pohonGroupedView = false;
+
 async function loadPohon() {
   if (!GAS_URL) { renderPohonEmpty('Konfigurasi GAS URL diperlukan'); return; }
   document.getElementById('pohonTableBody').innerHTML =
@@ -1564,11 +1642,54 @@ async function loadPohon() {
   try {
     allPohon = await apiCall('getPohon');
     populatePohonSelects();
+    renderPohonSummary(allPohon);
     renderPohonTable(allPohon);
   } catch(e) {
     showToast(e.message, 'error');
     renderPohonEmpty(e.message);
   }
+}
+
+// Render summary bar: total pohon + chip per jenis
+function renderPohonSummary(rows) {
+  const subtitle = document.getElementById('pohonSubtitle');
+  subtitle.textContent = `${rows.length} pohon terdaftar`;
+
+  const bar = document.getElementById('pohonSummaryBar');
+  if (!rows.length) { bar.style.display = 'none'; return; }
+
+  // Hitung akumulasi per jenis
+  const jenisMap = {};
+  rows.forEach(p => {
+    const j = p['Jenis'] || 'Tidak Diketahui';
+    if (!jenisMap[j]) jenisMap[j] = { count: 0, sehat: 0 };
+    jenisMap[j].count++;
+    if (p['Status'] === 'Sehat') jenisMap[j].sehat++;
+  });
+
+  const sorted = Object.entries(jenisMap).sort((a,b) => b[1].count - a[1].count);
+  bar.style.display = 'block';
+  bar.innerHTML = `
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <span style="font-size:.78rem;font-weight:600;color:var(--text-muted);white-space:nowrap">Akumulasi per jenis:</span>
+      ${sorted.map(([jenis, data]) => `
+        <div style="display:inline-flex;align-items:center;gap:6px;
+          background:rgba(255,255,255,0.6);border:1px solid rgba(46,125,50,0.18);
+          border-radius:20px;padding:5px 12px;font-size:.8rem;
+          backdrop-filter:blur(8px);cursor:pointer;transition:all .2s"
+          onclick="quickFilterJenis('${escapeHtml(jenis)}')"
+          title="Klik untuk filter jenis ini">
+          <strong style="color:var(--primary)">${data.count}</strong>
+          <span style="color:var(--text)">${escapeHtml(jenis)}</span>
+          <span style="color:var(--text-muted);font-size:.72rem">(${data.sehat} sehat)</span>
+        </div>`).join('')}
+      <button class="btn btn-outline btn-sm" onclick="quickFilterJenis('')" style="border-radius:20px;padding:5px 12px;font-size:.78rem" title="Tampilkan semua">Semua</button>
+    </div>`;
+}
+
+function quickFilterJenis(jenis) {
+  document.getElementById('filterJenis').value = jenis;
+  filterPohon();
 }
 
 function filterPohon() {
@@ -1581,15 +1702,65 @@ function filterPohon() {
     const matchS = !status || String(p['Status']).toLowerCase().includes(status);
     return matchQ && matchJ && matchS;
   });
+  renderPohonSummary(filtered);
   renderPohonTable(filtered);
+}
+
+// Toggle antara flat view dan grouped-by-jenis view
+function toggleGroupedView() {
+  pohonGroupedView = !pohonGroupedView;
+  const btn = document.getElementById('btnToggleGrouped');
+  btn.style.background = pohonGroupedView ? 'rgba(46,125,50,0.12)' : '';
+  btn.style.color = pohonGroupedView ? 'var(--primary)' : '';
+  filterPohon();
 }
 
 function renderPohonTable(rows) {
   const tbody = document.getElementById('pohonTableBody');
-  if (!rows.length) { tbody.innerHTML = `<tr><td colspan="6">${emptyStateHtml('Belum ada data pohon', 'Tambahkan pohon menggunakan tombol di atas.')}</td></tr>`; return; }
-  tbody.innerHTML = rows.map(p => `
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="6">${emptyStateHtml('Belum ada data pohon', 'Tambahkan pohon menggunakan tombol di atas.')}</td></tr>`;
+    return;
+  }
+
+  if (pohonGroupedView) {
+    renderPohonTableGrouped(rows, tbody);
+  } else {
+    tbody.innerHTML = rows.map(p => pohonRow(p)).join('');
+  }
+}
+
+function renderPohonTableGrouped(rows, tbody) {
+  // Kelompokkan by jenis
+  const groups = {};
+  rows.forEach(p => {
+    const j = p['Jenis'] || 'Tidak Diketahui';
+    if (!groups[j]) groups[j] = [];
+    groups[j].push(p);
+  });
+
+  let html = '';
+  Object.entries(groups).sort((a,b) => b[1].length - a[1].length).forEach(([jenis, items]) => {
+    // Group header row
+    html += `
+      <tr style="background:rgba(46,125,50,0.06)">
+        <td colspan="6" style="padding:10px 16px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="color:var(--primary)" aria-hidden="true"><path d="M12 22V12M12 12C12 7 7 4 7 4s-.5 5 5 8M12 12c0-5 5-8 5-8s.5 5-5 8"/></svg>
+            <strong style="font-size:.875rem;color:var(--primary)">${escapeHtml(jenis)}</strong>
+            <span style="background:var(--primary);color:#fff;border-radius:20px;padding:2px 9px;font-size:.7rem;font-weight:700">${items.length} pohon</span>
+            <span style="font-size:.75rem;color:var(--text-muted);margin-left:4px">${items.map(i=>i['Lokasi']).join(' · ')}</span>
+          </div>
+        </td>
+      </tr>`;
+    items.forEach(p => { html += pohonRow(p, true); });
+  });
+  tbody.innerHTML = html;
+}
+
+function pohonRow(p, indented = false) {
+  return `
     <tr>
-      <td><strong>${escapeHtml(p['Nama'])}</strong></td>
+      <td style="${indented?'padding-left:32px':''}"><strong>${escapeHtml(p['Nama'])}</strong></td>
       <td>${escapeHtml(p['Jenis'])}</td>
       <td>${escapeHtml(p['Lokasi'])}</td>
       <td>${formatDisplayDate(p['Tanggal Tanam'])}</td>
@@ -1607,7 +1778,7 @@ function renderPohonTable(rows) {
           </button>
         </div>
       </td>
-    </tr>`).join('');
+    </tr>`;
 }
 
 function renderPohonEmpty(msg) {
@@ -1675,6 +1846,115 @@ async function savePohon() {
   } finally {
     setButtonLoading('btnSavePohon', false);
   }
+}
+
+// ============================================================
+// MULTI-LOKASI
+// ============================================================
+function openModalMultiLokasi() {
+  document.getElementById('mlNama').value    = '';
+  document.getElementById('mlJenis').value   = '';
+  document.getElementById('mlTglTanam').value = todayISO();
+  document.getElementById('mlStatus').value  = 'Sehat';
+  document.getElementById('mlLokasiList').innerHTML = '';
+  document.getElementById('mlLokasiCount').textContent = '(0 lokasi)';
+  clearFormErrors('modalMultiLokasi');
+  // Tambahkan 1 baris lokasi otomatis
+  addLokasiRow();
+  openModal('modalMultiLokasi');
+}
+
+function addLokasiRow() {
+  const list  = document.getElementById('mlLokasiList');
+  const index = list.children.length + 1;
+  const row   = document.createElement('div');
+  row.className = 'ml-lokasi-row';
+  row.style.cssText = 'display:flex;gap:8px;align-items:center';
+  row.innerHTML = `
+    <span style="font-size:.75rem;color:var(--text-muted);min-width:18px;text-align:right">${index}</span>
+    <input class="form-control" type="text" placeholder="contoh: Depan Kelas 6A, Halaman Belakang..."
+      style="flex:1" oninput="updateLokasiCount()" />
+    <button type="button" onclick="removeLokasiRow(this)"
+      style="width:32px;height:32px;flex-shrink:0;border:1px solid rgba(229,57,53,.2);
+      background:rgba(229,57,53,.07);border-radius:8px;cursor:pointer;display:flex;
+      align-items:center;justify-content:center;transition:background .2s"
+      onmouseover="this.style.background='rgba(229,57,53,.15)'"
+      onmouseout="this.style.background='rgba(229,57,53,.07)'"
+      aria-label="Hapus lokasi">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e53935" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>`;
+  list.appendChild(row);
+  updateLokasiCount();
+  // Focus new input
+  setTimeout(() => row.querySelector('input').focus(), 50);
+}
+
+function removeLokasiRow(btn) {
+  const list = document.getElementById('mlLokasiList');
+  if (list.children.length <= 1) { showToast('Minimal satu lokasi diperlukan', 'warning'); return; }
+  btn.closest('.ml-lokasi-row').remove();
+  // Re-number
+  Array.from(list.children).forEach((row, i) => {
+    row.querySelector('span').textContent = i + 1;
+  });
+  updateLokasiCount();
+}
+
+function updateLokasiCount() {
+  const list   = document.getElementById('mlLokasiList');
+  const filled = Array.from(list.querySelectorAll('input')).filter(i => i.value.trim()).length;
+  document.getElementById('mlLokasiCount').textContent = `(${filled} lokasi terisi)`;
+}
+
+async function saveMultiLokasi() {
+  const nama   = document.getElementById('mlNama').value.trim();
+  const jenis  = document.getElementById('mlJenis').value.trim();
+  const tgl    = document.getElementById('mlTglTanam').value;
+  const status = document.getElementById('mlStatus').value;
+
+  let valid = true;
+  if (!nama)  { showFieldError('mlNama','errMlNama');   valid = false; }
+  if (!jenis) { showFieldError('mlJenis','errMlJenis'); valid = false; }
+  if (!tgl)   { showFieldError('mlTglTanam','errMlTgl');valid = false; }
+
+  const inputs  = Array.from(document.querySelectorAll('#mlLokasiList input'));
+  const lokasis = inputs.map(i => i.value.trim()).filter(Boolean);
+  if (!lokasis.length) {
+    document.getElementById('errMlLokasi').style.display = 'block';
+    valid = false;
+  } else {
+    document.getElementById('errMlLokasi').style.display = 'none';
+  }
+  if (!valid) return;
+
+  setButtonLoading('btnSaveMultiLokasi', true);
+  const btn = document.getElementById('btnSaveMultiLokasi');
+  const orig = btn.querySelector('.btn-text').textContent;
+  btn.querySelector('.btn-text').textContent = `Menyimpan 0/${lokasis.length}...`;
+
+  let saved = 0;
+  const errors = [];
+  for (const lokasi of lokasis) {
+    try {
+      await apiCall('addPohon', { nama, jenis, lokasi, tanggalTanam: tgl, status });
+      saved++;
+      btn.querySelector('.btn-text').textContent = `Menyimpan ${saved}/${lokasis.length}...`;
+    } catch(e) {
+      errors.push(`Lokasi "${lokasi}": ${e.message}`);
+    }
+  }
+
+  setButtonLoading('btnSaveMultiLokasi', false);
+  btn.querySelector('.btn-text').textContent = orig;
+
+  if (errors.length) {
+    showToast(`${saved} berhasil, ${errors.length} gagal: ${errors[0]}`, 'warning', 5000);
+  } else {
+    showToast(`${saved} pohon berhasil ditambahkan (${jenis} — ${saved} lokasi)`);
+  }
+
+  closeModal('modalMultiLokasi');
+  loadPohon();
 }
 
 // Detail Pohon
