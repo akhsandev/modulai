@@ -781,13 +781,14 @@
               <th>Nama Pohon</th>
               <th>Jenis</th>
               <th>Lokasi</th>
+              <th style="text-align:center">Jml</th>
               <th>Tgl Tanam</th>
               <th>Status</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody id="pohonTableBody">
-            <tr><td colspan="6"><div class="loading-overlay"><div class="spinner"></div></div></td></tr>
+            <tr><td colspan="7"><div class="loading-overlay"><div class="spinner"></div></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -995,11 +996,18 @@
       </div>
       <div class="form-row">
         <div class="form-group">
+          <label class="form-label" for="pohonJumlah">Jumlah <span class="required" aria-hidden="true">*</span></label>
+          <input class="form-control" id="pohonJumlah" type="number" min="1" max="9999" value="1" required />
+          <div class="form-error" id="errPohonJumlah">Jumlah minimal 1</div>
+        </div>
+        <div class="form-group">
           <label class="form-label" for="pohonTglTanam">Tanggal Tanam <span class="required" aria-hidden="true">*</span></label>
           <input class="form-control" id="pohonTglTanam" type="date" required />
           <div class="form-error" id="errPohonTgl">Tanggal tanam wajib diisi</div>
         </div>
-        <div class="form-group">
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="grid-column:1/-1">
           <label class="form-label" for="pohonStatus">Status</label>
           <select class="form-control" id="pohonStatus">
             <option value="Sehat">Sehat</option>
@@ -1061,7 +1069,7 @@
         </div>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin:16px 0 10px">
-        <label class="form-label" style="margin:0">Daftar Lokasi <span class="required" aria-hidden="true">*</span>
+        <label class="form-label" style="margin:0">Daftar Lokasi &amp; Jumlah <span class="required" aria-hidden="true">*</span>
           <span id="mlLokasiCount" style="font-weight:400;color:var(--text-muted);font-size:.78rem;margin-left:6px">(0 lokasi)</span>
         </label>
         <button class="btn btn-outline btn-sm" onclick="addLokasiRow()" type="button">
@@ -1515,7 +1523,11 @@ function renderStats(data) {
       <div class="stat-icon green">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 22V12M12 12C12 7 7 4 7 4s-.5 5 5 8M12 12c0-5 5-8 5-8s.5 5-5 8"/></svg>
       </div>
-      <div><div class="stat-label">Total Pohon</div><div class="stat-value" id="statTotalPohon">${data.totalPohon}</div></div>
+      <div>
+        <div class="stat-label">Total Pohon</div>
+        <div class="stat-value" id="statTotalPohon">${data.totalPohon}</div>
+        <div style="font-size:.72rem;color:var(--text-muted);margin-top:2px">${data.totalEntri} entri lokasi</div>
+      </div>
     </div>
     <div class="glass-card stat-card">
       <div class="stat-icon teal">
@@ -1652,38 +1664,50 @@ async function loadPohon() {
 
 // Render summary bar: total pohon + chip per jenis
 function renderPohonSummary(rows) {
+  // Hitung total individu pohon (sum Jumlah), bukan jumlah entri
+  const totalPohon = rows.reduce((s, p) => {
+    const j = parseInt(p['Jumlah'], 10);
+    return s + (isNaN(j) || j < 1 ? 1 : j);
+  }, 0);
   const subtitle = document.getElementById('pohonSubtitle');
-  subtitle.textContent = `${rows.length} pohon terdaftar`;
+  subtitle.textContent = `${totalPohon} pohon · ${rows.length} entri lokasi`;
 
   const bar = document.getElementById('pohonSummaryBar');
   if (!rows.length) { bar.style.display = 'none'; return; }
 
-  // Hitung akumulasi per jenis
+  // Akumulasi per jenis (sum Jumlah)
   const jenisMap = {};
   rows.forEach(p => {
-    const j = p['Jenis'] || 'Tidak Diketahui';
-    if (!jenisMap[j]) jenisMap[j] = { count: 0, sehat: 0 };
-    jenisMap[j].count++;
-    if (p['Status'] === 'Sehat') jenisMap[j].sehat++;
+    const j   = p['Jenis'] || 'Tidak Diketahui';
+    const jml = parseInt(p['Jumlah'], 10);
+    const n   = isNaN(jml) || jml < 1 ? 1 : jml;
+    if (!jenisMap[j]) jenisMap[j] = { total: 0, sehat: 0, entri: 0 };
+    jenisMap[j].total += n;
+    jenisMap[j].entri++;
+    if (p['Status'] === 'Sehat') jenisMap[j].sehat += n;
   });
 
-  const sorted = Object.entries(jenisMap).sort((a,b) => b[1].count - a[1].count);
+  const sorted = Object.entries(jenisMap).sort((a, b) => b[1].total - a[1].total);
   bar.style.display = 'block';
   bar.innerHTML = `
     <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-      <span style="font-size:.78rem;font-weight:600;color:var(--text-muted);white-space:nowrap">Akumulasi per jenis:</span>
-      ${sorted.map(([jenis, data]) => `
+      <span style="font-size:.78rem;font-weight:600;color:var(--text-muted);white-space:nowrap">Per jenis:</span>
+      ${sorted.map(([jenis, d]) => `
         <div style="display:inline-flex;align-items:center;gap:6px;
           background:rgba(255,255,255,0.6);border:1px solid rgba(46,125,50,0.18);
           border-radius:20px;padding:5px 12px;font-size:.8rem;
           backdrop-filter:blur(8px);cursor:pointer;transition:all .2s"
           onclick="quickFilterJenis('${escapeHtml(jenis)}')"
-          title="Klik untuk filter jenis ini">
-          <strong style="color:var(--primary)">${data.count}</strong>
+          title="Klik untuk filter · ${d.entri} lokasi">
+          <strong style="color:var(--primary)">${d.total}</strong>
           <span style="color:var(--text)">${escapeHtml(jenis)}</span>
-          <span style="color:var(--text-muted);font-size:.72rem">(${data.sehat} sehat)</span>
+          <span style="color:var(--text-muted);font-size:.72rem">${d.entri} lok</span>
         </div>`).join('')}
-      <button class="btn btn-outline btn-sm" onclick="quickFilterJenis('')" style="border-radius:20px;padding:5px 12px;font-size:.78rem" title="Tampilkan semua">Semua</button>
+      <button class="btn btn-outline btn-sm"
+        onclick="quickFilterJenis('')"
+        style="border-radius:20px;padding:5px 12px;font-size:.78rem">
+        Semua
+      </button>
     </div>`;
 }
 
@@ -1718,7 +1742,7 @@ function toggleGroupedView() {
 function renderPohonTable(rows) {
   const tbody = document.getElementById('pohonTableBody');
   if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="6">${emptyStateHtml('Belum ada data pohon', 'Tambahkan pohon menggunakan tombol di atas.')}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7">${emptyStateHtml('Belum ada data pohon', 'Tambahkan pohon menggunakan tombol di atas.')}</td></tr>`;
     return;
   }
 
@@ -1739,16 +1763,21 @@ function renderPohonTableGrouped(rows, tbody) {
   });
 
   let html = '';
-  Object.entries(groups).sort((a,b) => b[1].length - a[1].length).forEach(([jenis, items]) => {
-    // Group header row
+  Object.entries(groups).sort((a, b) => {
+    // sort by total jumlah desc
+    const sumA = a[1].reduce((s,p) => s + (parseInt(p['Jumlah'],10)||1), 0);
+    const sumB = b[1].reduce((s,p) => s + (parseInt(p['Jumlah'],10)||1), 0);
+    return sumB - sumA;
+  }).forEach(([jenis, items]) => {
+    const totalJml = items.reduce((s,p) => s + (parseInt(p['Jumlah'],10)||1), 0);
     html += `
       <tr style="background:rgba(46,125,50,0.06)">
         <td colspan="6" style="padding:10px 16px">
-          <div style="display:flex;align-items:center;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="color:var(--primary)" aria-hidden="true"><path d="M12 22V12M12 12C12 7 7 4 7 4s-.5 5 5 8M12 12c0-5 5-8 5-8s.5 5-5 8"/></svg>
             <strong style="font-size:.875rem;color:var(--primary)">${escapeHtml(jenis)}</strong>
-            <span style="background:var(--primary);color:#fff;border-radius:20px;padding:2px 9px;font-size:.7rem;font-weight:700">${items.length} pohon</span>
-            <span style="font-size:.75rem;color:var(--text-muted);margin-left:4px">${items.map(i=>i['Lokasi']).join(' · ')}</span>
+            <span style="background:var(--primary);color:#fff;border-radius:20px;padding:2px 9px;font-size:.7rem;font-weight:700">${totalJml} pohon</span>
+            <span style="font-size:.72rem;color:var(--text-muted)">${items.length} lokasi</span>
           </div>
         </td>
       </tr>`;
@@ -1758,11 +1787,13 @@ function renderPohonTableGrouped(rows, tbody) {
 }
 
 function pohonRow(p, indented = false) {
+  const jumlah = parseInt(p['Jumlah'], 10) || 1;
   return `
     <tr>
-      <td style="${indented?'padding-left:32px':''}"><strong>${escapeHtml(p['Nama'])}</strong></td>
+      <td style="${indented ? 'padding-left:32px' : ''}"><strong>${escapeHtml(p['Nama'])}</strong></td>
       <td>${escapeHtml(p['Jenis'])}</td>
       <td>${escapeHtml(p['Lokasi'])}</td>
+      <td style="text-align:center;font-weight:700;color:var(--primary)">${jumlah}</td>
       <td>${formatDisplayDate(p['Tanggal Tanam'])}</td>
       <td>${statusBadge(p['Status'])}</td>
       <td>
@@ -1782,7 +1813,7 @@ function pohonRow(p, indented = false) {
 }
 
 function renderPohonEmpty(msg) {
-  document.getElementById('pohonTableBody').innerHTML = `<tr><td colspan="6">${emptyStateHtml('Gagal memuat data', msg)}</td></tr>`;
+  document.getElementById('pohonTableBody').innerHTML = `<tr><td colspan="7">${emptyStateHtml('Gagal memuat data', msg)}</td></tr>`;
 }
 
 function emptyStateHtml(title, desc) {
@@ -1797,47 +1828,51 @@ function openModalAddPohon() {
   document.getElementById('pohonId').value = '';
   document.getElementById('modalPohonTitle').textContent = 'Tambah Pohon';
   ['pohonNama','pohonJenis','pohonLokasi'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('pohonJumlah').value  = '1';
   document.getElementById('pohonTglTanam').value = todayISO();
-  document.getElementById('pohonStatus').value = 'Sehat';
+  document.getElementById('pohonStatus').value  = 'Sehat';
   clearFormErrors('modalPohon');
   openModal('modalPohon');
 }
 
 function openModalEditPohon(p) {
-  document.getElementById('pohonId').value = p['ID'];
+  document.getElementById('pohonId').value    = p['ID'];
   document.getElementById('modalPohonTitle').textContent = 'Edit Pohon';
-  document.getElementById('pohonNama').value  = p['Nama']    || '';
-  document.getElementById('pohonJenis').value = p['Jenis']   || '';
-  document.getElementById('pohonLokasi').value= p['Lokasi']  || '';
+  document.getElementById('pohonNama').value   = p['Nama']    || '';
+  document.getElementById('pohonJenis').value  = p['Jenis']   || '';
+  document.getElementById('pohonLokasi').value = p['Lokasi']  || '';
+  document.getElementById('pohonJumlah').value = p['Jumlah']  || 1;
   document.getElementById('pohonTglTanam').value = p['Tanggal Tanam'] ? p['Tanggal Tanam'].substring(0,10) : '';
-  document.getElementById('pohonStatus').value= p['Status']  || 'Sehat';
+  document.getElementById('pohonStatus').value = p['Status']  || 'Sehat';
   clearFormErrors('modalPohon');
   openModal('modalPohon');
 }
 
 async function savePohon() {
-  const nama    = document.getElementById('pohonNama').value.trim();
-  const jenis   = document.getElementById('pohonJenis').value.trim();
-  const lokasi  = document.getElementById('pohonLokasi').value.trim();
-  const tgl     = document.getElementById('pohonTglTanam').value;
-  const status  = document.getElementById('pohonStatus').value;
-  const id      = document.getElementById('pohonId').value;
+  const nama   = document.getElementById('pohonNama').value.trim();
+  const jenis  = document.getElementById('pohonJenis').value.trim();
+  const lokasi = document.getElementById('pohonLokasi').value.trim();
+  const jumlah = parseInt(document.getElementById('pohonJumlah').value, 10);
+  const tgl    = document.getElementById('pohonTglTanam').value;
+  const status = document.getElementById('pohonStatus').value;
+  const id     = document.getElementById('pohonId').value;
 
   let valid = true;
-  if (!nama)  { showFieldError('pohonNama','errPohonNama'); valid=false; }
-  if (!jenis) { showFieldError('pohonJenis','errPohonJenis'); valid=false; }
-  if (!lokasi){ showFieldError('pohonLokasi','errPohonLokasi'); valid=false; }
-  if (!tgl)   { showFieldError('pohonTglTanam','errPohonTgl'); valid=false; }
+  if (!nama)             { showFieldError('pohonNama','errPohonNama');    valid=false; }
+  if (!jenis)            { showFieldError('pohonJenis','errPohonJenis');  valid=false; }
+  if (!lokasi)           { showFieldError('pohonLokasi','errPohonLokasi');valid=false; }
+  if (!jumlah || jumlah < 1) { showFieldError('pohonJumlah','errPohonJumlah'); valid=false; }
+  if (!tgl)              { showFieldError('pohonTglTanam','errPohonTgl'); valid=false; }
   if (!valid) return;
 
   setButtonLoading('btnSavePohon', true);
   try {
     if (id) {
-      await apiCall('updatePohon', { id, nama, jenis, lokasi, tanggalTanam: tgl, status });
+      await apiCall('updatePohon', { id, nama, jenis, lokasi, jumlah, tanggalTanam: tgl, status });
       showToast('Data pohon berhasil diperbarui');
     } else {
-      await apiCall('addPohon', { nama, jenis, lokasi, tanggalTanam: tgl, status });
-      showToast('Pohon berhasil ditambahkan');
+      await apiCall('addPohon', { nama, jenis, lokasi, jumlah, tanggalTanam: tgl, status });
+      showToast(`${jumlah} pohon ${jenis} berhasil ditambahkan`);
     }
     closeModal('modalPohon');
     loadPohon();
@@ -1869,13 +1904,18 @@ function addLokasiRow() {
   const index = list.children.length + 1;
   const row   = document.createElement('div');
   row.className = 'ml-lokasi-row';
-  row.style.cssText = 'display:flex;gap:8px;align-items:center';
+  row.style.cssText = 'display:grid;grid-template-columns:18px 1fr 90px 32px;gap:8px;align-items:center';
   row.innerHTML = `
-    <span style="font-size:.75rem;color:var(--text-muted);min-width:18px;text-align:right">${index}</span>
-    <input class="form-control" type="text" placeholder="contoh: Depan Kelas 6A, Halaman Belakang..."
-      style="flex:1" oninput="updateLokasiCount()" />
+    <span style="font-size:.75rem;color:var(--text-muted);text-align:right">${index}</span>
+    <input class="form-control ml-lokasi-input" type="text"
+      placeholder="contoh: Depan Kelas 6A"
+      oninput="updateLokasiCount()" />
+    <input class="form-control ml-jumlah-input" type="number"
+      min="1" max="9999" value="1"
+      title="Jumlah pohon di lokasi ini"
+      placeholder="Jml" style="text-align:center;padding-left:8px;padding-right:8px" />
     <button type="button" onclick="removeLokasiRow(this)"
-      style="width:32px;height:32px;flex-shrink:0;border:1px solid rgba(229,57,53,.2);
+      style="width:32px;height:32px;border:1px solid rgba(229,57,53,.2);
       background:rgba(229,57,53,.07);border-radius:8px;cursor:pointer;display:flex;
       align-items:center;justify-content:center;transition:background .2s"
       onmouseover="this.style.background='rgba(229,57,53,.15)'"
@@ -1885,8 +1925,7 @@ function addLokasiRow() {
     </button>`;
   list.appendChild(row);
   updateLokasiCount();
-  // Focus new input
-  setTimeout(() => row.querySelector('input').focus(), 50);
+  setTimeout(() => row.querySelector('.ml-lokasi-input').focus(), 50);
 }
 
 function removeLokasiRow(btn) {
@@ -1902,8 +1941,14 @@ function removeLokasiRow(btn) {
 
 function updateLokasiCount() {
   const list   = document.getElementById('mlLokasiList');
-  const filled = Array.from(list.querySelectorAll('input')).filter(i => i.value.trim()).length;
-  document.getElementById('mlLokasiCount').textContent = `(${filled} lokasi terisi)`;
+  const rows   = Array.from(list.querySelectorAll('.ml-lokasi-row'));
+  const filled = rows.filter(r => r.querySelector('.ml-lokasi-input').value.trim()).length;
+  const totalJml = rows.reduce((sum, r) => {
+    const jml = parseInt(r.querySelector('.ml-jumlah-input').value, 10);
+    return sum + (isNaN(jml) || jml < 1 ? 1 : jml);
+  }, 0);
+  document.getElementById('mlLokasiCount').textContent =
+    `(${filled} lokasi · total ${totalJml} pohon)`;
 }
 
 async function saveMultiLokasi() {
@@ -1917,9 +1962,15 @@ async function saveMultiLokasi() {
   if (!jenis) { showFieldError('mlJenis','errMlJenis'); valid = false; }
   if (!tgl)   { showFieldError('mlTglTanam','errMlTgl');valid = false; }
 
-  const inputs  = Array.from(document.querySelectorAll('#mlLokasiList input'));
-  const lokasis = inputs.map(i => i.value.trim()).filter(Boolean);
-  if (!lokasis.length) {
+  // Kumpulkan lokasi + jumlah dari setiap baris
+  const lokasiBaris = Array.from(document.querySelectorAll('#mlLokasiList .ml-lokasi-row'))
+    .map(r => ({
+      lokasi: r.querySelector('.ml-lokasi-input').value.trim(),
+      jumlah: Math.max(1, parseInt(r.querySelector('.ml-jumlah-input').value, 10) || 1)
+    }))
+    .filter(x => x.lokasi);
+
+  if (!lokasiBaris.length) {
     document.getElementById('errMlLokasi').style.display = 'block';
     valid = false;
   } else {
@@ -1927,30 +1978,30 @@ async function saveMultiLokasi() {
   }
   if (!valid) return;
 
+  const totalPohon = lokasiBaris.reduce((s, x) => s + x.jumlah, 0);
   setButtonLoading('btnSaveMultiLokasi', true);
   const btn = document.getElementById('btnSaveMultiLokasi');
-  const orig = btn.querySelector('.btn-text').textContent;
-  btn.querySelector('.btn-text').textContent = `Menyimpan 0/${lokasis.length}...`;
+  btn.querySelector('.btn-text').textContent = `Menyimpan 0/${lokasiBaris.length}...`;
 
   let saved = 0;
   const errors = [];
-  for (const lokasi of lokasis) {
+  for (const item of lokasiBaris) {
     try {
-      await apiCall('addPohon', { nama, jenis, lokasi, tanggalTanam: tgl, status });
+      await apiCall('addPohon', { nama, jenis, lokasi: item.lokasi, jumlah: item.jumlah, tanggalTanam: tgl, status });
       saved++;
-      btn.querySelector('.btn-text').textContent = `Menyimpan ${saved}/${lokasis.length}...`;
+      btn.querySelector('.btn-text').textContent = `Menyimpan ${saved}/${lokasiBaris.length}...`;
     } catch(e) {
-      errors.push(`Lokasi "${lokasi}": ${e.message}`);
+      errors.push(`"${item.lokasi}": ${e.message}`);
     }
   }
 
   setButtonLoading('btnSaveMultiLokasi', false);
-  btn.querySelector('.btn-text').textContent = orig;
+  btn.querySelector('.btn-text').textContent = 'Simpan Semua';
 
   if (errors.length) {
-    showToast(`${saved} berhasil, ${errors.length} gagal: ${errors[0]}`, 'warning', 5000);
+    showToast(`${saved} entri berhasil, ${errors.length} gagal: ${errors[0]}`, 'warning', 5000);
   } else {
-    showToast(`${saved} pohon berhasil ditambahkan (${jenis} — ${saved} lokasi)`);
+    showToast(`${saved} entri (${totalPohon} pohon) berhasil ditambahkan — ${jenis}`);
   }
 
   closeModal('modalMultiLokasi');
