@@ -1440,9 +1440,10 @@ function todayISO() {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 function formatDisplayDate(str) {
-  if (!str) return '-';
+  if (!str || str === '' || str === 'undefined' || str === 'null') return '-';
   const d = new Date(str);
-  if (isNaN(d)) return str;
+  // Check if date is valid and not epoch 0 (1 Jan 1970)
+  if (isNaN(d.getTime()) || d.getTime() === 0) return '-';
   return d.toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
 }
 
@@ -1788,6 +1789,8 @@ function renderPohonTableGrouped(rows, tbody) {
 
 function pohonRow(p, indented = false) {
   const jumlah = parseInt(p['Jumlah'], 10) || 1;
+  // Encode for HTML attribute - replace quotes with &quot; but keep JSON parseable
+  const pohonDataStr = JSON.stringify(p).replace(/"/g, '&quot;');
   return `
     <tr>
       <td style="${indented ? 'padding-left:32px' : ''}"><strong>${escapeHtml(p['Nama'])}</strong></td>
@@ -1801,7 +1804,7 @@ function pohonRow(p, indented = false) {
           <button class="btn btn-outline btn-sm btn-icon" onclick="openDetailPohon('${escapeHtml(p['ID'])}')" title="Lihat detail" aria-label="Lihat detail ${escapeHtml(p['Nama'])}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
-          <button class="btn btn-outline btn-sm btn-icon" onclick='openModalEditPohon(${JSON.stringify(p)})' title="Edit" aria-label="Edit ${escapeHtml(p['Nama'])}">
+          <button class="btn btn-outline btn-sm btn-icon btn-edit-pohon" data-pohon="${pohonDataStr}" title="Edit" aria-label="Edit ${escapeHtml(p['Nama'])}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           </button>
           <button class="btn btn-danger btn-sm btn-icon" onclick="confirmDelete('pohon','${escapeHtml(p['ID'])}','${escapeHtml(p['Nama'])}')" title="Hapus" aria-label="Hapus ${escapeHtml(p['Nama'])}">
@@ -2516,6 +2519,23 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('fotoTanggal').value    = today;
   document.getElementById('laporanTanggal').value = today;
   document.getElementById('pohonTglTanam').value  = today;
+
+  // Event delegation for edit buttons (since they're dynamically created)
+  document.addEventListener('click', (e) => {
+    const editBtn = e.target.closest('.btn-edit-pohon');
+    if (editBtn) {
+      try {
+        const pohonDataStr = editBtn.getAttribute('data-pohon');
+        // Decode &quot; back to "
+        const jsonStr = pohonDataStr.replace(/&quot;/g, '"');
+        const p = JSON.parse(jsonStr);
+        openModalEditPohon(p);
+      } catch(err) {
+        console.error('Error parsing pohon data:', err);
+        showToast('Gagal membuka form edit', 'error');
+      }
+    }
+  });
 
   // Load initial page
   if (GAS_URL) {
