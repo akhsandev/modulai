@@ -616,7 +616,10 @@
         const statusColor = { pending:'warning', processing:'info', done:'success', cancelled:'secondary' };
         const statusIcon  = { pending:'clock', processing:'gear fa-spin', done:'circle-check', cancelled:'ban' };
 
-        const rows = orders.map(o => `
+        const rows = orders.map(o => {
+            const wa = String(o.buyer_wa || '');
+            const waNum = wa.replace(/\D/g, '');
+            return `
             <div class="p-3 bg-theme-auto mb-3 rounded-4 shadow-sm" style="border-left:4px solid var(--bs-${statusColor[o.status] || 'secondary'});">
                 <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
                     <div>
@@ -628,7 +631,7 @@
                             <i class="fa-solid fa-user me-1"></i>${escHtmlD(o.buyer_name)}
                             &nbsp;·&nbsp;
                             <i class="fa-brands fa-whatsapp me-1 text-success"></i>
-                            <a href="https://wa.me/${escHtmlD(o.buyer_wa.replace(/\D/g,''))}" target="_blank" rel="noopener" style="color:inherit;">${escHtmlD(o.buyer_wa)}</a>
+                            <a href="https://wa.me/${escHtmlD(waNum)}" target="_blank" rel="noopener" style="color:inherit;">${escHtmlD(wa)}</a>
                             &nbsp;·&nbsp;
                             <i class="fa-solid fa-box me-1"></i>${escHtmlD(o.paket || '-')}
                         </div>
@@ -642,12 +645,13 @@
                         <span class="badge bg-${statusColor[o.status] || 'secondary'} rounded-pill" style="font-size:.7rem;">
                             <i class="fa-solid fa-${statusIcon[o.status] || 'circle'} me-1"></i>${escHtmlD(o.status)}
                         </span>
-                        <button class="btn btn-sm btn-outline-primary rounded-3 shadow-sm" onclick="openOrderDetail('${escHtmlD(o.order_id)}')" style="font-size:.75rem;">
+                        <button class="btn btn-sm btn-outline-primary rounded-3 shadow-sm" onclick="openOrderDetail('${escHtmlD(String(o.order_id))}')" style="font-size:.75rem;">
                             <i class="fa-solid fa-eye me-1"></i>Detail
                         </button>
                     </div>
                 </div>
-            </div>`).join('');
+            </div>`;
+        }).join('');
 
         container.innerHTML = `<div class="mb-2" style="font-size:.8rem;color:var(--bs-secondary-color);">${total} order ditemukan</div>` + rows;
     }
@@ -695,8 +699,9 @@
     function buildOrderDetailHtml(d, orderId, status) {
         if (!d) return '<p class="text-muted">Tidak ada data.</p>';
         const row = (label, val) => val ? `<tr><td class="text-muted pe-3" style="font-size:.8rem;white-space:nowrap;">${label}</td><td style="font-size:.85rem;word-break:break-word;">${val}</td></tr>` : '';
-        const bool = v => v ? '<span class="badge bg-success rounded-pill">Ya</span>' : '<span class="badge bg-secondary rounded-pill">Tidak</span>';
         const stories = (d.stories || []).map((s, i) => `<li><strong>Bab ${i+1}:</strong> ${escHtmlD(s.title)} — ${escHtmlD(s.body)}</li>`).join('') || '<li class="text-muted">Tidak ada</li>';
+        const waStr = String(d.buyerWa || '');
+        const waNum = waStr.replace(/\D/g, '');
 
         return `
         <div class="mb-3 p-2 rounded-3" style="background:var(--bs-light);font-size:.75rem;font-family:monospace;">
@@ -706,7 +711,7 @@
         <h6 class="fw-bold mb-2" style="font-size:.85rem;color:var(--bs-secondary);">INFO PEMESAN</h6>
         <table class="table table-sm table-borderless mb-3">
             ${row('Nama', escHtmlD(d.buyerName))}
-            ${row('WhatsApp', d.buyerWa ? `<a href="https://wa.me/${d.buyerWa.replace(/\D/g,'')}" target="_blank" rel="noopener">${escHtmlD(d.buyerWa)}</a>` : '')}
+            ${row('WhatsApp', waStr ? `<a href="https://wa.me/${waNum}" target="_blank" rel="noopener">${escHtmlD(waStr)}</a>` : '')}
             ${row('Email', escHtmlD(d.buyerEmail))}
             ${row('Paket', `<span class="badge bg-primary rounded-pill">${escHtmlD(d.paket)}</span>`)}
             ${row('Catatan', escHtmlD(d.notes))}
@@ -1100,7 +1105,7 @@
 
     /* ── helpers ── */
     function escHtmlD(s) {
-        return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
     function formatDate(iso) {
         if (!iso) return '-';
