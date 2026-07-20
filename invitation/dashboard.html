@@ -502,8 +502,9 @@
 
     function renderInviteResult(o) {
       const editorUrl = location.origin + location.pathname.replace('dashboard.html','') + 'editor-online.html?slug=' + o.slug + '&token=' + o.edit_token;
-      const waText = encodeURIComponent('Halo ' + o.name + '! Undangan digital Anda sudah siap. Silakan isi data melalui link berikut:\\n\\n' + editorUrl + '\\n\\nLink ini hanya untuk Anda. Jangan dibagikan ke orang lain.');
+      const waText = encodeURIComponent('Halo ' + o.name + '! Undangan digital Anda sudah siap. Silakan isi data melalui link berikut:\n\n' + editorUrl + '\n\nLink ini hanya untuk Anda. Jangan dibagikan ke orang lain.');
       const waUrl = 'https://wa.me/' + String(o.phone||'').replace(/\D/g,'').replace(/^0/,'62') + '?text=' + waText;
+      const dlUrl = ORDERS_GAS + '?action=generateHTML&slug=' + o.slug + '&token=' + getAdminToken();
       return `<div class="invite-result">
         <div class="fw-bold mb-2" style="font-size:.82rem;color:#198754;"><i class="fa-solid fa-circle-check me-1"></i>Undangan siap — slug: <code>${o.slug}</code></div>
         <div style="font-size:.75rem;color:#6c757d;">Link Editor untuk Client:</div>
@@ -515,6 +516,9 @@
           <button class="btn btn-outline-secondary btn-sm rounded-4" onclick="copyText('${editorUrl}', this)">
             <i class="fa-regular fa-copy me-1"></i>Salin Link
           </button>
+          <a href="${dlUrl}" target="_blank" class="btn btn-outline-primary btn-sm rounded-4" download="index.html">
+            <i class="fa-solid fa-file-code me-1"></i>Download index.html
+          </a>
         </div>
       </div>`;
     }
