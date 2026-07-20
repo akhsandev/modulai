@@ -1,0 +1,32 @@
+html {
+    scroll-behavior: smooth !important;
+    width: 100vw !important;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif !important;
+    padding: 0 !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* ⚠️ Hanya elemen tertentu yang perlu transisi warna — hindari wildcard */
+nav,
+section {
+    transition: background-color 350ms ease;
+}
+
+.hover-area {
+    display: none;
+    cursor: pointer;
+}
+
+.hover-wrapper:hover .hover-area {
+    display: flex;
+}
+
+.gif-image {
+    max-height: 10rem;
+}

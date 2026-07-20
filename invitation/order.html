@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pesan Undangan Digital — Akhsan Studio</title>
+<meta name="description" content="Form pemesanan undangan pernikahan digital.">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{--ivory:#fdf8f2;--ivory-2:#f5ede6;--rose:#c9a09a;--rose-dark:#9e6b64;--gold:#c4a35a;--sage:#5c7a62;--warm-900:#2d2420;--warm-700:#6b5a52;--warm-400:#a89488;--warm-200:#e8d8d0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Plus Jakarta Sans','Segoe UI',sans-serif;background:var(--ivory-2);color:var(--warm-900);min-height:100dvh;-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}
+.page{max-width:680px;margin:0 auto;padding:2rem 1.25rem 4rem;}
+.back-link{display:inline-flex;align-items:center;gap:.5rem;font-size:.8125rem;color:var(--warm-400);font-weight:600;margin-bottom:2rem;transition:color .2s;}
+.back-link:hover{color:var(--rose-dark);}
+.form-header{text-align:center;margin-bottom:2.5rem;}
+.form-logo{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:600;color:var(--rose-dark);margin-bottom:1.5rem;}
+.form-logo span{color:var(--gold);font-style:italic;}
+.form-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:2.25rem;font-weight:500;line-height:1.15;margin-bottom:.625rem;}
+.form-title em{font-style:italic;color:var(--rose-dark);}
+.form-subtitle{font-size:.875rem;color:var(--warm-400);line-height:1.7;}
+.steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:2.5rem;}
+.step{display:flex;align-items:center;gap:.5rem;}
+.step-dot{width:2rem;height:2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;transition:all .3s;}
+.step-dot.active{background:var(--warm-900);color:var(--ivory);}
+.step-dot.done{background:var(--sage);color:var(--ivory);}
+.step-dot.idle{background:var(--warm-200);color:var(--warm-400);}
+.step-label{font-size:.7rem;font-weight:600;color:var(--warm-400);white-space:nowrap;}
+.step-label.active{color:var(--warm-900);}
+.step-line{width:3rem;height:1px;background:var(--warm-200);flex-shrink:0;}
+.card{background:var(--ivory);border:1px solid rgba(201,160,154,.18);border-radius:2rem;box-shadow:0 4px 20px rgba(45,36,32,.09);padding:2rem;margin-bottom:1rem;}
+.card-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:500;margin-bottom:1.5rem;display:flex;align-items:center;gap:.625rem;color:var(--rose-dark);}
+.field{margin-bottom:1.25rem;}
+.field:last-child{margin-bottom:0;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+label{display:block;font-size:.7rem;font-weight:700;color:var(--warm-700);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.375rem;}
+label .req{color:var(--rose-dark);margin-left:.15rem;}
+input[type=text],input[type=tel],input[type=email],input[type=date],textarea,select{width:100%;padding:.75rem 1rem;border:1.5px solid var(--warm-200);border-radius:1rem;background:var(--ivory);color:var(--warm-900);font-family:inherit;font-size:.875rem;transition:border-color .2s,box-shadow .2s;outline:none;-webkit-appearance:none;appearance:none;}
+input:focus,textarea:focus,select:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(201,160,154,.15);}
+input.error,textarea.error,select.error{border-color:var(--rose-dark);}
+.field-hint{font-size:.7rem;color:var(--warm-400);margin-top:.3rem;line-height:1.5;}
+.field-error{font-size:.7rem;color:var(--rose-dark);font-weight:600;margin-top:.3rem;display:none;}
+.field-error.show{display:block;}
+textarea{resize:vertical;min-height:5rem;line-height:1.6;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a89488' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .875rem center;padding-right:2.5rem;}
+.package-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;}
+.pkg{border:1.5px solid var(--warm-200);border-radius:1.25rem;padding:1.125rem;cursor:pointer;transition:all .2s;position:relative;}
+.pkg:hover{border-color:var(--rose);}
+.pkg.selected{border-color:var(--warm-900);background:rgba(45,36,32,.03);}
+.pkg.selected::after{content:'✓';position:absolute;top:.625rem;right:.75rem;font-size:.7rem;font-weight:700;color:var(--ivory);background:var(--warm-900);width:1.25rem;height:1.25rem;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.pkg-name{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--warm-400);margin-bottom:.375rem;}
+.pkg-price{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:600;color:var(--warm-900);line-height:1;margin-bottom:.5rem;}
+.pkg-features{font-size:.7rem;color:var(--warm-400);line-height:1.6;}
+.pkg-popular{position:absolute;top:-.625rem;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--warm-900);font-size:.6rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .625rem;border-radius:99px;white-space:nowrap;}
+.btn-next{width:100%;padding:1rem;background:var(--warm-900);color:var(--ivory);border:none;border-radius:99px;font-family:inherit;font-size:.875rem;font-weight:700;cursor:pointer;transition:opacity .2s,transform .2s;display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:1.5rem;}
+.btn-next:hover{opacity:.88;transform:translateY(-1px);}
+.btn-next:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.btn-back{width:100%;padding:.875rem;background:transparent;color:var(--warm-700);border:1.5px solid var(--warm-200);border-radius:99px;font-family:inherit;font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;margin-top:.75rem;}
+.btn-back:hover{border-color:var(--rose);color:var(--rose-dark);}
+.summary-row{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;padding:.625rem 0;border-bottom:1px solid var(--warm-200);}
+.summary-row:last-child{border-bottom:none;}
+.summary-label{font-size:.75rem;color:var(--warm-400);font-weight:600;white-space:nowrap;}
+.summary-value{font-size:.8125rem;color:var(--warm-900);font-weight:500;text-align:right;}
+.success-screen{text-align:center;padding:3rem 1.5rem;}
+.success-icon{width:4rem;height:4rem;background:linear-gradient(135deg,var(--sage),#4a6350);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:1.5rem;color:#fff;margin-bottom:1.5rem;}
+.success-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;font-weight:500;margin-bottom:.75rem;}
+.success-desc{font-size:.875rem;color:var(--warm-400);line-height:1.75;max-width:28rem;margin:0 auto 2rem;}
+.success-ref{background:rgba(92,122,98,.08);border:1px solid rgba(92,122,98,.2);border-radius:1rem;padding:.875rem 1.125rem;display:inline-flex;align-items:center;gap:.75rem;font-size:.8125rem;margin-bottom:2rem;}
+.success-ref strong{color:var(--sage);}
+.btn-home{display:inline-flex;align-items:center;gap:.5rem;background:var(--warm-900);color:var(--ivory);border-radius:99px;padding:.875rem 1.75rem;font-size:.875rem;font-weight:700;}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@media(max-width:520px){.field-row{grid-template-columns:1fr;}.package-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a href="./landing.html" class="back-link">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    Kembali ke Beranda
+  </a>
+
+  <div class="form-header">
+    <div class="form-logo">Akhsan<span>Studio</span></div>
+    <h1 class="form-title">Pesan undangan<br><em>digital Anda.</em></h1>
+    <p class="form-subtitle">Isi formulir di bawah. Kami akan menghubungi Anda via WhatsApp untuk konfirmasi dan memulai pengerjaan.</p>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-dot active" id="dot-1">1</div>
+      <span class="step-label active" id="lbl-1">Paket</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-dot idle" id="dot-2">2</div>
+      <span class="step-label" id="lbl-2">Data</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-dot idle" id="dot-3">3</div>
+      <span class="step-label" id="lbl-3">Konfirmasi</span>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div id="step-1">
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Pilih Paket
+      </div>
+      <div class="package-grid">
+        <div class="pkg selected" data-pkg="basic" id="pkg-basic">
+          <div class="pkg-name">Basic</div>
+          <div class="pkg-price">Rp 150rb</div>
+          <div class="pkg-features">Foto, countdown, galeri 3 foto, maps, ucapan tamu</div>
+        </div>
+        <div class="pkg" data-pkg="pro" id="pkg-pro" style="position:relative;">
+          <div class="pkg-popular">Terpopuler</div>
+          <div class="pkg-name">Pro</div>
+          <div class="pkg-price">Rp 250rb</div>
+          <div class="pkg-features">Semua Basic + galeri 12 foto, musik, video, broadcast WA, editor mandiri</div>
+        </div>
+        <div class="pkg" data-pkg="custom" id="pkg-custom">
+          <div class="pkg-name">Custom</div>
+          <div class="pkg-price">Nego</div>
+          <div class="pkg-features">Semua Pro + domain sendiri, desain kustom, fitur tambahan</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-next" id="btn-step1-next">
+      Lanjutkan
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+
+  <!-- STEP 2 -->
+  <div id="step-2" style="display:none;">
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Data Pemesan
+      </div>
+      <div class="field">
+        <label for="f-name">Nama Lengkap <span class="req">*</span></label>
+        <input type="text" id="f-name" placeholder="cth. Budi Santoso" autocomplete="name">
+        <div class="field-error" id="err-name">Nama tidak boleh kosong.</div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="f-phone">Nomor WhatsApp <span class="req">*</span></label>
+          <input type="tel" id="f-phone" placeholder="08xxxxxxxxxx" autocomplete="tel">
+          <div class="field-error" id="err-phone">Nomor WA tidak valid.</div>
+        </div>
+        <div class="field">
+          <label for="f-email">Email (opsional)</label>
+          <input type="email" id="f-email" placeholder="nama@email.com" autocomplete="email">
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Detail Pernikahan
+      </div>
+      <div class="field">
+        <label for="f-couple">Nama Mempelai <span class="req">*</span></label>
+        <input type="text" id="f-couple" placeholder="cth. Budi & Siti">
+        <div class="field-error" id="err-couple">Nama mempelai tidak boleh kosong.</div>
+        <p class="field-hint">Nama yang akan tampil di undangan.</p>
+      </div>
+      <div class="field">
+        <label for="f-date">Tanggal Pernikahan <span class="req">*</span></label>
+        <input type="date" id="f-date">
+        <div class="field-error" id="err-date">Tanggal pernikahan wajib diisi.</div>
+      </div>
+      <div class="field">
+        <label for="f-message">Catatan Tambahan</label>
+        <textarea id="f-message" placeholder="Tema warna, musik pilihan, atau permintaan khusus..."></textarea>
+        <p class="field-hint">Opsional.</p>
+      </div>
+    </div>
+    <button class="btn-next" id="btn-step2-next">
+      Lanjut ke Konfirmasi
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+    <button class="btn-back" id="btn-step2-back">← Kembali</button>
+  </div>
+
+  <!-- STEP 3 -->
+  <div id="step-3" style="display:none;">
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Ringkasan Pesanan
+      </div>
+      <div id="summary-content"></div>
+    </div>
+    <div class="card" style="background:rgba(45,36,32,.03);">
+      <p style="font-size:.8125rem;color:var(--warm-700);line-height:1.7;">Dengan menekan <strong>Kirim Pesanan</strong>, Anda menyetujui bahwa kami akan menghubungi Anda via WhatsApp untuk konfirmasi pembayaran dan pengerjaan undangan.</p>
+    </div>
+    <button class="btn-next" id="btn-submit">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Kirim Pesanan
+    </button>
+    <button class="btn-back" id="btn-step3-back">← Kembali</button>
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="step-success" style="display:none;">
+    <div class="card">
+      <div class="success-screen">
+        <div class="success-icon">✓</div>
+        <h2 class="success-title">Pesanan terkirim!</h2>
+        <p class="success-desc">Terima kasih telah memesan. Kami akan menghubungi Anda melalui WhatsApp dalam 1×24 jam untuk konfirmasi dan memulai proses pembuatan.</p>
+        <div class="success-ref">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          <span>No. Referensi: <strong id="ref-number">—</strong></span>
+        </div>
+        <a href="./landing.html" class="btn-home">Kembali ke Beranda</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbw9b24Ros7NqQZ3ZSOs_mFVKIhtDOmYgzckTMqrWzcFQMOcxH8a_vxRfOjOv5t7x3yq/exec';
+const PKG_LABELS = { basic: 'Basic — Rp 150.000', pro: 'Pro — Rp 250.000', custom: 'Custom — Harga nego' };
+let selectedPkg = 'basic';
+
+// Package selection
+document.querySelectorAll('.pkg').forEach(function(p) {
+  p.addEventListener('click', function() {
+    document.querySelectorAll('.pkg').forEach(function(x) { x.classList.remove('selected'); });
+    p.classList.add('selected');
+    selectedPkg = p.dataset.pkg;
+  });
+});
+
+// Step buttons
+document.getElementById('btn-step1-next').addEventListener('click', function() { goStep(2); });
+document.getElementById('btn-step2-next').addEventListener('click', function() { goStep(3); });
+document.getElementById('btn-step2-back').addEventListener('click', function() { goStep(1); });
+document.getElementById('btn-step3-back').addEventListener('click', function() { goStep(2); });
+document.getElementById('btn-submit').addEventListener('click', submitOrder);
+
+function goStep(n) {
+  if (n === 2 && !validateStep1()) return;
+  if (n === 3 && !validateStep2()) return;
+  if (n === 3) buildSummary();
+
+  for (var i = 1; i <= 3; i++) {
+    var el = document.getElementById('step-' + i);
+    if (el) el.style.display = (i === n) ? 'block' : 'none';
+    var dot = document.getElementById('dot-' + i);
+    var lbl = document.getElementById('lbl-' + i);
+    if (dot) dot.className = 'step-dot ' + (i < n ? 'done' : i === n ? 'active' : 'idle');
+    if (lbl) lbl.className = 'step-label' + (i === n ? ' active' : '');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function validateStep1() { return true; }
+
+function validateStep2() {
+  var ok = true;
+  var name = document.getElementById('f-name').value.trim();
+  setErr('err-name', !name); if (!name) ok = false;
+  var phone = document.getElementById('f-phone').value.trim().replace(/\D/g, '');
+  var phoneOk = phone.length >= 9 && phone.length <= 15;
+  setErr('err-phone', !phoneOk); if (!phoneOk) ok = false;
+  var couple = document.getElementById('f-couple').value.trim();
+  setErr('err-couple', !couple); if (!couple) ok = false;
+  var date = document.getElementById('f-date').value;
+  setErr('err-date', !date); if (!date) ok = false;
+  return ok;
+}
+
+function setErr(id, show) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('show', show);
+  var inp = el.previousElementSibling;
+  if (inp) inp.classList.toggle('error', show);
+}
+
+function buildSummary() {
+  var rows = [
+    ['Paket', PKG_LABELS[selectedPkg] || selectedPkg],
+    ['Nama Pemesan', document.getElementById('f-name').value.trim()],
+    ['No. WhatsApp', document.getElementById('f-phone').value.trim()],
+    ['Email', document.getElementById('f-email').value.trim() || '—'],
+    ['Nama Mempelai', document.getElementById('f-couple').value.trim()],
+    ['Tanggal', formatDate(document.getElementById('f-date').value)],
+    ['Catatan', document.getElementById('f-message').value.trim() || '—'],
+  ];
+  document.getElementById('summary-content').innerHTML = rows.map(function(r) {
+    return '<div class="summary-row"><span class="summary-label">' + r[0] + '</span><span class="summary-value">' + escHtml(r[1]) + '</span></div>';
+  }).join('');
+}
+
+function formatDate(val) {
+  if (!val) return '—';
+  var d = new Date(val + 'T00:00:00');
+  return d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function submitOrder() {
+  var btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Mengirim...';
+
+  var body = {
+    action       : 'submitOrder',
+    name         : document.getElementById('f-name').value.trim(),
+    phone        : document.getElementById('f-phone').value.trim(),
+    email        : document.getElementById('f-email').value.trim(),
+    package      : selectedPkg,
+    couple_names : document.getElementById('f-couple').value.trim(),
+    wedding_date : document.getElementById('f-date').value,
+    message      : document.getElementById('f-message').value.trim(),
+  };
+
+  try {
+    var res = await fetch(GAS_URL, {
+      method  : 'POST',
+      body    : JSON.stringify(body),
+      headers : { 'Content-Type': 'text/plain' },
+    }).then(function(r) { return r.json(); });
+
+    if (res.code === 201) {
+      document.getElementById('ref-number').textContent = (res.data.id || '').slice(0, 8).toUpperCase() || '—';
+      document.getElementById('step-3').style.display = 'none';
+      document.getElementById('step-success').style.display = 'block';
+      for (var i = 1; i <= 3; i++) {
+        var d = document.getElementById('dot-' + i);
+        if (d) d.className = 'step-dot done';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      throw new Error((res.error && res.error[0]) || 'Terjadi kesalahan.');
+    }
+  } catch (err) {
+    alert('Gagal mengirim: ' + err.message + '\n\nSilakan coba lagi atau hubungi kami via WhatsApp.');
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Kirim Pesanan';
+  }
+}
+</script>
+</body>
+</html>
