@@ -483,7 +483,7 @@ footer small { font-size: .75rem; }
   <div style="position:relative;z-index:1;max-width:56rem;width:100%;">
     <div class="hero-badge" aria-label="Status produk">
       <i class="fa-solid fa-circle-check" style="font-size:.65rem;" aria-hidden="true"></i>
-      Sudah Dipakai 100+ Pasangan
+      Trial Gratis 2 Hari · Rp 99rb Setelah Itu
     </div>
     <h1 class="hero-title" id="hero-heading">
       Undangan Digital<br>yang <em>Elegan</em> &amp; Mudah
@@ -719,72 +719,57 @@ footer small { font-size: .75rem; }
 ════════════════════════════════════ -->
 <section class="section" aria-labelledby="pricing-heading">
   <div class="section-inner text-center">
-    <p class="section-label">Paket Harga</p>
-    <h2 class="section-title" id="pricing-heading">Pilih Paketmu</h2>
-    <p class="section-sub" style="margin:0 auto;">Harga transparan, tanpa biaya tersembunyi.</p>
+    <p class="section-label">Harga</p>
+    <h2 class="section-title" id="pricing-heading">Satu Harga, Semua Fitur</h2>
+    <p class="section-sub" style="margin:0 auto;">Tidak ada paket bertingkat, tidak ada fitur yang dikunci. Bayar sekali, dapat segalanya.</p>
 
-    <div class="pricing-grid">
+    <!-- Single pricing card — centered & max-width constrained -->
+    <div style="display:flex;justify-content:center;margin-top:3rem;">
+      <div class="pricing-card popular" style="max-width:28rem;width:100%;text-align:left;" data-aos>
 
-      <!-- Basic -->
-      <div class="pricing-card" data-aos>
-        <div class="pricing-name">Dasar</div>
-        <div class="pricing-price">Rp 75<small>rb</small></div>
-        <p class="pricing-desc">Cocok untuk undangan sederhana namun tetap elegan.</p>
-        <ul class="pricing-features" aria-label="Fitur paket Dasar">
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Semua section konten</li>
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> 6 foto galeri</li>
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> RSVP &amp; ucapan tamu</li>
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Dark/light mode</li>
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Background musik</li>
-          <li class="dimmed"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Upload foto ke Drive</li>
-          <li class="dimmed"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Domain kustom</li>
+        <!-- Trial badge -->
+        <div class="popular-badge" aria-label="Gratis trial 2 hari">🎁 Gratis Trial 2 Hari</div>
+
+        <div class="pricing-name" style="margin-top:.875rem;">Undangan Digital</div>
+
+        <!-- Price -->
+        <div style="display:flex;align-items:flex-end;gap:.5rem;margin-bottom:.25rem;">
+          <div class="pricing-price">Rp 99<small>rb</small></div>
+          <span style="font-size:.8rem;color:var(--ink-3);margin-bottom:.6rem;line-height:1.4;">sekali bayar<br>setelah trial</span>
+        </div>
+
+        <p class="pricing-desc">Coba gratis 2 hari — tidak perlu bayar dulu. Bayar Rp&nbsp;99.000 hanya kalau puas.</p>
+
+        <!-- Features -->
+        <ul class="pricing-features" aria-label="Semua fitur yang tersedia">
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Semua section konten (12+ section)</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Upload 3 foto mempelai + 6 foto galeri</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Foto otomatis kompress ke WebP via Google Drive</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Love Story timeline hingga 5 bab</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Jadwal akad, resepsi &amp; acara tambahan</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Countdown timer otomatis</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> RSVP &amp; ucapan tamu realtime</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Dress code &amp; love gift info</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Background musik (MP3 / URL)</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Dark / light mode otomatis</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Link personal per tamu (<code>?to=Nama</code>)</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Google Maps terintegrasi</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Meta &amp; SEO siap kirim</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Aktif 6 bulan</li>
         </ul>
-        <a href="order.html?paket=dasar" class="btn-pricing btn-pricing-ghost">
-          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-          Pilih Paket Dasar
-        </a>
-      </div>
 
-      <!-- Standard (popular) -->
-      <div class="pricing-card popular" data-aos style="--delay:.1s">
-        <div class="popular-badge" aria-label="Paket terpopuler">⭐ Paling Banyak Dipilih</div>
-        <div class="pricing-name" style="margin-top:.75rem;">Standar</div>
-        <div class="pricing-price">Rp 150<small>rb</small></div>
-        <p class="pricing-desc">Lengkap dengan upload foto ke Google Drive.</p>
-        <ul class="pricing-features" aria-label="Fitur paket Standar">
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Semua fitur Dasar</li>
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Upload foto ke Google Drive</li>
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> 3 foto mempelai + 6 galeri</li>
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Love Story 5 bab</li>
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Countdown + Kalender</li>
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Love Gift info lengkap</li>
-          <li class="dimmed"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Domain kustom</li>
-        </ul>
-        <a href="order.html?paket=standar" class="btn-pricing btn-pricing-primary">
-          <i class="fa-solid fa-pen-nib" aria-hidden="true"></i>
-          Pilih Paket Standar
-        </a>
-      </div>
+        <!-- Trial note -->
+        <div style="background:rgba(196,163,90,.08);border:1px solid rgba(196,163,90,.25);border-radius:.625rem;padding:.75rem 1rem;margin-bottom:1.5rem;font-size:.8rem;color:var(--ink-2);line-height:1.6;">
+          <i class="fa-solid fa-circle-info" style="color:var(--gold);margin-right:.35rem;" aria-hidden="true"></i>
+          <strong>Trial 2 hari gratis.</strong> Isi form, undangan langsung jadi dan bisa dibagikan ke tamu. Kalau puas, lanjut bayar Rp&nbsp;99.000 agar undangan tetap aktif hingga 6 bulan.
+        </div>
 
-      <!-- Premium -->
-      <div class="pricing-card" data-aos style="--delay:.2s">
-        <div class="pricing-name">Premium</div>
-        <div class="pricing-price">Rp 250<small>rb</small></div>
-        <p class="pricing-desc">Semua fitur plus domain/subdomain kustom sesuai nama kalian.</p>
-        <ul class="pricing-features" aria-label="Fitur paket Premium">
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Semua fitur Standar</li>
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Domain kustom (mis. <code>ansar-nindy.my.id</code>)</li>
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Revisi konten 1x</li>
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Video background support</li>
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Prioritas proses 24 jam</li>
-          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Aktif 12 bulan</li>
-        </ul>
-        <a href="order.html?paket=premium" class="btn-pricing btn-pricing-ghost">
-          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-          Pilih Paket Premium
+        <a href="order.html" class="btn-pricing btn-pricing-primary">
+          <i class="fa-solid fa-rocket" aria-hidden="true"></i>
+          Coba Gratis Sekarang
         </a>
-      </div>
 
+      </div>
     </div>
   </div>
 </section>
@@ -857,10 +842,18 @@ footer small { font-size: .75rem; }
 
       <div class="faq-item" role="listitem">
         <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          Bagaimana cara trial gratis 2 hari?
+          <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-a">Isi form order, submit — undangan langsung dibuat dan bisa dibagikan ke tamu. Selama 2 hari pertama gratis tanpa syarat. Setelah itu, bayar Rp 99.000 agar undangan tetap aktif hingga 6 bulan.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
           Berapa lama proses pembuatan undangan?
           <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
         </button>
-        <div class="faq-a">Paket Dasar dan Standar biasanya selesai dalam 1–3 jam setelah form disubmit. Paket Premium maksimal 24 jam.</div>
+        <div class="faq-a">Biasanya selesai dalam 1–3 jam setelah form disubmit. Kamu akan dihubungi via WhatsApp begitu undangan sudah siap dibagikan.</div>
       </div>
 
       <div class="faq-item" role="listitem">
@@ -876,7 +869,7 @@ footer small { font-size: .75rem; }
           Bisakah saya revisi setelah undangan jadi?
           <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
         </button>
-        <div class="faq-a">Paket Dasar dan Standar tidak termasuk revisi. Paket Premium mendapat 1x revisi konten gratis. Revisi tambahan bisa diorder terpisah.</div>
+        <div class="faq-a">Revisi konten bisa diorder terpisah. Hubungi kami via WhatsApp untuk detail harga revisi.</div>
       </div>
 
       <div class="faq-item" role="listitem">
@@ -884,7 +877,7 @@ footer small { font-size: .75rem; }
           Berapa lama undangan aktif?
           <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
         </button>
-        <div class="faq-a">Paket Dasar dan Standar aktif 6 bulan. Paket Premium aktif 12 bulan. Perpanjangan bisa dilakukan kapan saja.</div>
+        <div class="faq-a">Undangan aktif 6 bulan setelah pembayaran. Perpanjangan bisa dilakukan kapan saja dengan menghubungi kami.</div>
       </div>
 
       <div class="faq-item" role="listitem">
