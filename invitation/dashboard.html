@@ -464,7 +464,7 @@
     function renderOrderCard(o) {
       const pkgLabel = { basic: 'Basic', pro: 'Pro', custom: 'Custom' };
       const date = o.created_at ? new Date(o.created_at).toLocaleString('id-ID') : '-';
-      const wedDate = o.wedding_date ? new Date(o.wedding_date + 'T00:00:00').toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' }) : '-';
+      const wedDate = o.wedding_date ? new Date(String(o.wedding_date) + 'T00:00:00').toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' }) : '-';
       const statusClass = o.status === 'new' ? 'new' : o.status === 'processing' ? 'processing' : 'done';
 
       return `<div class="order-card" id="order-${o.id}">
@@ -503,7 +503,7 @@
     function renderInviteResult(o) {
       const editorUrl = location.origin + location.pathname.replace('dashboard.html','') + 'editor-online.html?slug=' + o.slug + '&token=' + o.edit_token;
       const waText = encodeURIComponent('Halo ' + o.name + '! Undangan digital Anda sudah siap. Silakan isi data melalui link berikut:\\n\\n' + editorUrl + '\\n\\nLink ini hanya untuk Anda. Jangan dibagikan ke orang lain.');
-      const waUrl = 'https://wa.me/' + o.phone.replace(/\D/g,'').replace(/^0/,'62') + '?text=' + waText;
+      const waUrl = 'https://wa.me/' + String(o.phone||'').replace(/\D/g,'').replace(/^0/,'62') + '?text=' + waText;
       return `<div class="invite-result">
         <div class="fw-bold mb-2" style="font-size:.82rem;color:#198754;"><i class="fa-solid fa-circle-check me-1"></i>Undangan siap — slug: <code>${o.slug}</code></div>
         <div style="font-size:.75rem;color:#6c757d;">Link Editor untuk Client:</div>
