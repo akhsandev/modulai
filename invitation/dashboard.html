@@ -467,56 +467,56 @@
       const wedDate = o.wedding_date ? new Date(o.wedding_date + 'T00:00:00').toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' }) : '-';
       const statusClass = o.status === 'new' ? 'new' : o.status === 'processing' ? 'processing' : 'done';
 
-      return \`<div class="order-card" id="order-\${o.id}">
+      return `<div class="order-card" id="order-${o.id}">
         <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
           <div>
-            <span class="fw-bold">\${esc(o.couple_names || '-')}</span>
-            <span class="order-badge \${statusClass} ms-2">\${o.status}</span>
+            <span class="fw-bold">${esc(o.couple_names || '-')}</span>
+            <span class="order-badge ${statusClass} ms-2">${o.status}</span>
           </div>
-          <small class="text-muted text-nowrap">\${date}</small>
+          <small class="text-muted text-nowrap">${date}</small>
         </div>
         <div class="row g-1 mb-3" style="font-size:.8rem;">
-          <div class="col-6"><i class="fa-solid fa-user me-1 text-muted"></i>\${esc(o.name)}</div>
-          <div class="col-6"><i class="fa-brands fa-whatsapp me-1 text-success"></i>\${esc(o.phone)}</div>
-          <div class="col-6"><i class="fa-solid fa-tag me-1 text-muted"></i>Paket \${pkgLabel[o.package] || o.package}</div>
-          <div class="col-6"><i class="fa-regular fa-calendar me-1 text-muted"></i>\${wedDate}</div>
-          \${o.message ? \`<div class="col-12 text-muted"><i class="fa-solid fa-comment me-1"></i>\${esc(o.message)}</div>\` : ''}
+          <div class="col-6"><i class="fa-solid fa-user me-1 text-muted"></i>${esc(o.name)}</div>
+          <div class="col-6"><i class="fa-brands fa-whatsapp me-1 text-success"></i>${esc(o.phone)}</div>
+          <div class="col-6"><i class="fa-solid fa-tag me-1 text-muted"></i>Paket ${pkgLabel[o.package] || o.package}</div>
+          <div class="col-6"><i class="fa-regular fa-calendar me-1 text-muted"></i>${wedDate}</div>
+          ${o.message ? `<div class="col-12 text-muted"><i class="fa-solid fa-comment me-1"></i>${esc(o.message)}</div>` : ''}
         </div>
-        <div id="result-\${o.id}">
-          \${o.slug ? renderInviteResult(o) : renderConfirmForm(o)}
+        <div id="result-${o.id}">
+          ${o.slug ? renderInviteResult(o) : renderConfirmForm(o)}
         </div>
-      </div>\`;
+      </div>`;
     }
 
     function renderConfirmForm(o) {
       const suggestedSlug = (o.couple_names || o.name || 'undangan')
         .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 30);
-      return \`<div class="d-flex align-items-center gap-2 flex-wrap">
+      return `<div class="d-flex align-items-center gap-2 flex-wrap">
         <label style="font-size:.78rem;font-weight:600;">Slug URL:</label>
-        <input class="slug-input" id="slug-\${o.id}" value="\${suggestedSlug}" placeholder="cth. budi-siti">
-        <button class="btn-confirm" onclick="confirmOrder('\${o.id}', '\${o.package || 'pro'}')">
+        <input class="slug-input" id="slug-${o.id}" value="${suggestedSlug}" placeholder="cth. budi-siti">
+        <button class="btn-confirm" onclick="confirmOrder('${o.id}', '${o.package || 'pro'}')">
           <i class="fa-solid fa-check"></i>Konfirmasi & Buat Undangan
         </button>
-      </div>\`;
+      </div>`;
     }
 
     function renderInviteResult(o) {
       const editorUrl = location.origin + location.pathname.replace('dashboard.html','') + 'editor-online.html?slug=' + o.slug + '&token=' + o.edit_token;
       const waText = encodeURIComponent('Halo ' + o.name + '! Undangan digital Anda sudah siap. Silakan isi data melalui link berikut:\\n\\n' + editorUrl + '\\n\\nLink ini hanya untuk Anda. Jangan dibagikan ke orang lain.');
       const waUrl = 'https://wa.me/' + o.phone.replace(/\D/g,'').replace(/^0/,'62') + '?text=' + waText;
-      return \`<div class="invite-result">
-        <div class="fw-bold mb-2" style="font-size:.82rem;color:#198754;"><i class="fa-solid fa-circle-check me-1"></i>Undangan siap — slug: <code>\${o.slug}</code></div>
+      return `<div class="invite-result">
+        <div class="fw-bold mb-2" style="font-size:.82rem;color:#198754;"><i class="fa-solid fa-circle-check me-1"></i>Undangan siap — slug: <code>${o.slug}</code></div>
         <div style="font-size:.75rem;color:#6c757d;">Link Editor untuk Client:</div>
-        <div class="link-box">\${editorUrl}</div>
+        <div class="link-box">${editorUrl}</div>
         <div class="d-flex gap-2 mt-2 flex-wrap">
-          <a href="\${waUrl}" target="_blank" class="btn btn-success btn-sm rounded-4">
+          <a href="${waUrl}" target="_blank" class="btn btn-success btn-sm rounded-4">
             <i class="fa-brands fa-whatsapp me-1"></i>Kirim via WA
           </a>
-          <button class="btn btn-outline-secondary btn-sm rounded-4" onclick="copyText('\${editorUrl}', this)">
+          <button class="btn btn-outline-secondary btn-sm rounded-4" onclick="copyText('${editorUrl}', this)">
             <i class="fa-regular fa-copy me-1"></i>Salin Link
           </button>
         </div>
-      </div>\`;
+      </div>`;
     }
 
     async function confirmOrder(orderId, pkg) {
