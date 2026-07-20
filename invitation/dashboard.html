@@ -684,6 +684,7 @@
             if (json.code !== 200) throw new Error(json.error?.[0] || 'Gagal');
 
             _currentOrderData = json.data.data;
+            _currentOrderData._accessKey = json.data.access_key || ''; // simpan access_key
             const status = json.data.status;
 
             // Set status select
@@ -868,6 +869,12 @@
             if (r1.test(h)) h = h.replace(r1, '$1' + ea(val) + '$2');
             else h = h.replace(r2, '$1' + ea(val) + '$2');
         };
+
+        // ── Body attributes: data-key (unik per undangan) & data-url ──
+        // data-key dari _accessKey yang di-generate saat order disimpan ke GAS
+        // Ini memastikan comment & like setiap undangan terpisah satu sama lain
+        if (d._accessKey) setAttr('data-key', d._accessKey);
+        // data-url tetap pakai GAS URL yang sama (satu endpoint untuk semua)
 
         // ── Mempelai ──
         if (d.groomName)   setTxt('ed-groom-name',    d.groomName);
