@@ -720,30 +720,27 @@ textarea.form-control { resize:vertical; min-height:5rem; }
     </div>
 
     <div class="card-s">
-      <div class="card-s-hd"><i class="fa-solid fa-box" style="color:var(--gold);" aria-hidden="true"></i><h6>Pilih Paket</h6></div>
+      <div class="card-s-hd"><i class="fa-solid fa-box" style="color:var(--gold);" aria-hidden="true"></i><h6>Paket</h6></div>
       <div class="card-s-bd">
-        <div style="display:flex;flex-direction:column;gap:.625rem;" role="radiogroup" aria-label="Pilihan paket">
-          <label style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border:1.5px solid rgba(201,160,154,.25);border-radius:.75rem;cursor:pointer;transition:border-color .15s;" id="paket-dasar-label">
-            <input type="radio" name="paket" value="dasar" id="paket-dasar" style="accent-color:var(--rose-dark);">
-            <div>
-              <div style="font-weight:700;font-size:.9rem;">Dasar — Rp 75.000</div>
-              <div style="font-size:.78rem;color:var(--ink-3);">Semua section konten, RSVP, dark mode, background musik</div>
+        <!-- Hidden input — value tetap "standar" agar kompatibel dengan GAS -->
+        <input type="hidden" name="paket" id="paket-standar" value="standar">
+        <div style="display:flex;align-items:flex-start;gap:.875rem;padding:.875rem 1rem;border:1.5px solid var(--rose);border-radius:.75rem;background:rgba(201,160,154,.04);">
+          <div style="width:1.15rem;height:1.15rem;border-radius:50%;background:var(--rose-dark);flex-shrink:0;margin-top:.15rem;display:flex;align-items:center;justify-content:center;">
+            <div style="width:.45rem;height:.45rem;border-radius:50%;background:#fff;"></div>
+          </div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.2rem;">
+              <span style="font-weight:700;font-size:.95rem;">Undangan Digital — Rp 99.000</span>
+              <span style="font-size:.65rem;background:linear-gradient(135deg,var(--rose),var(--rose-dark));color:#fff;padding:.15rem .55rem;border-radius:99px;letter-spacing:.04em;">SEMUA FITUR</span>
             </div>
-          </label>
-          <label style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border:1.5px solid var(--rose);border-radius:.75rem;cursor:pointer;transition:border-color .15s;background:rgba(201,160,154,.04);" id="paket-standar-label">
-            <input type="radio" name="paket" value="standar" id="paket-standar" checked style="accent-color:var(--rose-dark);">
-            <div>
-              <div style="font-weight:700;font-size:.9rem;">Standar — Rp 150.000 <span style="font-size:.68rem;background:var(--rose-dark);color:#fff;padding:.1rem .45rem;border-radius:99px;vertical-align:middle;">POPULER</span></div>
-              <div style="font-size:.78rem;color:var(--ink-3);">Semua fitur Dasar + upload foto ke Google Drive</div>
+            <div style="font-size:.78rem;color:var(--ink-3);line-height:1.55;">
+              Gratis trial 2 hari · Semua section konten · Upload foto ke Drive · RSVP · Dark mode · Musik · Aktif 6 bulan
             </div>
-          </label>
-          <label style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border:1.5px solid rgba(201,160,154,.25);border-radius:.75rem;cursor:pointer;transition:border-color .15s;" id="paket-premium-label">
-            <input type="radio" name="paket" value="premium" id="paket-premium" style="accent-color:var(--rose-dark);">
-            <div>
-              <div style="font-weight:700;font-size:.9rem;">Premium — Rp 250.000</div>
-              <div style="font-size:.78rem;color:var(--ink-3);">Semua fitur Standar + domain kustom + revisi 1x + prioritas</div>
-            </div>
-          </label>
+          </div>
+        </div>
+        <div style="margin-top:.625rem;font-size:.75rem;color:var(--ink-3);display:flex;align-items:center;gap:.35rem;">
+          <i class="fa-solid fa-circle-info" style="color:var(--gold);" aria-hidden="true"></i>
+          Undangan langsung jadi setelah submit. Bayar Rp&nbsp;99.000 setelah 2 hari trial jika puas.
         </div>
       </div>
     </div>
@@ -828,9 +825,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initGasInputs();
   initToggleListeners();
   initColorSync();
-  initPaketHighlight();
   initAutoFill();
-  applyPaketFromUrl();
   loadDraft();         // restore setelah semua DOM siap
 
   // Track all inputs for auto-save
@@ -1125,30 +1120,6 @@ function initColorSync() {
 /* ═══════════════════════════════════════════════
    PAKET HIGHLIGHT
 ═══════════════════════════════════════════════ */
-function initPaketHighlight() {
-  document.querySelectorAll('input[name="paket"]').forEach(r => {
-    r.addEventListener('change', updatePaketHighlight);
-  });
-  updatePaketHighlight();
-}
-
-function updatePaketHighlight() {
-  ['dasar','standar','premium'].forEach(p => {
-    const lbl = document.getElementById(`paket-${p}-label`);
-    const rad = document.getElementById(`paket-${p}`);
-    if (!lbl || !rad) return;
-    lbl.style.borderColor = rad.checked ? 'var(--rose)' : 'rgba(201,160,154,.25)';
-    lbl.style.background  = rad.checked ? 'rgba(201,160,154,.04)' : '';
-  });
-}
-
-function applyPaketFromUrl() {
-  const p = new URLSearchParams(window.location.search).get('paket');
-  if (!p) return;
-  const r = document.getElementById(`paket-${p}`);
-  if (r) { r.checked = true; updatePaketHighlight(); }
-}
-
 /* ═══════════════════════════════════════════════
    AUTO-FILL: sync hero/panel names from groom+bride
 ═══════════════════════════════════════════════ */
@@ -1207,9 +1178,9 @@ function collectFormData() {
   // Custom events
   data.customEvents = getCustomEvents();
 
-  // Paket
-  const pr = document.querySelector('input[name="paket"]:checked');
-  if (pr) data.paket = pr.value;
+  // Paket — ambil dari hidden input (satu harga, tidak ada pilihan)
+  const pr = document.getElementById('paket-standar');
+  data.paket = pr ? pr.value : 'standar';
 
   return data;
 }
@@ -1257,12 +1228,6 @@ function loadDraft() {
   // Restore custom events
   if (draft.customEvents?.length) setCustomEvents(draft.customEvents);
 
-  // Restore paket
-  if (draft.paket) {
-    const r = document.getElementById(`paket-${draft.paket}`);
-    if (r) r.checked = true;
-  }
-
   // Sync gift block visibility from restored checkboxes (without re-binding listeners)
   const giftPairs = [
     ['toggle-gift-tf',   'gift-tf-block'],
@@ -1275,7 +1240,6 @@ function loadDraft() {
     const block = document.getElementById(blockId);
     if (tog && block) block.classList.toggle('hidden-gift', !tog.checked);
   });
-  updatePaketHighlight();
 
   // Sync color pickers
   [[1],[2],[3]].forEach(([i]) => {
