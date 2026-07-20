@@ -683,8 +683,10 @@
             } catch { throw new Error('Respons server tidak valid'); }
             if (json.code !== 200) throw new Error(json.error?.[0] || 'Gagal');
 
-            _currentOrderData = json.data.data;
-            _currentOrderData._accessKey = json.data.access_key || ''; // simpan access_key
+            _currentOrderData = json.data.data || {};
+            // Attach access_key dari response (kolom terpisah di sheet orders)
+            // Ini yang akan mengganti data-key di index.html yang di-generate
+            _currentOrderData._accessKey = String(json.data.access_key || '');
             const status = json.data.status;
 
             // Set status select
@@ -708,6 +710,7 @@
         <div class="mb-3 p-2 rounded-3" style="background:var(--bs-light);font-size:.75rem;font-family:monospace;">
             ${escHtmlD(orderId)} &nbsp;·&nbsp;
             <span class="badge bg-${({pending:'warning',processing:'info',done:'success',cancelled:'secondary'})[status]||'secondary'} rounded-pill">${escHtmlD(status)}</span>
+            ${d._accessKey ? '&nbsp;·&nbsp;<span title="data-key di index.html" style="color:var(--bs-success);font-size:.7rem;"><i class="fa-solid fa-key me-1"></i>' + escHtmlD(d._accessKey.substring(0,12)) + '...</span>' : '<span style="color:var(--bs-warning);font-size:.7rem;"><i class="fa-solid fa-triangle-exclamation me-1"></i>no key — order lama</span>'}
         </div>
         <h6 class="fw-bold mb-2" style="font-size:.85rem;color:var(--bs-secondary);">INFO PEMESAN</h6>
         <table class="table table-sm table-borderless mb-3">
