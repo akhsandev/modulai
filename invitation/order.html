@@ -3,357 +3,1497 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pesan Undangan Digital — Akhsan Studio</title>
-<meta name="description" content="Form pemesanan undangan pernikahan digital.">
+<title>Form Order Undangan Digital</title>
+<meta name="description" content="Isi data undangan pernikahanmu secara online.">
+<meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css" crossorigin="anonymous">
 <style>
-:root{--ivory:#fdf8f2;--ivory-2:#f5ede6;--rose:#c9a09a;--rose-dark:#9e6b64;--gold:#c4a35a;--sage:#5c7a62;--warm-900:#2d2420;--warm-700:#6b5a52;--warm-400:#a89488;--warm-200:#e8d8d0;}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{font-family:'Plus Jakarta Sans','Segoe UI',sans-serif;background:var(--ivory-2);color:var(--warm-900);min-height:100dvh;-webkit-font-smoothing:antialiased;}
-a{text-decoration:none;color:inherit;}
-.page{max-width:680px;margin:0 auto;padding:2rem 1.25rem 4rem;}
-.back-link{display:inline-flex;align-items:center;gap:.5rem;font-size:.8125rem;color:var(--warm-400);font-weight:600;margin-bottom:2rem;transition:color .2s;}
-.back-link:hover{color:var(--rose-dark);}
-.form-header{text-align:center;margin-bottom:2.5rem;}
-.form-logo{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:600;color:var(--rose-dark);margin-bottom:1.5rem;}
-.form-logo span{color:var(--gold);font-style:italic;}
-.form-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:2.25rem;font-weight:500;line-height:1.15;margin-bottom:.625rem;}
-.form-title em{font-style:italic;color:var(--rose-dark);}
-.form-subtitle{font-size:.875rem;color:var(--warm-400);line-height:1.7;}
-.steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:2.5rem;}
-.step{display:flex;align-items:center;gap:.5rem;}
-.step-dot{width:2rem;height:2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;transition:all .3s;}
-.step-dot.active{background:var(--warm-900);color:var(--ivory);}
-.step-dot.done{background:var(--sage);color:var(--ivory);}
-.step-dot.idle{background:var(--warm-200);color:var(--warm-400);}
-.step-label{font-size:.7rem;font-weight:600;color:var(--warm-400);white-space:nowrap;}
-.step-label.active{color:var(--warm-900);}
-.step-line{width:3rem;height:1px;background:var(--warm-200);flex-shrink:0;}
-.card{background:var(--ivory);border:1px solid rgba(201,160,154,.18);border-radius:2rem;box-shadow:0 4px 20px rgba(45,36,32,.09);padding:2rem;margin-bottom:1rem;}
-.card-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:500;margin-bottom:1.5rem;display:flex;align-items:center;gap:.625rem;color:var(--rose-dark);}
-.field{margin-bottom:1.25rem;}
-.field:last-child{margin-bottom:0;}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-label{display:block;font-size:.7rem;font-weight:700;color:var(--warm-700);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.375rem;}
-label .req{color:var(--rose-dark);margin-left:.15rem;}
-input[type=text],input[type=tel],input[type=email],input[type=date],textarea,select{width:100%;padding:.75rem 1rem;border:1.5px solid var(--warm-200);border-radius:1rem;background:var(--ivory);color:var(--warm-900);font-family:inherit;font-size:.875rem;transition:border-color .2s,box-shadow .2s;outline:none;-webkit-appearance:none;appearance:none;}
-input:focus,textarea:focus,select:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(201,160,154,.15);}
-input.error,textarea.error,select.error{border-color:var(--rose-dark);}
-.field-hint{font-size:.7rem;color:var(--warm-400);margin-top:.3rem;line-height:1.5;}
-.field-error{font-size:.7rem;color:var(--rose-dark);font-weight:600;margin-top:.3rem;display:none;}
-.field-error.show{display:block;}
-textarea{resize:vertical;min-height:5rem;line-height:1.6;}
-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a89488' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .875rem center;padding-right:2.5rem;}
-.package-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;}
-.pkg{border:1.5px solid var(--warm-200);border-radius:1.25rem;padding:1.125rem;cursor:pointer;transition:all .2s;position:relative;}
-.pkg:hover{border-color:var(--rose);}
-.pkg.selected{border-color:var(--warm-900);background:rgba(45,36,32,.03);}
-.pkg.selected::after{content:'✓';position:absolute;top:.625rem;right:.75rem;font-size:.7rem;font-weight:700;color:var(--ivory);background:var(--warm-900);width:1.25rem;height:1.25rem;border-radius:50%;display:flex;align-items:center;justify-content:center;}
-.pkg-name{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--warm-400);margin-bottom:.375rem;}
-.pkg-price{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:600;color:var(--warm-900);line-height:1;margin-bottom:.5rem;}
-.pkg-features{font-size:.7rem;color:var(--warm-400);line-height:1.6;}
-.pkg-popular{position:absolute;top:-.625rem;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--warm-900);font-size:.6rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .625rem;border-radius:99px;white-space:nowrap;}
-.btn-next{width:100%;padding:1rem;background:var(--warm-900);color:var(--ivory);border:none;border-radius:99px;font-family:inherit;font-size:.875rem;font-weight:700;cursor:pointer;transition:opacity .2s,transform .2s;display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:1.5rem;}
-.btn-next:hover{opacity:.88;transform:translateY(-1px);}
-.btn-next:disabled{opacity:.4;cursor:not-allowed;transform:none;}
-.btn-back{width:100%;padding:.875rem;background:transparent;color:var(--warm-700);border:1.5px solid var(--warm-200);border-radius:99px;font-family:inherit;font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;margin-top:.75rem;}
-.btn-back:hover{border-color:var(--rose);color:var(--rose-dark);}
-.summary-row{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;padding:.625rem 0;border-bottom:1px solid var(--warm-200);}
-.summary-row:last-child{border-bottom:none;}
-.summary-label{font-size:.75rem;color:var(--warm-400);font-weight:600;white-space:nowrap;}
-.summary-value{font-size:.8125rem;color:var(--warm-900);font-weight:500;text-align:right;}
-.success-screen{text-align:center;padding:3rem 1.5rem;}
-.success-icon{width:4rem;height:4rem;background:linear-gradient(135deg,var(--sage),#4a6350);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:1.5rem;color:#fff;margin-bottom:1.5rem;}
-.success-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;font-weight:500;margin-bottom:.75rem;}
-.success-desc{font-size:.875rem;color:var(--warm-400);line-height:1.75;max-width:28rem;margin:0 auto 2rem;}
-.success-ref{background:rgba(92,122,98,.08);border:1px solid rgba(92,122,98,.2);border-radius:1rem;padding:.875rem 1.125rem;display:inline-flex;align-items:center;gap:.75rem;font-size:.8125rem;margin-bottom:2rem;}
-.success-ref strong{color:var(--sage);}
-.btn-home{display:inline-flex;align-items:center;gap:.5rem;background:var(--warm-900);color:var(--ivory);border-radius:99px;padding:.875rem 1.75rem;font-size:.875rem;font-weight:700;}
-@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@media(max-width:520px){.field-row{grid-template-columns:1fr;}.package-grid{grid-template-columns:1fr;}}
+/* ── Tokens ── */
+:root {
+  --rose:#c9a09a; --rose-dark:#9e6b64; --rose-light:#e8cdc9;
+  --gold:#c4a35a; --ivory:#fdf8f2; --warm:#f5ede6;
+  --ink:#2d2420; --ink-2:#5a3f3a; --ink-3:#a89488;
+  --sage:#7a9e7e; --surface:#fff;
+  --r-sm:.5rem; --r-md:.875rem; --r-lg:1.25rem;
+  --shadow-sm:0 2px 8px rgba(45,36,32,.07);
+  --shadow-md:0 4px 20px rgba(45,36,32,.11);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--ivory); color: var(--ink); font-size: 16px; line-height: 1.6; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font-family: inherit; }
+img { max-width: 100%; display: block; }
+
+/* ── Layout ── */
+.layout { display: flex; min-height: 100dvh; }
+.sidebar {
+  width: 240px; flex-shrink: 0; position: sticky; top: 0; height: 100dvh; overflow-y: auto;
+  background: var(--surface); border-right: 1px solid rgba(201,160,154,.2);
+  padding: 1.25rem .875rem; display: flex; flex-direction: column;
+}
+.main-area { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(253,248,242,.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(201,160,154,.18);
+  padding: .75rem 1.25rem; display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
+}
+.content-area { flex: 1; padding: 1.5rem 1.25rem 4rem; max-width: 820px; width: 100%; }
+
+/* ── Brand ── */
+.sidebar-brand { display: flex; align-items: center; gap: .5rem; margin-bottom: 1.5rem; padding: .25rem .25rem .875rem; border-bottom: 1px solid rgba(201,160,154,.18); }
+.brand-icon { width: 1.9rem; height: 1.9rem; border-radius: 50%; background: linear-gradient(135deg,var(--rose),var(--rose-dark)); color:#fff; font-size:.75rem; display:flex;align-items:center;justify-content:center; }
+.brand-label { font-size:.85rem; font-weight:700; color:var(--rose-dark); }
+
+/* ── Sidebar Nav ── */
+.nav-group-label { font-size:.6rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); padding:.625rem .5rem .2rem; margin-top:.25rem; }
+.nav-link { display:flex;align-items:center;gap:.5rem; padding:.45rem .625rem; border-radius:.5rem; font-size:.8rem; font-weight:500; color:var(--ink-2); transition:background .15s, color .15s; cursor:pointer; text-decoration:none; border:none; background:none; width:100%; text-align:left; }
+.nav-link:hover { background:rgba(201,160,154,.1); color:var(--rose-dark); }
+.nav-link.active { background:linear-gradient(135deg,rgba(201,160,154,.18),rgba(196,163,90,.1)); color:var(--rose-dark); font-weight:700; }
+.nav-link i { width:1rem; text-align:center; flex-shrink:0; font-size:.82rem; }
+
+/* ── Step progress ── */
+.step-dots { display:flex; align-items:center; gap:.35rem; padding: .5rem .5rem 0; }
+.step-dot { width:.45rem; height:.45rem; border-radius:50%; background:rgba(201,160,154,.3); transition:background .2s; }
+.step-dot.done { background:var(--sage); }
+.step-dot.active { background:var(--rose-dark); width:.55rem; height:.55rem; }
+</style>
+<style>
+/* ── Cards ── */
+.card-s { background:var(--surface); border:1px solid rgba(201,160,154,.2); border-radius:var(--r-lg); box-shadow:var(--shadow-sm); overflow:hidden; margin-bottom:.875rem; }
+.card-s-hd { background:linear-gradient(135deg,rgba(201,160,154,.1),rgba(196,163,90,.06)); padding:.8rem 1.1rem; border-bottom:1px solid rgba(201,160,154,.13); display:flex; align-items:center; gap:.6rem; }
+.card-s-hd h6 { margin:0; font-weight:700; font-size:.875rem; color:var(--rose-dark); }
+.card-s-bd { padding:1.1rem; }
+.section-badge { font-size:.62rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); background:rgba(196,163,90,.12); padding:.18rem .55rem; border-radius:99px; }
+.page-section { display:none; } .page-section.active { display:block; }
+.section-header { margin-bottom:.875rem; }
+.section-header h5 { font-weight:700; font-size:1rem; color:var(--rose-dark); margin:.25rem 0 .1rem; }
+.section-header p { font-size:.78rem; color:var(--ink-3); }
+
+/* ── Form elements ── */
+.form-label { font-size:.72rem; font-weight:700; color:var(--ink-2); letter-spacing:.04em; text-transform:uppercase; margin-bottom:.3rem; display:block; }
+.form-control, .form-select {
+  width:100%; padding:.55rem .8rem; font-size:.875rem; border-radius:var(--r-md);
+  border:1.5px solid rgba(201,160,154,.35); background:var(--ivory); color:var(--ink);
+  transition:border-color .15s, box-shadow .15s; outline:none;
+}
+.form-control:focus, .form-select:focus { border-color:var(--rose); box-shadow:0 0 0 3px rgba(201,160,154,.18); background:#fff; }
+.form-control.is-invalid { border-color:#e74c3c; box-shadow:0 0 0 3px rgba(231,76,60,.12); }
+textarea.form-control { resize:vertical; min-height:5rem; }
+.fhint { font-size:.7rem; color:var(--ink-3); margin-top:.2rem; line-height:1.45; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+@media (max-width:520px) { .form-row { grid-template-columns:1fr; } }
+.invalid-msg { font-size:.7rem; color:#e74c3c; margin-top:.2rem; display:none; }
+.form-control.is-invalid ~ .invalid-msg { display:block; }
+
+/* ── Toggle switch ── */
+.toggle-switch { position:relative; display:inline-block; width:2.5rem; height:1.35rem; flex-shrink:0; }
+.toggle-switch input { opacity:0; width:0; height:0; }
+.toggle-slider { position:absolute; cursor:pointer; inset:0; background:rgba(201,160,154,.35); border-radius:99px; transition:.2s; }
+.toggle-slider::before { content:''; position:absolute; width:1rem; height:1rem; left:.175rem; top:.175rem; background:#fff; border-radius:50%; transition:.2s; }
+.toggle-switch input:checked + .toggle-slider { background:var(--rose-dark); }
+.toggle-switch input:checked + .toggle-slider::before { transform:translateX(1.15rem); }
+
+/* ── Buttons ── */
+.btn-primary-ed { background:linear-gradient(135deg,var(--rose),var(--rose-dark)); color:#fff; border:none; border-radius:99px; padding:.55rem 1.5rem; font-weight:600; font-size:.82rem; letter-spacing:.04em; box-shadow:0 4px 12px rgba(158,107,100,.28); transition:transform .15s, box-shadow .15s; cursor:pointer; display:inline-flex; align-items:center; gap:.4rem; }
+.btn-primary-ed:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(158,107,100,.38); }
+.btn-primary-ed:disabled { opacity:.55; cursor:not-allowed; transform:none; box-shadow:none; }
+.btn-secondary-ed { background:linear-gradient(135deg,#5c7a62,#4a6350); color:#fff; border:none; border-radius:99px; padding:.5rem 1.25rem; font-weight:600; font-size:.8rem; transition:transform .15s; cursor:pointer; display:inline-flex; align-items:center; gap:.4rem; }
+.btn-secondary-ed:hover { transform:translateY(-1px); }
+.btn-ghost-ed { border:1.5px solid rgba(201,160,154,.4); color:var(--rose-dark); background:none; border-radius:99px; padding:.5rem 1.25rem; font-weight:600; font-size:.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:.4rem; transition:background .15s; }
+.btn-ghost-ed:hover { background:rgba(201,160,154,.08); }
+
+/* ── Upload widget ── */
+.upload-wrap { position:relative; }
+.upload-wrap .form-control { padding-right:2.75rem; }
+.btn-upload { position:absolute; right:.3rem; top:50%; transform:translateY(-50%); background:linear-gradient(135deg,var(--rose),var(--rose-dark)); border:none; border-radius:.45rem; color:#fff; width:2rem; height:1.75rem; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:.75rem; transition:transform .15s; flex-shrink:0; }
+.btn-upload:hover { transform:translateY(-50%) scale(1.07); }
+.btn-upload:disabled { opacity:.5; cursor:not-allowed; transform:translateY(-50%); }
+.upload-thumb { width:3rem; height:3rem; object-fit:cover; border-radius:.5rem; border:1px solid rgba(201,160,154,.3); display:none; flex-shrink:0; }
+.upload-thumb.show { display:block; }
+.upload-prog { font-size:.68rem; color:var(--gold); display:none; align-items:center; gap:.3rem; margin-top:.2rem; }
+.upload-prog.show { display:flex; }
+.upload-err { font-size:.68rem; color:#c0392b; display:none; margin-top:.2rem; }
+.upload-err.show { display:block; }
+
+/* ── Story block ── */
+.story-block { border:1px solid rgba(201,160,154,.25); border-radius:.75rem; padding:.875rem; background:var(--ivory); position:relative; margin-bottom:.625rem; }
+.btn-del { position:absolute; top:.5rem; right:.5rem; background:rgba(158,107,100,.12); border:none; border-radius:50%; width:1.6rem; height:1.6rem; color:var(--rose-dark); font-size:.7rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.btn-del:hover { background:rgba(158,107,100,.25); }
+
+/* ── Color swatch row ── */
+.dc-row { display:flex; align-items:center; gap:.625rem; margin-bottom:.5rem; }
+
+/* ── Gift block ── */
+.gift-block { border:1px solid rgba(201,160,154,.22); border-radius:.75rem; padding:.875rem; background:var(--ivory); margin-bottom:.625rem; transition:opacity .2s, pointer-events .2s; }
+.gift-block.hidden-gift { opacity:.4; pointer-events:none; }
+
+/* ── Topbar change badge ── */
+.change-badge { font-size:.72rem; background:rgba(196,163,90,.15); color:var(--gold); padding:.2rem .6rem; border-radius:99px; display:none; }
+.save-ok { font-size:.75rem; color:var(--sage); display:none; align-items:center; gap:.3rem; }
+.save-ok.show { display:inline-flex; }
+</style>
+<style>
+/* ── GAS config box ── */
+.gas-box { background:rgba(196,163,90,.07); border:1px solid rgba(196,163,90,.25); border-radius:.75rem; padding:.75rem 1rem; margin-bottom:1rem; }
+.gas-box-label { font-size:.68rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); display:block; margin-bottom:.3rem; }
+
+/* ── Submit section ── */
+.submit-section { background:var(--surface); border:1px solid rgba(201,160,154,.2); border-radius:var(--r-lg); padding:1.5rem; margin-bottom:.875rem; }
+.submit-section h5 { font-weight:700; font-size:.95rem; color:var(--rose-dark); margin-bottom:.5rem; }
+
+/* ── Order info card ── */
+.order-info { background:linear-gradient(135deg,rgba(201,160,154,.1),rgba(196,163,90,.06)); border:1px solid rgba(201,160,154,.25); border-radius:var(--r-lg); padding:1.25rem; margin-bottom:1rem; }
+.order-info p { font-size:.82rem; color:var(--ink-2); line-height:1.7; margin:0; }
+
+/* ── Success screen ── */
+.success-screen {
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:4rem 2rem; gap:1rem;
+}
+.success-screen.show { display:flex; }
+.success-icon { width:5rem; height:5rem; border-radius:50%; background:linear-gradient(135deg,var(--sage),#4a7a50); color:#fff; font-size:2rem; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px rgba(90,142,94,.3); }
+.success-screen h3 { font-family:'Cormorant Garamond',serif; font-size:2rem; color:var(--rose-dark); }
+.success-screen p { color:var(--ink-2); font-size:.9rem; max-width:28rem; line-height:1.7; }
+
+/* ── Mobile sidebar ── */
+@media (max-width:768px) {
+  .layout { flex-direction:column; }
+  .sidebar { width:100%; height:auto; position:static; flex-direction:row; flex-wrap:wrap; padding:.75rem; overflow-x:auto; overflow-y:visible; border-right:none; border-bottom:1px solid rgba(201,160,154,.2); }
+  .sidebar-brand { margin-bottom:0; padding-bottom:0; border-bottom:none; border-right:1px solid rgba(201,160,154,.18); padding-right:.75rem; margin-right:.25rem; }
+  .nav-group-label { display:none; }
+  .nav-link { padding:.35rem .6rem; font-size:.72rem; white-space:nowrap; }
+  .step-dots { display:none; }
+  .content-area { padding:1rem .875rem 4rem; }
+}
 </style>
 </head>
 <body>
-<div class="page">
 
-  <a href="./landing.html" class="back-link">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-    Kembali ke Beranda
-  </a>
+<div class="layout">
 
-  <div class="form-header">
-    <div class="form-logo">Akhsan<span>Studio</span></div>
-    <h1 class="form-title">Pesan undangan<br><em>digital Anda.</em></h1>
-    <p class="form-subtitle">Isi formulir di bawah. Kami akan menghubungi Anda via WhatsApp untuk konfirmasi dan memulai pengerjaan.</p>
+<!-- ══════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════ -->
+<aside class="sidebar" aria-label="Navigasi form">
+  <div class="sidebar-brand">
+    <div class="brand-icon" aria-hidden="true"><i class="fa-solid fa-heart"></i></div>
+    <span class="brand-label">Form Order</span>
+  </div>
+  <nav aria-label="Seksi form">
+    <div class="nav-group-label">Konten</div>
+    <button class="nav-link active" data-page="page-mempelai" onclick="showPage(this)"><i class="fa-solid fa-user-group" aria-hidden="true"></i>Mempelai</button>
+    <button class="nav-link" data-page="page-kisah" onclick="showPage(this)"><i class="fa-solid fa-book-heart" aria-hidden="true"></i>Kisah Cinta</button>
+    <button class="nav-link" data-page="page-acara" onclick="showPage(this)"><i class="fa-solid fa-calendar-heart" aria-hidden="true"></i>Acara &amp; Tanggal</button>
+    <button class="nav-link" data-page="page-lokasi" onclick="showPage(this)"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>Lokasi</button>
+    <button class="nav-link" data-page="page-galeri" onclick="showPage(this)"><i class="fa-regular fa-images" aria-hidden="true"></i>Foto Galeri</button>
+    <button class="nav-link" data-page="page-dresscode" onclick="showPage(this)"><i class="fa-solid fa-shirt" aria-hidden="true"></i>Dress Code</button>
+    <button class="nav-link" data-page="page-gift" onclick="showPage(this)"><i class="fa-solid fa-gift" aria-hidden="true"></i>Love Gift</button>
+    <div class="nav-group-label">Pengaturan</div>
+    <button class="nav-link" data-page="page-musik" onclick="showPage(this)"><i class="fa-solid fa-music" aria-hidden="true"></i>Musik</button>
+    <button class="nav-link" data-page="page-meta" onclick="showPage(this)"><i class="fa-solid fa-code" aria-hidden="true"></i>Meta &amp; SEO</button>
+    <div class="nav-group-label">Kirim</div>
+    <button class="nav-link" data-page="page-submit" onclick="showPage(this)"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i>Submit Order</button>
+  </nav>
+  <div class="step-dots" aria-hidden="true" id="step-dots"></div>
+</aside>
+
+<!-- ══════════════════════════════════
+   MAIN
+═══════════════════════════════════ -->
+<div class="main-area">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <a href="landing.html" class="btn-ghost-ed" style="font-size:.78rem;" aria-label="Kembali ke halaman utama">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      <span class="d-hide-xs">Kembali</span>
+    </a>
+    <div style="flex:1;"></div>
+    <span class="change-badge" id="change-badge" aria-live="polite"></span>
+    <div class="save-ok" id="save-ok" aria-live="polite"><i class="fa-solid fa-check" aria-hidden="true"></i>Tersimpan lokal</div>
   </div>
 
-  <div class="steps">
-    <div class="step">
-      <div class="step-dot active" id="dot-1">1</div>
-      <span class="step-label active" id="lbl-1">Paket</span>
-    </div>
-    <div class="step-line"></div>
-    <div class="step">
-      <div class="step-dot idle" id="dot-2">2</div>
-      <span class="step-label" id="lbl-2">Data</span>
-    </div>
-    <div class="step-line"></div>
-    <div class="step">
-      <div class="step-dot idle" id="dot-3">3</div>
-      <span class="step-label" id="lbl-3">Konfirmasi</span>
+  <div class="content-area" id="content-area">
+
+  <!-- ══ SUCCESS ══ -->
+  <div class="success-screen" id="success-screen" role="alert" aria-atomic="true">
+    <div class="success-icon" aria-hidden="true"><i class="fa-solid fa-check"></i></div>
+    <h3>Order Terkirim!</h3>
+    <p>Data undanganmu sudah kami terima. Kami akan memproses dan menghubungimu sesuai paket yang dipilih.</p>
+    <p id="success-order-id" style="font-size:.8rem;color:var(--ink-3);font-family:monospace;"></p>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-top:.5rem;">
+      <a href="landing.html" class="btn-ghost-ed">Kembali ke Beranda</a>
+      <button onclick="resetForm()" class="btn-secondary-ed"><i class="fa-solid fa-plus" aria-hidden="true"></i>Order Baru</button>
     </div>
   </div>
 
-  <!-- STEP 1 -->
-  <div id="step-1">
-    <div class="card">
-      <div class="card-title">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-        Pilih Paket
-      </div>
-      <div class="package-grid">
-        <div class="pkg selected" data-pkg="basic" id="pkg-basic">
-          <div class="pkg-name">Basic</div>
-          <div class="pkg-price">Rp 150rb</div>
-          <div class="pkg-features">Foto, countdown, galeri 3 foto, maps, ucapan tamu</div>
+  <!-- ══ FORM WRAPPER ══ -->
+  <div id="form-wrapper">
+
+  <!-- ══ MEMPELAI ══ -->
+  <div class="page-section active" id="page-mempelai">
+    <div class="section-header">
+      <span class="section-badge">Mempelai</span>
+      <h5>Data Mempelai</h5>
+      <p>Nama lengkap, orang tua, urutan anak, dan tampilan di halaman pembuka.</p>
+    </div>
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-mars" style="color:var(--rose-dark);" aria-hidden="true"></i><h6>Pengantin Pria</h6></div>
+      <div class="card-s-bd">
+        <div class="form-row">
+          <div>
+            <label class="form-label" for="f-groom-name">Nama Lengkap <span aria-hidden="true" style="color:#e74c3c">*</span></label>
+            <input type="text" class="form-control" id="f-groom-name" data-key="groomName" placeholder="cth. Muhammad Wahyu Pratama" required>
+            <div class="invalid-msg">Nama pengantin pria wajib diisi.</div>
+          </div>
+          <div>
+            <label class="form-label" for="f-groom-order">Urutan Anak</label>
+            <input type="text" class="form-control" id="f-groom-order" data-key="groomOrder" placeholder="cth. Putra ke-1">
+          </div>
         </div>
-        <div class="pkg" data-pkg="pro" id="pkg-pro" style="position:relative;">
-          <div class="pkg-popular">Terpopuler</div>
-          <div class="pkg-name">Pro</div>
-          <div class="pkg-price">Rp 250rb</div>
-          <div class="pkg-features">Semua Basic + galeri 12 foto, musik, video, broadcast WA, editor mandiri</div>
-        </div>
-        <div class="pkg" data-pkg="custom" id="pkg-custom">
-          <div class="pkg-name">Custom</div>
-          <div class="pkg-price">Nego</div>
-          <div class="pkg-features">Semua Pro + domain sendiri, desain kustom, fitur tambahan</div>
+        <div style="margin-top:.75rem;">
+          <label class="form-label" for="f-groom-parents">Nama Orang Tua</label>
+          <input type="text" class="form-control" id="f-groom-parents" data-key="groomParents" placeholder="cth. Bapak Marmin &amp; Ibu Isa">
+          <p class="fhint">Gunakan &amp; untuk karakter &amp; di dalam teks.</p>
         </div>
       </div>
     </div>
-    <button class="btn-next" id="btn-step1-next">
-      Lanjutkan
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-venus" style="color:var(--rose);" aria-hidden="true"></i><h6>Pengantin Wanita</h6></div>
+      <div class="card-s-bd">
+        <div class="form-row">
+          <div>
+            <label class="form-label" for="f-bride-name">Nama Lengkap <span aria-hidden="true" style="color:#e74c3c">*</span></label>
+            <input type="text" class="form-control" id="f-bride-name" data-key="brideName" placeholder="cth. Nurul Gusfirnindya" required>
+            <div class="invalid-msg">Nama pengantin wanita wajib diisi.</div>
+          </div>
+          <div>
+            <label class="form-label" for="f-bride-order">Urutan Anak</label>
+            <input type="text" class="form-control" id="f-bride-order" data-key="brideOrder" placeholder="cth. Putri ke-1">
+          </div>
+        </div>
+        <div style="margin-top:.75rem;">
+          <label class="form-label" for="f-bride-parents">Nama Orang Tua</label>
+          <input type="text" class="form-control" id="f-bride-parents" data-key="brideParents" placeholder="cth. Bapak Firdaus &amp; Ibu Nur Wahyuni">
+        </div>
+      </div>
+    </div>
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-heart" style="color:var(--gold);" aria-hidden="true"></i><h6>Tampilan Halaman</h6></div>
+      <div class="card-s-bd">
+        <div class="form-row">
+          <div>
+            <label class="form-label" for="f-welcome-names">Welcome Screen <span aria-hidden="true" style="color:#e74c3c">*</span></label>
+            <input type="text" class="form-control" id="f-welcome-names" data-key="welcomeNames" placeholder="cth. Nindy &amp; Ansar" required>
+            <div class="invalid-msg">Nama welcome screen wajib diisi.</div>
+          </div>
+          <div>
+            <label class="form-label" for="f-hero-names">Hero Section</label>
+            <input type="text" class="form-control" id="f-hero-names" data-key="heroNames" placeholder="cth. Ansar &amp; Nindy">
+          </div>
+        </div>
+        <div class="form-row" style="margin-top:.75rem;">
+          <div>
+            <label class="form-label" for="f-hero-date">Teks Tanggal (Hero)</label>
+            <input type="text" class="form-control" id="f-hero-date" data-key="heroDate" placeholder="cth. Sabtu, 1 Agustus 2026">
+          </div>
+          <div>
+            <label class="form-label" for="f-panel-names">Panel Desktop — Nama</label>
+            <input type="text" class="form-control" id="f-panel-names" data-key="panelNames" placeholder="cth. Ansar &amp; Nindy">
+          </div>
+        </div>
+        <div class="form-row" style="margin-top:.75rem;">
+          <div>
+            <label class="form-label" for="f-panel-date">Panel Desktop — Tanggal</label>
+            <input type="text" class="form-control" id="f-panel-date" data-key="panelDate" placeholder="cth. Sabtu, 1 Agustus 2026">
+          </div>
+          <div>
+            <label class="form-label" for="f-panel-city">Panel Desktop — Kota</label>
+            <input type="text" class="form-control" id="f-panel-city" data-key="panelCity" placeholder="cth. Soppeng, Sulawesi Selatan">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:.625rem;margin-top:1rem;">
+      <button class="btn-primary-ed" onclick="nextPage()"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Lanjut</button>
+    </div>
+  </div>
+
+  <!-- ══ KISAH CINTA ══ -->
+  <div class="page-section" id="page-kisah">
+    <div class="section-header">
+      <span class="section-badge">Kisah Cinta</span>
+      <h5>Timeline Kisah Cinta</h5>
+      <p>Ceritakan perjalanan cinta kalian. Maksimal 5 bab.</p>
+    </div>
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-toggle-on" style="color:var(--rose-dark);" aria-hidden="true"></i><h6>Aktifkan Seksi</h6></div>
+      <div class="card-s-bd">
+        <div style="display:flex;align-items:center;gap:.875rem;">
+          <label class="toggle-switch" aria-label="Tampilkan seksi kisah cinta">
+            <input type="checkbox" id="toggle-show-story" data-key="showStory">
+            <span class="toggle-slider"></span>
+          </label>
+          <div>
+            <span style="font-size:.875rem;font-weight:600;">Tampilkan Seksi Kisah Cinta</span>
+            <p class="fhint">Nonaktifkan jika tidak ingin menampilkan kisah.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="story-list"></div>
+    <button class="btn-secondary-ed" id="btn-add-story" onclick="addStory()" style="font-size:.8rem;margin-bottom:1rem;">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>Tambah Bab
     </button>
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.625rem;margin-top:.5rem;">
+      <button class="btn-ghost-ed" onclick="prevPage()"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Kembali</button>
+      <button class="btn-primary-ed" onclick="nextPage()"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Lanjut</button>
+    </div>
   </div>
 
-  <!-- STEP 2 -->
-  <div id="step-2" style="display:none;">
-    <div class="card">
-      <div class="card-title">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Data Pemesan
+  <!-- ══ ACARA ══ -->
+  <div class="page-section" id="page-acara">
+    <div class="section-header">
+      <span class="section-badge">Acara</span>
+      <h5>Jadwal Acara</h5>
+      <p>Countdown timer, info akad, resepsi, dan acara tambahan.</p>
+    </div>
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-clock" style="color:var(--rose-dark);" aria-hidden="true"></i><h6>Countdown Timer</h6></div>
+      <div class="card-s-bd">
+        <label class="form-label" for="f-data-time">Tanggal &amp; Waktu Target Countdown <span aria-hidden="true" style="color:#e74c3c">*</span></label>
+        <input type="datetime-local" class="form-control" id="f-data-time" data-key="eventTime" required>
+        <div class="invalid-msg">Tanggal acara wajib diisi.</div>
+        <p class="fhint">Tanggal ini juga menentukan hitungan mundur di halaman undangan.</p>
       </div>
-      <div class="field">
-        <label for="f-name">Nama Lengkap <span class="req">*</span></label>
-        <input type="text" id="f-name" placeholder="cth. Budi Santoso" autocomplete="name">
-        <div class="field-error" id="err-name">Nama tidak boleh kosong.</div>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label for="f-phone">Nomor WhatsApp <span class="req">*</span></label>
-          <input type="tel" id="f-phone" placeholder="08xxxxxxxxxx" autocomplete="tel">
-          <div class="field-error" id="err-phone">Nomor WA tidak valid.</div>
+    </div>
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-ring" style="color:var(--gold);" aria-hidden="true"></i><h6>Akad Nikah</h6></div>
+      <div class="card-s-bd">
+        <label class="form-label" for="f-akad-info">Info Akad</label>
+        <input type="text" class="form-control" id="f-akad-info" data-key="akadInfo" placeholder="cth. Sabtu, 1 Agustus 2026&lt;br&gt;11.00 WITA – Selesai">
+        <p class="fhint">Gunakan &lt;br&gt; untuk baris baru.</p>
+        <div style="margin-top:.75rem;">
+          <label class="form-label" for="f-akad-addr">Alamat Akad</label>
+          <input type="text" class="form-control" id="f-akad-addr" data-key="akadAddr" placeholder="cth. Jl. Jera'e, Soppeng">
         </div>
-        <div class="field">
-          <label for="f-email">Email (opsional)</label>
-          <input type="email" id="f-email" placeholder="nama@email.com" autocomplete="email">
+      </div>
+    </div>
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-champagne-glasses" style="color:var(--gold);" aria-hidden="true"></i><h6>Resepsi</h6></div>
+      <div class="card-s-bd">
+        <label class="form-label" for="f-resepsi-info">Info Resepsi</label>
+        <input type="text" class="form-control" id="f-resepsi-info" data-key="resepsiInfo" placeholder="cth. Sabtu, 1 Agustus 2026&lt;br&gt;14.00 WITA – Selesai">
+        <div style="margin-top:.75rem;">
+          <label class="form-label" for="f-resepsi-addr">Alamat Resepsi</label>
+          <input type="text" class="form-control" id="f-resepsi-addr" data-key="resepsiAddr" placeholder="cth. Gedung Serbaguna, Soppeng">
         </div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-title">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        Detail Pernikahan
-      </div>
-      <div class="field">
-        <label for="f-couple">Nama Mempelai <span class="req">*</span></label>
-        <input type="text" id="f-couple" placeholder="cth. Budi & Siti">
-        <div class="field-error" id="err-couple">Nama mempelai tidak boleh kosong.</div>
-        <p class="field-hint">Nama yang akan tampil di undangan.</p>
-      </div>
-      <div class="field">
-        <label for="f-date">Tanggal Pernikahan <span class="req">*</span></label>
-        <input type="date" id="f-date">
-        <div class="field-error" id="err-date">Tanggal pernikahan wajib diisi.</div>
-      </div>
-      <div class="field">
-        <label for="f-message">Catatan Tambahan</label>
-        <textarea id="f-message" placeholder="Tema warna, musik pilihan, atau permintaan khusus..."></textarea>
-        <p class="field-hint">Opsional.</p>
-      </div>
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.625rem;margin-top:1rem;">
+      <button class="btn-ghost-ed" onclick="prevPage()"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Kembali</button>
+      <button class="btn-primary-ed" onclick="nextPage()"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Lanjut</button>
     </div>
-    <button class="btn-next" id="btn-step2-next">
-      Lanjut ke Konfirmasi
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-    </button>
-    <button class="btn-back" id="btn-step2-back">← Kembali</button>
   </div>
 
-  <!-- STEP 3 -->
-  <div id="step-3" style="display:none;">
-    <div class="card">
-      <div class="card-title">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        Ringkasan Pesanan
-      </div>
-      <div id="summary-content"></div>
+  <!-- ══ LOKASI ══ -->
+  <div class="page-section" id="page-lokasi">
+    <div class="section-header">
+      <span class="section-badge">Lokasi</span>
+      <h5>Lokasi &amp; Google Maps</h5>
     </div>
-    <div class="card" style="background:rgba(45,36,32,.03);">
-      <p style="font-size:.8125rem;color:var(--warm-700);line-height:1.7;">Dengan menekan <strong>Kirim Pesanan</strong>, Anda menyetujui bahwa kami akan menghubungi Anda via WhatsApp untuk konfirmasi pembayaran dan pengerjaan undangan.</p>
-    </div>
-    <button class="btn-next" id="btn-submit">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-      Kirim Pesanan
-    </button>
-    <button class="btn-back" id="btn-step3-back">← Kembali</button>
-  </div>
-
-  <!-- SUCCESS -->
-  <div id="step-success" style="display:none;">
-    <div class="card">
-      <div class="success-screen">
-        <div class="success-icon">✓</div>
-        <h2 class="success-title">Pesanan terkirim!</h2>
-        <p class="success-desc">Terima kasih telah memesan. Kami akan menghubungi Anda melalui WhatsApp dalam 1×24 jam untuk konfirmasi dan memulai proses pembuatan.</p>
-        <div class="success-ref">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-          <span>No. Referensi: <strong id="ref-number">—</strong></span>
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-map-location-dot" style="color:var(--rose-dark);" aria-hidden="true"></i><h6>Venue</h6></div>
+      <div class="card-s-bd">
+        <label class="form-label" for="f-venue-address">Alamat Lengkap</label>
+        <textarea class="form-control" id="f-venue-address" data-key="venueAddress" rows="3" placeholder="cth. Ulugalung, Desa Goarie, Soppeng&#10;(bisa pakai &lt;br&gt; untuk baris baru)"></textarea>
+        <p class="fhint">Tampil di bawah tombol Maps di undangan.</p>
+        <div style="margin-top:.75rem;">
+          <label class="form-label" for="f-maps-link">URL Google Maps</label>
+          <input type="url" class="form-control" id="f-maps-link" data-key="mapsLink" placeholder="https://goo.gl/maps/xxxxx">
+          <p class="fhint">Buka Google Maps → Share → Copy link.</p>
         </div>
-        <a href="./landing.html" class="btn-home">Kembali ke Beranda</a>
       </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.625rem;margin-top:1rem;">
+      <button class="btn-ghost-ed" onclick="prevPage()"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Kembali</button>
+      <button class="btn-primary-ed" onclick="nextPage()"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Lanjut</button>
     </div>
   </div>
 
-</div>
+  <!-- ══ GALERI ══ -->
+  <div class="page-section" id="page-galeri">
+    <div class="section-header">
+      <span class="section-badge">Galeri</span>
+      <h5>Foto Galeri</h5>
+      <p>Upload foto langsung — otomatis dikompress ke WebP, disimpan ke Google Drive.</p>
+    </div>
+    <!-- Konfigurasi upload tersimpan otomatis — tidak perlu diisi client -->
+    <input type="url"      id="gas-url-input" style="display:none;" tabindex="-1" aria-hidden="true">
+    <input type="password" id="gas-key-input" style="display:none;" tabindex="-1" aria-hidden="true">
+    <button id="btn-toggle-key" style="display:none;" aria-hidden="true"></button>
+    <i id="key-eye-icon" style="display:none;" aria-hidden="true"></i>
+
+    <!-- Foto mempelai & banner -->
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-user-circle" style="color:var(--rose-dark);" aria-hidden="true"></i><h6>Foto Mempelai</h6></div>
+      <div class="card-s-bd">
+        <div id="photo-slots-main"></div>
+      </div>
+    </div>
+    <!-- Gallery carousel -->
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-regular fa-images" style="color:var(--rose-dark);" aria-hidden="true"></i><h6>Galeri Foto (6 foto)</h6></div>
+      <div class="card-s-bd">
+        <div id="photo-slots-gallery"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.625rem;margin-top:1rem;">
+      <button class="btn-ghost-ed" onclick="prevPage()"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Kembali</button>
+      <button class="btn-primary-ed" onclick="nextPage()"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Lanjut</button>
+    </div>
+  </div>
+
+  <!-- ══ DRESS CODE ══ -->
+  <div class="page-section" id="page-dresscode">
+    <div class="section-header">
+      <span class="section-badge">Dress Code</span>
+      <h5>Dress Code</h5>
+    </div>
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-shirt" style="color:var(--rose-dark);" aria-hidden="true"></i><h6>Pengaturan</h6></div>
+      <div class="card-s-bd">
+        <div style="display:flex;align-items:center;gap:.875rem;margin-bottom:1rem;">
+          <label class="toggle-switch" aria-label="Tampilkan dress code">
+            <input type="checkbox" id="dc-enabled" data-key="dcEnabled">
+            <span class="toggle-slider"></span>
+          </label>
+          <span style="font-size:.875rem;font-weight:600;">Tampilkan Dress Code</span>
+        </div>
+        <div id="dc-fields">
+          <label class="form-label" for="f-dc-text">Teks Dress Code</label>
+          <input type="text" class="form-control" id="f-dc-text" data-key="dcText" placeholder="cth. Batik &amp; Bersepatu" style="margin-bottom:.875rem;">
+          <div class="form-label" style="margin-bottom:.5rem;">Warna Swatches (3 warna)</div>
+          <div class="dc-row">
+            <label class="form-label" style="min-width:3.5rem;margin:0;">Warna 1</label>
+            <input type="color" class="form-control" id="dc-color1" data-key="dcColor1" style="width:3rem;height:2.25rem;padding:.1rem .2rem;">
+            <input type="text" class="form-control" id="dc-hex1" data-key="dcHex1" placeholder="#c9a09a" style="max-width:7rem;">
+          </div>
+          <div class="dc-row">
+            <label class="form-label" style="min-width:3.5rem;margin:0;">Warna 2</label>
+            <input type="color" class="form-control" id="dc-color2" data-key="dcColor2" style="width:3rem;height:2.25rem;padding:.1rem .2rem;">
+            <input type="text" class="form-control" id="dc-hex2" data-key="dcHex2" placeholder="#7ec8a4" style="max-width:7rem;">
+          </div>
+          <div class="dc-row">
+            <label class="form-label" style="min-width:3.5rem;margin:0;">Warna 3</label>
+            <input type="color" class="form-control" id="dc-color3" data-key="dcColor3" style="width:3rem;height:2.25rem;padding:.1rem .2rem;">
+            <input type="text" class="form-control" id="dc-hex3" data-key="dcHex3" placeholder="#4a9068" style="max-width:7rem;">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.625rem;margin-top:1rem;">
+      <button class="btn-ghost-ed" onclick="prevPage()"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Kembali</button>
+      <button class="btn-primary-ed" onclick="nextPage()"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Lanjut</button>
+    </div>
+  </div>
+
+  <!-- ══ LOVE GIFT ══ -->
+  <div class="page-section" id="page-gift">
+    <div class="section-header">
+      <span class="section-badge">Love Gift</span>
+      <h5>Love Gift</h5>
+    </div>
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-toggle-on" style="color:var(--rose-dark);" aria-hidden="true"></i><h6>Tampilkan / Sembunyikan</h6></div>
+      <div class="card-s-bd" style="display:flex;flex-direction:column;gap:.875rem;">
+        <div style="display:flex;align-items:center;gap:.875rem;">
+          <label class="toggle-switch" aria-label="Tampilkan transfer bank"><input type="checkbox" id="toggle-gift-tf" data-key="giftTfShow"><span class="toggle-slider"></span></label>
+          <span style="font-size:.875rem;font-weight:600;"><i class="fa-solid fa-building-columns" style="color:var(--gold);" aria-hidden="true"></i> Transfer Bank</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.875rem;">
+          <label class="toggle-switch" aria-label="Tampilkan QRIS"><input type="checkbox" id="toggle-gift-qris" data-key="giftQrisShow"><span class="toggle-slider"></span></label>
+          <span style="font-size:.875rem;font-weight:600;"><i class="fa-solid fa-qrcode" style="color:var(--gold);" aria-hidden="true"></i> QRIS</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.875rem;">
+          <label class="toggle-switch" aria-label="Tampilkan DANA"><input type="checkbox" id="toggle-gift-dana" data-key="giftDanaShow"><span class="toggle-slider"></span></label>
+          <span style="font-size:.875rem;font-weight:600;"><i class="fa-solid fa-wallet" style="color:var(--gold);" aria-hidden="true"></i> DANA</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:.875rem;">
+          <label class="toggle-switch" aria-label="Tampilkan hadiah fisik"><input type="checkbox" id="toggle-gift-fisik" data-key="giftFisikShow"><span class="toggle-slider"></span></label>
+          <span style="font-size:.875rem;font-weight:600;"><i class="fa-solid fa-gift" style="color:var(--gold);" aria-hidden="true"></i> Hadiah Fisik</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gift-block" id="gift-tf-block">
+      <div style="font-size:.8rem;font-weight:700;color:var(--rose-dark);margin-bottom:.625rem;"><i class="fa-solid fa-building-columns" style="color:var(--gold);margin-right:.35rem;" aria-hidden="true"></i>Transfer Bank</div>
+      <div class="form-row">
+        <div>
+          <label class="form-label" for="f-tf-name">Nama Pemilik</label>
+          <input type="text" class="form-control" id="f-tf-name" data-key="tfName" placeholder="cth. Nurul Gusfirnindya">
+        </div>
+        <div>
+          <label class="form-label" for="f-tf-bank">Nama Bank</label>
+          <input type="text" class="form-control" id="f-tf-bank" data-key="tfBank" placeholder="cth. BRI">
+        </div>
+      </div>
+      <div style="margin-top:.625rem;">
+        <label class="form-label" for="f-tf-number">Nomor Rekening</label>
+        <input type="text" class="form-control" id="f-tf-number" data-key="tfNumber" placeholder="cth. 1234567890123">
+      </div>
+    </div>
+
+    <div class="gift-block" id="gift-qris-block">
+      <div style="font-size:.8rem;font-weight:700;color:var(--rose-dark);margin-bottom:.625rem;"><i class="fa-solid fa-qrcode" style="color:var(--gold);margin-right:.35rem;" aria-hidden="true"></i>QRIS</div>
+      <label class="form-label" for="f-qris-name">Nama Pemilik QRIS</label>
+      <input type="text" class="form-control" id="f-qris-name" data-key="qrisName" placeholder="cth. Wahyu Pratama" style="margin-bottom:.625rem;">
+      <label class="form-label">Gambar QRIS</label>
+      <div style="display:flex;align-items:center;gap:.625rem;">
+        <img class="upload-thumb" id="thumb-qris" src="" alt="Preview QRIS">
+        <div style="flex:1;">
+          <div class="upload-wrap">
+            <input type="url" class="form-control" id="inp-qris" data-key="qrisImg" placeholder="Upload atau tempel URL...">
+            <button class="btn-upload" type="button" onclick="triggerUpload('qris')" aria-label="Upload gambar QRIS"><i class="fa-solid fa-upload" aria-hidden="true"></i></button>
+          </div>
+          <div class="upload-prog" id="prog-qris"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Mengupload...</div>
+          <div class="upload-err" id="err-qris" role="alert"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gift-block" id="gift-dana-block">
+      <div style="font-size:.8rem;font-weight:700;color:var(--rose-dark);margin-bottom:.625rem;"><i class="fa-solid fa-wallet" style="color:var(--gold);margin-right:.35rem;" aria-hidden="true"></i>DANA</div>
+      <div class="form-row">
+        <div>
+          <label class="form-label" for="f-dana-name">Nama Pemilik</label>
+          <input type="text" class="form-control" id="f-dana-name" data-key="danaName" placeholder="cth. Wahyu Pratama">
+        </div>
+        <div>
+          <label class="form-label" for="f-dana-number">Nomor HP DANA</label>
+          <input type="tel" class="form-control" id="f-dana-number" data-key="danaNumber" placeholder="cth. 08123456789">
+        </div>
+      </div>
+    </div>
+
+    <div class="gift-block" id="gift-fisik-block">
+      <div style="font-size:.8rem;font-weight:700;color:var(--rose-dark);margin-bottom:.625rem;"><i class="fa-solid fa-gift" style="color:var(--gold);margin-right:.35rem;" aria-hidden="true"></i>Hadiah Fisik</div>
+      <div class="form-row">
+        <div>
+          <label class="form-label" for="f-gift-name">Nama Pemilik</label>
+          <input type="text" class="form-control" id="f-gift-name" data-key="giftName" placeholder="cth. Nurul Gusfirnindya">
+        </div>
+        <div>
+          <label class="form-label" for="f-gift-phone">Nomor WhatsApp</label>
+          <input type="tel" class="form-control" id="f-gift-phone" data-key="giftPhone" placeholder="cth. 08123456789">
+        </div>
+      </div>
+      <div style="margin-top:.625rem;">
+        <label class="form-label" for="f-gift-address">Alamat Pengiriman</label>
+        <textarea class="form-control" id="f-gift-address" data-key="giftAddress" rows="2" placeholder="Jl. Contoh No. 1, Kota..."></textarea>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.625rem;margin-top:1rem;">
+      <button class="btn-ghost-ed" onclick="prevPage()"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Kembali</button>
+      <button class="btn-primary-ed" onclick="nextPage()"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Lanjut</button>
+    </div>
+  </div>
+
+  <!-- ══ MUSIK ══ -->
+  <div class="page-section" id="page-musik">
+    <div class="section-header">
+      <span class="section-badge">Musik</span>
+      <h5>Background Musik</h5>
+    </div>
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-music" style="color:var(--rose-dark);" aria-hidden="true"></i><h6>File Musik (MP3)</h6></div>
+      <div class="card-s-bd">
+        <label class="form-label" for="f-audio">URL File MP3</label>
+        <input type="url" class="form-control" id="f-audio" data-key="audioUrl" placeholder="./assets/music/bg.mp3 atau https://...">
+        <p class="fhint">Path lokal atau URL direct link. Kosongkan untuk menonaktifkan.</p>
+        <div style="margin-top:.75rem;padding:.625rem .875rem;background:rgba(196,163,90,.07);border:1px solid rgba(196,163,90,.2);border-radius:.625rem;">
+          <p style="font-size:.78rem;color:var(--ink-2);margin:0;"><i class="fa-solid fa-circle-info" style="color:var(--gold);" aria-hidden="true"></i> Hosting MP3 gratis: upload ke <a href="https://archive.org" target="_blank" rel="noopener" style="color:var(--rose-dark);">archive.org</a> lalu ambil direct link.</p>
+        </div>
+        <div style="margin-top:.875rem;">
+          <label class="form-label" for="f-music-credit">Link Kredit Musik</label>
+          <input type="url" class="form-control" id="f-music-credit" data-key="musicCredit" placeholder="https://www.youtube.com/...">
+          <p class="fhint">Link sumber musik yang ditampilkan di footer undangan.</p>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.625rem;margin-top:1rem;">
+      <button class="btn-ghost-ed" onclick="prevPage()"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Kembali</button>
+      <button class="btn-primary-ed" onclick="nextPage()"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Lanjut</button>
+    </div>
+  </div>
+
+  <!-- ══ META ══ -->
+  <div class="page-section" id="page-meta">
+    <div class="section-header">
+      <span class="section-badge">Meta &amp; SEO</span>
+      <h5>Meta Tag &amp; SEO</h5>
+    </div>
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-globe" style="color:var(--rose-dark);" aria-hidden="true"></i><h6>Tags</h6></div>
+      <div class="card-s-bd" style="display:flex;flex-direction:column;gap:.75rem;">
+        <div>
+          <label class="form-label" for="f-page-title">Title Halaman</label>
+          <input type="text" class="form-control" id="f-page-title" data-key="pageTitle" placeholder="Undangan Pernikahan ...">
+        </div>
+        <div>
+          <label class="form-label" for="f-meta-desc">Meta Description</label>
+          <input type="text" class="form-control" id="f-meta-desc" data-key="metaDesc">
+        </div>
+        <div>
+          <label class="form-label" for="f-og-title">OG Title</label>
+          <input type="text" class="form-control" id="f-og-title" data-key="ogTitle">
+        </div>
+        <div>
+          <label class="form-label" for="f-og-desc">OG Description</label>
+          <input type="text" class="form-control" id="f-og-desc" data-key="ogDesc">
+        </div>
+        <div>
+          <label class="form-label" for="f-og-image">OG Image URL (preview WhatsApp)</label>
+          <input type="url" class="form-control" id="f-og-image" data-key="ogImage" placeholder="https://drive.google.com/uc?id=xxx&export=view">
+          <p class="fhint">URL gambar publik untuk preview saat link dibagikan.</p>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.625rem;margin-top:1rem;">
+      <button class="btn-ghost-ed" onclick="prevPage()"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Kembali</button>
+      <button class="btn-primary-ed" onclick="nextPage()"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Lanjut</button>
+    </div>
+  </div>
+
+  <!-- ══ SUBMIT ══ -->
+  <div class="page-section" id="page-submit">
+    <div class="section-header">
+      <span class="section-badge">Kirim Order</span>
+      <h5>Review &amp; Submit</h5>
+      <p>Periksa data lagi, pilih paket, lalu kirim.</p>
+    </div>
+
+    <div class="order-info">
+      <p><i class="fa-solid fa-circle-info" style="color:var(--gold);" aria-hidden="true"></i> Setelah submit, kami akan memproses undangan dan menghubungimu via nomor WhatsApp yang diisi di bawah.</p>
+    </div>
+
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-user" style="color:var(--rose-dark);" aria-hidden="true"></i><h6>Info Pemesan</h6></div>
+      <div class="card-s-bd">
+        <div class="form-row">
+          <div>
+            <label class="form-label" for="f-buyer-name">Nama Pemesan <span aria-hidden="true" style="color:#e74c3c">*</span></label>
+            <input type="text" class="form-control" id="f-buyer-name" data-key="buyerName" placeholder="Nama lengkap kamu" required>
+            <div class="invalid-msg">Nama pemesan wajib diisi.</div>
+          </div>
+          <div>
+            <label class="form-label" for="f-buyer-wa">Nomor WhatsApp <span aria-hidden="true" style="color:#e74c3c">*</span></label>
+            <input type="tel" class="form-control" id="f-buyer-wa" data-key="buyerWa" placeholder="cth. 08123456789" required>
+            <div class="invalid-msg">Nomor WhatsApp wajib diisi.</div>
+          </div>
+        </div>
+        <div style="margin-top:.75rem;">
+          <label class="form-label" for="f-buyer-email">Email (opsional)</label>
+          <input type="email" class="form-control" id="f-buyer-email" data-key="buyerEmail" placeholder="email@kamu.com">
+        </div>
+      </div>
+    </div>
+
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-box" style="color:var(--gold);" aria-hidden="true"></i><h6>Pilih Paket</h6></div>
+      <div class="card-s-bd">
+        <div style="display:flex;flex-direction:column;gap:.625rem;" role="radiogroup" aria-label="Pilihan paket">
+          <label style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border:1.5px solid rgba(201,160,154,.25);border-radius:.75rem;cursor:pointer;transition:border-color .15s;" id="paket-dasar-label">
+            <input type="radio" name="paket" value="dasar" id="paket-dasar" style="accent-color:var(--rose-dark);">
+            <div>
+              <div style="font-weight:700;font-size:.9rem;">Dasar — Rp 75.000</div>
+              <div style="font-size:.78rem;color:var(--ink-3);">Semua section konten, RSVP, dark mode, background musik</div>
+            </div>
+          </label>
+          <label style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border:1.5px solid var(--rose);border-radius:.75rem;cursor:pointer;transition:border-color .15s;background:rgba(201,160,154,.04);" id="paket-standar-label">
+            <input type="radio" name="paket" value="standar" id="paket-standar" checked style="accent-color:var(--rose-dark);">
+            <div>
+              <div style="font-weight:700;font-size:.9rem;">Standar — Rp 150.000 <span style="font-size:.68rem;background:var(--rose-dark);color:#fff;padding:.1rem .45rem;border-radius:99px;vertical-align:middle;">POPULER</span></div>
+              <div style="font-size:.78rem;color:var(--ink-3);">Semua fitur Dasar + upload foto ke Google Drive</div>
+            </div>
+          </label>
+          <label style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border:1.5px solid rgba(201,160,154,.25);border-radius:.75rem;cursor:pointer;transition:border-color .15s;" id="paket-premium-label">
+            <input type="radio" name="paket" value="premium" id="paket-premium" style="accent-color:var(--rose-dark);">
+            <div>
+              <div style="font-weight:700;font-size:.9rem;">Premium — Rp 250.000</div>
+              <div style="font-size:.78rem;color:var(--ink-3);">Semua fitur Standar + domain kustom + revisi 1x + prioritas</div>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-note-sticky" style="color:var(--gold);" aria-hidden="true"></i><h6>Catatan Tambahan</h6></div>
+      <div class="card-s-bd">
+        <label class="form-label" for="f-notes">Catatan</label>
+        <textarea class="form-control" id="f-notes" data-key="notes" rows="3" placeholder="Informasi tambahan atau permintaan khusus..."></textarea>
+      </div>
+    </div>
+
+    <!-- GAS URL disimpan otomatis dari DEFAULT_GAS_URL — hidden dari client -->
+    <input type="url" id="gas-url-submit" style="display:none;" tabindex="-1" aria-hidden="true">
+
+    <!-- Error summary -->
+    <div id="submit-error" style="display:none;background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.3);border-radius:.75rem;padding:.875rem 1rem;margin-bottom:.875rem;font-size:.84rem;color:#c0392b;" role="alert" aria-live="assertive"></div>
+
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.625rem;margin-top:1rem;">
+      <button class="btn-ghost-ed" onclick="prevPage()"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Kembali</button>
+      <button class="btn-primary-ed" id="btn-submit" onclick="submitOrder(this)">
+        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>Kirim Order
+      </button>
+    </div>
+  </div>
+
+  </div><!-- /form-wrapper -->
+  </div><!-- /content-area -->
+</div><!-- /main-area -->
+</div><!-- /layout -->
+
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwY6zbBjIdX-W7ZJp-6ni6GIpyLfhCoEKoF6oS9NAjwSQOvw0sXgZYm8AflHCj07-x7/exec';
-const PKG_LABELS = { basic: 'Basic — Rp 150.000', pro: 'Pro — Rp 250.000', custom: 'Custom — Harga nego' };
-let selectedPkg = 'basic';
+'use strict';
 
-// Package selection
-document.querySelectorAll('.pkg').forEach(function(p) {
-  p.addEventListener('click', function() {
-    document.querySelectorAll('.pkg').forEach(function(x) { x.classList.remove('selected'); });
-    p.classList.add('selected');
-    selectedPkg = p.dataset.pkg;
-  });
+/* ═══════════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════════ */
+const PAGE_ORDER = [
+  'page-mempelai','page-kisah','page-acara','page-lokasi',
+  'page-galeri','page-dresscode','page-gift',
+  'page-musik','page-meta','page-submit'
+];
+const STORAGE_KEY = 'order_draft';
+const GAS_URL_KEY  = 'order_gas_url';
+const GAS_KEY_STOR = 'order_gas_key';
+
+// ─── KONFIGURASI: isi GAS URL kamu di sini ───────────────────────
+// Ganti dengan URL GAS Web App kamu (sama dengan data-url di index.html)
+// Client tidak perlu mengisi ini — URL sudah tertanam di halaman.
+const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwY6zbBjIdX-W7ZJp-6ni6GIpyLfhCoEKoF6oS9NAjwSQOvw0sXgZYm8AflHCj07-x7/exec';
+// Access key untuk upload foto (sama dengan data-key di index.html)
+const DEFAULT_ACCESS_KEY = 'aabf6c54d8459bb303c590fcd1691b083e58db2998a8ebd3c4';
+// ─────────────────────────────────────────────────────────────────
+
+// Photo slot definitions: slotId → {inputId, thumbId, progId, errId, label, dataKey}
+const PHOTO_SLOTS = {
+  banner: { label:'Foto Pasangan (Hero)',      dataKey:'photoBanner' },
+  cowo:   { label:'Foto Pengantin Pria',       dataKey:'photoCowo'   },
+  cewe:   { label:'Foto Pengantin Wanita',     dataKey:'photoCewe'   },
+  'c1-0': { label:'Galeri Foto 1',             dataKey:'photoG1'     },
+  'c1-1': { label:'Galeri Foto 2',             dataKey:'photoG2'     },
+  'c1-2': { label:'Galeri Foto 3',             dataKey:'photoG3'     },
+  'c2-0': { label:'Galeri Foto 4',             dataKey:'photoG4'     },
+  'c2-1': { label:'Galeri Foto 5',             dataKey:'photoG5'     },
+  'c2-2': { label:'Galeri Foto 6',             dataKey:'photoG6'     },
+};
+
+/* ═══════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════ */
+let currentPage = 0;
+let draft = {};
+let changeCount = 0;
+let autoSaveTimer = null;
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  buildStepDots();
+  buildPhotoSlots();   // DOM slots harus ada dulu sebelum loadDraft restore thumbnail
+  initGasInputs();
+  initToggleListeners();
+  initColorSync();
+  initPaketHighlight();
+  initAutoFill();
+  applyPaketFromUrl();
+  loadDraft();         // restore setelah semua DOM siap
+
+  // Track all inputs for auto-save
+  document.addEventListener('input', onAnyInput);
+  document.addEventListener('change', onAnyInput);
 });
 
-// Step buttons
-document.getElementById('btn-step1-next').addEventListener('click', function() { goStep(2); });
-document.getElementById('btn-step2-next').addEventListener('click', function() { goStep(3); });
-document.getElementById('btn-step2-back').addEventListener('click', function() { goStep(1); });
-document.getElementById('btn-step3-back').addEventListener('click', function() { goStep(2); });
-document.getElementById('btn-submit').addEventListener('click', submitOrder);
+/* ═══════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════ */
+function showPage(btnOrId) {
+  const pageId = typeof btnOrId === 'string' ? btnOrId : btnOrId.dataset.page;
+  const idx = PAGE_ORDER.indexOf(pageId);
+  if (idx < 0) return;
+  currentPage = idx;
 
-function goStep(n) {
-  if (n === 2 && !validateStep1()) return;
-  if (n === 3 && !validateStep2()) return;
-  if (n === 3) buildSummary();
+  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(pageId);
+  if (target) { target.classList.add('active'); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 
-  for (var i = 1; i <= 3; i++) {
-    var el = document.getElementById('step-' + i);
-    if (el) el.style.display = (i === n) ? 'block' : 'none';
-    var dot = document.getElementById('dot-' + i);
-    var lbl = document.getElementById('lbl-' + i);
-    if (dot) dot.className = 'step-dot ' + (i < n ? 'done' : i === n ? 'active' : 'idle');
-    if (lbl) lbl.className = 'step-label' + (i === n ? ' active' : '');
-  }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.querySelectorAll('.nav-link[data-page]').forEach(l => {
+    l.classList.toggle('active', l.dataset.page === pageId);
+  });
+
+  updateStepDots();
 }
 
-function validateStep1() { return true; }
-
-function validateStep2() {
-  var ok = true;
-  var name = document.getElementById('f-name').value.trim();
-  setErr('err-name', !name); if (!name) ok = false;
-  var phone = document.getElementById('f-phone').value.trim().replace(/\D/g, '');
-  var phoneOk = phone.length >= 9 && phone.length <= 15;
-  setErr('err-phone', !phoneOk); if (!phoneOk) ok = false;
-  var couple = document.getElementById('f-couple').value.trim();
-  setErr('err-couple', !couple); if (!couple) ok = false;
-  var date = document.getElementById('f-date').value;
-  setErr('err-date', !date); if (!date) ok = false;
-  return ok;
+function nextPage() {
+  if (currentPage < PAGE_ORDER.length - 1) showPage(PAGE_ORDER[currentPage + 1]);
 }
 
-function setErr(id, show) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  el.classList.toggle('show', show);
-  var inp = el.previousElementSibling;
-  if (inp) inp.classList.toggle('error', show);
+function prevPage() {
+  if (currentPage > 0) showPage(PAGE_ORDER[currentPage - 1]);
 }
 
-function buildSummary() {
-  var rows = [
-    ['Paket', PKG_LABELS[selectedPkg] || selectedPkg],
-    ['Nama Pemesan', document.getElementById('f-name').value.trim()],
-    ['No. WhatsApp', document.getElementById('f-phone').value.trim()],
-    ['Email', document.getElementById('f-email').value.trim() || '—'],
-    ['Nama Mempelai', document.getElementById('f-couple').value.trim()],
-    ['Tanggal', formatDate(document.getElementById('f-date').value)],
-    ['Catatan', document.getElementById('f-message').value.trim() || '—'],
+/* ═══════════════════════════════════════════════
+   STEP DOTS
+═══════════════════════════════════════════════ */
+function buildStepDots() {
+  const container = document.getElementById('step-dots');
+  if (!container) return;
+  container.innerHTML = '';
+  PAGE_ORDER.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'step-dot' + (i === 0 ? ' active' : '');
+    container.appendChild(dot);
+  });
+}
+
+function updateStepDots() {
+  const dots = document.querySelectorAll('#step-dots .step-dot');
+  dots.forEach((d, i) => {
+    d.className = 'step-dot' + (i < currentPage ? ' done' : i === currentPage ? ' active' : '');
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   PHOTO SLOTS — build dynamic
+═══════════════════════════════════════════════ */
+function buildPhotoSlots() {
+  const mainSlots  = ['banner','cowo','cewe'];
+  const gallSlots  = ['c1-0','c1-1','c1-2','c2-0','c2-1','c2-2'];
+
+  renderSlots('photo-slots-main', mainSlots);
+  renderSlots('photo-slots-gallery', gallSlots);
+
+  // Hidden file input
+  const fi = document.createElement('input');
+  fi.type = 'file'; fi.accept = 'image/*'; fi.id = '_hidden-file';
+  fi.style.display = 'none';
+  document.body.appendChild(fi);
+  fi.addEventListener('change', () => {
+    const file = fi.files?.[0];
+    if (!file || !window._currentUploadSlot) return;
+    doUpload(file, window._currentUploadSlot);
+  });
+}
+
+function renderSlots(containerId, slotKeys) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+  slotKeys.forEach((key, i) => {
+    const slot = PHOTO_SLOTS[key];
+    const html = `
+      <div style="margin-bottom:.875rem;">
+        <label class="form-label" for="inp-${key}">${slot.label}</label>
+        <div style="display:flex;align-items:center;gap:.625rem;">
+          <img class="upload-thumb" id="thumb-${key}" src="" alt="Preview ${slot.label}">
+          <div style="flex:1;">
+            <div class="upload-wrap">
+              <input type="url" class="form-control" id="inp-${key}" data-key="${slot.dataKey}" placeholder="Upload foto atau tempel URL...">
+              <button class="btn-upload" type="button" onclick="triggerUpload('${key}')" aria-label="Upload ${slot.label}">
+                <i class="fa-solid fa-upload" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div class="upload-prog" id="prog-${key}" aria-live="polite"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Mengupload...</div>
+            <div class="upload-err" id="err-${key}" role="alert"></div>
+          </div>
+        </div>
+      </div>`;
+    container.insertAdjacentHTML('beforeend', html);
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   STORY BLOCKS
+═══════════════════════════════════════════════ */
+let storyCount = 0;
+const MAX_STORIES = 5;
+
+function addStory(title = '', body = '') {
+  if (storyCount >= MAX_STORIES) return;
+  storyCount++;
+  const list = document.getElementById('story-list');
+  const n = list.children.length + 1;
+  const div = document.createElement('div');
+  div.className = 'story-block';
+  div.dataset.story = String(n);
+  div.innerHTML = `
+    <button class="btn-del" type="button" onclick="delStory(this)" aria-label="Hapus bab ${n}">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+    <div style="font-size:.7rem;font-weight:700;color:var(--rose-dark);margin-bottom:.5rem;background:rgba(201,160,154,.15);display:inline-block;padding:.1rem .5rem;border-radius:99px;">Bab ${n}</div>
+    <label class="form-label" for="story-title-${n}">Judul</label>
+    <input type="text" class="form-control" id="story-title-${n}" style="margin-bottom:.5rem;" value="${escHtml(title)}" placeholder="cth. Awal Pertemuan">
+    <label class="form-label" for="story-body-${n}">Cerita</label>
+    <textarea class="form-control" id="story-body-${n}" rows="3" placeholder="Cerita singkat...">${escHtml(body)}</textarea>`;
+  list.appendChild(div);
+  markChanged();
+}
+
+function delStory(btn) {
+  btn.closest('.story-block').remove();
+  storyCount = Math.max(0, storyCount - 1);
+  markChanged();
+}
+
+function getStories() {
+  const blocks = document.querySelectorAll('#story-list .story-block');
+  return Array.from(blocks).map((b, i) => ({
+    title: b.querySelector('input')?.value.trim() || '',
+    body:  b.querySelector('textarea')?.value.trim() || '',
+  }));
+}
+
+function setStories(stories) {
+  document.getElementById('story-list').innerHTML = '';
+  storyCount = 0;
+  (stories || []).forEach(s => addStory(s.title, s.body));
+}
+
+/* ═══════════════════════════════════════════════
+   GAS INPUT — persist to localStorage
+═══════════════════════════════════════════════ */
+function initGasInputs() {
+  // URL dan access key sudah di-hardcode — client tidak perlu mengisi apapun
+  // Simpan ke localStorage sekali supaya getGasUrl()/getGasKey() konsisten
+  if (!localStorage.getItem(GAS_URL_KEY))  localStorage.setItem(GAS_URL_KEY,  DEFAULT_GAS_URL);
+  if (!localStorage.getItem(GAS_KEY_STOR)) localStorage.setItem(GAS_KEY_STOR, DEFAULT_ACCESS_KEY);
+
+  // Isi hidden inputs
+  const urlInp = document.getElementById('gas-url-input');
+  const urlSub = document.getElementById('gas-url-submit');
+  const keyInp = document.getElementById('gas-key-input');
+  if (urlInp) urlInp.value = DEFAULT_GAS_URL;
+  if (urlSub) urlSub.value = DEFAULT_GAS_URL;
+  if (keyInp) keyInp.value = localStorage.getItem(GAS_KEY_STOR) || DEFAULT_ACCESS_KEY;
+}
+
+function getGasUrl() {
+  return localStorage.getItem(GAS_URL_KEY) || DEFAULT_GAS_URL || '';
+}
+function getGasKey() {
+  return localStorage.getItem(GAS_KEY_STOR) || DEFAULT_ACCESS_KEY || '';
+}
+
+
+</script>
+<script>
+/* ═══════════════════════════════════════════════
+   TOGGLE LISTENERS (gift visibility)
+═══════════════════════════════════════════════ */
+function initToggleListeners() {
+  const pairs = [
+    ['toggle-gift-tf',   'gift-tf-block'],
+    ['toggle-gift-qris', 'gift-qris-block'],
+    ['toggle-gift-dana', 'gift-dana-block'],
+    ['toggle-gift-fisik','gift-fisik-block'],
   ];
-  document.getElementById('summary-content').innerHTML = rows.map(function(r) {
-    return '<div class="summary-row"><span class="summary-label">' + r[0] + '</span><span class="summary-value">' + escHtml(r[1]) + '</span></div>';
-  }).join('');
+  pairs.forEach(([togId, blockId]) => {
+    const tog   = document.getElementById(togId);
+    const block = document.getElementById(blockId);
+    if (!tog || !block) return;
+    const sync = () => block.classList.toggle('hidden-gift', !tog.checked);
+    tog.addEventListener('change', sync);
+    sync();
+  });
 }
 
-function formatDate(val) {
-  if (!val) return '—';
-  var d = new Date(val + 'T00:00:00');
-  return d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+/* ═══════════════════════════════════════════════
+   COLOR SYNC (picker ↔ hex input)
+═══════════════════════════════════════════════ */
+function initColorSync() {
+  [[1],[2],[3]].forEach(([i]) => {
+    const picker = document.getElementById(`dc-color${i}`);
+    const hex    = document.getElementById(`dc-hex${i}`);
+    if (!picker || !hex) return;
+    picker.addEventListener('input', () => { hex.value = picker.value; markChanged(); });
+    hex.addEventListener('input', () => {
+      if (/^#[0-9a-fA-F]{6}$/.test(hex.value)) { picker.value = hex.value; markChanged(); }
+    });
+  });
 }
 
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+/* ═══════════════════════════════════════════════
+   PAKET HIGHLIGHT
+═══════════════════════════════════════════════ */
+function initPaketHighlight() {
+  document.querySelectorAll('input[name="paket"]').forEach(r => {
+    r.addEventListener('change', updatePaketHighlight);
+  });
+  updatePaketHighlight();
 }
 
-async function submitOrder() {
-  var btn = document.getElementById('btn-submit');
-  btn.disabled = true;
-  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Mengirim...';
+function updatePaketHighlight() {
+  ['dasar','standar','premium'].forEach(p => {
+    const lbl = document.getElementById(`paket-${p}-label`);
+    const rad = document.getElementById(`paket-${p}`);
+    if (!lbl || !rad) return;
+    lbl.style.borderColor = rad.checked ? 'var(--rose)' : 'rgba(201,160,154,.25)';
+    lbl.style.background  = rad.checked ? 'rgba(201,160,154,.04)' : '';
+  });
+}
 
-  var body = {
-    action       : 'submitOrder',
-    name         : document.getElementById('f-name').value.trim(),
-    phone        : document.getElementById('f-phone').value.trim(),
-    email        : document.getElementById('f-email').value.trim(),
-    package      : selectedPkg,
-    couple_names : document.getElementById('f-couple').value.trim(),
-    wedding_date : document.getElementById('f-date').value,
-    message      : document.getElementById('f-message').value.trim(),
+function applyPaketFromUrl() {
+  const p = new URLSearchParams(window.location.search).get('paket');
+  if (!p) return;
+  const r = document.getElementById(`paket-${p}`);
+  if (r) { r.checked = true; updatePaketHighlight(); }
+}
+
+/* ═══════════════════════════════════════════════
+   AUTO-FILL: sync hero/panel names from groom+bride
+═══════════════════════════════════════════════ */
+function initAutoFill() {
+  const sync = () => {
+    const g = document.getElementById('f-groom-name')?.value.trim().split(/[\s,]/)[0] || '';
+    const b = document.getElementById('f-bride-name')?.value.trim().split(/[\s,]/)[0] || '';
+    if (!g && !b) return;
+    const combo = [b,g].filter(Boolean).join(' & ');
+    const comboRev = [g,b].filter(Boolean).join(' & ');
+
+    const heroNames  = document.getElementById('f-hero-names');
+    const panelNames = document.getElementById('f-panel-names');
+    const welcome    = document.getElementById('f-welcome-names');
+
+    if (heroNames  && !heroNames.value)  heroNames.value  = comboRev;
+    if (panelNames && !panelNames.value) panelNames.value = comboRev;
+    if (welcome    && !welcome.value)    welcome.value    = combo;
   };
 
-  try {
-    var res = await fetch(GAS_URL, {
-      method  : 'POST',
-      body    : JSON.stringify(body),
-      headers : { 'Content-Type': 'text/plain' },
-    }).then(function(r) { return r.json(); });
+  document.getElementById('f-groom-name')?.addEventListener('blur', sync);
+  document.getElementById('f-bride-name')?.addEventListener('blur', sync);
+}
 
-    if (res.code === 201) {
-      document.getElementById('ref-number').textContent = (res.data.id || '').slice(0, 8).toUpperCase() || '—';
-      document.getElementById('step-3').style.display = 'none';
-      document.getElementById('step-success').style.display = 'block';
-      for (var i = 1; i <= 3; i++) {
-        var d = document.getElementById('dot-' + i);
-        if (d) d.className = 'step-dot done';
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      throw new Error((res.error && res.error[0]) || 'Terjadi kesalahan.');
-    }
-  } catch (err) {
-    alert('Gagal mengirim: ' + err.message + '\n\nSilakan coba lagi atau hubungi kami via WhatsApp.');
-    btn.disabled = false;
-    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Kirim Pesanan';
+/* ═══════════════════════════════════════════════
+   DRAFT — auto-save to localStorage
+═══════════════════════════════════════════════ */
+function onAnyInput() {
+  markChanged();
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(saveDraft, 800);
+}
+
+function markChanged() {
+  changeCount++;
+  const badge = document.getElementById('change-badge');
+  if (badge) { badge.style.display = 'inline-block'; badge.textContent = `${changeCount} perubahan`; }
+  const ok = document.getElementById('save-ok');
+  if (ok) ok.classList.remove('show');
+}
+
+function collectFormData() {
+  const data = { ...draft };
+
+  // All keyed inputs / textareas / selects
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.dataset.key;
+    if (!k) return;
+    if (el.type === 'checkbox') data[k] = el.checked;
+    else data[k] = el.value;
+  });
+
+  // Stories
+  data.stories = getStories();
+
+  // Paket
+  const pr = document.querySelector('input[name="paket"]:checked');
+  if (pr) data.paket = pr.value;
+
+  return data;
+}
+
+function saveDraft() {
+  const data = collectFormData();
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    changeCount = 0;
+    const badge = document.getElementById('change-badge');
+    if (badge) badge.style.display = 'none';
+    const ok = document.getElementById('save-ok');
+    if (ok) ok.classList.add('show');
+    setTimeout(() => ok?.classList.remove('show'), 2000);
+  } catch (e) {
+    console.warn('Could not save draft:', e);
   }
+}
+
+function loadDraft() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    draft = JSON.parse(raw) || {};
+  } catch (_) { draft = {}; }
+
+  // Restore keyed fields
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.dataset.key;
+    if (k === undefined || !(k in draft)) return;
+    if (el.type === 'checkbox') el.checked = Boolean(draft[k]);
+    else el.value = draft[k] ?? '';
+
+    // Sync thumbnails for photo inputs
+    if (el.tagName === 'INPUT' && el.type === 'url' && el.value) {
+      const slotEntry = Object.entries(PHOTO_SLOTS).find(([,v]) => v.dataKey === k);
+      if (slotEntry) updateThumb(slotEntry[0], el.value);
+    }
+    if (el.id === 'inp-qris' && el.value) updateThumb('qris', el.value);
+  });
+
+  // Restore stories
+  if (draft.stories?.length) setStories(draft.stories);
+
+  // Restore paket
+  if (draft.paket) {
+    const r = document.getElementById(`paket-${draft.paket}`);
+    if (r) r.checked = true;
+  }
+
+  // Sync gift block visibility from restored checkboxes (without re-binding listeners)
+  const giftPairs = [
+    ['toggle-gift-tf',   'gift-tf-block'],
+    ['toggle-gift-qris', 'gift-qris-block'],
+    ['toggle-gift-dana', 'gift-dana-block'],
+    ['toggle-gift-fisik','gift-fisik-block'],
+  ];
+  giftPairs.forEach(([togId, blockId]) => {
+    const tog   = document.getElementById(togId);
+    const block = document.getElementById(blockId);
+    if (tog && block) block.classList.toggle('hidden-gift', !tog.checked);
+  });
+  updatePaketHighlight();
+
+  // Sync color pickers
+  [[1],[2],[3]].forEach(([i]) => {
+    const hex = document.getElementById(`dc-hex${i}`);
+    const pk  = document.getElementById(`dc-color${i}`);
+    if (hex?.value && /^#[0-9a-fA-F]{6}$/.test(hex.value) && pk) pk.value = hex.value;
+  });
+}
+</script>
+<script>
+/* ═══════════════════════════════════════════════
+   UPLOAD PHOTO
+═══════════════════════════════════════════════ */
+function triggerUpload(slotKey) {
+  const gasUrl = getGasUrl();
+  if (!gasUrl) {
+    alert('Konfigurasi upload belum siap. Hubungi penyedia undangan.');
+    return;
+  }
+  window._currentUploadSlot = slotKey;
+  const fi = document.getElementById('_hidden-file');
+  fi.value = '';
+  fi.click();
+}
+
+async function doUpload(file, slotKey) {
+  const progId = `prog-${slotKey}`;
+  const errId  = `err-${slotKey}`;
+  const inpId  = slotKey === 'qris' ? 'inp-qris' : `inp-${slotKey}`;
+  const prog = document.getElementById(progId);
+  const err  = document.getElementById(errId);
+  const inp  = document.getElementById(inpId);
+  if (!prog || !err || !inp) return;
+
+  prog.classList.add('show');
+  err.classList.remove('show');
+  err.textContent = '';
+
+  // Disable upload button
+  const btns = document.querySelectorAll(`[onclick="triggerUpload('${slotKey}')"]`);
+  btns.forEach(b => b.disabled = true);
+
+  try {
+    prog.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Mengkompress...';
+    const { b64, mime, name, sizeKb } = await compressToWebP(file, 110);
+
+    prog.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Mengupload ke Drive...';
+    const gasUrl = getGasUrl();
+    const url = await uploadToGAS(gasUrl, b64, mime, name);
+
+    inp.value = url;
+    // Update data key
+    const dk = Object.values(PHOTO_SLOTS).find(s => s.dataKey && document.getElementById(`inp-${slotKey}`)?.dataset.key === s.dataKey)?.dataKey
+              || inp.dataset.key;
+    if (dk) draft[dk] = url;
+
+    updateThumb(slotKey, url);
+    prog.classList.remove('show');
+    markChanged();
+
+    const ok = document.createElement('div');
+    ok.style.cssText = 'font-size:.68rem;color:var(--sage);margin-top:.2rem;';
+    ok.textContent = `✓ Tersimpan (${sizeKb}KB)`;
+    inp.closest('[style]')?.appendChild(ok);
+    setTimeout(() => ok.remove(), 3000);
+
+  } catch (e) {
+    prog.classList.remove('show');
+    err.textContent = '⚠ ' + (e.message || 'Upload gagal');
+    err.classList.add('show');
+  } finally {
+    btns.forEach(b => b.disabled = false);
+  }
+}
+
+async function compressToWebP(file, maxKb = 110) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Gagal membaca file'));
+    reader.onload = ev => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Gagal memuat gambar'));
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let { width, height } = img;
+        const MAX_DIM = 1200;
+        if (width > MAX_DIM || height > MAX_DIM) {
+          if (width >= height) { height = Math.round(height * MAX_DIM / width); width = MAX_DIM; }
+          else { width = Math.round(width * MAX_DIM / height); height = MAX_DIM; }
+        }
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+
+        let quality = 0.90;
+        const maxBytes = maxKb * 1024;
+        const tryCompress = () => {
+          const mime = canvas.toDataURL('image/webp', 0.1).startsWith('data:image/webp') ? 'image/webp' : 'image/jpeg';
+          const dataUrl = canvas.toDataURL(mime, quality);
+          const b64 = dataUrl.split(',')[1];
+          const byteLen = Math.round(b64.length * 3 / 4);
+          if (byteLen <= maxBytes || quality <= 0.1) {
+            const actualMime = dataUrl.split(';')[0].split(':')[1];
+            const ext = actualMime === 'image/webp' ? 'webp' : 'jpg';
+            resolve({ b64, mime: actualMime, name: file.name.replace(/\.[^.]+$/, '') + '_c.' + ext, sizeKb: Math.round(byteLen / 1024) });
+          } else {
+            quality = parseFloat((quality - 0.1).toFixed(1));
+            tryCompress();
+          }
+        };
+        tryCompress();
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function uploadToGAS(gasUrl, b64, mime, name) {
+  const key = getGasKey();
+  let resp;
+  try {
+    resp = await fetch(gasUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'uploadPhoto', b64, mime, name, key }),
+      redirect: 'follow',
+    });
+  } catch (_) {
+    throw new Error('Tidak bisa terhubung ke GAS. Cek URL dan koneksi.');
+  }
+  if (!resp.ok && resp.type !== 'opaque') throw new Error('GAS error: ' + resp.status);
+  let json;
+  try {
+    const text = await resp.text();
+    json = JSON.parse(text);
+  } catch { throw new Error('Respons bukan JSON valid'); }
+  if (json.code !== 201) throw new Error(json.error?.[0] || 'Upload gagal (code ' + json.code + ')');
+  return json.data.url;
+}
+
+function updateThumb(slotKey, url) {
+  const id = slotKey === 'qris' ? 'thumb-qris' : `thumb-${slotKey}`;
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (url && (url.startsWith('http') || url.startsWith('.'))) {
+    el.src = url; el.classList.add('show');
+    el.onerror = () => { el.classList.remove('show'); el.src = ''; };
+  } else {
+    el.classList.remove('show'); el.src = '';
+  }
+}
+</script>
+<script>
+/* ═══════════════════════════════════════════════
+   VALIDATION
+═══════════════════════════════════════════════ */
+function validateRequired() {
+  const required = [
+    { id: 'f-groom-name',    msg: 'Nama pengantin pria wajib diisi.',   page: 'page-mempelai' },
+    { id: 'f-bride-name',    msg: 'Nama pengantin wanita wajib diisi.', page: 'page-mempelai' },
+    { id: 'f-welcome-names', msg: 'Nama welcome screen wajib diisi.',   page: 'page-mempelai' },
+    { id: 'f-data-time',     msg: 'Tanggal & waktu acara wajib diisi.',  page: 'page-acara'    },
+    { id: 'f-buyer-name',    msg: 'Nama pemesan wajib diisi.',           page: 'page-submit'   },
+    { id: 'f-buyer-wa',      msg: 'Nomor WhatsApp wajib diisi.',         page: 'page-submit'   },
+  ];
+
+  const errors = [];
+  let firstPage = null;
+
+  required.forEach(({ id, msg, page }) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const empty = !el.value.trim();
+    el.classList.toggle('is-invalid', empty);
+    if (empty) {
+      errors.push(msg);
+      if (!firstPage) firstPage = page;
+    }
+  });
+
+  return { errors, firstPage };
+}
+
+function showError(fieldId, msg) {
+  const el = document.getElementById(fieldId);
+  if (!el) return;
+  el.classList.add('is-invalid');
+  const next = el.nextElementSibling;
+  if (next?.classList.contains('invalid-msg')) { next.textContent = msg; next.style.display = 'block'; }
+}
+
+/* ═══════════════════════════════════════════════
+   SUBMIT ORDER
+═══════════════════════════════════════════════ */
+async function submitOrder(btn) {
+  const errBox = document.getElementById('submit-error');
+  errBox.style.display = 'none';
+
+  const { errors, firstPage } = validateRequired();
+  if (errors.length) {
+    errBox.innerHTML = '<strong>Mohon lengkapi field berikut:</strong><ul style="margin:.5rem 0 0 1rem;">' +
+      errors.map(e => `<li>${e}</li>`).join('') + '</ul>';
+    errBox.style.display = 'block';
+    if (firstPage && firstPage !== PAGE_ORDER[currentPage]) showPage(firstPage);
+    errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const gasUrl = getGasUrl() || document.getElementById('gas-url-submit')?.value.trim();
+  if (!gasUrl) {
+    errBox.innerHTML = '<strong>URL GAS Web App wajib diisi</strong> agar order bisa terkirim ke server. Isi di kolom di atas.';
+    errBox.style.display = 'block';
+    document.getElementById('gas-url-submit')?.focus();
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Mengirim...';
+
+  const data = collectFormData();
+  data.submittedAt = new Date().toISOString();
+  data.orderId = 'ORD-' + Date.now();
+
+  try {
+    const resp = await fetch(gasUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'saveOrder', order: data }),
+      redirect: 'follow',
+    });
+
+    // GAS always returns 200 even for errors; non-ok only for network failures
+    let json;
+    try {
+      const text = await resp.text();
+      json = JSON.parse(text);
+    } catch {
+      throw new Error('Respons server tidak valid atau koneksi terputus');
+    }
+    if (json.code !== 201 && json.code !== 200) {
+      throw new Error(json.error?.[0] || 'Gagal menyimpan order (code ' + json.code + ')');
+    }
+
+    // Success
+    localStorage.removeItem(STORAGE_KEY);
+    showSuccessScreen(data.orderId, data.buyerName, data.buyerWa);
+
+  } catch (e) {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-paper-plane" aria-hidden="true"></i>Kirim Order';
+
+    // If GAS unavailable, save locally and show WhatsApp fallback
+    const fallbackMsg = buildWhatsAppFallback(data);
+    errBox.innerHTML = `<strong>Gagal terhubung ke server.</strong> ${e.message}<br><br>
+      <strong>Alternatif:</strong> <a href="${fallbackMsg}" target="_blank" rel="noopener" style="color:var(--rose-dark);font-weight:700;">
+      <i class="fa-brands fa-whatsapp"></i> Kirim via WhatsApp</a> (data disalin otomatis)`;
+    errBox.style.display = 'block';
+    errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function buildWhatsAppFallback(data) {
+  const lines = [
+    '🌸 *Order Undangan Digital*',
+    `Nama: ${data.buyerName || '-'}`,
+    `WA: ${data.buyerWa || '-'}`,
+    `Paket: ${data.paket || '-'}`,
+    `Mempelai: ${data.groomName || '-'} & ${data.brideName || '-'}`,
+    `Tanggal: ${data.eventTime || '-'}`,
+    `Akad: ${data.akadInfo || '-'}`,
+    `Resepsi: ${data.resepsiInfo || '-'}`,
+    `ID: ${data.orderId || '-'}`,
+  ];
+  const msg = encodeURIComponent(lines.join('\n'));
+  return `https://wa.me/?text=${msg}`;
+}
+
+function showSuccessScreen(orderId, name, wa) {
+  document.getElementById('form-wrapper').style.display = 'none';
+  const sc = document.getElementById('success-screen');
+  sc.classList.add('show');
+  const oidEl = document.getElementById('success-order-id');
+  if (oidEl) oidEl.textContent = `Order ID: ${orderId}`;
+  sc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetForm() {
+  draft = {};
+  document.getElementById('form-wrapper').style.display = 'block';
+  document.getElementById('success-screen').classList.remove('show');
+  document.querySelectorAll('[data-key]').forEach(el => {
+    if (el.type === 'checkbox') el.checked = false;
+    else el.value = '';
+  });
+  // Reset thumbnails
+  document.querySelectorAll('.upload-thumb').forEach(img => {
+    img.src = '';
+    img.classList.remove('show');
+  });
+  document.getElementById('story-list').innerHTML = '';
+  storyCount = 0;
+  changeCount = 0;
+  const badge = document.getElementById('change-badge');
+  if (badge) badge.style.display = 'none';
+  localStorage.removeItem(STORAGE_KEY);
+  showPage('page-mempelai');
+}
+
+/* ═══════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════ */
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 </body>

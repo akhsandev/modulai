@@ -59,6 +59,12 @@
                 </button>
             </li>
             <li class="nav-item">
+                <button class="nav-link" onclick="navOrders(this)">
+                    <i class="fa-solid fa-inbox"></i>
+                    <span class="d-block" style="font-size: 0.7rem;">Orders</span>
+                </button>
+            </li>
+            <li class="nav-item">
                 <button class="nav-link" onclick="undangan.admin.navbar.buttonNavSetting(this)">
                     <i class="fa-solid fa-gear"></i>
                     <span class="d-block" style="font-size: 0.7rem;">Setting</span>
@@ -92,14 +98,14 @@
                         </button>
                     </li>
                     <li class="nav-item pe-2" role="presentation">
-                        <button class="btn-theme-auto nav-link w-100 text-start fw-semibold my-1 rounded-4 shadow-sm" data-bs-toggle="pill" data-bs-target="#pills-setting" id="button-setting" type="button" role="tab" aria-controls="pills-setting" aria-selected="false">
-                            <i class="fa-solid fa-gear ms-3 me-2"></i>Setting
+                        <button class="btn-theme-auto nav-link w-100 text-start fw-semibold my-1 rounded-4 shadow-sm" data-bs-toggle="pill" data-bs-target="#pills-orders" id="button-orders" type="button" role="tab" aria-controls="pills-orders" aria-selected="false" onclick="loadOrders()">
+                            <i class="fa-solid fa-inbox ms-3 me-2"></i>Orders
+                            <span class="badge bg-danger ms-1 rounded-pill" id="orders-badge" style="display:none;font-size:.6rem;"></span>
                         </button>
                     </li>
                     <li class="nav-item pe-2" role="presentation">
-                        <button class="btn-theme-auto nav-link w-100 text-start fw-semibold my-1 rounded-4 shadow-sm position-relative" data-bs-toggle="pill" data-bs-target="#pills-orders" id="button-orders" type="button" role="tab" aria-controls="pills-orders" aria-selected="false">
-                            <i class="fa-solid fa-inbox ms-3 me-2"></i>Orders
-                            <span class="badge bg-danger rounded-pill ms-1 position-absolute end-0 me-3" id="orders-badge" style="display:none;font-size:.6rem;"></span>
+                        <button class="btn-theme-auto nav-link w-100 text-start fw-semibold my-1 rounded-4 shadow-sm" data-bs-toggle="pill" data-bs-target="#pills-setting" id="button-setting" type="button" role="tab" aria-controls="pills-setting" aria-selected="false">
+                            <i class="fa-solid fa-gear ms-3 me-2"></i>Setting
                         </button>
                     </li>
                     <li class="nav-item pe-2" role="presentation">
@@ -258,12 +264,60 @@
                         </div>
                     </section>
 
+                    <!-- ══════════════════════════════════════
+                         ORDERS TAB
+                    ══════════════════════════════════════ -->
+                    <section class="tab-pane fade" id="pills-orders" role="tabpanel" tabindex="0">
+
+                        <!-- Sub Header -->
+                        <div class="rounded-4 p-2 mb-4 shadow" style="background-color: var(--bs-gray-200)">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                <h5 class="fw-bold my-1 ms-0 p-0 mb-0" style="color: var(--bs-gray-900); font-size: 1rem;">
+                                    <i class="fa-solid fa-inbox mx-2"></i>Orders
+                                    <span class="badge bg-danger ms-1 rounded-pill" id="orders-badge-tab" style="display:none;font-size:.65rem;"></span>
+                                </h5>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <select class="form-select form-select-sm rounded-3 shadow-sm" id="orders-filter" onchange="loadOrders()" style="width:auto;font-size:.8rem;">
+                                        <option value="">Semua Status</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="processing">Processing</option>
+                                        <option value="done">Done</option>
+                                        <option value="cancelled">Cancelled</option>
+                                    </select>
+                                    <button class="btn btn-primary rounded-3 btn-sm shadow-sm" onclick="loadOrders()" aria-label="Refresh orders">
+                                        <i class="fa-solid fa-rotate-right"></i><span class="d-none d-sm-inline ms-2">Refresh</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Orders list -->
+                        <div id="orders-list">
+                            <div class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-spinner fa-spin fa-2x mb-3 d-block"></i>
+                                Memuat orders...
+                            </div>
+                        </div>
+
+                    </section>
+
                     <!-- Setting -->
                     <section class="tab-pane fade" id="pills-setting" role="tabpanel" tabindex="0">
 
                         <!-- Sub Header -->
                         <div class="rounded-4 p-2 mb-4 shadow" style="background-color: var(--bs-gray-200)">
                             <h5 class="fw-bold my-1 ms-0 p-0" style="color: var(--bs-gray-900); font-size: 1rem;"><i class="fa-solid fa-gear mx-2"></i>Setting</h5>
+                        </div>
+
+                        <!-- GAS URL for Orders -->
+                        <div class="p-3 bg-theme-auto mb-3 rounded-4 shadow">
+                            <p class="mx-0 mt-0 mb-1 p-0 fw-bold"><i class="fa-solid fa-link me-2"></i>GAS URL (untuk Orders)</p>
+                            <p class="small text-muted mb-2">URL Google Apps Script Web App — dipakai untuk memuat dan download order client.</p>
+                            <div class="input-group input-group-sm mb-2">
+                                <input type="url" class="form-control form-control-sm rounded-start-4 shadow-sm" id="orders-gas-url-input" placeholder="https://script.google.com/macros/s/xxxx/exec" autocomplete="off">
+                                <button class="btn btn-sm btn-primary rounded-end-4 shadow-sm" type="button" onclick="saveOrdersGasUrl()">Simpan</button>
+                            </div>
+                            <small class="text-muted" style="font-size:.72rem;"><i class="fa-solid fa-circle-info me-1"></i>GAS URL yang sama seperti di <code>data-url</code> pada <code>index.html</code>.</small>
                         </div>
 
                         <!-- Email -->
@@ -387,191 +441,10 @@
                             <p class="m-0 p-0">Discover and support this project on <i class="fa-brands fa-github me-1"></i><a target="_blank" href="https://github.com/akhsandev">GitHub</a></p>
                         </div>
                     </section>
-
-                    <!-- Orders -->
-                    <section class="tab-pane fade" id="pills-orders" role="tabpanel" tabindex="0">
-                        <div class="rounded-4 p-2 mb-4 shadow" style="background-color: var(--bs-gray-200)">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <h5 class="fw-bold my-1 ms-0 p-0" style="color: var(--bs-gray-900); font-size: 1rem;"><i class="fa-solid fa-inbox mx-2"></i>Orders Masuk</h5>
-                                <button class="btn btn-sm btn-outline-secondary rounded-4" onclick="loadOrders()" title="Refresh">
-                                    <i class="fa-solid fa-rotate-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div id="orders-container">
-                            <div class="text-center py-5 text-muted">
-                                <i class="fa-solid fa-spinner fa-spin fa-2x mb-3"></i>
-                                <p>Memuat orders...</p>
-                            </div>
-                        </div>
-                    </section>
                 </div>
             </div>
         </div>
     </main>
-
-    <!-- Orders Script -->
-    <style>
-    .order-card{border:1px solid rgba(0,0,0,.1);border-radius:1rem;padding:1.125rem;margin-bottom:.875rem;background:var(--bs-body-bg);transition:box-shadow .2s;}
-    .order-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);}
-    .order-badge{font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .6rem;border-radius:99px;}
-    .order-badge.new{background:rgba(220,53,69,.12);color:#dc3545;}
-    .order-badge.processing{background:rgba(255,193,7,.15);color:#856404;}
-    .order-badge.done{background:rgba(25,135,84,.12);color:#198754;}
-    .invite-result{background:rgba(25,135,84,.08);border:1px solid rgba(25,135,84,.2);border-radius:.75rem;padding:1rem;margin-top:.875rem;}
-    .invite-result .link-box{font-family:monospace;font-size:.75rem;background:rgba(0,0,0,.04);border-radius:.5rem;padding:.5rem .75rem;word-break:break-all;margin:.375rem 0;}
-    .btn-confirm{background:linear-gradient(135deg,#198754,#146c43);color:#fff;border:none;border-radius:99px;padding:.45rem 1.25rem;font-size:.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;transition:all .15s;}
-    .btn-confirm:hover{opacity:.88;}
-    .btn-confirm:disabled{opacity:.5;cursor:not-allowed;}
-    .slug-input{font-size:.8rem;border-radius:.5rem;border:1px solid rgba(0,0,0,.2);padding:.35rem .625rem;width:120px;}
-    </style>
-
-    <script>
-    const ORDERS_GAS = document.body.getAttribute('data-url');
-    let _ordersToken = null;
-
-    // Load orders saat tab diklik
-    document.getElementById('button-orders').addEventListener('click', loadOrders);
-
-    async function loadOrders() {
-      const container = document.getElementById('orders-container');
-      container.innerHTML = '<div class="text-center py-5 text-muted"><i class="fa-solid fa-spinner fa-spin fa-2x mb-3 d-block"></i>Memuat...</div>';
-
-      try {
-        const token = getAdminToken();
-        if (!token) { container.innerHTML = '<div class="text-center py-4 text-muted">Login terlebih dahulu.</div>'; return; }
-
-        const res = await fetch(ORDERS_GAS + '?action=listOrders&token=' + encodeURIComponent(token)).then(r => r.json());
-        if (res.code !== 200) throw new Error(res.error?.[0] || 'Gagal memuat');
-
-        const orders = res.data || [];
-        const badge = document.getElementById('orders-badge');
-        const newCount = orders.filter(o => o.status === 'new').length;
-        if (newCount > 0) { badge.textContent = newCount; badge.style.display = 'inline'; }
-        else { badge.style.display = 'none'; }
-
-        if (orders.length === 0) {
-          container.innerHTML = '<div class="text-center py-5 text-muted"><i class="fa-solid fa-inbox fa-2x mb-3 d-block"></i>Belum ada order.</div>';
-          return;
-        }
-
-        container.innerHTML = orders.map(o => renderOrderCard(o)).join('');
-      } catch (err) {
-        container.innerHTML = '<div class="text-center py-4 text-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>' + err.message + '</div>';
-      }
-    }
-
-    function renderOrderCard(o) {
-      const pkgLabel = { basic: 'Basic', pro: 'Pro', custom: 'Custom' };
-      const date = o.created_at ? new Date(o.created_at).toLocaleString('id-ID') : '-';
-      const wedDate = o.wedding_date ? new Date(String(o.wedding_date) + 'T00:00:00').toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' }) : '-';
-      const statusClass = o.status === 'new' ? 'new' : o.status === 'processing' ? 'processing' : 'done';
-
-      return `<div class="order-card" id="order-${o.id}">
-        <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
-          <div>
-            <span class="fw-bold">${esc(o.couple_names || '-')}</span>
-            <span class="order-badge ${statusClass} ms-2">${o.status}</span>
-          </div>
-          <small class="text-muted text-nowrap">${date}</small>
-        </div>
-        <div class="row g-1 mb-3" style="font-size:.8rem;">
-          <div class="col-6"><i class="fa-solid fa-user me-1 text-muted"></i>${esc(o.name)}</div>
-          <div class="col-6"><i class="fa-brands fa-whatsapp me-1 text-success"></i>${esc(o.phone)}</div>
-          <div class="col-6"><i class="fa-solid fa-tag me-1 text-muted"></i>Paket ${pkgLabel[o.package] || o.package}</div>
-          <div class="col-6"><i class="fa-regular fa-calendar me-1 text-muted"></i>${wedDate}</div>
-          ${o.message ? `<div class="col-12 text-muted"><i class="fa-solid fa-comment me-1"></i>${esc(o.message)}</div>` : ''}
-        </div>
-        <div id="result-${o.id}">
-          ${o.slug ? renderInviteResult(o) : renderConfirmForm(o)}
-        </div>
-      </div>`;
-    }
-
-    function renderConfirmForm(o) {
-      const suggestedSlug = (o.couple_names || o.name || 'undangan')
-        .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 30);
-      return `<div class="d-flex align-items-center gap-2 flex-wrap">
-        <label style="font-size:.78rem;font-weight:600;">Slug URL:</label>
-        <input class="slug-input" id="slug-${o.id}" value="${suggestedSlug}" placeholder="cth. budi-siti">
-        <button class="btn-confirm" onclick="confirmOrder('${o.id}', '${o.package || 'pro'}')">
-          <i class="fa-solid fa-check"></i>Konfirmasi & Buat Undangan
-        </button>
-      </div>`;
-    }
-
-    function renderInviteResult(o) {
-      const editorUrl = location.origin + location.pathname.replace('dashboard.html','') + 'editor-online.html?slug=' + o.slug + '&token=' + o.edit_token;
-      const waText = encodeURIComponent('Halo ' + o.name + '! Undangan digital Anda sudah siap. Silakan isi data melalui link berikut:\n\n' + editorUrl + '\n\nLink ini hanya untuk Anda. Jangan dibagikan ke orang lain.');
-      const waUrl = 'https://wa.me/' + String(o.phone||'').replace(/\D/g,'').replace(/^0/,'62') + '?text=' + waText;
-      const dlUrl = ORDERS_GAS + '?action=generateHTML&slug=' + o.slug + '&token=' + getAdminToken();
-      return `<div class="invite-result">
-        <div class="fw-bold mb-2" style="font-size:.82rem;color:#198754;"><i class="fa-solid fa-circle-check me-1"></i>Undangan siap — slug: <code>${o.slug}</code></div>
-        <div style="font-size:.75rem;color:#6c757d;">Link Editor untuk Client:</div>
-        <div class="link-box">${editorUrl}</div>
-        <div class="d-flex gap-2 mt-2 flex-wrap">
-          <a href="${waUrl}" target="_blank" class="btn btn-success btn-sm rounded-4">
-            <i class="fa-brands fa-whatsapp me-1"></i>Kirim via WA
-          </a>
-          <button class="btn btn-outline-secondary btn-sm rounded-4" onclick="copyText('${editorUrl}', this)">
-            <i class="fa-regular fa-copy me-1"></i>Salin Link
-          </button>
-          <a href="${dlUrl}" target="_blank" class="btn btn-outline-primary btn-sm rounded-4" download="index.html">
-            <i class="fa-solid fa-file-code me-1"></i>Download index.html
-          </a>
-        </div>
-      </div>`;
-    }
-
-    async function confirmOrder(orderId, pkg) {
-      const slugInput = document.getElementById('slug-' + orderId);
-      const slug = slugInput ? slugInput.value.trim().toLowerCase().replace(/[^a-z0-9-]/g,'-') : '';
-      if (!slug) { alert('Isi slug terlebih dahulu!'); return; }
-
-      const btn = event.currentTarget;
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Membuat...';
-
-      try {
-        const token = getAdminToken();
-        const res = await fetch(ORDERS_GAS, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'createInvitationFromOrder',
-            token,
-            order_id: orderId,
-            slug,
-            package: pkg,
-            status: 'published',
-          }),
-          headers: { 'Content-Type': 'text/plain' },
-        }).then(r => r.json());
-
-        if (res.code !== 201) throw new Error(res.error?.[0] || 'Gagal membuat undangan');
-
-        // Refresh card
-        loadOrders();
-      } catch (err) {
-        alert('Error: ' + err.message);
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-check"></i>Konfirmasi & Buat Undangan';
-      }
-    }
-
-    function copyText(text, btn) {
-      navigator.clipboard.writeText(text).then(() => {
-        const orig = btn.innerHTML;
-        btn.innerHTML = '<i class="fa-solid fa-check me-1"></i>Tersalin!';
-        setTimeout(() => { btn.innerHTML = orig; }, 2000);
-      });
-    }
-
-    function getAdminToken() {
-      try { return JSON.parse(localStorage.getItem('session') || '{}').token || null; } catch(_) { return null; }
-    }
-
-    function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-    </script>
 
     <!-- Modal login -->
     <div class="modal fade" id="mainModal" data-bs-backdrop="static" data-bs-keyboard="false" aria-label="modal login" tabindex="-1" aria-hidden="true">
@@ -595,6 +468,647 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Order Detail -->
+    <div class="modal fade" id="orderModal" aria-labelledby="orderModalLabel" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content rounded-4">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="orderModalLabel"><i class="fa-solid fa-inbox me-2"></i>Detail Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body" id="order-modal-body">
+                    <div class="text-center py-4"><i class="fa-solid fa-spinner fa-spin fa-2x"></i></div>
+                </div>
+                <div class="modal-footer gap-2">
+                    <select class="form-select form-select-sm rounded-3 shadow-sm" id="modal-status-select" style="width:auto;" aria-label="Update status order">
+                        <option value="pending">pending</option>
+                        <option value="processing">processing</option>
+                        <option value="done">done</option>
+                        <option value="cancelled">cancelled</option>
+                    </select>
+                    <button class="btn btn-warning btn-sm rounded-3 shadow-sm" id="btn-update-status" onclick="updateOrderStatus()">
+                        <i class="fa-solid fa-pen"></i> Update Status
+                    </button>
+                    <button class="btn btn-success btn-sm rounded-3 shadow-sm" id="btn-download-html" onclick="downloadOrderHtml()">
+                        <i class="fa-solid fa-download"></i> Download index.html
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm rounded-3" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders Script -->
+    <script>
+    'use strict';
+
+    /* ── state ── */
+    let _currentOrderId   = null;
+    let _currentOrderData = null;
+
+    /* ── save GAS URL for orders ── */
+    function saveOrdersGasUrl() {
+        const inp = document.getElementById('orders-gas-url-input');
+        if (!inp) return;
+        const val = inp.value.trim();
+        if (!val) { alert('URL tidak boleh kosong.'); inp.focus(); return; }
+        if (!val.includes('script.google.com')) { alert('Masukkan URL GAS yang valid (mengandung script.google.com).'); inp.focus(); return; }
+        localStorage.setItem('orders_gas_url', val);
+        inp.style.borderColor = '#28a745';
+        setTimeout(() => inp.style.borderColor = '', 2000);
+    }
+
+    /* ── init GAS URL input on DOMContentLoaded ── */
+    document.addEventListener('DOMContentLoaded', () => {
+        const stored = localStorage.getItem('orders_gas_url') || '';
+        const inp = document.getElementById('orders-gas-url-input');
+        if (inp && stored) inp.value = stored;
+    });
+
+    /* ── shared: retrieve JWT token stored by undangan session module ── */
+    function _getAdminToken() {
+        // session.js stores token in localStorage under key 'session' as JSON {token: '...'}
+        try {
+            const raw = localStorage.getItem('session');
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed && parsed.token) return parsed.token;
+            }
+        } catch (_) {}
+        return '';
+    }
+
+    /* ── shared: get GAS URL from body data-url ── */
+    function _getGasUrl() {
+        // First try localStorage (set via the Orders GAS URL input in Settings)
+        const stored = localStorage.getItem('orders_gas_url') || '';
+        if (stored) return stored;
+        // Fallback: body data-url (only valid if it's a GAS exec URL)
+        const body = (document.body.getAttribute('data-url') || '').trim();
+        return body.includes('script.google.com') ? body : '';
+    }
+
+    /* ── mobile nav helper ── */
+    function navOrders(btn) {
+        // Activate the orders pill programmatically
+        const pill = document.getElementById('button-orders');
+        if (pill) {
+            bootstrap.Tab.getOrCreateInstance(pill).show();
+            loadOrders();
+        }
+        // Update mobile nav active state
+        document.querySelectorAll('.fixed-bottom .nav-link').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    /* ── load orders from GAS ── */
+    async function loadOrders() {
+        const container = document.getElementById('orders-list');
+        if (!container) return;
+
+        container.innerHTML = '<div class="text-center py-5 text-muted"><i class="fa-solid fa-spinner fa-spin fa-2x mb-3 d-block"></i>Memuat orders...</div>';
+
+        const gasUrl = _getGasUrl();
+        const tok    = _getAdminToken();
+        const statusFilter = document.getElementById('orders-filter')?.value || '';
+        let url = gasUrl + (gasUrl.includes('?') ? '&' : '?') + 'action=getOrders&token=' + encodeURIComponent(tok);
+        if (statusFilter) url += '&status=' + encodeURIComponent(statusFilter);
+
+        try {
+            const resp = await fetch(url, { redirect: 'follow' });
+            let json;
+            try {
+                const text = await resp.text();
+                json = JSON.parse(text);
+            } catch { throw new Error('Respons server tidak valid'); }
+
+            if (json.code !== 200) throw new Error(json.error?.[0] || 'Gagal memuat orders');
+
+            renderOrders(json.data.lists || [], json.data.count || 0);
+        } catch (e) {
+            container.innerHTML = '<div class="alert alert-danger rounded-4 shadow-sm">' +
+                '<i class="fa-solid fa-triangle-exclamation me-2"></i>' +
+                '<strong>Gagal memuat orders.</strong> ' + escHtmlD(e.message) +
+                '<br><small>Pastikan GAS URL sudah dikonfigurasi dan token valid.</small>' +
+                '<div class="mt-2"><button class="btn btn-sm btn-outline-danger rounded-3" onclick="loadOrders()">Coba Lagi</button></div>' +
+                '</div>';
+        }
+    }
+
+    function renderOrders(orders, total) {
+        const container = document.getElementById('orders-list');
+
+        // Update badge
+        const pending = orders.filter(o => o.status === 'pending').length;
+        ['orders-badge','orders-badge-tab'].forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (pending > 0) { el.textContent = pending; el.style.display = 'inline-block'; }
+            else el.style.display = 'none';
+        });
+
+        if (!orders.length) {
+            container.innerHTML = '<div class="text-center py-5 text-muted"><i class="fa-regular fa-folder-open fa-2x mb-3 d-block"></i>Belum ada order masuk.</div>';
+            return;
+        }
+
+        const statusColor = { pending:'warning', processing:'info', done:'success', cancelled:'secondary' };
+        const statusIcon  = { pending:'clock', processing:'gear fa-spin', done:'circle-check', cancelled:'ban' };
+
+        const rows = orders.map(o => `
+            <div class="p-3 bg-theme-auto mb-3 rounded-4 shadow-sm" style="border-left:4px solid var(--bs-${statusColor[o.status] || 'secondary'});">
+                <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+                    <div>
+                        <div class="fw-bold mb-1" style="font-size:.95rem;">
+                            <i class="fa-solid fa-heart text-danger me-1" style="font-size:.75rem;"></i>
+                            ${escHtmlD(o.groom_name || '?')} &amp; ${escHtmlD(o.bride_name || '?')}
+                        </div>
+                        <div style="font-size:.8rem;color:var(--bs-secondary-color);">
+                            <i class="fa-solid fa-user me-1"></i>${escHtmlD(o.buyer_name)}
+                            &nbsp;·&nbsp;
+                            <i class="fa-brands fa-whatsapp me-1 text-success"></i>
+                            <a href="https://wa.me/${escHtmlD(o.buyer_wa.replace(/\D/g,''))}" target="_blank" rel="noopener" style="color:inherit;">${escHtmlD(o.buyer_wa)}</a>
+                            &nbsp;·&nbsp;
+                            <i class="fa-solid fa-box me-1"></i>${escHtmlD(o.paket || '-')}
+                        </div>
+                        <div style="font-size:.75rem;color:var(--bs-secondary-color);margin-top:.25rem;">
+                            <i class="fa-regular fa-clock me-1"></i>${formatDate(o.submitted_at)}
+                            &nbsp;·&nbsp;
+                            <code style="font-size:.7rem;">${escHtmlD(o.order_id)}</code>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                        <span class="badge bg-${statusColor[o.status] || 'secondary'} rounded-pill" style="font-size:.7rem;">
+                            <i class="fa-solid fa-${statusIcon[o.status] || 'circle'} me-1"></i>${escHtmlD(o.status)}
+                        </span>
+                        <button class="btn btn-sm btn-outline-primary rounded-3 shadow-sm" onclick="openOrderDetail('${escHtmlD(o.order_id)}')" style="font-size:.75rem;">
+                            <i class="fa-solid fa-eye me-1"></i>Detail
+                        </button>
+                    </div>
+                </div>
+            </div>`).join('');
+
+        container.innerHTML = `<div class="mb-2" style="font-size:.8rem;color:var(--bs-secondary-color);">${total} order ditemukan</div>` + rows;
+    }
+
+    /* ── open order detail modal ── */
+    async function openOrderDetail(orderId) {
+        _currentOrderId   = orderId;
+        _currentOrderData = null;
+
+        const body = document.getElementById('order-modal-body');
+        body.innerHTML = '<div class="text-center py-4"><i class="fa-solid fa-spinner fa-spin fa-2x"></i></div>';
+
+        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('orderModal'));
+        modal.show();
+
+        const gasUrl = _getGasUrl();
+        const tok    = _getAdminToken();
+
+        const url = gasUrl + (gasUrl.includes('?') ? '&' : '?') +
+            'action=getOrderData&token=' + encodeURIComponent(tok) +
+            '&order_id=' + encodeURIComponent(orderId);
+
+        try {
+            const resp = await fetch(url, { redirect: 'follow' });
+            let json;
+            try {
+                const text = await resp.text();
+                json = JSON.parse(text);
+            } catch { throw new Error('Respons server tidak valid'); }
+            if (json.code !== 200) throw new Error(json.error?.[0] || 'Gagal');
+
+            _currentOrderData = json.data.data;
+            const status = json.data.status;
+
+            // Set status select
+            const sel = document.getElementById('modal-status-select');
+            if (sel) sel.value = status || 'pending';
+
+            body.innerHTML = buildOrderDetailHtml(_currentOrderData, json.data.order_id, status);
+        } catch (e) {
+            body.innerHTML = '<div class="alert alert-danger rounded-3"><i class="fa-solid fa-triangle-exclamation me-2"></i>' + escHtmlD(e.message) + '</div>';
+        }
+    }
+
+    function buildOrderDetailHtml(d, orderId, status) {
+        if (!d) return '<p class="text-muted">Tidak ada data.</p>';
+        const row = (label, val) => val ? `<tr><td class="text-muted pe-3" style="font-size:.8rem;white-space:nowrap;">${label}</td><td style="font-size:.85rem;word-break:break-word;">${val}</td></tr>` : '';
+        const bool = v => v ? '<span class="badge bg-success rounded-pill">Ya</span>' : '<span class="badge bg-secondary rounded-pill">Tidak</span>';
+        const stories = (d.stories || []).map((s, i) => `<li><strong>Bab ${i+1}:</strong> ${escHtmlD(s.title)} — ${escHtmlD(s.body)}</li>`).join('') || '<li class="text-muted">Tidak ada</li>';
+
+        return `
+        <div class="mb-3 p-2 rounded-3" style="background:var(--bs-light);font-size:.75rem;font-family:monospace;">
+            ${escHtmlD(orderId)} &nbsp;·&nbsp;
+            <span class="badge bg-${({pending:'warning',processing:'info',done:'success',cancelled:'secondary'})[status]||'secondary'} rounded-pill">${escHtmlD(status)}</span>
+        </div>
+        <h6 class="fw-bold mb-2" style="font-size:.85rem;color:var(--bs-secondary);">INFO PEMESAN</h6>
+        <table class="table table-sm table-borderless mb-3">
+            ${row('Nama', escHtmlD(d.buyerName))}
+            ${row('WhatsApp', d.buyerWa ? `<a href="https://wa.me/${d.buyerWa.replace(/\D/g,'')}" target="_blank" rel="noopener">${escHtmlD(d.buyerWa)}</a>` : '')}
+            ${row('Email', escHtmlD(d.buyerEmail))}
+            ${row('Paket', `<span class="badge bg-primary rounded-pill">${escHtmlD(d.paket)}</span>`)}
+            ${row('Catatan', escHtmlD(d.notes))}
+        </table>
+        <h6 class="fw-bold mb-2" style="font-size:.85rem;color:var(--bs-secondary);">MEMPELAI</h6>
+        <table class="table table-sm table-borderless mb-3">
+            ${row('Pengantin Pria', escHtmlD(d.groomName))}
+            ${row('Urutan Anak', escHtmlD(d.groomOrder))}
+            ${row('Orang Tua', escHtmlD(d.groomParents))}
+            ${row('Pengantin Wanita', escHtmlD(d.brideName))}
+            ${row('Urutan Anak', escHtmlD(d.brideOrder))}
+            ${row('Orang Tua', escHtmlD(d.brideParents))}
+            ${row('Welcome Screen', escHtmlD(d.welcomeNames))}
+            ${row('Hero Names', escHtmlD(d.heroNames))}
+            ${row('Hero Date', escHtmlD(d.heroDate))}
+        </table>
+        <h6 class="fw-bold mb-2" style="font-size:.85rem;color:var(--bs-secondary);">ACARA</h6>
+        <table class="table table-sm table-borderless mb-3">
+            ${row('Countdown', escHtmlD(d.eventTime))}
+            ${row('Info Akad', escHtmlD(d.akadInfo))} ${row('Alamat Akad', escHtmlD(d.akadAddr))}
+            ${row('Info Resepsi', escHtmlD(d.resepsiInfo))} ${row('Alamat Resepsi', escHtmlD(d.resepsiAddr))}
+        </table>
+        <h6 class="fw-bold mb-2" style="font-size:.85rem;color:var(--bs-secondary);">LOKASI & FOTO</h6>
+        <table class="table table-sm table-borderless mb-3">
+            ${row('Alamat Venue', escHtmlD(d.venueAddress))}
+            ${row('Google Maps', d.mapsLink ? `<a href="${escHtmlD(d.mapsLink)}" target="_blank" rel="noopener">Buka Maps</a>` : '')}
+            ${row('Foto Pasangan', d.photoBanner ? `<a href="${escHtmlD(d.photoBanner)}" target="_blank" rel="noopener">Lihat</a>` : '')}
+            ${row('Foto Pria', d.photoCowo ? `<a href="${escHtmlD(d.photoCowo)}" target="_blank" rel="noopener">Lihat</a>` : '')}
+            ${row('Foto Wanita', d.photoCewe ? `<a href="${escHtmlD(d.photoCewe)}" target="_blank" rel="noopener">Lihat</a>` : '')}
+        </table>
+        <h6 class="fw-bold mb-2" style="font-size:.85rem;color:var(--bs-secondary);">KISAH CINTA</h6>
+        <ul class="mb-3" style="font-size:.83rem;">${stories}</ul>
+        <h6 class="fw-bold mb-2" style="font-size:.85rem;color:var(--bs-secondary);">MUSIK & META</h6>
+        <table class="table table-sm table-borderless mb-0">
+            ${row('Audio URL', escHtmlD(d.audioUrl))}
+            ${row('Music Credit', escHtmlD(d.musicCredit))}
+            ${row('Page Title', escHtmlD(d.pageTitle))}
+            ${row('OG Image', d.ogImage ? `<a href="${escHtmlD(d.ogImage)}" target="_blank" rel="noopener">Lihat</a>` : '')}
+        </table>`;
+    }
+
+    /* ── update status ── */
+    async function updateOrderStatus() {
+        if (!_currentOrderId) return;
+        const sel = document.getElementById('modal-status-select');
+        const newStatus = sel?.value;
+        if (!newStatus) return;
+
+        const btn = document.getElementById('btn-update-status');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+        const gasUrl = _getGasUrl();
+        const tok    = _getAdminToken();
+
+        const url = gasUrl + (gasUrl.includes('?') ? '&' : '?') +
+            'action=updateOrderStatus&token=' + encodeURIComponent(tok) +
+            '&order_id=' + encodeURIComponent(_currentOrderId) +
+            '&status=' + encodeURIComponent(newStatus);
+
+        try {
+            const resp = await fetch(url, { redirect: 'follow' });
+            let json;
+            try {
+                const text = await resp.text();
+                json = JSON.parse(text);
+            } catch { throw new Error('Respons server tidak valid'); }
+            if (json.code !== 200) throw new Error(json.error?.[0] || 'Gagal update');
+            btn.innerHTML = '<i class="fa-solid fa-check me-1"></i> Updated';
+            setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-pen"></i> Update Status'; btn.disabled = false; }, 2000);
+            loadOrders(); // refresh list
+        } catch (e) {
+            alert('Gagal update status: ' + e.message);
+            btn.innerHTML = '<i class="fa-solid fa-pen"></i> Update Status';
+            btn.disabled = false;
+        }
+    }
+
+    /* ── generate index.html from order data ── */
+    async function downloadOrderHtml() {
+        if (!_currentOrderData) { alert('Data order belum dimuat.'); return; }
+
+        const btn = document.getElementById('btn-download-html');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+
+        try {
+            // Fetch index.html template dari server (path relatif)
+            const resp = await fetch('./index.html');
+            if (!resp.ok) throw new Error('Tidak bisa ambil index.html (HTTP ' + resp.status + '). Pastikan index.html ada di server yang sama.');            let html = await resp.text();
+
+            html = applyOrderToHtml(html, _currentOrderData);
+
+            const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            const g = (_currentOrderData.groomName || 'groom').split(/[\s,]/)[0].toLowerCase();
+            const b = (_currentOrderData.brideName  || 'bride').split(/[\s,]/)[0].toLowerCase();
+            link.download = `undangan-${g}-${b}.html`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        } catch (e) {
+            alert('Gagal generate HTML: ' + e.message);
+        } finally {
+            btn.innerHTML = '<i class="fa-solid fa-download"></i> Download index.html';
+            btn.disabled = false;
+        }
+    }
+
+    /* ── apply order data to index.html template string ── */
+    function applyOrderToHtml(h, d) {
+        // Helper: escape for HTML attribute value
+        const ea = s => String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+        // Helper: escape for text content
+        const et = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        // Helper: escape regex special chars
+        const er = s => s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+        // NOTE: all RegExp strings avoid literal </ sequences to prevent HTML parser issues.
+        // We write closing-tag patterns as '<' + '/' inside string concatenation.
+
+        // Helper: set element text content by id
+        const setTxt = (id, val) => {
+            const re = new RegExp('(id="' + er(id) + '"[^>]*>)[^<]*(<' + '/)', 'i');
+            h = h.replace(re, (_, a, b) => a + et(val) + b);
+        };
+        // Helper: set element innerHTML by id (closing tag as string concat)
+        const setHtml = (id, val) => {
+            const re = new RegExp('(id="' + er(id) + '"[^>]*>)[\\s\\S]*?(<' + '\\/[a-z]+>)', 'i');
+            h = h.replace(re, (_, a, b) => a + val + b);
+        };
+        // Helper: set body data-* attribute
+        const setAttr = (attr, val) => h = h.replace(new RegExp('(' + er(attr) + '=")[^"]*(")', 'i'), '$1' + ea(val) + '$2');
+        // Helper: set img data-src by alt text
+        const setImgSrc = (alt, url) => {
+            if (!url) return;
+            const r1 = new RegExp('(data-src=")[^"]*("[ \\t]*[^>]*alt="' + er(alt) + '")', 'i');
+            const r2 = new RegExp('(alt="' + er(alt) + '"[^>]*data-src=")[^"]*(")', 'i');
+            if (r1.test(h)) h = h.replace(r1, '$1' + ea(url) + '$2');
+            else if (r2.test(h)) h = h.replace(r2, '$1' + ea(url) + '$2');
+        };
+        // Helper: set href by id
+        const setHref = (id, val) => {
+            const r1 = new RegExp('(id="' + er(id) + '"[^>]*\\shref=")[^"]*(")', 'i');
+            const r2 = new RegExp('(href=")[^"]*("[^>]*id="' + er(id) + '")', 'i');
+            if (r1.test(h)) h = h.replace(r1, '$1' + ea(val) + '$2');
+            else h = h.replace(r2, '$1' + ea(val) + '$2');
+        };
+        // Helper: set meta content attr by id
+        const setMetaContent = (id, val) => {
+            const r1 = new RegExp('(id="' + er(id) + '"[^>]*\\scontent=")[^"]*(")', 'i');
+            const r2 = new RegExp('(content=")[^"]*("[^>]*id="' + er(id) + '")', 'i');
+            if (r1.test(h)) h = h.replace(r1, '$1' + ea(val) + '$2');
+            else h = h.replace(r2, '$1' + ea(val) + '$2');
+        };
+
+        // ── Mempelai ──
+        if (d.groomName)   setTxt('ed-groom-name',    d.groomName);
+        if (d.groomOrder)  setTxt('ed-groom-order',   d.groomOrder);
+        if (d.groomParents)setTxt('ed-groom-parents', d.groomParents);
+        if (d.brideName)   setTxt('ed-bride-name',    d.brideName);
+        if (d.brideOrder)  setTxt('ed-bride-order',   d.brideOrder);
+        if (d.brideParents)setTxt('ed-bride-parents', d.brideParents);
+        if (d.welcomeNames)setTxt('ed-welcome-names', d.welcomeNames);
+        if (d.heroNames)   setTxt('ed-hero-names',    d.heroNames);
+        if (d.heroDate)    setTxt('ed-hero-date',      d.heroDate);
+        if (d.panelNames)  setTxt('ed-panel-names',   d.panelNames);
+        if (d.panelDate)   setTxt('ed-panel-date',     d.panelDate);
+        if (d.panelCity)   setTxt('ed-panel-city',     d.panelCity);
+
+        // ── Foto mempelai ──
+        if (d.photoBanner) setImgSrc('foto pasangan',       d.photoBanner);
+        if (d.photoCowo)   setImgSrc('foto pengantin pria', d.photoCowo);
+        if (d.photoCewe)   setImgSrc('foto pengantin wanita', d.photoCewe);
+
+        // ── Acara ──
+        if (d.eventTime) setAttr('data-time', d.eventTime.replace('T',' ') + (d.eventTime.length === 16 ? ':00' : ''));
+        if (d.akadInfo)  setHtml('ed-akad-info', d.akadInfo);
+        if (d.resepsiInfo) setHtml('ed-resepsi-info', d.resepsiInfo);
+
+        // Update event cards addr attributes
+        if (d.akadAddr) h = h.replace(/(data-event-type="akad"[^>]*data-event-addr=")[^"]*(")/i, `$1${ea(d.akadAddr)}$2`);
+        if (d.resepsiAddr) h = h.replace(/(data-event-type="resepsi"[^>]*data-event-addr=")[^"]*(")/i, `$1${ea(d.resepsiAddr)}$2`);
+
+        // ── Lokasi ──
+        if (d.venueAddress) setHtml('ed-venue-address', et(d.venueAddress).replace(/\n/g,'<br>'));
+        if (d.mapsLink)     setHref('ed-maps-link', d.mapsLink);
+
+        // ── Galeri ──
+        const galKeys = ['photoG1','photoG2','photoG3','photoG4','photoG5','photoG6'];
+        const carouselIds = ['carousel-image-one','carousel-image-two'];
+        // Map photos into carousels: G1-G3 → carousel-image-one, G4-G6 → carousel-image-two
+        [0,1].forEach(ci => {
+            const startIdx = ci * 3;
+            [0,1,2].forEach(pi => {
+                const photo = d[galKeys[startIdx + pi]];
+                if (!photo) return;
+                const carouselId = carouselIds[ci];
+                h = replaceNthDataSrcInBlock(h, carouselId, pi, ea(photo));
+            });
+        });
+
+        // ── Dress code ──
+        const dcEnabled = d.dcEnabled === true || d.dcEnabled === 'true';
+        const dcWrapper = /(<div id="dc-section-wrapper"[^>]*)(>)/i;
+        if (dcWrapper.test(h)) {
+            h = h.replace(dcWrapper, (_, tag, close) => {
+                const cleaned = tag.replace(/\s*style="([^"]*)"/i, (sm, sv) => {
+                    const ns = sv.replace(/\s*display\s*:\s*none\s*;?\s*/gi,'').trim();
+                    return ns ? ` style="${ns}"` : '';
+                });
+                if (!dcEnabled) {
+                    return (cleaned.includes('style="')
+                        ? cleaned.replace(/style="([^"]*)"/i, (_,sv) => `style="${sv.trim()}${sv.trim()?';':''}display:none;"`)
+                        : cleaned + ' style="display:none;"') + close;
+                }
+                return cleaned + close;
+            });
+        }
+        if (d.dcText) {
+            // Avoid literal </ in regex — split the pattern
+            const dcRe = new RegExp('(id="ed-dc-text"[^>]*>)[^<]*(<' + '/)','i');
+            h = h.replace(dcRe, (_, a, b) => a + et(d.dcText) + b);
+        }
+        const dcSearch = 'Dress Code<' + '/p>';
+        const dcStart = h.indexOf(dcSearch);
+        const colors = [d.dcHex1 || d.dcColor1, d.dcHex2 || d.dcColor2, d.dcHex3 || d.dcColor3];        if (dcStart >= 0) {
+            const before = h.slice(0, dcStart);
+            let after = h.slice(dcStart);
+            let count = -1;
+            after = after.replace(/(<span class="swatch"[^>]*style=")[^"]*("[^>]*>)/gi, (m, a, b) => {
+                count++;
+                const c = colors[count];
+                if (c === undefined || c === null || !c) return m;
+                let ns;
+                if (a.includes('background:')) ns = a.replace(/background:[^;'"`,}]+/, `background:${c}`);
+                else ns = a + `background:${c};`;
+                return ns + b;
+            });
+            h = before + after;
+        }
+
+        // ── Gift ──
+        const giftMap = [
+            { toggleKey:'giftTfShow',   cardId:'gift-card-tf'   },
+            { toggleKey:'giftQrisShow', cardId:'gift-card-qris' },
+            { toggleKey:'giftDanaShow', cardId:'gift-card-dana' },
+            { toggleKey:'giftFisikShow',cardId:'gift-card-fisik'},
+        ];
+        giftMap.forEach(({ toggleKey, cardId }) => {
+            const show = d[toggleKey] === true || d[toggleKey] === 'true';
+            const tagRe = new RegExp(`(<div[^>]*id="${er(cardId)}"[^>]*)(>)`,'i');
+            if (!tagRe.test(h)) return;
+            h = h.replace(tagRe, (_, tag, close) => {
+                let cleaned = tag.replace(/\s*style="([^"]*)"/i, (sm, sv) => {
+                    const ns = sv.replace(/\s*display\s*:\s*none\s*;?\s*/gi,'').trim();
+                    return ns ? ` style="${ns}"` : '';
+                });
+                if (!show) {
+                    if (/style="/i.test(cleaned)) cleaned = cleaned.replace(/style="([^"]*)"/i, (_,sv) => `style="${sv.trim()}${sv.trim()?';':''}display:none;"`);
+                    else cleaned += ' style="display:none;"';
+                }
+                return cleaned + close;
+            });
+        });
+
+        // Gift field helpers — all closing-tag patterns use string concat to avoid </ in script
+        const CI = '<' + '/i>';    // </i>
+        const CS = '<' + '/span>'; // </span>
+        const CP = '<' + '/p>';    // </p>
+
+        if (d.tfName)  h = h.replace(new RegExp('(collapseTf[\\s\\S]*?fa-user fa-sm me-1">' + CI + ')[^<]+','i'),  '$1' + et(d.tfName));
+        if (d.tfBank)  h = h.replace(new RegExp('(id="collapseTf"[\\s\\S]*?<p[^>]*>)[^<]+(' + CP + ')','i'),       '$1' + et(d.tfBank) + '$2');
+        if (d.tfNumber){
+            h = h.replace(new RegExp('(id="collapseTf"[\\s\\S]*?font-family:monospace[^>]*>)[^<]+(' + CS + ')','i'), '$1' + d.tfNumber + '$2');
+            h = h.replace(/(id="collapseTf"[\s\S]*?data-copy=")[^"]+(")/i, '$1' + d.tfNumber + '$2');
+        }
+        if (d.qrisName) h = h.replace(new RegExp('(collapseQris[\\s\\S]*?fa-user fa-sm me-1">' + CI + ')[^<]+','i'), '$1' + et(d.qrisName));
+        if (d.qrisImg)  h = h.replace(/(id="collapseQris"[\s\S]*?data-src=")[^"]+(")/i, '$1' + ea(d.qrisImg) + '$2');
+        if (d.danaName) h = h.replace(new RegExp('(id="gift-card-dana"[\\s\\S]*?fa-user fa-sm me-1">' + CI + ')[^<]+','i'), '$1' + et(d.danaName));
+        if (d.danaNumber){
+            h = h.replace(new RegExp('(id="dana-number"[^>]*>)[^<]+(' + CS + ')','i'), '$1' + et(d.danaNumber) + '$2');
+            h = h.replace(/(id="collapseDana"[\s\S]*?data-copy=")[^"]+(")/i, '$1' + d.danaNumber + '$2');
+        }
+        if (d.giftName)  h = h.replace(new RegExp('(collapseGift[\\s\\S]*?fa-user fa-sm me-1">' + CI + ')[^<]+','i'), '$1' + et(d.giftName));
+        if (d.giftPhone) {
+            h = h.replace(new RegExp('(id="collapseGift"[\\s\\S]*?fa-phone[^>]*>' + CI + ')[^<]+','i'), '$1' + et(d.giftPhone));
+            h = h.replace(/(id="collapseGift"[\s\S]*?data-copy=")[^"]+(")/i, '$1' + d.giftPhone + '$2');
+        }
+        if (d.giftAddress) {
+            const dotRe = new RegExp('(id="collapseGift"[\\s\\S]*?fa-location-dot[^>]*>' + CI + '\\s*)([\\s\\S]*?)(' + CP + ')','i');
+            h = h.replace(dotRe, '$1' + et(d.giftAddress.replace(/\n/g,'<br>')) + '$3');
+        }
+
+        // ── Musik ──
+        if (d.audioUrl) setAttr('data-audio', d.audioUrl);
+        if (d.musicCredit) setHref('ed-music-credit', d.musicCredit);
+
+        // ── Kalender ──
+        if (d.eventTime) {
+            const dt = d.eventTime.replace('T',' ');
+            setAttr('data-cal-start', dt + (dt.length === 16 ? ':00' : ''));
+        }
+
+        // ── Kisah cinta ──
+        const showStory = d.showStory === true || d.showStory === 'true';
+        setAttr('data-show-story', showStory ? 'true' : 'false');
+
+        if (d.stories && d.stories.length > 0) {
+            const CD = '<' + '/div>';
+            const CP2 = '<' + '/p>';
+            const buildBlock = (s, i, isLast) => {
+                const lineDiv = isLast ? '' : '<div class="timeline-line" style="flex:1;min-height:2rem;">' + CD;
+                const wrapCls = isLast ? '' : ' mb-4';
+                const innerCls = isLast ? '' : 'd-flex flex-column align-items-center ';
+                const innerClose = isLast ? '' : ' class="pb-3"';
+                return '<div class="d-flex gap-3' + wrapCls + '">' +
+                    '<div class="' + innerCls + '" style="min-width:2.25rem;">' +
+                    '<div class="timeline-dot">' + (i+1) + CD + lineDiv + CD +
+                    '<div' + innerClose + '>' +
+                    '<p class="mb-1" style="font-size:.875rem;color:var(--c-rose-dark);font-weight:700;">' + et(s.title) + CP2 +
+                    '<p style="font-size:.82rem;color:var(--text-secondary);line-height:1.7;margin:0;">' + et(s.body) + CP2 +
+                    CD + CD;
+            };
+            const blocks = d.stories.map((s, i) => buildBlock(s, i, i === d.stories.length - 1)).join('\n');
+            // Build regex without literal </ to avoid HTML parser truncating the script tag
+            const CDiv = '<' + '\\/div>';
+            const containerRe = new RegExp(
+                '(<div class="overflow-y-scroll overflow-x-hidden ps-1 pe-2 with-scrollbar"[^>]*>)' +
+                '([\\s\\S]*?)' +
+                '(' + CDiv + '\\s*' + CDiv + '\\s*' + CDiv + '\\s*<\\!-- Timeline)',
+                'i'
+            );
+            if (containerRe.test(h)) h = h.replace(containerRe, '$1\n' + blocks + '\n$3');
+        }
+
+        // ── Meta & SEO ──
+        if (d.pageTitle) setTxt('ed-page-title', d.pageTitle);
+        if (d.metaDesc)  setMetaContent('ed-meta-desc', d.metaDesc);
+        if (d.ogTitle)   setMetaContent('ed-og-title', d.ogTitle);
+        if (d.ogDesc)    setMetaContent('ed-og-desc', d.ogDesc);
+        if (d.ogImage) {
+            const ogV = ea(d.ogImage);
+            h = h.replace(/(property="og:image"\s+content=")[^"]*(")/i, `$1${ogV}$2`);
+            h = h.replace(/(content=")[^"]*(")(\s+property="og:image")/i, `$1${ogV}$2$3`);
+        }
+
+        return h;
+    }
+
+    /* ── helper: replace nth data-src within a carousel block ── */
+    function replaceNthDataSrcInBlock(h, carouselId, nth, newSrc) {
+        const startMarker = `id="${carouselId}"`;
+        const startIdx = h.indexOf(startMarker);
+        if (startIdx < 0) return h;
+
+        let depth = 0, i = startIdx, endIdx = -1;
+        while (i < h.length) {
+            if (h[i] === '<') {
+                if (h.substring(i,i+2) === '</') {
+                    const ce = h.indexOf('>',i);
+                    if (ce > i) {
+                        const tag = h.substring(i+2,ce).trim().split(/\s/)[0].toLowerCase();
+                        if (tag === 'div') { depth--; if (depth < 0) { endIdx = ce+1; break; } }
+                        i = ce+1; continue;
+                    }
+                } else {
+                    const te = h.indexOf('>',i);
+                    if (te > i) {
+                        const tc = h.substring(i+1,te);
+                        const tag = tc.trim().split(/[\s/]/)[0].toLowerCase();
+                        const sc = tc.trimEnd().endsWith('/') || ['img','input','br','hr','meta','link'].includes(tag);
+                        if (tag === 'div' && !sc) depth++;
+                        i = te+1; continue;
+                    }
+                }
+            }
+            i++;
+        }
+        if (endIdx < 0) return h;
+
+        const block = h.substring(startIdx, endIdx);
+        let count = -1;
+        const replaced = block.replace(/data-src="([^"]+)"/gi, (m) => {
+            count++;
+            return count === nth ? `data-src="${newSrc}"` : m;
+        });
+        return h.substring(0, startIdx) + replaced + h.substring(endIdx);
+    }
+
+    /* ── helpers ── */
+    function escHtmlD(s) {
+        return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function formatDate(iso) {
+        if (!iso) return '-';
+        try {
+            return new Intl.DateTimeFormat('id-ID', { dateStyle:'medium', timeStyle:'short' }).format(new Date(iso));
+        } catch (_) { return iso; }
+    }
+    </script>
 </body>
 
 </html>
