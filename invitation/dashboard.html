@@ -890,12 +890,52 @@
 
         // ── Acara ──
         if (d.eventTime) setAttr('data-time', d.eventTime.replace('T',' ') + (d.eventTime.length === 16 ? ':00' : ''));
-        if (d.akadInfo)  setHtml('ed-akad-info', d.akadInfo);
-        if (d.resepsiInfo) setHtml('ed-resepsi-info', d.resepsiInfo);
 
-        // Update event cards addr attributes
-        if (d.akadAddr) h = h.replace(/(data-event-type="akad"[^>]*data-event-addr=")[^"]*(")/i, `$1${ea(d.akadAddr)}$2`);
-        if (d.resepsiAddr) h = h.replace(/(data-event-type="resepsi"[^>]*data-event-addr=")[^"]*(")/i, `$1${ea(d.resepsiAddr)}$2`);
+        // Rebuild seluruh event cards block dari data order.
+        // Ini memastikan custom events dari template (Mappacci, dll.) tidak ikut terbawa
+        // kalau order tidak mendefinisikannya — hanya akad + resepsi yang diisi client.
+        (function rebuildEventCards() {
+            const addrP = (addr) => addr
+                ? '<p class="event-addr" style="font-size:.7rem;color:var(--text-secondary);margin:.4rem 0 0;opacity:.8;">' +
+                  '<i class="fa-solid fa-location-dot me-1" style="color:var(--c-gold);"></i>' + et(addr) + '<' + '/p>'
+                : '';
+
+            const cards = [];
+
+            // Akad
+            const akadInfo = d.akadInfo || '';
+            const akadAddr = d.akadAddr || '';
+            cards.push(
+                '<div class="col-6" data-aos="fade-up" data-aos-duration="800"' +
+                ' data-event-type="akad" data-event-addr="' + ea(akadAddr) + '">' +
+                '<div class="card-elegant p-3 text-center">' +
+                '<i class="fa-solid fa-ring mb-2" style="color:var(--c-gold);font-size:1.25rem;"></i>' +
+                '<p class="font-esthetic mb-1" style="font-size:1.5rem;color:var(--c-rose-dark);">Akad<' + '/p>' +
+                '<p id="ed-akad-info" style="font-size:.775rem;color:var(--text-secondary);margin:0;line-height:1.5;">' + akadInfo + '<' + '/p>' +
+                addrP(akadAddr) +
+                '<' + '/div><' + '/div>'
+            );
+
+            // Resepsi
+            const resepsiInfo = d.resepsiInfo || '';
+            const resepsiAddr = d.resepsiAddr || '';
+            cards.push(
+                '<div class="col-6" data-aos="fade-up" data-aos-duration="900"' +
+                ' data-event-type="resepsi" data-event-addr="' + ea(resepsiAddr) + '">' +
+                '<div class="card-elegant p-3 text-center">' +
+                '<i class="fa-solid fa-champagne-glasses mb-2" style="color:var(--c-gold);font-size:1.25rem;"></i>' +
+                '<p class="font-esthetic mb-1" style="font-size:1.5rem;color:var(--c-rose-dark);">Resepsi<' + '/p>' +
+                '<p id="ed-resepsi-info" style="font-size:.775rem;color:var(--text-secondary);margin:0;line-height:1.5;">' + resepsiInfo + '<' + '/p>' +
+                addrP(resepsiAddr) +
+                '<' + '/div><' + '/div>'
+            );
+
+            const newBlock = '\n                        ' + cards.join('\n                        ') + '\n                        ';
+            h = h.replace(
+                /<!--\s*ed-events-start\s*-->[\s\S]*?<!--\s*ed-events-end\s*-->/i,
+                '<!-- ed-events-start -->' + newBlock + '<!-- ed-events-end -->'
+            );
+        })();
 
         // ── Lokasi ──
         if (d.venueAddress) setHtml('ed-venue-address', et(d.venueAddress).replace(/\n/g,'<br>'));
