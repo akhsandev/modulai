@@ -940,6 +940,24 @@
                 '<' + '/div><' + '/div>'
             );
 
+            // Custom events dari order
+            const customEvents = Array.isArray(d.customEvents) ? d.customEvents : [];
+            customEvents.forEach((ev, idx) => {
+                if (!ev.name) return;
+                const delay = 1000 + idx * 100;
+                const icon  = ev.icon || 'fa-sparkles';
+                cards.push(
+                    '<div class="col-6" data-aos="fade-up" data-aos-duration="' + delay + '"' +
+                    ' data-event-type="custom" data-event-icon="' + ea(icon) + '" data-event-addr="' + ea(ev.addr || '') + '">' +
+                    '<div class="card-elegant p-3 text-center">' +
+                    '<i class="fa-solid ' + et(icon) + ' mb-2" style="color:var(--c-gold);font-size:1.25rem;"></i>' +
+                    '<p class="font-esthetic mb-1" style="font-size:1.5rem;color:var(--c-rose-dark);">' + et(ev.name) + '<' + '/p>' +
+                    '<p style="font-size:.775rem;color:var(--text-secondary);margin:0;line-height:1.5;">' + (ev.info || '') + '<' + '/p>' +
+                    addrP(ev.addr || '') +
+                    '<' + '/div><' + '/div>'
+                );
+            });
+
             const newBlock = '\n                        ' + cards.join('\n                        ') + '\n                        ';
             h = h.replace(
                 /<!--\s*ed-events-start\s*-->[\s\S]*?<!--\s*ed-events-end\s*-->/i,

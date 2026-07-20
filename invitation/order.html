@@ -395,6 +395,19 @@ textarea.form-control { resize:vertical; min-height:5rem; }
         </div>
       </div>
     </div>
+
+    <!-- Acara Tambahan -->
+    <div class="card-s">
+      <div class="card-s-hd"><i class="fa-solid fa-calendar-plus" style="color:var(--gold);" aria-hidden="true"></i><h6>Acara Tambahan <span style="font-weight:400;font-size:.75rem;color:var(--ink-3);">(opsional)</span></h6></div>
+      <div class="card-s-bd">
+        <p style="font-size:.78rem;color:var(--ink-3);margin-bottom:.75rem;">Tambahkan acara selain Akad dan Resepsi — misal Mappacci, Siraman, Pengajian, dll.</p>
+        <div id="order-custom-events"></div>
+        <button type="button" class="btn-secondary-ed" id="btn-add-custom-event" onclick="addCustomEvent()" style="font-size:.8rem;margin-top:.25rem;">
+          <i class="fa-solid fa-plus" aria-hidden="true"></i>Tambah Acara
+        </button>
+      </div>
+    </div>
+
     <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.625rem;margin-top:1rem;">
       <button class="btn-ghost-ed" onclick="prevPage()"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Kembali</button>
       <button class="btn-primary-ed" onclick="nextPage()"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Lanjut</button>
@@ -971,6 +984,82 @@ function setStories(stories) {
 }
 
 /* ═══════════════════════════════════════════════
+   CUSTOM EVENTS (Acara Tambahan)
+═══════════════════════════════════════════════ */
+const EVENT_ICONS_ORDER = [
+  { val:'fa-sparkles',           label:'Kilap'       },
+  { val:'fa-star',               label:'Bintang'     },
+  { val:'fa-heart',              label:'Hati'        },
+  { val:'fa-fire',               label:'Api'         },
+  { val:'fa-leaf',               label:'Daun'        },
+  { val:'fa-moon',               label:'Bulan'       },
+  { val:'fa-dove',               label:'Merpati'     },
+  { val:'fa-hand-holding-heart', label:'Tangan Hati' },
+  { val:'fa-cake-candles',       label:'Kue'         },
+  { val:'fa-drums',              label:'Drum'        },
+  { val:'fa-water',              label:'Air'         },
+  { val:'fa-hands-praying',      label:'Doa'         },
+  { val:'fa-calendar-day',       label:'Kalender'    },
+  { val:'fa-ring',               label:'Cincin'      },
+  { val:'fa-champagne-glasses',  label:'Gelas'       },
+  { val:'fa-music',              label:'Musik'       },
+];
+
+function addCustomEvent(name = '', info = '', addr = '', icon = 'fa-sparkles') {
+  const list  = document.getElementById('order-custom-events');
+  const count = list.children.length + 1;
+  const iconOpts = EVENT_ICONS_ORDER.map(ic =>
+    `<option value="${ic.val}" ${ic.val === icon ? 'selected' : ''}>${ic.label}</option>`
+  ).join('');
+
+  const div = document.createElement('div');
+  div.className = 'story-block';
+  div.style.marginBottom = '.625rem';
+  div.innerHTML = `
+    <button class="btn-del" type="button" onclick="this.closest('.story-block').remove(); markChanged();" aria-label="Hapus acara">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+    <div style="font-size:.7rem;font-weight:700;color:var(--rose-dark);margin-bottom:.625rem;background:rgba(201,160,154,.15);display:inline-block;padding:.1rem .5rem;border-radius:99px;">Acara ${count}</div>
+    <div class="form-row">
+      <div>
+        <label class="form-label">Nama Acara</label>
+        <input type="text" class="form-control custom-event-name" value="${escHtml(name)}" placeholder="cth. Mappacci">
+      </div>
+      <div>
+        <label class="form-label">Ikon</label>
+        <select class="form-select custom-event-icon">${iconOpts}</select>
+      </div>
+    </div>
+    <div style="margin-top:.625rem;">
+      <label class="form-label">Info (tanggal, waktu)</label>
+      <input type="text" class="form-control custom-event-info" value="${escHtml(info)}" placeholder="cth. Jumat, 31 Juli 2026&lt;br&gt;20.00 WITA – Selesai">
+      <p class="fhint">Gunakan &lt;br&gt; untuk baris baru.</p>
+    </div>
+    <div style="margin-top:.5rem;">
+      <label class="form-label">Alamat Lokasi</label>
+      <input type="text" class="form-control custom-event-addr" value="${escHtml(addr)}" placeholder="cth. Jl. Mawar No. 1">
+    </div>`;
+  list.appendChild(div);
+  markChanged();
+}
+
+function getCustomEvents() {
+  return Array.from(document.querySelectorAll('#order-custom-events .story-block')).map(b => ({
+    name : b.querySelector('.custom-event-name')?.value.trim()  || '',
+    info : b.querySelector('.custom-event-info')?.value.trim()  || '',
+    addr : b.querySelector('.custom-event-addr')?.value.trim()  || '',
+    icon : b.querySelector('.custom-event-icon')?.value         || 'fa-sparkles',
+  })).filter(e => e.name);
+}
+
+function setCustomEvents(events) {
+  const list = document.getElementById('order-custom-events');
+  if (!list) return;
+  list.innerHTML = '';
+  (events || []).forEach(e => addCustomEvent(e.name, e.info, e.addr, e.icon));
+}
+
+/* ═══════════════════════════════════════════════
    GAS INPUT — persist to localStorage
 ═══════════════════════════════════════════════ */
 function initGasInputs() {
@@ -1115,6 +1204,9 @@ function collectFormData() {
   // Stories
   data.stories = getStories();
 
+  // Custom events
+  data.customEvents = getCustomEvents();
+
   // Paket
   const pr = document.querySelector('input[name="paket"]:checked');
   if (pr) data.paket = pr.value;
@@ -1161,6 +1253,9 @@ function loadDraft() {
 
   // Restore stories
   if (draft.stories?.length) setStories(draft.stories);
+
+  // Restore custom events
+  if (draft.customEvents?.length) setCustomEvents(draft.customEvents);
 
   // Restore paket
   if (draft.paket) {
@@ -1481,6 +1576,8 @@ function resetForm() {
     img.classList.remove('show');
   });
   document.getElementById('story-list').innerHTML = '';
+  const ceList = document.getElementById('order-custom-events');
+  if (ceList) ceList.innerHTML = '';
   storyCount = 0;
   changeCount = 0;
   const badge = document.getElementById('change-badge');
