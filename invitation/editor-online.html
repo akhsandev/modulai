@@ -479,7 +479,7 @@ document.querySelectorAll('.nav-link[data-page]').forEach(lk => {
 
   try {
     showLoading('Memuat data undangan...');
-    const res = await fetch(`${GAS_URL}?action=getInvitation&slug=${encodeURIComponent(SLUG)}`).then(r => r.json());
+    const res = await fetch(`${GAS_URL}?action=getInvitationForEdit&slug=${encodeURIComponent(SLUG)}&edit_token=${encodeURIComponent(EDIT_TOKEN)}`).then(r => r.json());
 
     if (res.code !== 200) throw new Error(res.error?.[0] || 'Gagal memuat data.');
 
