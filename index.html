@@ -1,0 +1,2701 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEKTOR — Belajar Fisika Seru | Kelas XI</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$','$'],['\\(','\\)']],
+    displayMath: [['$$','$$'],['\\[','\\]']],
+    tags: 'none'
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+  startup: { typeset: true }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #020617;
+  --bg2: #0a0f1e;
+  --bg3: #0d1b2e;
+  --blue: #3b82f6;
+  --blue-l: #60a5fa;
+  --cyan: #22d3ee;
+  --cyan-l: #67e8f9;
+  --indigo: #818cf8;
+  --green: #22c55e;
+  --green-l: #86efac;
+  --amber: #f59e0b;
+  --amber-l: #fde68a;
+  --red: #ef4444;
+  --red-l: #fca5a5;
+  --white: #fff;
+  --g3: #cbd5e1;
+  --g4: #94a3b8;
+  --g5: #64748b;
+  --g6: #475569;
+  --g7: #334155;
+  --gb: rgba(255,255,255,0.04);
+  --gbr: rgba(255,255,255,0.10);
+  --p1c: #3b82f6;
+  --p2c: #22d3ee;
+  --p3c: #818cf8;
+}
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── PROGRESS BAR TOP ── */
+#progress-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1100;
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+}
+#progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+/* ── TOP NAV ── */
+#top-nav {
+  position: fixed; top: 3px; left: 0; right: 0; z-index: 1000;
+  background: rgba(2,6,23,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--gbr);
+  padding: 0 20px;
+  height: 52px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 800; color: var(--cyan-l);
+  letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap;
+}
+.nav-logo-icon {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.nav-pills { display: flex; gap: 4px; }
+.nav-pill {
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+  cursor: pointer; border: 1px solid transparent;
+  background: transparent; color: var(--g4);
+  transition: all 0.2s;
+}
+.nav-pill:hover { color: var(--white); background: var(--gb); border-color: var(--gbr); }
+.nav-pill.active { color: var(--cyan); background: rgba(34,211,238,0.12); border-color: rgba(34,211,238,0.35); }
+.nav-right {
+  display: flex; align-items: center; gap: 10px;
+}
+.progress-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 20px;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--gbr);
+  font-size: 11px; color: var(--g4); font-family: 'JetBrains Mono', monospace;
+}
+.xp-badge {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 20px;
+  background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.3);
+  font-size: 11px; color: var(--amber-l); font-weight: 700;
+}
+.btn-icon {
+  width: 30px; height: 30px; border-radius: 8px;
+  border: 1px solid var(--gbr); background: var(--gb);
+  color: var(--g3); cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.btn-icon:hover { background: rgba(255,255,255,0.08); color: var(--white); }
+
+/* ── SLIDES VIEWPORT ── */
+#slides-vp {
+  margin-top: 55px;
+  padding: 28px 16px 80px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 40px;
+}
+
+/* ── SLIDE BASE ── */
+.slide {
+  width: 100%; max-width: 1160px;
+  border-radius: 20px;
+  border: 1px solid var(--gbr);
+  position: relative; overflow: hidden;
+  background: var(--bg3);
+  box-shadow: 0 8px 56px rgba(0,0,0,0.55), 0 0 40px rgba(59,130,246,0.12);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex; flex-direction: column;
+}
+.slide:hover { transform: translateY(-2px); box-shadow: 0 12px 64px rgba(0,0,0,0.6), 0 0 50px rgba(59,130,246,0.18); }
+.slide.p1-slide { border-color: rgba(59,130,246,0.25); }
+.slide.p2-slide { border-color: rgba(34,211,238,0.25); }
+.slide.p3-slide { border-color: rgba(129,140,248,0.25); }
+.slide.cover-slide { min-height: 640px; background: linear-gradient(135deg,#020617,#0a1628,#0d2040); }
+.slide.divider-slide { min-height: 180px; justify-content: center; align-items: center; }
+.slide.p1-div { background: linear-gradient(135deg,#05101f,#0d1f3a,#05101f); border-color: rgba(59,130,246,0.3); }
+.slide.p2-div { background: linear-gradient(135deg,#041118,#071f30,#041118); border-color: rgba(34,211,238,0.3); }
+.slide.p3-div { background: linear-gradient(135deg,#060a18,#0d1430,#060a18); border-color: rgba(129,140,248,0.3); }
+
+/* Slot badge */
+.slot-badge {
+  position: absolute; bottom: 16px; right: 18px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--g6); letter-spacing: 0.08em;
+}
+/* Pertemuan label */
+.ptm-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.ptm-tag.p1 { background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.35); color: var(--blue-l); }
+.ptm-tag.p2 { background: rgba(34,211,238,0.12); border: 1px solid rgba(34,211,238,0.35); color: var(--cyan-l); }
+.ptm-tag.p3 { background: rgba(129,140,248,0.15); border: 1px solid rgba(129,140,248,0.35); color: var(--indigo); }
+
+/* ── PADDING ── */
+.sp { padding: 56px 44px 36px; }
+.sp-sm { padding: 44px 44px 28px; }
+
+/* ── TYPOGRAPHY ── */
+.t-display { font-size: clamp(2.2rem,5vw,4.2rem); font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; }
+.t-h1 { font-size: clamp(1.5rem,3vw,2.4rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
+.t-h2 { font-size: clamp(1.1rem,2vw,1.7rem); font-weight: 700; line-height: 1.2; }
+.t-body { font-size: 0.95rem; font-weight: 400; color: var(--g3); line-height: 1.7; }
+.t-small { font-size: 0.82rem; color: var(--g5); line-height: 1.5; }
+.grad-blue { background: linear-gradient(90deg,#60a5fa,#22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.grad-cyan { background: linear-gradient(90deg,#22d3ee,#818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.grad-indigo { background: linear-gradient(90deg,#818cf8,#22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+/* ── GLASS CARDS ── */
+.card { background: var(--gb); border: 1px solid var(--gbr); border-radius: 14px; }
+.card-blue { background: rgba(59,130,246,0.07); border: 1px solid rgba(59,130,246,0.22); border-radius: 14px; }
+.card-cyan { background: rgba(34,211,238,0.06); border: 1px solid rgba(34,211,238,0.22); border-radius: 14px; }
+.card-indigo { background: rgba(129,140,248,0.07); border: 1px solid rgba(129,140,248,0.22); border-radius: 14px; }
+.card-green { background: rgba(34,197,94,0.07); border: 1px solid rgba(34,197,94,0.22); border-radius: 14px; }
+.card-amber { background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.22); border-radius: 14px; }
+.card-red { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.22); border-radius: 14px; }
+
+/* ── CHIPS ── */
+.chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; }
+.chip-blue { background: rgba(59,130,246,0.18); border: 1px solid rgba(59,130,246,0.38); color: var(--blue-l); }
+.chip-cyan { background: rgba(34,211,238,0.13); border: 1px solid rgba(34,211,238,0.38); color: var(--cyan-l); }
+.chip-indigo { background: rgba(129,140,248,0.18); border: 1px solid rgba(129,140,248,0.38); color: var(--indigo); }
+.chip-green { background: rgba(34,197,94,0.13); border: 1px solid rgba(34,197,94,0.38); color: var(--green-l); }
+.chip-amber { background: rgba(245,158,11,0.13); border: 1px solid rgba(245,158,11,0.38); color: var(--amber-l); }
+.chip-red { background: rgba(239,68,68,0.13); border: 1px solid rgba(239,68,68,0.38); color: var(--red-l); }
+.chip-ghost { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--g4); }
+
+/* ── GRID ── */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.g4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+.g21 { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+.g12 { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
+@media(max-width:860px) { .g2,.g3,.g4,.g21,.g12 { grid-template-columns: 1fr; } }
+
+/* ── VECTOR NOTATION (CSS based - no unicode combining chars) ── */
+.vec { display: inline-block; position: relative; padding-right: 3px; }
+.vec::after {
+  content: '→'; position: absolute; top: -0.52em; right: -3px;
+  font-size: 0.6em; line-height: 1; font-weight: 400;
+  font-style: normal; color: inherit;
+}
+
+/* ── MATH BLOCK ── */
+.math-box {
+  background: rgba(13,27,46,0.85);
+  border: 1px solid rgba(59,130,246,0.3);
+  border-left: 3px solid var(--blue);
+  border-radius: 10px; padding: 18px 22px;
+  overflow-x: auto; font-size: 1.05rem;
+}
+.math-box.cyan { border-left-color: var(--cyan); border-color: rgba(34,211,238,0.3); }
+.math-box.indigo { border-left-color: var(--indigo); border-color: rgba(129,140,248,0.3); }
+.math-box.amber { border-left-color: var(--amber); border-color: rgba(245,158,11,0.3); }
+.formula-card {
+  background: linear-gradient(135deg,rgba(59,130,246,0.1),rgba(34,211,238,0.06));
+  border: 1px solid rgba(59,130,246,0.3);
+  border-radius: 14px; padding: 20px; text-align: center;
+}
+
+/* ── DECORATIVE GLOW ── */
+.deco { position: absolute; border-radius: 50%; pointer-events: none; }
+
+/* ── ICON CIRCLES ── */
+.ico { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.ico-sm { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+
+/* ── DIVIDER LINE ── */
+.divider { height: 1px; background: var(--gbr); margin: 14px 0; }
+
+/* ── INTERACTIVE QUIZ ── */
+.quiz-wrap { display: flex; flex-direction: column; gap: 10px; }
+.quiz-opt {
+  padding: 13px 18px; border-radius: 10px;
+  border: 1px solid var(--gbr); background: var(--gb);
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; transition: all 0.18s; user-select: none;
+}
+.quiz-opt:hover:not(.locked) { border-color: var(--blue); background: rgba(59,130,246,0.08); transform: translateX(4px); }
+.quiz-opt.correct { border-color: var(--green) !important; background: rgba(34,197,94,0.12) !important; }
+.quiz-opt.wrong { border-color: var(--red) !important; background: rgba(239,68,68,0.1) !important; }
+.quiz-opt.locked { cursor: default; }
+.quiz-letter {
+  width: 30px; height: 30px; border-radius: 7px; flex-shrink: 0;
+  background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.35);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--blue-l);
+  transition: all 0.18s;
+}
+.quiz-opt.correct .quiz-letter { background: rgba(34,197,94,0.2); border-color: var(--green); color: var(--green-l); }
+.quiz-opt.wrong .quiz-letter { background: rgba(239,68,68,0.15); border-color: var(--red); color: var(--red-l); }
+.quiz-opt .quiz-text { font-size: 13px; color: var(--g3); flex: 1; transition: color 0.18s; }
+.quiz-opt.correct .quiz-text { color: var(--green-l); }
+.quiz-opt.wrong .quiz-text { color: var(--red-l); }
+.quiz-feedback {
+  padding: 12px 16px; border-radius: 10px; font-size: 13px;
+  display: none; margin-top: 4px;
+}
+.quiz-feedback.show { display: flex; align-items: start; gap: 10px; }
+.quiz-feedback.ok { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: var(--green-l); }
+.quiz-feedback.no { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: var(--red-l); }
+.quiz-score {
+  display: none; margin-top: 12px; padding: 14px 18px; border-radius: 10px;
+  text-align: center; font-weight: 700; font-size: 14px;
+  background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); color: var(--blue-l);
+}
+.quiz-score.show { display: block; }
+
+/* ── REVEAL CARD ── */
+.reveal-card { cursor: pointer; transition: all 0.2s; user-select: none; }
+.reveal-card:hover { transform: translateY(-2px); }
+.reveal-body { display: none; padding: 14px 0 4px; }
+.reveal-body.open { display: block; }
+.reveal-hint { font-size: 11px; color: var(--g5); margin-top: 8px; }
+
+/* ── STEP CARD ── */
+.step-row { display: flex; gap: 0; flex-direction: column; }
+.step-item { display: flex; gap: 16px; position: relative; }
+.step-item:not(:last-child)::before {
+  content: ''; position: absolute; left: 17px; top: 38px;
+  width: 2px; height: calc(100% + 0px);
+  background: linear-gradient(to bottom, var(--gbr), transparent);
+}
+.step-dot {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; border: 2px solid;
+}
+.step-body { padding: 6px 0 20px; flex: 1; }
+
+/* ── FLOW ROW ── */
+.flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.flow-step {
+  padding: 7px 14px; border-radius: 8px;
+  background: var(--gb); border: 1px solid var(--gbr);
+  font-size: 12px; font-weight: 500; color: var(--g3);
+}
+.flow-arrow { color: var(--cyan); font-size: 16px; flex-shrink: 0; }
+
+/* ── XP ANIMATION ── */
+@keyframes xp-pop { 0%{transform:scale(0.5);opacity:0} 60%{transform:scale(1.2)} 100%{transform:scale(1);opacity:1} }
+.xp-pop { animation: xp-pop 0.4s ease forwards; }
+@keyframes shine { 0%{background-position:-200% center} 100%{background-position:200% center} }
+
+/* ── VECTOR CANVAS ── */
+.v-canvas { background: rgba(2,6,23,0.65); border: 1px solid rgba(59,130,246,0.22); border-radius: 12px; overflow: hidden; }
+
+/* ── COMPARE TABLE ── */
+.cmp-table { width: 100%; border-collapse: collapse; }
+.cmp-table th, .cmp-table td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--gbr); font-size: 13px; }
+.cmp-table th { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--g5); }
+.cmp-table tr:last-child td { border-bottom: none; }
+.cmp-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* ── BOTTOM NAV DOTS ── */
+#dot-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;
+  background: rgba(2,6,23,0.92); backdrop-filter: blur(20px);
+  border-top: 1px solid var(--gbr);
+  padding: 10px 20px; display: flex; justify-content: center; align-items: center; gap: 5px; flex-wrap: wrap;
+}
+.d-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--g7); border: none; cursor: pointer;
+  transition: all 0.2s; padding: 0;
+}
+.d-dot.active { width: 22px; border-radius: 4px; background: var(--cyan); }
+.d-dot.p1 { background: var(--blue); }
+.d-dot.p2 { background: var(--cyan); }
+.d-dot.p3 { background: var(--indigo); }
+
+/* ── SCROLL HINT ── */
+.scroll-hint {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border-radius: 30px;
+  background: rgba(34,211,238,0.08); border: 1px solid rgba(34,211,238,0.25);
+  font-size: 12px; color: var(--cyan-l); margin: 0 auto;
+  animation: bounce 2s ease infinite;
+}
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(4px)} }
+
+/* ── SECTION HEADER ACCENT ── */
+.s-accent {
+  display: flex; align-items: center; gap: 10px;
+  padding-top: 8px; margin-bottom: 20px;
+}
+.accent-line { flex: 1; height: 1px; background: var(--gbr); }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"><div id="progress-fill"></div></div>
+
+<!-- TOP NAV -->
+<nav id="top-nav">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">⚡</div>
+    <span>Vektor · Fisika XI</span>
+  </div>
+  <div class="nav-pills">
+    <button class="nav-pill active" onclick="goSection('intro')">Intro</button>
+    <button class="nav-pill" onclick="goSection('p1')">Pertemuan 1</button>
+    <button class="nav-pill" onclick="goSection('p2')">Pertemuan 2</button>
+    <button class="nav-pill" onclick="goSection('p3')">Pertemuan 3</button>
+  </div>
+  <div class="nav-right">
+    <div class="xp-badge">⭐ <span id="xp-count">0</span> XP</div>
+    <div class="progress-pill" id="slide-info">1 / 28</div>
+    <button class="btn-icon" onclick="navPrev()">←</button>
+    <button class="btn-icon" onclick="navNext()">→</button>
+  </div>
+</nav>
+
+<div id="slides-vp">
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 1 — HERO COVER                   -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide cover-slide" id="s1" data-sec="intro">
+  <div class="deco" style="width:700px;height:700px;background:radial-gradient(circle,rgba(59,130,246,0.13),transparent 70%);top:-250px;right:-200px;"></div>
+  <div class="deco" style="width:400px;height:400px;background:radial-gradient(circle,rgba(34,211,238,0.08),transparent 70%);bottom:-100px;left:-100px;"></div>
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:24px;position:relative;">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+      <span class="chip chip-blue">Fisika SMA Kelas XI</span>
+      <span class="chip chip-cyan">Kurikulum Merdeka</span>
+      <span class="chip chip-green">3 Pertemuan</span>
+    </div>
+    <div>
+      <div class="t-display grad-blue" style="margin-bottom:10px;">VEKTOR</div>
+      <div style="font-size:1.1rem;color:var(--g4);max-width:560px;line-height:1.6;">
+        Besaran yang bukan sekadar angka — karena arah juga penting
+      </div>
+    </div>
+    <!-- Hero SVG -->
+    <svg viewBox="0 0 500 140" width="500" height="140" style="max-width:100%;">
+      <defs>
+        <marker id="h1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#22d3ee"/></marker>
+        <marker id="h2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#60a5fa"/></marker>
+        <marker id="h3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#818cf8"/></marker>
+      </defs>
+      <line x1="50" y1="110" x2="190" y2="45" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#h1)"/>
+      <text x="113" y="65" fill="#22d3ee" font-size="14" font-family="Outfit" font-weight="700">A</text>
+      <text x="118" y="57" fill="#22d3ee" font-size="9">→</text>
+      <line x1="190" y1="45" x2="330" y2="82" stroke="#60a5fa" stroke-width="2.5" marker-end="url(#h2)"/>
+      <text x="254" y="54" fill="#60a5fa" font-size="14" font-family="Outfit" font-weight="700">B</text>
+      <text x="259" y="46" fill="#60a5fa" font-size="9">→</text>
+      <line x1="50" y1="110" x2="327" y2="85" stroke="#818cf8" stroke-width="2.5" stroke-dasharray="6,3" marker-end="url(#h3)"/>
+      <text x="175" y="112" fill="#818cf8" font-size="13" font-family="Outfit" font-weight="700">R = A + B</text>
+      <path d="M 78,110 A 28,28 0 0,0 74,87" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+      <text x="86" y="103" fill="#f59e0b" font-size="11" font-family="Outfit">θ</text>
+      <circle cx="50" cy="110" r="4" fill="#22d3ee"/>
+      <circle cx="190" cy="45" r="4" fill="#60a5fa"/>
+      <circle cx="330" cy="82" r="4" fill="#818cf8"/>
+    </svg>
+    <!-- Stats row -->
+    <div style="display:flex;gap:28px;justify-content:center;flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <div style="font-size:2rem;font-weight:900;color:var(--cyan-l);">3</div>
+        <div style="font-size:10px;color:var(--g5);text-transform:uppercase;letter-spacing:0.08em;">Pertemuan</div>
+      </div>
+      <div style="width:1px;background:var(--gbr);height:44px;align-self:center;"></div>
+      <div style="text-align:center;">
+        <div style="font-size:2rem;font-weight:900;color:var(--blue-l);">28</div>
+        <div style="font-size:10px;color:var(--g5);text-transform:uppercase;letter-spacing:0.08em;">Slide</div>
+      </div>
+      <div style="width:1px;background:var(--gbr);height:44px;align-self:center;"></div>
+      <div style="text-align:center;">
+        <div style="font-size:2rem;font-weight:900;color:var(--indigo);">15+</div>
+        <div style="font-size:10px;color:var(--g5);text-transform:uppercase;letter-spacing:0.08em;">Latihan</div>
+      </div>
+      <div style="width:1px;background:var(--gbr);height:44px;align-self:center;"></div>
+      <div style="text-align:center;">
+        <div style="font-size:2rem;font-weight:900;color:var(--amber-l);">5</div>
+        <div style="font-size:10px;color:var(--g5);text-transform:uppercase;letter-spacing:0.08em;">Kuis Interaktif</div>
+      </div>
+    </div>
+    <div class="scroll-hint">⬇ Scroll untuk mulai belajar</div>
+  </div>
+  <div class="slot-badge">01 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 2 — PETA KONSEP ROADMAP          -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide" id="s2" data-sec="intro">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:22px;">
+    <div class="s-accent">
+      <span class="chip chip-ghost">Roadmap</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1 grad-blue">Yang akan kamu pelajari</div>
+    <div style="display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;gap:0;align-items:start;">
+      <div class="card-blue" style="padding:20px;">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
+          <div class="ico" style="background:rgba(59,130,246,0.2);border:1px solid rgba(59,130,246,0.35);">🌍</div>
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue-l);">Pertemuan 1</div>
+            <div style="font-weight:700;font-size:0.95rem;">Mengenal Vektor</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="font-size:12px;color:var(--g4);display:flex;gap:6px;"><span style="color:var(--blue-l);">•</span>Skalar vs Vektor</div>
+          <div style="font-size:12px;color:var(--g4);display:flex;gap:6px;"><span style="color:var(--blue-l);">•</span>Notasi &amp; Representasi</div>
+          <div style="font-size:12px;color:var(--g4);display:flex;gap:6px;"><span style="color:var(--blue-l);">•</span>Komponen vektor</div>
+          <div style="font-size:12px;color:var(--g4);display:flex;gap:6px;"><span style="color:var(--blue-l);">•</span>Contoh nyata</div>
+        </div>
+        <div style="margin-top:12px;"><span class="chip chip-blue">LOTS</span></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--cyan);padding-top:36px;">→</div>
+      <div class="card-cyan" style="padding:20px;">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
+          <div class="ico" style="background:rgba(34,211,238,0.15);border:1px solid rgba(34,211,238,0.35);">⚙️</div>
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cyan-l);">Pertemuan 2</div>
+            <div style="font-weight:700;font-size:0.95rem;">Operasi Vektor</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="font-size:12px;color:var(--g4);display:flex;gap:6px;"><span style="color:var(--cyan-l);">•</span>Metode Segitiga</div>
+          <div style="font-size:12px;color:var(--g4);display:flex;gap:6px;"><span style="color:var(--cyan-l);">•</span>Metode Jajar Genjang</div>
+          <div style="font-size:12px;color:var(--g4);display:flex;gap:6px;"><span style="color:var(--cyan-l);">•</span>Metode Analitis</div>
+          <div style="font-size:12px;color:var(--g4);display:flex;gap:6px;"><span style="color:var(--cyan-l);">•</span>Resultan Vektor</div>
+        </div>
+        <div style="margin-top:12px;"><span class="chip chip-cyan">LOTS → MOTS</span></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--cyan);padding-top:36px;">→</div>
+      <div class="card-indigo" style="padding:20px;">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
+          <div class="ico" style="background:rgba(129,140,248,0.18);border:1px solid rgba(129,140,248,0.35);">🚀</div>
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--indigo);">Pertemuan 3</div>
+            <div style="font-weight:700;font-size:0.95rem;">Aplikasi Nyata</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="font-size:12px;color:var(--g4);display:flex;gap:6px;"><span style="color:var(--indigo);">•</span>GPS &amp; Drone</div>
+          <div style="font-size:12px;color:var(--g4);display:flex;gap:6px;"><span style="color:var(--indigo);">•</span>BMKG &amp; Lingkungan</div>
+          <div style="font-size:12px;color:var(--g4);display:flex;gap:6px;"><span style="color:var(--indigo);">•</span>Studi Kasus Indonesia</div>
+          <div style="font-size:12px;color:var(--g4);display:flex;gap:6px;"><span style="color:var(--indigo);">•</span>Soal HOTS</div>
+        </div>
+        <div style="margin-top:12px;"><span class="chip chip-indigo">MOTS → HOTS</span></div>
+      </div>
+    </div>
+    <div class="card" style="padding:14px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <span style="font-size:12px;color:var(--g5);font-weight:600;">Pendekatan:</span>
+      <span class="chip chip-green">🔗 Meaningful</span>
+      <span class="chip chip-amber">🧘 Mindful</span>
+      <span class="chip chip-blue">🎯 Joyful</span>
+      <span class="chip chip-ghost" style="margin-left:auto;font-size:10px;">Jawab kuis → dapat XP ⭐</span>
+    </div>
+  </div>
+  <div class="slot-badge">02 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DIVIDER — PERTEMUAN 1                  -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide divider-slide p1-div" id="p1" data-sec="p1">
+  <div class="deco" style="width:280px;height:280px;background:radial-gradient(circle,rgba(59,130,246,0.2),transparent 70%);top:-80px;right:-40px;"></div>
+  <div style="text-align:center;padding:28px 40px;position:relative;z-index:1;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--blue-l);margin-bottom:10px;">— PERTEMUAN 1 —</div>
+    <div class="t-h1 grad-blue" style="margin-bottom:8px;">"Mengenal Dunia Vektor"</div>
+    <div style="font-size:13px;color:var(--g4);">2 × 45 menit · Dari fenomena nyata ke konsep</div>
+  </div>
+  <div class="slot-badge">P1</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 3 — FENOMENA: KAMU UDAH PAKAI    -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p1-slide" id="s3" data-sec="p1">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:20px;">
+    <div class="s-accent">
+      <span class="ptm-tag p1">Pertemuan 1</span>
+      <span class="chip chip-ghost" style="margin-left:4px;">Fenomena</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Tanpa sadar, kamu sudah pakai vektor! 😮</div>
+    <div class="g3" style="gap:14px;">
+      <div class="card" style="padding:18px;text-align:center;border-color:rgba(59,130,246,0.22);">
+        <div style="font-size:38px;margin-bottom:10px;">📱</div>
+        <div style="font-weight:700;font-size:13px;color:var(--blue-l);margin-bottom:6px;">Google Maps</div>
+        <div style="font-size:12px;color:var(--g5);line-height:1.6;">"Belok kiri 200 m,<br>lalu belok kanan 500 m"</div>
+        <div style="margin-top:10px;font-size:11px;color:var(--g6);font-style:italic;">jarak <strong style="color:var(--blue-l);">+</strong> arah</div>
+      </div>
+      <div class="card" style="padding:18px;text-align:center;border-color:rgba(34,211,238,0.22);">
+        <div style="font-size:38px;margin-bottom:10px;">🌬️</div>
+        <div style="font-weight:700;font-size:13px;color:var(--cyan-l);margin-bottom:6px;">BMKG Cuaca</div>
+        <div style="font-size:12px;color:var(--g5);line-height:1.6;">"Angin barat daya<br>25 km/jam"</div>
+        <div style="margin-top:10px;font-size:11px;color:var(--g6);font-style:italic;">kecepatan <strong style="color:var(--cyan-l);">+</strong> arah</div>
+      </div>
+      <div class="card" style="padding:18px;text-align:center;border-color:rgba(129,140,248,0.22);">
+        <div style="font-size:38px;margin-bottom:10px;">🚁</div>
+        <div style="font-weight:700;font-size:13px;color:var(--indigo);margin-bottom:6px;">Drone Pengiriman</div>
+        <div style="font-size:12px;color:var(--g5);line-height:1.6;">"Terbang ke koordinat<br>3°S, 107°E"</div>
+        <div style="margin-top:10px;font-size:11px;color:var(--g6);font-style:italic;">posisi <strong style="color:var(--indigo);">+</strong> arah</div>
+      </div>
+    </div>
+    <!-- Big question -->
+    <div class="card-blue" style="padding:18px;display:flex;align-items:center;gap:14px;">
+      <div class="ico" style="background:rgba(59,130,246,0.2);border:1px solid rgba(59,130,246,0.35);font-size:22px;">🤔</div>
+      <div>
+        <div style="font-weight:700;color:var(--blue-l);margin-bottom:4px;font-size:14px;">Pola yang sama dari ketiganya?</div>
+        <div style="font-size:13px;color:var(--g3);">Semua butuh <strong>besar (angka)</strong> DAN <strong>arah</strong> untuk informasi yang lengkap. Itulah inti dari <strong style="color:var(--cyan);">VEKTOR</strong>!</div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">03 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 4 — SKALAR vs VEKTOR             -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p1-slide" id="s4" data-sec="p1">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p1">Pertemuan 1</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Dua Jenis Besaran dalam Fisika</div>
+    <div class="g2" style="gap:18px;flex:1;">
+      <!-- SKALAR -->
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card-green" style="padding:18px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <div class="ico" style="background:rgba(34,197,94,0.18);border:1px solid rgba(34,197,94,0.35);">📏</div>
+            <div>
+              <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--green-l);">Besaran Skalar</div>
+              <div style="font-weight:700;font-size:1rem;">Hanya punya BESAR</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;">
+            <span class="chip chip-green">🌡️ Suhu: 30°C</span>
+            <span class="chip chip-green">⚖️ Massa: 5 kg</span>
+            <span class="chip chip-green">⏱️ Waktu: 10 s</span>
+            <span class="chip chip-green">📐 Jarak: 100 m</span>
+            <span class="chip chip-green">⚡ Energi: 200 J</span>
+          </div>
+        </div>
+        <div class="card" style="padding:13px;text-align:center;">
+          <div style="font-size:11px;color:var(--g5);margin-bottom:5px;">Contoh:</div>
+          <div style="font-size:1.5rem;font-weight:900;color:var(--green-l);">30°C</div>
+          <div style="font-size:11px;color:var(--g6);margin-top:4px;">Tidak perlu tahu "ke arah mana"</div>
+        </div>
+      </div>
+      <!-- VEKTOR -->
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card-blue" style="padding:18px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <div class="ico" style="background:rgba(59,130,246,0.18);border:1px solid rgba(59,130,246,0.35);">🧭</div>
+            <div>
+              <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue-l);">Besaran Vektor</div>
+              <div style="font-weight:700;font-size:1rem;">Punya BESAR + ARAH</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <span class="chip chip-blue" style="width:fit-content;">🚗 Kecepatan: 60 km/jam ke Utara</span>
+            <span class="chip chip-blue" style="width:fit-content;">↗️ Perpindahan: 5 m ke Timur</span>
+            <span class="chip chip-blue" style="width:fit-content;">💪 Gaya: 10 N ke bawah</span>
+            <span class="chip chip-blue" style="width:fit-content;">🔄 Percepatan: 2 m/s² ke kiri</span>
+          </div>
+        </div>
+        <div class="card" style="padding:13px;text-align:center;">
+          <div style="font-size:11px;color:var(--g5);margin-bottom:5px;">Contoh:</div>
+          <div style="font-size:1.3rem;font-weight:900;color:var(--blue-l);">25 km/jam <span style="font-size:0.9rem;">barat daya</span></div>
+          <div style="font-size:11px;color:var(--g6);margin-top:4px;">Tanpa arah → informasi tidak lengkap!</div>
+        </div>
+      </div>
+    </div>
+    <!-- Quick note -->
+    <div class="card" style="padding:12px 16px;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:16px;">💡</span>
+      <span style="font-size:12px;color:var(--g4);"><strong style="color:var(--amber-l);">Ingat:</strong> speedometer mobilmu = <em>kelajuan</em> (skalar). Tapi saat navigasi GPS kamu butuh <em>kecepatan</em> (vektor) — ada arahnya!</span>
+    </div>
+  </div>
+  <div class="slot-badge">04 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 5 — KUIS 1 (Interaktif)          -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p1-slide" id="s5" data-sec="p1">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p1">Pertemuan 1</span>
+      <span class="chip chip-amber" style="margin-left:4px;">🎯 Kuis · +10 XP per jawaban benar</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Kuis Cepat — Skalar atau Vektor?</div>
+    <div class="g2" style="gap:20px;flex:1;align-items:start;">
+      <!-- Q1 -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card" style="padding:14px 16px;">
+          <div style="font-size:11px;font-weight:700;color:var(--g5);margin-bottom:6px;letter-spacing:0.06em;">PERTANYAAN 1</div>
+          <div style="font-size:14px;color:var(--g3);">"Berat badan Rafa adalah <strong>55 kg</strong>" — termasuk besaran apa?</div>
+        </div>
+        <div class="quiz-wrap" id="q1">
+          <div class="quiz-opt" onclick="answerQuiz('q1','A',false,'Massa (kg) hanya punya besar, tidak ada arahnya. ✓ Ini besaran skalar!')">
+            <div class="quiz-letter">A</div><div class="quiz-text">Vektor — karena ada angkanya</div>
+          </div>
+          <div class="quiz-opt" onclick="answerQuiz('q1','B',true,'Betul! Massa/berat hanya punya besar (55 kg), tidak ada arah. Ini skalar! 🎉')">
+            <div class="quiz-letter">B</div><div class="quiz-text">Skalar — karena hanya ada besar, tidak ada arah</div>
+          </div>
+          <div class="quiz-opt" onclick="answerQuiz('q1','C',false,'Bukan keduanya — massa jelas termasuk salah satunya!')">
+            <div class="quiz-letter">C</div><div class="quiz-text">Bukan keduanya</div>
+          </div>
+        </div>
+        <div class="quiz-feedback" id="q1-fb"></div>
+      </div>
+      <!-- Q2 -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card" style="padding:14px 16px;">
+          <div style="font-size:11px;font-weight:700;color:var(--g5);margin-bottom:6px;letter-spacing:0.06em;">PERTANYAAN 2</div>
+          <div style="font-size:14px;color:var(--g3);">"Pesawat terbang ke arah <strong>Timur</strong> dengan kecepatan <strong>900 km/jam</strong>" — termasuk besaran apa?</div>
+        </div>
+        <div class="quiz-wrap" id="q2">
+          <div class="quiz-opt" onclick="answerQuiz('q2','A',true,'Tepat! Ada besar (900 km/jam) DAN arah (ke Timur). Ini vektor! 🎉')">
+            <div class="quiz-letter">A</div><div class="quiz-text">Vektor — ada besar DAN arah</div>
+          </div>
+          <div class="quiz-opt" onclick="answerQuiz('q2','B',false,'Jika hanya skalar, informasi arahnya (ke Timur) tidak diperlukan. Tapi ternyata diperlukan!')">
+            <div class="quiz-letter">B</div><div class="quiz-text">Skalar — karena ada angka km/jam</div>
+          </div>
+          <div class="quiz-opt" onclick="answerQuiz('q2','C',false,'Kecepatan dengan arah pasti termasuk salah satunya — vektor!')">
+            <div class="quiz-letter">C</div><div class="quiz-text">Tergantung situasinya</div>
+          </div>
+        </div>
+        <div class="quiz-feedback" id="q2-fb"></div>
+      </div>
+    </div>
+    <div class="quiz-score" id="q12-score"></div>
+  </div>
+  <div class="slot-badge">05 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 6 — NOTASI VEKTOR                -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p1-slide" id="s6" data-sec="p1">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p1">Pertemuan 1</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Cara Menulis Vektor</div>
+    <div class="g2" style="gap:20px;">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="formula-card">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--g5);margin-bottom:10px;">Notasi anak panah (di buku)</div>
+          <div style="font-size:2.2rem;font-weight:800;">$$\vec{A} \quad \vec{F} \quad \vec{v}$$</div>
+          <div style="font-size:11px;color:var(--g5);margin-top:8px;">Anak panah di atas huruf = besaran vektor</div>
+        </div>
+        <div class="formula-card">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--g5);margin-bottom:10px;">Besar vektor</div>
+          <div style="font-size:1.8rem;font-weight:800;">$$|\vec{A}| = A$$</div>
+          <div style="font-size:11px;color:var(--g5);margin-top:8px;">Nilai mutlak atau huruf tanpa panah = besarnya saja</div>
+        </div>
+        <div class="card-cyan" style="padding:14px;">
+          <strong style="color:var(--cyan-l);font-size:13px;">💡 Tips:</strong>
+          <div style="font-size:12px;color:var(--g4);margin-top:6px;line-height:1.6;">Saat nulis tangan, bisa pakai anak panah di atas huruf (<span class="vec">A</span>) atau huruf tebal (<strong>A</strong>). Yang penting, selalu bedakan vektor dari skalar!</div>
+        </div>
+      </div>
+      <!-- Diagram komponen -->
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="v-canvas" style="padding:14px;">
+          <svg viewBox="0 0 300 230" width="100%">
+            <defs>
+              <marker id="nax" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#94a3b8"/></marker>
+              <marker id="nav" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#22d3ee"/></marker>
+              <marker id="navx" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#60a5fa"/></marker>
+              <marker id="navy" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#818cf8"/></marker>
+            </defs>
+            <line x1="25" y1="195" x2="275" y2="195" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#nax)"/>
+            <line x1="35" y1="205" x2="35" y2="20" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#nax)"/>
+            <text x="278" y="199" fill="#94a3b8" font-size="12" font-family="Outfit">x</text>
+            <text x="29" y="16" fill="#94a3b8" font-size="12" font-family="Outfit">y</text>
+            <!-- Vector A -->
+            <line x1="35" y1="195" x2="205" y2="75" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#nav)"/>
+            <text x="108" y="120" fill="#22d3ee" font-size="14" font-family="Outfit" font-weight="700">A</text>
+            <text x="114" y="113" fill="#22d3ee" font-size="9">→</text>
+            <!-- Ax -->
+            <line x1="35" y1="195" x2="205" y2="195" stroke="#60a5fa" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#navx)"/>
+            <text x="112" y="210" fill="#60a5fa" font-size="11" font-family="Outfit">Ax = A cos θ</text>
+            <!-- Ay -->
+            <line x1="207" y1="195" x2="207" y2="77" stroke="#818cf8" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#navy)"/>
+            <text x="212" y="140" fill="#818cf8" font-size="11" font-family="Outfit">Ay = A sin θ</text>
+            <!-- angle -->
+            <path d="M 62,195 A 27,27 0 0,0 59,172" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+            <text x="70" y="189" fill="#fbbf24" font-size="12" font-family="Outfit">θ</text>
+            <circle cx="35" cy="195" r="4" fill="#22d3ee"/>
+          </svg>
+        </div>
+        <div class="formula-card">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--g5);margin-bottom:10px;">Besar dari komponen</div>
+          <div>$$A = \sqrt{A_x^2 + A_y^2}$$</div>
+          <div style="margin-top:10px;">$$\theta = \arctan\!\left(\frac{A_y}{A_x}\right)$$</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">06 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 7 — CONTOH & REVEAL KOMPONEN     -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p1-slide" id="s7" data-sec="p1">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p1">Pertemuan 1</span>
+      <span class="chip chip-blue" style="margin-left:4px;">Contoh Soal</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Coba Dulu, Baru Lihat Jawabannya</div>
+    <div class="g2" style="gap:20px;flex:1;">
+      <!-- Soal -->
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card-blue" style="padding:18px;">
+          <div style="font-weight:700;color:var(--blue-l);margin-bottom:10px;font-size:14px;">📋 Soal</div>
+          <div class="t-body" style="line-height:1.8;">
+            Sebuah drone bergerak dengan kecepatan $v = 50$ m/s membentuk sudut $\theta = 37°$ terhadap sumbu-x positif.<br><br>
+            Tentukan komponen-x dan komponen-y kecepatannya!<br>
+            <em style="font-size:12px;color:var(--g5);">(sin 37° ≈ 0,6 | cos 37° ≈ 0,8)</em>
+          </div>
+        </div>
+        <div class="v-canvas" style="padding:12px;">
+          <svg viewBox="0 0 270 160" width="100%">
+            <defs>
+              <marker id="da1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#94a3b8"/></marker>
+              <marker id="dav" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#22d3ee"/></marker>
+              <marker id="davx" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#60a5fa"/></marker>
+              <marker id="davy" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#818cf8"/></marker>
+            </defs>
+            <line x1="20" y1="130" x2="250" y2="130" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#da1)"/>
+            <line x1="30" y1="140" x2="30" y2="20" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#da1)"/>
+            <line x1="30" y1="130" x2="186" y2="44" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#dav)"/>
+            <text x="100" y="78" fill="#22d3ee" font-size="12" font-family="Outfit" font-weight="700">v = 50 m/s</text>
+            <line x1="30" y1="130" x2="186" y2="130" stroke="#60a5fa" stroke-width="1.8" stroke-dasharray="4,3" marker-end="url(#davx)"/>
+            <text x="100" y="145" fill="#60a5fa" font-size="11" font-family="Outfit">vx = ?</text>
+            <line x1="188" y1="130" x2="188" y2="46" stroke="#818cf8" stroke-width="1.8" stroke-dasharray="4,3" marker-end="url(#davy)"/>
+            <text x="194" y="92" fill="#818cf8" font-size="11" font-family="Outfit">vy = ?</text>
+            <path d="M 52,130 A 22,22 0 0,0 50,111" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+            <text x="58" y="125" fill="#fbbf24" font-size="11" font-family="Outfit">37°</text>
+            <text x="24" y="20" fill="rgba(255,255,255,0.3)" font-size="9" font-family="Outfit">🚁</text>
+            <circle cx="30" cy="130" r="4" fill="#22d3ee"/>
+          </svg>
+        </div>
+      </div>
+      <!-- Reveal jawaban -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card reveal-card" style="padding:16px;" onclick="toggleReveal('rev1')">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-weight:700;font-size:13px;color:var(--blue-l);">Langkah 1 — Komponen-x</span>
+            <span style="color:var(--g5);font-size:12px;" id="rev1-ico">👆 klik untuk buka</span>
+          </div>
+          <div class="reveal-body" id="rev1">
+            <div class="math-box" style="margin-top:10px;">$$v_x = v\cos\theta = 50 \times 0{,}8 = \mathbf{40 \text{ m/s}}$$</div>
+          </div>
+        </div>
+        <div class="card reveal-card" style="padding:16px;" onclick="toggleReveal('rev2')">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-weight:700;font-size:13px;color:var(--indigo);">Langkah 2 — Komponen-y</span>
+            <span style="color:var(--g5);font-size:12px;" id="rev2-ico">👆 klik untuk buka</span>
+          </div>
+          <div class="reveal-body" id="rev2">
+            <div class="math-box indigo" style="margin-top:10px;">$$v_y = v\sin\theta = 50 \times 0{,}6 = \mathbf{30 \text{ m/s}}$$</div>
+          </div>
+        </div>
+        <div class="card reveal-card" style="padding:16px;" onclick="toggleReveal('rev3')">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-weight:700;font-size:13px;color:var(--green-l);">✅ Verifikasi</span>
+            <span style="color:var(--g5);font-size:12px;" id="rev3-ico">👆 klik untuk buka</span>
+          </div>
+          <div class="reveal-body" id="rev3">
+            <div class="math-box cyan" style="margin-top:10px;">$$\sqrt{40^2+30^2} = \sqrt{2500} = 50 \text{ m/s} \checkmark$$</div>
+            <div style="font-size:12px;color:var(--green-l);margin-top:8px;">Hasil cocok dengan kecepatan awal. ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">07 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 8 — REFLEKSI P1 + RINGKASAN      -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p1-slide" id="s8" data-sec="p1">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p1">Pertemuan 1</span>
+      <span class="chip chip-amber" style="margin-left:4px;">Ringkasan</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Yang sudah kamu pelajari hari ini 🎉</div>
+    <div class="g2" style="gap:16px;flex:1;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card" style="padding:14px;border-left:3px solid var(--green);display:flex;align-items:start;gap:10px;">
+          <span style="font-size:18px;">✅</span>
+          <div>
+            <div style="font-weight:700;font-size:13px;color:var(--green-l);margin-bottom:3px;">Vektor ≠ Skalar</div>
+            <div style="font-size:12px;color:var(--g4);">Vektor punya besar DAN arah. Skalar hanya besar.</div>
+          </div>
+        </div>
+        <div class="card" style="padding:14px;border-left:3px solid var(--blue);display:flex;align-items:start;gap:10px;">
+          <span style="font-size:18px;">✅</span>
+          <div>
+            <div style="font-weight:700;font-size:13px;color:var(--blue-l);margin-bottom:3px;">Notasi</div>
+            <div style="font-size:12px;color:var(--g4);">Ditulis $\vec{A}$ atau <strong>A</strong>. Besar vektornya = $|\vec{A}| = A$</div>
+          </div>
+        </div>
+        <div class="card" style="padding:14px;border-left:3px solid var(--cyan);display:flex;align-items:start;gap:10px;">
+          <span style="font-size:18px;">✅</span>
+          <div>
+            <div style="font-weight:700;font-size:13px;color:var(--cyan-l);margin-bottom:3px;">Komponen</div>
+            <div style="font-size:12px;color:var(--g4);">$A_x = A\cos\theta$ dan $A_y = A\sin\theta$. Besar: $A = \sqrt{A_x^2+A_y^2}$</div>
+          </div>
+        </div>
+        <div class="card" style="padding:14px;border-left:3px solid var(--indigo);display:flex;align-items:start;gap:10px;">
+          <span style="font-size:18px;">✅</span>
+          <div>
+            <div style="font-weight:700;font-size:13px;color:var(--indigo);margin-bottom:3px;">Contoh nyata</div>
+            <div style="font-size:12px;color:var(--g4);">GPS, BMKG, drone — semuanya pakai vektor setiap detik.</div>
+          </div>
+        </div>
+      </div>
+      <!-- Refleksi & preview -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card-amber" style="padding:16px;">
+          <div style="font-weight:700;color:var(--amber-l);margin-bottom:10px;font-size:13px;">📝 Cek Pemahamanmu</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="card" style="padding:11px;font-size:12px;color:var(--g3);">Jika $A_x = 3$ dan $A_y = 4$, berapa $|\vec{A}|$? <em style="color:var(--g5);">(Jawab: 5)</em></div>
+            <div class="card" style="padding:11px;font-size:12px;color:var(--g3);">Suhu, gaya, volume, perpindahan — mana yang vektor? <em style="color:var(--g5);">(gaya & perpindahan)</em></div>
+            <div class="card" style="padding:11px;font-size:12px;color:var(--g3);">Mengapa GPS butuh konsep vektor?</div>
+          </div>
+        </div>
+        <div class="card-cyan" style="padding:16px;">
+          <div style="font-weight:700;color:var(--cyan-l);margin-bottom:8px;font-size:13px;">👀 Preview Pertemuan 2</div>
+          <div style="font-size:12px;color:var(--g4);line-height:1.6;">Kita sudah kenal vektor. Selanjutnya — bagaimana <strong>menambahkan</strong> dua vektor? Ada 3 cara berbeda yang semua menghasilkan jawaban sama! 🤯</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">08 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DIVIDER — PERTEMUAN 2                  -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide divider-slide p2-div" id="p2" data-sec="p2">
+  <div class="deco" style="width:280px;height:280px;background:radial-gradient(circle,rgba(34,211,238,0.2),transparent 70%);top:-80px;right:-40px;"></div>
+  <div style="text-align:center;padding:28px 40px;position:relative;z-index:1;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan-l);margin-bottom:10px;">— PERTEMUAN 2 —</div>
+    <div class="t-h1 grad-cyan" style="margin-bottom:8px;">"Operasi Vektor"</div>
+    <div style="font-size:13px;color:var(--g4);">2 × 45 menit · Tiga cara menjumlahkan vektor</div>
+  </div>
+  <div class="slot-badge">P2</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 9 — METODE SEGITIGA              -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p2-slide" id="s9" data-sec="p2">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p2">Pertemuan 2</span>
+      <span class="chip chip-cyan" style="margin-left:4px;">Metode 1</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Metode Segitiga <span style="font-size:1rem;font-weight:500;color:var(--g4);">— Head to Tail</span></div>
+    <div class="g2" style="gap:22px;flex:1;align-items:start;">
+      <!-- Diagram animated -->
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="v-canvas" style="padding:14px;">
+          <svg viewBox="0 0 310 210" width="100%">
+            <defs>
+              <marker id="sg1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#22d3ee"/></marker>
+              <marker id="sg2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#60a5fa"/></marker>
+              <marker id="sgr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#f59e0b"/></marker>
+            </defs>
+            <text x="12" y="18" fill="rgba(255,255,255,0.4)" font-size="10" font-family="Outfit">Sambung kepala ke ekor:</text>
+            <!-- A -->
+            <line x1="25" y1="170" x2="145" y2="95" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#sg1)"/>
+            <text x="74" y="122" fill="#22d3ee" font-size="13" font-family="Outfit" font-weight="700">A</text>
+            <text x="79" y="114" fill="#22d3ee" font-size="9">→</text>
+            <!-- B dari ujung A -->
+            <line x1="145" y1="95" x2="270" y2="135" stroke="#60a5fa" stroke-width="2.5" marker-end="url(#sg2)"/>
+            <text x="200" y="105" fill="#60a5fa" font-size="13" font-family="Outfit" font-weight="700">B</text>
+            <text x="205" y="97" fill="#60a5fa" font-size="9">→</text>
+            <!-- Resultan -->
+            <line x1="25" y1="170" x2="265" y2="138" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="6,3" marker-end="url(#sgr)"/>
+            <text x="125" y="175" fill="#f59e0b" font-size="12" font-family="Outfit" font-weight="700">R = A + B</text>
+            <!-- Dots -->
+            <circle cx="25" cy="170" r="5" fill="#22d3ee"/>
+            <circle cx="145" cy="95" r="4" fill="rgba(255,255,255,0.4)"/>
+            <circle cx="270" cy="135" r="4" fill="#f59e0b"/>
+            <text x="17" y="186" fill="rgba(255,255,255,0.4)" font-size="9" font-family="Outfit">Start</text>
+            <text x="254" y="155" fill="rgba(255,255,255,0.4)" font-size="9" font-family="Outfit">End</text>
+          </svg>
+        </div>
+        <div class="formula-card">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--g5);margin-bottom:8px;">Rumus Resultan (Hukum Kosinus)</div>
+          <div>$$R = \sqrt{A^2 + B^2 + 2AB\cos\alpha}$$</div>
+          <div style="font-size:11px;color:var(--g5);margin-top:7px;">$\alpha$ = sudut antara vektor <span class="vec">A</span> dan <span class="vec">B</span></div>
+        </div>
+      </div>
+      <!-- Langkah -->
+      <div class="step-row">
+        <div class="step-item">
+          <div class="step-dot" style="border-color:var(--cyan);background:rgba(34,211,238,0.12);color:var(--cyan);">1</div>
+          <div class="step-body">
+            <div style="font-weight:700;font-size:13px;color:var(--cyan-l);margin-bottom:3px;">Gambar <span class="vec">A</span> dari titik pangkal O</div>
+            <div style="font-size:12px;color:var(--g5);">Panjang dan arah sesuai skala.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot" style="border-color:var(--blue-l);background:rgba(96,165,250,0.12);color:var(--blue-l);">2</div>
+          <div class="step-body">
+            <div style="font-weight:700;font-size:13px;color:var(--blue-l);margin-bottom:3px;">Gambar <span class="vec">B</span> dari ujung (kepala) <span class="vec">A</span></div>
+            <div style="font-size:12px;color:var(--g5);">Pangkal <span class="vec">B</span> harus disambung ke kepala <span class="vec">A</span>.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot" style="border-color:var(--amber);background:rgba(245,158,11,0.12);color:var(--amber);">3</div>
+          <div class="step-body">
+            <div style="font-weight:700;font-size:13px;color:var(--amber-l);margin-bottom:3px;">Tarik garis O → ujung <span class="vec">B</span></div>
+            <div style="font-size:12px;color:var(--g5);">Garis ini = <span class="vec">R</span> = resultan!</div>
+          </div>
+        </div>
+        <div class="card-cyan" style="padding:13px;margin-top:4px;">
+          <strong style="color:var(--cyan-l);font-size:12px;">🎒 Analogi:</strong>
+          <div style="font-size:12px;color:var(--g4);margin-top:5px;">Bayangkan jalan kaki: 3 langkah ke Utara (A), lalu 4 langkah ke Timur (B). Garis lurus dari start ke finish = resultan kamu!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">09 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 10 — METODE JAJAR GENJANG (FIXED) -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p2-slide" id="s10" data-sec="p2">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p2">Pertemuan 2</span>
+      <span class="chip chip-cyan" style="margin-left:4px;">Metode 2</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Metode Jajar Genjang <span style="font-size:1rem;font-weight:500;color:var(--g4);">— Parallelogram</span></div>
+    <div class="g2" style="gap:22px;flex:1;align-items:start;">
+
+      <!-- ── DIAGRAM JAJAR GENJANG YANG BENAR ── -->
+      <!-- O=(50,180) A=(50+120,180-80)=(170,100) B=(50+160,180+0)=(210,180) -->
+      <!-- Sudut antara A dan B ~40°, ujung jajar genjang = O+A+B = (330,100) -->
+      <div class="v-canvas" style="padding:16px;">
+        <svg viewBox="0 0 340 230" width="100%">
+          <defs>
+            <marker id="jja" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0,9 3.5,0 7" fill="#22d3ee"/>
+            </marker>
+            <marker id="jjb" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0,9 3.5,0 7" fill="#60a5fa"/>
+            </marker>
+            <marker id="jja2" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0,9 3.5,0 7" fill="rgba(34,211,238,0.3)"/>
+            </marker>
+            <marker id="jjb2" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0,9 3.5,0 7" fill="rgba(96,165,250,0.3)"/>
+            </marker>
+            <marker id="jjr2" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0,9 3.5,0 7" fill="#f59e0b"/>
+            </marker>
+          </defs>
+
+          <!-- O = (55,185), A-tip = (55+110, 185-75) = (165,110),
+               B-tip = (55+160, 185+10) = (215,195),
+               P (jajar genjang) = A-tip + B-vec = (165+160, 110+10) = (325,120) -->
+
+          <!-- Filled parallelogram -->
+          <polygon points="55,185 165,110 325,120 215,195"
+                   fill="rgba(34,211,238,0.06)"
+                   stroke="rgba(34,211,238,0.15)" stroke-width="1"/>
+
+          <!-- Sisi sejajar (ghost copies) — dashed -->
+          <!-- B dari ujung A: A-tip → P -->
+          <line x1="165" y1="110" x2="319" y2="120"
+                stroke="rgba(96,165,250,0.35)" stroke-width="1.8"
+                stroke-dasharray="5,4" marker-end="url(#jjb2)"/>
+          <!-- A dari ujung B: B-tip → P -->
+          <line x1="215" y1="195" x2="319" y2="122"
+                stroke="rgba(34,211,238,0.35)" stroke-width="1.8"
+                stroke-dasharray="5,4" marker-end="url(#jja2)"/>
+
+          <!-- Vektor A — dari O -->
+          <line x1="55" y1="185" x2="161" y2="112"
+                stroke="#22d3ee" stroke-width="2.8" marker-end="url(#jja)"/>
+          <text x="95" y="138" fill="#22d3ee" font-size="14" font-family="Outfit" font-weight="800">A</text>
+          <text x="101" y="130" fill="#22d3ee" font-size="9">→</text>
+
+          <!-- Vektor B — dari O (sudut berbeda dari A) -->
+          <line x1="55" y1="185" x2="210" y2="196"
+                stroke="#60a5fa" stroke-width="2.8" marker-end="url(#jjb)"/>
+          <text x="126" y="200" fill="#60a5fa" font-size="14" font-family="Outfit" font-weight="800">B</text>
+          <text x="132" y="192" fill="#60a5fa" font-size="9">→</text>
+
+          <!-- Diagonal resultan: O → P -->
+          <line x1="55" y1="185" x2="318" y2="122"
+                stroke="#f59e0b" stroke-width="2.8"
+                stroke-dasharray="7,3" marker-end="url(#jjr2)"/>
+          <text x="195" y="143" fill="#f59e0b" font-size="13" font-family="Outfit" font-weight="800">R</text>
+          <text x="201" y="135" fill="#f59e0b" font-size="9">→</text>
+
+          <!-- Sudut kecil di O -->
+          <path d="M 80,185 A 25,25 0 0,0 71,163"
+                fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.3"/>
+          <text x="81" y="178" fill="rgba(255,255,255,0.5)" font-size="10" font-family="Outfit">θ</text>
+
+          <!-- Titik O -->
+          <circle cx="55" cy="185" r="5" fill="#22d3ee"/>
+          <text x="42" y="201" fill="rgba(255,255,255,0.6)" font-size="11" font-family="Outfit" font-weight="700">O</text>
+
+          <!-- Label P -->
+          <circle cx="325" cy="120" r="3.5" fill="#f59e0b" opacity="0.7"/>
+          <text x="328" y="115" fill="rgba(255,255,255,0.4)" font-size="9" font-family="Outfit">P</text>
+
+          <!-- Keterangan -->
+          <text x="10" y="20" fill="rgba(255,255,255,0.4)" font-size="10" font-family="Outfit">A⃗ dan B⃗ berasal dari titik O yang SAMA</text>
+          <text x="10" y="33" fill="rgba(34,211,238,0.5)" font-size="9" font-family="Outfit">- - - sisi sejajar (copy)</text>
+        </svg>
+      </div>
+
+      <!-- ── LANGKAH-LANGKAH ── -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="step-row">
+          <div class="step-item">
+            <div class="step-dot" style="border-color:var(--cyan);background:rgba(34,211,238,0.12);color:var(--cyan);">1</div>
+            <div class="step-body">
+              <div style="font-weight:700;font-size:13px;color:var(--cyan-l);margin-bottom:3px;">Gambar <span class="vec">A</span> dan <span class="vec">B</span> dari titik <strong>O yang SAMA</strong></div>
+              <div style="font-size:12px;color:var(--g5);">Beda dengan segitiga — di sini kedua vektor dimulai dari titik pangkal O yang sama.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot" style="border-color:var(--blue-l);background:rgba(96,165,250,0.12);color:var(--blue-l);">2</div>
+            <div class="step-body">
+              <div style="font-weight:700;font-size:13px;color:var(--blue-l);margin-bottom:3px;">Buat garis sejajar dari ujung tiap vektor</div>
+              <div style="font-size:12px;color:var(--g5);">Dari ujung <span class="vec">A</span> buat garis sejajar <span class="vec">B</span>, dan sebaliknya, hingga bertemu di titik P.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot" style="border-color:var(--amber);background:rgba(245,158,11,0.12);color:var(--amber);">3</div>
+            <div class="step-body">
+              <div style="font-weight:700;font-size:13px;color:var(--amber-l);margin-bottom:3px;">Diagonal dari O ke P = Resultan <span class="vec">R</span></div>
+              <div style="font-size:12px;color:var(--g5);">Garis O→P adalah resultan. <strong style="color:#fca5a5;">Bukan</strong> diagonal yang lain!</div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="padding:12px;border-color:rgba(251,191,36,0.25);background:rgba(251,191,36,0.05);">
+          <div style="font-size:12px;color:var(--g4);line-height:1.6;">
+            <strong style="color:var(--amber-l);">⚡ Bandingkan:</strong> Segitiga = sambung kepala-ke-ekor. Jajar genjang = dari titik O sama, lengkapi. <strong style="color:var(--cyan-l);">Hasil numeriknya IDENTIK!</strong>
+          </div>
+        </div>
+        <div class="formula-card">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--g5);margin-bottom:8px;text-align:left;">Rumus Resultan</div>
+          <div>$$R = \sqrt{A^2 + B^2 + 2AB\cos\theta}$$</div>
+          <div style="font-size:11px;color:var(--g5);margin-top:8px;text-align:left;">θ = sudut antara <span class="vec">A</span> dan <span class="vec">B</span> (diukur dari titik O)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">10 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 11 — METODE ANALITIS             -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p2-slide" id="s11" data-sec="p2">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p2">Pertemuan 2</span>
+      <span class="chip chip-green" style="margin-left:4px;">Metode 3 — Paling Akurat</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Metode Analitis</div>
+    <div class="g2" style="gap:22px;flex:1;align-items:start;">
+      <!-- Steps -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card-blue" style="padding:14px;">
+          <div style="font-weight:700;color:var(--blue-l);margin-bottom:10px;font-size:13px;">4 Langkah Metode Analitis</div>
+          <div class="step-row">
+            <div class="step-item">
+              <div class="step-dot" style="border-color:var(--blue-l);background:rgba(96,165,250,0.1);color:var(--blue-l);font-size:11px;">1</div>
+              <div class="step-body">
+                <div style="font-size:12px;color:var(--g3);">Urai tiap vektor → komponen x dan y<br><em style="color:var(--g5);">$A_x = A\cos\theta_A$ , $A_y = A\sin\theta_A$</em></div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-dot" style="border-color:var(--blue-l);background:rgba(96,165,250,0.1);color:var(--blue-l);font-size:11px;">2</div>
+              <div class="step-body">
+                <div style="font-size:12px;color:var(--g3);">Jumlahkan semua komponen x<br><em style="color:var(--g5);">$R_x = \sum A_{ix}$</em></div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-dot" style="border-color:var(--blue-l);background:rgba(96,165,250,0.1);color:var(--blue-l);font-size:11px;">3</div>
+              <div class="step-body">
+                <div style="font-size:12px;color:var(--g3);">Jumlahkan semua komponen y<br><em style="color:var(--g5);">$R_y = \sum A_{iy}$</em></div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-dot" style="border-color:var(--blue-l);background:rgba(96,165,250,0.1);color:var(--blue-l);font-size:11px;">4</div>
+              <div class="step-body" style="padding-bottom:0;">
+                <div style="font-size:12px;color:var(--g3);">Hitung besar & arah resultan<br><em style="color:var(--g5);">$R = \sqrt{R_x^2+R_y^2}$ , $\theta = \arctan(R_y/R_x)$</em></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="padding:12px 14px;">
+          <div style="font-size:11px;color:var(--g4);line-height:1.7;">
+            <strong style="color:var(--amber-l);">Aturan tanda:</strong><br>
+            Ke kanan / ke atas = <strong style="color:var(--green-l);">+</strong> &nbsp;|&nbsp; Ke kiri / ke bawah = <strong style="color:var(--red-l);">−</strong>
+          </div>
+        </div>
+      </div>
+      <!-- Formulas -->
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="formula-card">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--g5);margin-bottom:10px;">Rumus Lengkap</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div>$$R_x = \sum_{i} A_i \cos\theta_i$$</div>
+            <div>$$R_y = \sum_{i} A_i \sin\theta_i$$</div>
+            <div class="divider"></div>
+            <div>$$R = \sqrt{R_x^2 + R_y^2}$$</div>
+            <div>$$\theta_R = \arctan\!\left(\frac{R_y}{R_x}\right)$$</div>
+          </div>
+        </div>
+        <div class="card-green" style="padding:13px;">
+          <div style="font-weight:700;color:var(--green-l);font-size:12px;margin-bottom:6px;">⭐ Keunggulan metode ini:</div>
+          <div style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--g4);">
+            <div>✓ Tidak bergantung akurasi gambar</div>
+            <div>✓ Bisa untuk banyak vektor sekaligus</div>
+            <div>✓ Dipakai komputer & kalkulator ilmiah</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">11 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 12 — CONTOH SOAL OJOL            -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p2-slide" id="s12" data-sec="p2">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:16px;">
+    <div class="s-accent">
+      <span class="ptm-tag p2">Pertemuan 2</span>
+      <span class="chip chip-cyan" style="margin-left:4px;">Contoh Soal</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Contoh: Resultan Kecepatan Ojol 🛵</div>
+    <div class="g2" style="gap:18px;flex:1;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card-blue" style="padding:16px;">
+          <div style="font-weight:700;color:var(--blue-l);margin-bottom:8px;font-size:13px;">📋 Soal</div>
+          <div class="t-body" style="line-height:1.8;font-size:13px;">
+            Seorang ojol bergerak:<br>
+            • <span class="vec" style="color:var(--cyan);">A</span> = <strong>40 m/s</strong> ke arah <strong>Timur</strong><br>
+            • <span class="vec" style="color:var(--blue-l);">B</span> = <strong>30 m/s</strong> ke arah <strong>Utara</strong><br><br>
+            Tentukan besar dan arah kecepatan resultan!
+          </div>
+        </div>
+        <div class="v-canvas" style="padding:12px;">
+          <svg viewBox="0 0 260 160" width="100%">
+            <defs>
+              <marker id="oj1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#22d3ee"/></marker>
+              <marker id="oj2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#60a5fa"/></marker>
+              <marker id="ojr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#f59e0b"/></marker>
+            </defs>
+            <line x1="28" y1="128" x2="194" y2="128" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#oj1)"/>
+            <text x="101" y="143" fill="#22d3ee" font-size="11" font-family="Outfit">A = 40 m/s →T</text>
+            <line x1="194" y1="128" x2="194" y2="46" stroke="#60a5fa" stroke-width="2.5" marker-end="url(#oj2)"/>
+            <text x="200" y="92" fill="#60a5fa" font-size="11" font-family="Outfit">B = 30 m/s ↑U</text>
+            <line x1="28" y1="128" x2="190" y2="49" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="5,3" marker-end="url(#ojr)"/>
+            <text x="80" y="80" fill="#f59e0b" font-size="11" font-family="Outfit" font-weight="700">R = ?</text>
+            <path d="M 55,128 A 26,26 0 0,0 52,104" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+            <text x="64" y="122" fill="#fbbf24" font-size="10" font-family="Outfit">θ</text>
+            <circle cx="28" cy="128" r="4" fill="#22d3ee"/>
+          </svg>
+        </div>
+      </div>
+      <!-- Step by step reveal -->
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="card reveal-card" style="padding:14px;" onclick="toggleReveal('oj1r')">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:12px;font-weight:700;color:var(--blue-l);">Langkah 1 — Komponen resultan</span>
+            <span style="font-size:11px;color:var(--g6);" id="oj1r-ico">👆 buka</span>
+          </div>
+          <div class="reveal-body" id="oj1r">
+            <div class="math-box" style="margin-top:10px;font-size:0.9rem;">
+              $$R_x = 40 + 0 = 40 \text{ m/s}$$
+              $$R_y = 0 + 30 = 30 \text{ m/s}$$
+            </div>
+          </div>
+        </div>
+        <div class="card reveal-card" style="padding:14px;" onclick="toggleReveal('oj2r')">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:12px;font-weight:700;color:var(--cyan-l);">Langkah 2 — Besar resultan</span>
+            <span style="font-size:11px;color:var(--g6);" id="oj2r-ico">👆 buka</span>
+          </div>
+          <div class="reveal-body" id="oj2r">
+            <div class="math-box cyan" style="margin-top:10px;font-size:0.9rem;">
+              $$R = \sqrt{40^2+30^2} = \sqrt{2500} = \mathbf{50 \text{ m/s}}$$
+            </div>
+          </div>
+        </div>
+        <div class="card reveal-card" style="padding:14px;" onclick="toggleReveal('oj3r')">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:12px;font-weight:700;color:var(--amber-l);">Langkah 3 — Arah resultan</span>
+            <span style="font-size:11px;color:var(--g6);" id="oj3r-ico">👆 buka</span>
+          </div>
+          <div class="reveal-body" id="oj3r">
+            <div class="math-box amber" style="margin-top:10px;font-size:0.9rem;">
+              $$\theta = \arctan\!\left(\frac{30}{40}\right) \approx 36{,}87°$$
+            </div>
+            <div style="font-size:11px;color:var(--g5);margin-top:6px;">dari Timur menuju Utara (Timur Laut)</div>
+          </div>
+        </div>
+        <div class="card-green" style="padding:12px;margin-top:4px;">
+          <div style="font-size:12px;color:var(--green-l);">✨ <strong>Fun fact:</strong> Ini segitiga 3-4-5! 40 = 4×10, 30 = 3×10, 50 = 5×10. Pythagoras kesukaan kita 😄</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">12 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 13 — PENGURANGAN VEKTOR          -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p2-slide" id="s13" data-sec="p2">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p2">Pertemuan 2</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Pengurangan Vektor</div>
+    <div class="g2" style="gap:22px;flex:1;align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card-cyan" style="padding:16px;">
+          <div style="font-weight:700;color:var(--cyan-l);margin-bottom:10px;font-size:14px;">💡 Trik Elegan</div>
+          <div style="font-size:13px;color:var(--g3);line-height:1.7;">
+            Pengurangan vektor = jumlahkan dengan <strong style="color:var(--cyan);">negatifnya</strong>:
+          </div>
+          <div class="math-box cyan" style="margin-top:12px;">$$\vec{A} - \vec{B} = \vec{A} + (-\vec{B})$$</div>
+          <div style="margin-top:10px;font-size:12px;color:var(--g5);">
+            $-\vec{B}$ = besar sama, tapi arah <strong style="color:var(--red-l);">berlawanan</strong>!
+          </div>
+        </div>
+        <div class="v-canvas" style="padding:12px;">
+          <svg viewBox="0 0 300 200" width="100%">
+            <defs>
+              <marker id="sub1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#22d3ee"/></marker>
+              <marker id="sub2g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="rgba(96,165,250,0.4)"/></marker>
+              <marker id="subn" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#fca5a5"/></marker>
+              <marker id="subr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#f59e0b"/></marker>
+            </defs>
+            <text x="10" y="18" fill="rgba(255,255,255,0.4)" font-size="10" font-family="Outfit">A − B = A + (−B)</text>
+            <!-- A -->
+            <line x1="50" y1="150" x2="178" y2="82" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#sub1)"/>
+            <text x="102" y="108" fill="#22d3ee" font-size="13" font-family="Outfit" font-weight="700">A</text>
+            <text x="107" y="100" fill="#22d3ee" font-size="9">→</text>
+            <!-- B asli (faded) -->
+            <line x1="50" y1="150" x2="208" y2="160" stroke="rgba(96,165,250,0.3)" stroke-width="1.5" stroke-dasharray="4,4" marker-end="url(#sub2g)"/>
+            <text x="122" y="176" fill="rgba(96,165,250,0.5)" font-size="11" font-family="Outfit">B (asli)</text>
+            <!-- -B dari ujung A -->
+            <line x1="178" y1="82" x2="20" y2="72" stroke="#fca5a5" stroke-width="2.5" marker-end="url(#subn)"/>
+            <text x="88" y="67" fill="#fca5a5" font-size="13" font-family="Outfit" font-weight="700">−B</text>
+            <text x="96" y="59" fill="#fca5a5" font-size="9">→</text>
+            <!-- Resultan -->
+            <line x1="50" y1="150" x2="24" y2="76" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="5,3" marker-end="url(#subr)"/>
+            <text x="7" y="122" fill="#f59e0b" font-size="12" font-family="Outfit" font-weight="700">A−B</text>
+            <circle cx="50" cy="150" r="4" fill="#22d3ee"/>
+          </svg>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card" style="padding:16px;">
+          <div style="font-weight:700;font-size:13px;margin-bottom:10px;">Contoh Nyata: Perubahan Kecepatan</div>
+          <div style="font-size:13px;color:var(--g4);line-height:1.7;">
+            Kapal awalnya bergerak ke Utara (<span class="vec">v</span>₁). Kemudian berbelok ke Timur (<span class="vec">v</span>₂).<br><br>
+            Perubahan kecepatan: $\Delta\vec{v} = \vec{v}_2 - \vec{v}_1$
+          </div>
+          <div class="math-box" style="margin-top:10px;font-size:0.9rem;">$$\Delta\vec{v} = \vec{v}_2 + (-\vec{v}_1)$$</div>
+        </div>
+        <div class="card-amber" style="padding:14px;">
+          <strong style="color:var(--amber-l);font-size:12px;">🎯 Analogi Simpel:</strong>
+          <div style="font-size:12px;color:var(--g4);margin-top:6px;line-height:1.6;">
+            Bayangkan kamu jalan 5 langkah ke Utara (+5). Tapi ada yang bilang "<em>−5 ke Utara</em>". Artinya? 5 langkah ke <strong style="color:var(--red-l);">Selatan</strong>! Negatif berarti balik arah.
+          </div>
+        </div>
+        <div class="formula-card" style="padding:16px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--g5);margin-bottom:8px;">Secara Analitis</div>
+          <div>$$(\vec{A}-\vec{B})_x = A_x - B_x$$</div>
+          <div style="margin-top:8px;">$$(\vec{A}-\vec{B})_y = A_y - B_y$$</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">13 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 14 — KUIS P2 (Interaktif)        -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p2-slide" id="s14" data-sec="p2">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p2">Pertemuan 2</span>
+      <span class="chip chip-amber" style="margin-left:4px;">🎯 Kuis · +10 XP</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Kuis Operasi Vektor</div>
+    <div class="g2" style="gap:20px;flex:1;align-items:start;">
+      <!-- Q3 -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card" style="padding:14px 16px;">
+          <div style="font-size:10px;font-weight:700;color:var(--g5);margin-bottom:6px;letter-spacing:0.06em;">PERTANYAAN 3</div>
+          <div style="font-size:13px;color:var(--g3);">Vektor <span class="vec">A</span> = 3 m ke Timur dan <span class="vec">B</span> = 4 m ke Utara. Berapa besar resultan $|\vec{R}|$?</div>
+        </div>
+        <div class="quiz-wrap" id="q3">
+          <div class="quiz-opt" onclick="answerQuiz('q3','A',false,'Kalau searah baru dijumlah langsung. Ini tegak lurus — pakai Pythagoras!')">
+            <div class="quiz-letter">A</div><div class="quiz-text">7 m (3 + 4)</div>
+          </div>
+          <div class="quiz-opt" onclick="answerQuiz('q3','B',false,'1 m bukan hasil penjumlahan maupun Pythagoras. Coba lagi!')">
+            <div class="quiz-letter">B</div><div class="quiz-text">1 m (4 − 3)</div>
+          </div>
+          <div class="quiz-opt" onclick="answerQuiz('q3','C',true,'Betul! √(3²+4²) = √(9+16) = √25 = 5 m. Segitiga 3-4-5! 🎉')">
+            <div class="quiz-letter">C</div><div class="quiz-text">5 m (√(3²+4²))</div>
+          </div>
+        </div>
+        <div class="quiz-feedback" id="q3-fb"></div>
+      </div>
+      <!-- Q4 -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card" style="padding:14px 16px;">
+          <div style="font-size:10px;font-weight:700;color:var(--g5);margin-bottom:6px;letter-spacing:0.06em;">PERTANYAAN 4</div>
+          <div style="font-size:13px;color:var(--g3);">Pada metode segitiga, pangkal vektor <span class="vec">B</span> harus diletakkan di mana?</div>
+        </div>
+        <div class="quiz-wrap" id="q4">
+          <div class="quiz-opt" onclick="answerQuiz('q4','A',false,'Bukan di pangkal yang sama — itu metode jajar genjang!')">
+            <div class="quiz-letter">A</div><div class="quiz-text">Di titik pangkal yang sama dengan <span class="vec">A</span></div>
+          </div>
+          <div class="quiz-opt" onclick="answerQuiz('q4','B',true,'Tepat! Itulah kenanya disebut head-to-tail. Kepala A → ekor B. 🎉')">
+            <div class="quiz-letter">B</div><div class="quiz-text">Di ujung (kepala) vektor <span class="vec">A</span></div>
+          </div>
+          <div class="quiz-opt" onclick="answerQuiz('q4','C',false,'Tidak ada aturan &quot;tengah&quot; dalam metode segitiga.')">
+            <div class="quiz-letter">C</div><div class="quiz-text">Di tengah vektor <span class="vec">A</span></div>
+          </div>
+        </div>
+        <div class="quiz-feedback" id="q4-fb"></div>
+      </div>
+    </div>
+    <div class="quiz-score" id="q34-score"></div>
+  </div>
+  <div class="slot-badge">14 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 15 — LATIHAN P2                  -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p2-slide" id="s15" data-sec="p2">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p2">Pertemuan 2</span>
+      <span class="chip chip-cyan" style="margin-left:4px;">Latihan Mandiri</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Latihan — Kerjakan Dulu, Baru Buka Jawaban</div>
+    <div style="display:flex;flex-direction:column;gap:10px;flex:1;">
+      <!-- Soal 1 -->
+      <div class="card" style="padding:14px 18px;">
+        <div style="display:flex;justify-content:space-between;align-items:start;gap:10px;flex-wrap:wrap;">
+          <div style="flex:1;">
+            <span class="chip chip-green" style="margin-bottom:8px;display:inline-flex;">LOTS</span>
+            <div style="font-size:13px;color:var(--g3);line-height:1.7;">Kurir berjalan 6 m ke Timur lalu 8 m ke Utara. Berapa perpindahan totalnya?</div>
+          </div>
+          <button onclick="toggleReveal('lat1')" style="padding:7px 14px;border-radius:8px;background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.3);color:var(--cyan-l);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;">Lihat Jawaban</button>
+        </div>
+        <div class="reveal-body" id="lat1" style="margin-top:6px;">
+          <div class="math-box cyan" style="font-size:0.88rem;">$$R = \sqrt{6^2+8^2} = \sqrt{100} = \mathbf{10 \text{ m}}$$</div>
+        </div>
+      </div>
+      <!-- Soal 2 -->
+      <div class="card" style="padding:14px 18px;">
+        <div style="display:flex;justify-content:space-between;align-items:start;gap:10px;flex-wrap:wrap;">
+          <div style="flex:1;">
+            <span class="chip chip-amber" style="margin-bottom:8px;display:inline-flex;">MOTS</span>
+            <div style="font-size:13px;color:var(--g3);line-height:1.7;">Pesawat terbang ke Utara 300 km/jam. Angin bertiup ke Timur 80 km/jam. Berapa kecepatan aktual pesawat terhadap tanah?</div>
+          </div>
+          <button onclick="toggleReveal('lat2')" style="padding:7px 14px;border-radius:8px;background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.3);color:var(--cyan-l);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;">Lihat Jawaban</button>
+        </div>
+        <div class="reveal-body" id="lat2" style="margin-top:6px;">
+          <div class="math-box" style="font-size:0.88rem;">$$R = \sqrt{300^2+80^2} = \sqrt{90000+6400} = \sqrt{96400} \approx \mathbf{310{,}5 \text{ km/jam}}$$</div>
+        </div>
+      </div>
+      <!-- Soal 3 -->
+      <div class="card" style="padding:14px 18px;">
+        <div style="display:flex;justify-content:space-between;align-items:start;gap:10px;flex-wrap:wrap;">
+          <div style="flex:1;">
+            <span class="chip chip-amber" style="margin-bottom:8px;display:inline-flex;">MOTS</span>
+            <div style="font-size:13px;color:var(--g3);line-height:1.7;">Bola ditendang dengan kecepatan 15 m/s pada sudut 37°. Tentukan komponen horizontal dan vertikal! <em style="color:var(--g5);">(sin 37° = 0,6 | cos 37° = 0,8)</em></div>
+          </div>
+          <button onclick="toggleReveal('lat3')" style="padding:7px 14px;border-radius:8px;background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.3);color:var(--cyan-l);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;">Lihat Jawaban</button>
+        </div>
+        <div class="reveal-body" id="lat3" style="margin-top:6px;">
+          <div class="math-box cyan" style="font-size:0.88rem;">$$v_x = 15\times0{,}8 = \mathbf{12\text{ m/s}} \quad v_y = 15\times0{,}6 = \mathbf{9\text{ m/s}}$$</div>
+        </div>
+      </div>
+      <div class="card-cyan" style="padding:12px 16px;font-size:12px;color:var(--g4);">
+        <strong style="color:var(--cyan-l);">Preview P3:</strong> Pertemuan berikutnya — kita lihat vektor bekerja nyata di Indonesia: GPS, BMKG, drone pemadam hutan, dan soal HOTS! 🇮🇩
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">15 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- DIVIDER — PERTEMUAN 3                  -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide divider-slide p3-div" id="p3" data-sec="p3">
+  <div class="deco" style="width:280px;height:280px;background:radial-gradient(circle,rgba(129,140,248,0.2),transparent 70%);top:-80px;right:-40px;"></div>
+  <div style="text-align:center;padding:28px 40px;position:relative;z-index:1;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--indigo);margin-bottom:10px;">— PERTEMUAN 3 —</div>
+    <div class="t-h1 grad-indigo" style="margin-bottom:8px;">"Vektor dalam Kehidupan Nyata"</div>
+    <div style="font-size:13px;color:var(--g4);">2 × 45 menit · Aplikasi, lingkungan, dan HOTS</div>
+  </div>
+  <div class="slot-badge">P3</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 16 — GPS & NAVIGASI              -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p3-slide" id="s16" data-sec="p3">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p3">Pertemuan 3</span>
+      <span class="chip chip-indigo" style="margin-left:4px;">Aplikasi Nyata</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">GPS — Vektor di Kantong Kamu 📱</div>
+    <div class="g2" style="gap:20px;flex:1;">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card-indigo" style="padding:16px;">
+          <div style="font-weight:700;color:var(--indigo);margin-bottom:12px;font-size:13px;">Bagaimana GPS tahu posisimu?</div>
+          <div class="step-row">
+            <div class="step-item">
+              <div class="step-dot" style="border-color:var(--indigo);background:rgba(129,140,248,0.12);color:var(--indigo);font-size:11px;">1</div>
+              <div class="step-body"><div style="font-size:12px;color:var(--g3);">Satelit mengirim sinyal → jarak ke satelit = <strong style="color:var(--indigo);">vektor radius</strong></div></div>
+            </div>
+            <div class="step-item">
+              <div class="step-dot" style="border-color:var(--indigo);background:rgba(129,140,248,0.12);color:var(--indigo);font-size:11px;">2</div>
+              <div class="step-body"><div style="font-size:12px;color:var(--g3);">Min. 3 satelit → titik posisi ditentukan lewat <strong style="color:var(--indigo);">penjumlahan vektor</strong></div></div>
+            </div>
+            <div class="step-item">
+              <div class="step-dot" style="border-color:var(--indigo);background:rgba(129,140,248,0.12);color:var(--indigo);font-size:11px;">3</div>
+              <div class="step-body" style="padding-bottom:0;"><div style="font-size:12px;color:var(--g3);">Rute = <strong style="color:var(--indigo);">vektor perpindahan</strong> dari posisi awal ke tujuan</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="formula-card" style="padding:16px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--g5);margin-bottom:8px;">Posisi 3D dalam Vektor</div>
+          <div>$$\vec{r} = x\,\hat{i} + y\,\hat{j} + z\,\hat{k}$$</div>
+          <div style="font-size:11px;color:var(--g5);margin-top:8px;">x = lintang, y = bujur, z = ketinggian</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card" style="padding:16px;">
+          <div style="font-weight:700;color:var(--indigo);margin-bottom:10px;font-size:13px;">🤔 Pikirkan ini:</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="card" style="padding:11px;font-size:12px;color:var(--g4);">Mengapa GPS butuh <strong style="color:var(--indigo);">minimal 3 satelit</strong>? Coba pikirkan mengapa 1 tidak cukup!</div>
+            <div class="card" style="padding:11px;font-size:12px;color:var(--g4);">Kalau sinyal 1 satelit memberi jarak 10 km — kamu bisa ada di <strong>mana saja</strong> dalam bola radius 10 km!</div>
+            <div class="card" style="padding:11px;font-size:12px;color:var(--g4);">3 bola irisan = 1 titik tepat. Itulah trilaterasi!</div>
+          </div>
+        </div>
+        <div class="card-green" style="padding:14px;">
+          <div style="font-size:12px;color:var(--green-l);font-weight:700;margin-bottom:6px;">🇮🇩 Konteks Indonesia</div>
+          <div style="font-size:12px;color:var(--g4);line-height:1.6;">Indonesia punya 17.000+ pulau. Navigasi kapal antarpulau sepenuhnya bergantung pada vektor GPS. Tanpa ini, pelayaran antarpulau jadi jauh lebih berbahaya.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">16 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 17 — DRONE & ROBOT & GAME        -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p3-slide" id="s17" data-sec="p3">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p3">Pertemuan 3</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Teknologi Favoritmu — Semua Pakai Vektor!</div>
+    <div class="g3" style="gap:14px;flex:1;">
+      <div class="card-indigo" style="padding:18px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:32px;text-align:center;">🚁</div>
+        <div style="font-weight:700;text-align:center;color:var(--indigo);font-size:13px;">Drone</div>
+        <div style="font-size:12px;color:var(--g4);line-height:1.6;">4 vektor gaya dari propeler. Untuk hover: resultan = berat. Untuk bergerak: resultan miring ke arah gerak.</div>
+        <div class="math-box indigo" style="font-size:0.82rem;">$$\vec{F}_{net} = \vec{F}_1+\vec{F}_2+\vec{F}_3+\vec{F}_4$$</div>
+      </div>
+      <div class="card-blue" style="padding:18px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:32px;text-align:center;">🤖</div>
+        <div style="font-weight:700;text-align:center;color:var(--blue-l);font-size:13px;">Robot Otonom</div>
+        <div style="font-size:12px;color:var(--g4);line-height:1.6;">Robot hitung vektor selisih posisi: dari posisi sekarang ke tujuan. Motor bergerak ke arah vektor itu.</div>
+        <div class="math-box" style="font-size:0.82rem;">$$\vec{d} = \vec{r}_{tujuan} - \vec{r}_{kini}$$</div>
+      </div>
+      <div class="card-amber" style="padding:18px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:32px;text-align:center;">🎮</div>
+        <div style="font-weight:700;text-align:center;color:var(--amber-l);font-size:13px;">Video Game</div>
+        <div style="font-size:12px;color:var(--g4);line-height:1.6;">Setiap karakter punya vektor posisi dan kecepatan. Fisika game — tembakan, lompatan, benturan — semua dihitung per frame!</div>
+        <div class="math-box amber" style="font-size:0.82rem;">$$\vec{r}(t) = \vec{r}_0 + \vec{v}\,t + \tfrac{1}{2}\vec{a}\,t^2$$</div>
+      </div>
+    </div>
+    <div class="card-cyan" style="padding:13px 16px;display:flex;align-items:center;gap:12px;">
+      <span style="font-size:20px;">💡</span>
+      <div style="font-size:12px;color:var(--g4);">Game engine seperti <strong style="color:var(--cyan-l);">Unity</strong> dan <strong style="color:var(--cyan-l);">Unreal Engine</strong> menghitung ratusan ribu operasi vektor per detik untuk mensimulasikan dunia virtual. Kamu yang jago fisika = kamu yang bisa jadi game developer! 🚀</div>
+    </div>
+  </div>
+  <div class="slot-badge">17 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 18 — VEKTOR & LINGKUNGAN 🌿      -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p3-slide" id="s18" data-sec="p3">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p3">Pertemuan 3</span>
+      <span class="chip chip-green" style="margin-left:4px;">Peduli Lingkungan 🌿</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Vektor untuk Menjaga Indonesia</div>
+    <div class="g2" style="gap:16px;flex:1;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card-green" style="padding:16px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div class="ico" style="background:rgba(34,197,94,0.18);border:1px solid rgba(34,197,94,0.35);">💨</div>
+            <div style="font-weight:700;color:var(--green-l);font-size:13px;">Penyebaran Asap Kebakaran Hutan</div>
+          </div>
+          <div style="font-size:12px;color:var(--g4);line-height:1.6;">Vektor kecepatan angin + vektor konsentrasi asap = prediksi penyebaran. BMKG memetakan asap kebakaran Kalimantan & Sumatera tiap hari dengan model vektor.</div>
+        </div>
+        <div class="card-blue" style="padding:16px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div class="ico" style="background:rgba(59,130,246,0.18);border:1px solid rgba(59,130,246,0.35);">🌊</div>
+            <div style="font-weight:700;color:var(--blue-l);font-size:13px;">Arus Laut & Sampah Plastik</div>
+          </div>
+          <div style="font-size:12px;color:var(--g4);line-height:1.6;">Arus laut adalah vektor. Model matematika arus membantu ilmuwan memprediksi ke mana sampah plastik terbawa — penting untuk program <em>Ocean Clean</em> Indonesia.</div>
+        </div>
+        <div class="card-red" style="padding:16px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div class="ico" style="background:rgba(239,68,68,0.18);border:1px solid rgba(239,68,68,0.35);">🌋</div>
+            <div style="font-weight:700;color:var(--red-l);font-size:13px;">Mitigasi Bencana</div>
+          </div>
+          <div style="font-size:12px;color:var(--g4);line-height:1.6;">Arah aliran lahar, arah tsunami, arah letusan — semuanya vektor. PVMBG pakai model vektor untuk rancang jalur evakuasi yang tepat.</div>
+        </div>
+      </div>
+      <!-- Studi kasus interaktif -->
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="v-canvas" style="padding:14px;">
+          <svg viewBox="0 0 280 170" width="100%">
+            <defs>
+              <marker id="wv1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#22d3ee"/></marker>
+              <marker id="sv1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="rgba(200,120,60,0.8)"/></marker>
+            </defs>
+            <!-- Map bg -->
+            <rect x="8" y="8" width="264" height="154" rx="8" fill="rgba(34,211,238,0.04)" stroke="rgba(34,211,238,0.15)" stroke-width="1"/>
+            <!-- Kalimantan shape -->
+            <ellipse cx="130" cy="90" rx="68" ry="42" fill="rgba(34,197,94,0.15)" stroke="rgba(34,197,94,0.35)" stroke-width="1"/>
+            <text x="100" y="95" fill="var(--green-l)" font-size="9" font-family="Outfit">Kalimantan</text>
+            <!-- Wind vector -->
+            <line x1="35" y1="60" x2="90" y2="75" stroke="#22d3ee" stroke-width="2" marker-end="url(#wv1)"/>
+            <text x="16" y="55" fill="#22d3ee" font-size="9" font-family="Outfit">Angin</text>
+            <!-- Fire -->
+            <circle cx="100" cy="80" r="6" fill="#f59e0b" opacity="0.85"/>
+            <text x="80" y="72" fill="#f59e0b" font-size="9" font-family="Outfit">🔥 Api</text>
+            <!-- Smoke vectors -->
+            <line x1="103" y1="78" x2="162" y2="64" stroke="rgba(200,120,60,0.6)" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#sv1)"/>
+            <line x1="103" y1="78" x2="175" y2="84" stroke="rgba(200,120,60,0.5)" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#sv1)"/>
+            <line x1="103" y1="78" x2="158" y2="98" stroke="rgba(200,120,60,0.4)" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#sv1)"/>
+            <text x="165" y="60" fill="rgba(200,120,60,0.9)" font-size="9" font-family="Outfit">Asap</text>
+            <text x="100" y="158" fill="rgba(255,255,255,0.35)" font-size="9" font-family="Outfit" text-anchor="middle">Model penyebaran asap berbasis vektor</text>
+          </svg>
+        </div>
+        <div class="card-amber reveal-card" style="padding:14px;" onclick="toggleReveal('env1')">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-weight:700;color:var(--amber-l);font-size:12px;">🤔 Diskusi: Kota mana yang perlu diperingatkan?</span>
+            <span style="font-size:11px;color:var(--g6);" id="env1-ico">👆 buka</span>
+          </div>
+          <div class="reveal-body" id="env1">
+            <div style="font-size:12px;color:var(--g4);margin-top:10px;line-height:1.6;">
+              Jika angin bertiup dari <strong>Selatan ke Utara</strong>, maka vektor angin mengarah ke Utara. Resultan penyebaran asap juga ke Utara → kota di <strong style="color:var(--amber-l);">sebelah Utara titik api</strong> yang paling perlu diperingatkan!
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">18 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 19 — SOAL HOTS 1 (ANALISIS)      -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p3-slide" id="s19" data-sec="p3">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:16px;">
+    <div class="s-accent">
+      <span class="ptm-tag p3">Pertemuan 3</span>
+      <span class="chip chip-red" style="margin-left:4px;">HOTS 🔥</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Soal HOTS — Nelayan Selat Malaka ⚓</div>
+    <div class="g2" style="gap:18px;flex:1;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card-indigo" style="padding:16px;">
+          <div style="font-weight:700;color:var(--indigo);margin-bottom:8px;font-size:13px;">📋 Soal</div>
+          <div style="font-size:13px;color:var(--g3);line-height:1.8;">
+            Kapal nelayan di Selat Malaka ingin bergerak ke arah tepat <strong>Timur</strong> dengan kecepatan 8 m/s.<br>
+            Arus laut mengalir ke <strong>Selatan</strong> dengan kecepatan 6 m/s.<br><br>
+            <strong style="color:var(--indigo);">a)</strong> Ke arah mana nelayan harus mengarahkan kapalnya?<br>
+            <strong style="color:var(--indigo);">b)</strong> Berapa kecepatan aktual kapal terhadap daratan?
+          </div>
+        </div>
+        <div class="v-canvas" style="padding:12px;">
+          <svg viewBox="0 0 270 165" width="100%">
+            <defs>
+              <marker id="hv" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#22d3ee"/></marker>
+              <marker id="ha" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#60a5fa"/></marker>
+              <marker id="hr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#f59e0b"/></marker>
+            </defs>
+            <line x1="18" y1="82" x2="252" y2="82" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+            <line x1="135" y1="18" x2="135" y2="150" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+            <text x="254" y="86" fill="rgba(255,255,255,0.3)" font-size="10" font-family="Outfit">T</text>
+            <text x="128" y="14" fill="rgba(255,255,255,0.3)" font-size="10" font-family="Outfit">U</text>
+            <!-- Desired (East) -->
+            <line x1="45" y1="82" x2="235" y2="82" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#hr)"/>
+            <text x="228" y="76" fill="#f59e0b" font-size="10" font-family="Outfit">Tujuan</text>
+            <!-- Arus (South) -->
+            <line x1="45" y1="82" x2="45" y2="148" stroke="#60a5fa" stroke-width="2.5" marker-end="url(#ha)"/>
+            <text x="50" y="126" fill="#60a5fa" font-size="10" font-family="Outfit">Arus: 6 m/s ↓S</text>
+            <!-- Arah kapal (NE direction) -->
+            <line x1="45" y1="82" x2="230" y2="34" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#hv)"/>
+            <text x="126" y="46" fill="#22d3ee" font-size="10" font-family="Outfit">v kapal: 8 m/s</text>
+            <circle cx="45" cy="82" r="4" fill="#22d3ee"/>
+            <text x="30" y="98" fill="rgba(255,255,255,0.4)" font-size="9" font-family="Outfit">⚓ Start</text>
+          </svg>
+        </div>
+      </div>
+      <!-- Guided solution -->
+      <div style="display:flex;flex-direction:column;gap:9px;">
+        <div style="font-size:12px;color:var(--g5);font-weight:600;">Panduan berpikir — buka satu per satu:</div>
+        <div class="card reveal-card" style="padding:13px;" onclick="toggleReveal('hots1a')">
+          <div style="display:flex;justify-content:space-between;"><span style="font-size:12px;color:var(--g3);">💭 Ide kunci: agar resultan ke Timur, maka...</span><span style="font-size:10px;color:var(--g6);" id="hots1a-ico">buka</span></div>
+          <div class="reveal-body" id="hots1a">
+            <div style="font-size:12px;color:var(--g4);margin-top:8px;line-height:1.6;">Komponen y dari resultan harus = 0. Artinya: $v_{kapal,y}$ harus mengimbangi arus ke Selatan!</div>
+          </div>
+        </div>
+        <div class="card reveal-card" style="padding:13px;" onclick="toggleReveal('hots1b')">
+          <div style="display:flex;justify-content:space-between;"><span style="font-size:12px;color:var(--g3);">📐 Setup persamaan</span><span style="font-size:10px;color:var(--g6);" id="hots1b-ico">buka</span></div>
+          <div class="reveal-body" id="hots1b">
+            <div class="math-box indigo" style="margin-top:8px;font-size:0.85rem;">
+              $$v_{kapal}\sin\theta = 6 \;\Rightarrow\; \sin\theta = \frac{6}{8} = 0{,}75$$
+              $$\theta \approx 48{,}6°\text{ dari Timur ke Utara}$$
+            </div>
+          </div>
+        </div>
+        <div class="card reveal-card" style="padding:13px;" onclick="toggleReveal('hots1c')">
+          <div style="display:flex;justify-content:space-between;"><span style="font-size:12px;color:var(--g3);">✅ Kecepatan aktual (b)</span><span style="font-size:10px;color:var(--g6);" id="hots1c-ico">buka</span></div>
+          <div class="reveal-body" id="hots1c">
+            <div class="math-box" style="margin-top:8px;font-size:0.85rem;">
+              $$v_x = 8\cos(48{,}6°) \approx 5{,}3\text{ m/s ke Timur}$$
+            </div>
+            <div style="font-size:11px;color:var(--g5);margin-top:6px;">Kapal lebih lambat dari 8 m/s karena sebagian tenaganya melawan arus!</div>
+          </div>
+        </div>
+        <div class="card-green" style="padding:12px;">
+          <div style="font-size:11px;color:var(--green-l);">🎣 <strong>Fun fact:</strong> Nelayan berpengalaman di Indonesia secara intuitif melakukan "perhitungan" ini tanpa sadar — itu naluri fisika murni!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">19 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 20 — KUIS FINAL (Interaktif)     -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p3-slide" id="s20" data-sec="p3">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="ptm-tag p3">Pertemuan 3</span>
+      <span class="chip chip-amber" style="margin-left:4px;">🏆 Kuis Final · +10 XP</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Kuis Final — Semua Materi</div>
+    <div class="g2" style="gap:20px;flex:1;align-items:start;">
+      <!-- Q5 -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card" style="padding:14px 16px;">
+          <div style="font-size:10px;font-weight:700;color:var(--g5);margin-bottom:6px;letter-spacing:0.06em;">PERTANYAAN 5</div>
+          <div style="font-size:13px;color:var(--g3);">Drone SAR bergerak $R_x$ = 5 m ke Timur dan $R_y$ = 12 m ke Utara. Berapa jarak dari titik asal?</div>
+        </div>
+        <div class="quiz-wrap" id="q5">
+          <div class="quiz-opt" onclick="answerQuiz('q5','A',false,'17 m hanya penjumlahan biasa. Vektor tegak lurus pakai Pythagoras!')">
+            <div class="quiz-letter">A</div><div class="quiz-text">17 m</div>
+          </div>
+          <div class="quiz-opt" onclick="answerQuiz('q5','B',true,'Betul! √(5²+12²) = √(25+144) = √169 = 13 m. Segitiga 5-12-13! 🎉')">
+            <div class="quiz-letter">B</div><div class="quiz-text">13 m</div>
+          </div>
+          <div class="quiz-opt" onclick="answerQuiz('q5','C',false,'Cek lagi hitungannya: √(25+144) = ?')">
+            <div class="quiz-letter">C</div><div class="quiz-text">7 m</div>
+          </div>
+        </div>
+        <div class="quiz-feedback" id="q5-fb"></div>
+      </div>
+      <!-- Q6 -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card" style="padding:14px 16px;">
+          <div style="font-size:10px;font-weight:700;color:var(--g5);margin-bottom:6px;letter-spacing:0.06em;">PERTANYAAN 6 — HOTS</div>
+          <div style="font-size:13px;color:var(--g3);">Mengapa vektor kecepatan angin penting bagi BMKG dalam memantau kebakaran hutan?</div>
+        </div>
+        <div class="quiz-wrap" id="q6">
+          <div class="quiz-opt" onclick="answerQuiz('q6','A',false,'Curah hujan tidak langsung berkaitan dengan vektor kecepatan angin dalam konteks ini.')">
+            <div class="quiz-letter">A</div><div class="quiz-text">Untuk memprediksi curah hujan</div>
+          </div>
+          <div class="quiz-opt" onclick="answerQuiz('q6','B',false,'Suhu bukan besaran vektor dan tidak berkaitan langsung dengan penyebaran asap.')">
+            <div class="quiz-letter">B</div><div class="quiz-text">Karena angin mempengaruhi suhu udara</div>
+          </div>
+          <div class="quiz-opt" onclick="answerQuiz('q6','C',true,'Tepat! Arah dan kecepatan angin menentukan ke mana asap bergerak. Tanpa vektor, prediksi tidak akurat! 🎉')">
+            <div class="quiz-letter">C</div><div class="quiz-text">Untuk memprediksi arah dan kecepatan penyebaran asap/polusi</div>
+          </div>
+        </div>
+        <div class="quiz-feedback" id="q6-fb"></div>
+      </div>
+    </div>
+    <div class="quiz-score" id="q56-score"></div>
+  </div>
+  <div class="slot-badge">20 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 21 — LATIHAN SOAL HOTS           -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p3-slide" id="s21" data-sec="p3">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:16px;">
+    <div class="s-accent">
+      <span class="ptm-tag p3">Pertemuan 3</span>
+      <span class="chip chip-red" style="margin-left:4px;">Latihan HOTS</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Bank Soal — LOTS sampai HOTS</div>
+    <div style="display:flex;flex-direction:column;gap:9px;flex:1;">
+      <div class="card" style="padding:13px 17px;">
+        <div style="display:flex;justify-content:space-between;align-items:start;gap:10px;flex-wrap:wrap;">
+          <div style="flex:1;">
+            <span class="chip chip-green" style="margin-bottom:7px;display:inline-flex;">LOTS 1</span>
+            <div style="font-size:12px;color:var(--g3);line-height:1.7;">Sebutkan perbedaan besaran skalar dan vektor! Berikan 2 contoh masing-masing.</div>
+          </div>
+          <button onclick="toggleReveal('hs1')" style="padding:6px 12px;border-radius:8px;background:rgba(129,140,248,0.1);border:1px solid rgba(129,140,248,0.25);color:var(--indigo);font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">Jawaban</button>
+        </div>
+        <div class="reveal-body" id="hs1">
+          <div style="font-size:12px;color:var(--g4);margin-top:8px;line-height:1.6;padding:10px;background:rgba(129,140,248,0.06);border-radius:8px;">Skalar: hanya besar (contoh: suhu, massa). Vektor: besar + arah (contoh: gaya, kecepatan).</div>
+        </div>
+      </div>
+      <div class="card" style="padding:13px 17px;">
+        <div style="display:flex;justify-content:space-between;align-items:start;gap:10px;flex-wrap:wrap;">
+          <div style="flex:1;">
+            <span class="chip chip-amber" style="margin-bottom:7px;display:inline-flex;">MOTS 2</span>
+            <div style="font-size:12px;color:var(--g3);line-height:1.7;">Dua gaya bekerja pada robot: $\vec{F}_1$ = 10 N arah 0°, $\vec{F}_2$ = 10 N arah 90°. Hitung resultan!</div>
+          </div>
+          <button onclick="toggleReveal('hs2')" style="padding:6px 12px;border-radius:8px;background:rgba(129,140,248,0.1);border:1px solid rgba(129,140,248,0.25);color:var(--indigo);font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">Jawaban</button>
+        </div>
+        <div class="reveal-body" id="hs2">
+          <div class="math-box indigo" style="margin-top:8px;font-size:0.85rem;">$$R = \sqrt{10^2+10^2} = 10\sqrt{2} \approx 14{,}14 \text{ N, arah } 45°$$</div>
+        </div>
+      </div>
+      <div class="card" style="padding:13px 17px;">
+        <div style="display:flex;justify-content:space-between;align-items:start;gap:10px;flex-wrap:wrap;">
+          <div style="flex:1;">
+            <span class="chip chip-red" style="margin-bottom:7px;display:inline-flex;">HOTS 3</span>
+            <div style="font-size:12px;color:var(--g3);line-height:1.7;">Tim SAR kerahkan 3 drone dari titik O: Drone A: 120 m ke Utara, Drone B: 90 m ke Timur, Drone C: 60 m ke Barat Laut (45°). Tentukan posisi pusat pencarian (rata-rata vektor)!</div>
+          </div>
+          <button onclick="toggleReveal('hs3')" style="padding:6px 12px;border-radius:8px;background:rgba(129,140,248,0.1);border:1px solid rgba(129,140,248,0.25);color:var(--indigo);font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">Jawaban</button>
+        </div>
+        <div class="reveal-body" id="hs3">
+          <div class="math-box indigo" style="margin-top:8px;font-size:0.82rem;">
+            $$\bar{x} = \frac{0+90-60\cos45°}{3} = \frac{0+90-42{,}4}{3} \approx 15{,}9 \text{ m}$$
+            $$\bar{y} = \frac{120+0+60\sin45°}{3} = \frac{120+42{,}4}{3} \approx 54{,}1 \text{ m}$$
+            $$|\bar{r}| = \sqrt{15{,}9^2+54{,}1^2} \approx 56{,}4 \text{ m dari O}$$
+          </div>
+        </div>
+      </div>
+      <div class="card" style="padding:13px 17px;">
+        <div style="display:flex;justify-content:space-between;align-items:start;gap:10px;flex-wrap:wrap;">
+          <div style="flex:1;">
+            <span class="chip chip-red" style="margin-bottom:7px;display:inline-flex;">HOTS 4</span>
+            <div style="font-size:12px;color:var(--g3);line-height:1.7;">Astronot di ISS menerapkan $\vec{F}_1 = 500\hat{i}+300\hat{j}$ N dan $\vec{F}_2 = -200\hat{i}+400\hat{j}$ N. Berapa besar dan arah resultan gaya?</div>
+          </div>
+          <button onclick="toggleReveal('hs4')" style="padding:6px 12px;border-radius:8px;background:rgba(129,140,248,0.1);border:1px solid rgba(129,140,248,0.25);color:var(--indigo);font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">Jawaban</button>
+        </div>
+        <div class="reveal-body" id="hs4">
+          <div class="math-box indigo" style="margin-top:8px;font-size:0.85rem;">
+            $$\vec{R} = 300\hat{i}+700\hat{j} \;\Rightarrow\; R = \sqrt{300^2+700^2} = \sqrt{580000} \approx 761\text{ N}$$
+            $$\theta = \arctan\!\left(\tfrac{700}{300}\right) \approx 66{,}8°$$
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">21 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 22 — MIND MAP VISUAL             -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p3-slide" id="s22" data-sec="p3">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:14px;">
+    <div class="s-accent">
+      <span class="ptm-tag p3">Pertemuan 3</span>
+      <span class="chip chip-indigo" style="margin-left:4px;">Mind Map</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Peta Konsep Vektor — Big Picture</div>
+    <div class="v-canvas" style="padding:18px;flex:1;">
+      <svg viewBox="0 0 860 350" width="100%" style="max-height:320px;">
+        <defs>
+          <marker id="mm" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
+            <polygon points="0 0,6 2.5,0 5" fill="rgba(255,255,255,0.25)"/>
+          </marker>
+        </defs>
+        <!-- CENTRAL -->
+        <ellipse cx="430" cy="175" rx="78" ry="42" fill="rgba(59,130,246,0.22)" stroke="#3b82f6" stroke-width="2"/>
+        <text x="430" y="170" text-anchor="middle" fill="#fff" font-size="15" font-family="Outfit" font-weight="800">VEKTOR</text>
+        <text x="430" y="188" text-anchor="middle" fill="#93c5fd" font-size="10" font-family="Outfit">Fisika XI</text>
+
+        <!-- DEFINISI -->
+        <line x1="357" y1="152" x2="188" y2="85" stroke="rgba(34,211,238,0.45)" stroke-width="1.8" marker-end="url(#mm)"/>
+        <ellipse cx="147" cy="72" rx="60" ry="26" fill="rgba(34,211,238,0.12)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="147" y="68" text-anchor="middle" fill="#22d3ee" font-size="12" font-family="Outfit" font-weight="700">Definisi</text>
+        <text x="147" y="82" text-anchor="middle" fill="#67e8f9" font-size="9" font-family="Outfit">Besar + Arah</text>
+        <line x1="90" y1="61" x2="52" y2="42" stroke="rgba(34,211,238,0.3)" stroke-width="1.3"/>
+        <rect x="4" y="30" width="52" height="20" rx="4" fill="rgba(34,211,238,0.08)" stroke="rgba(34,211,238,0.25)" stroke-width="1"/>
+        <text x="30" y="44" text-anchor="middle" fill="#a5f3fc" font-size="9" font-family="Outfit">vec(A)</text>
+        <line x1="90" y1="79" x2="52" y2="90" stroke="rgba(34,211,238,0.3)" stroke-width="1.3"/>
+        <rect x="4" y="80" width="52" height="20" rx="4" fill="rgba(34,211,238,0.08)" stroke="rgba(34,211,238,0.25)" stroke-width="1"/>
+        <text x="30" y="94" text-anchor="middle" fill="#a5f3fc" font-size="9" font-family="Outfit">|A|=besar</text>
+
+        <!-- JENIS -->
+        <line x1="355" y1="168" x2="188" y2="175" stroke="rgba(96,165,250,0.45)" stroke-width="1.8" marker-end="url(#mm)"/>
+        <ellipse cx="143" cy="175" rx="60" ry="26" fill="rgba(96,165,250,0.12)" stroke="#60a5fa" stroke-width="1.5"/>
+        <text x="143" y="171" text-anchor="middle" fill="#60a5fa" font-size="12" font-family="Outfit" font-weight="700">Jenis</text>
+        <text x="143" y="185" text-anchor="middle" fill="#93c5fd" font-size="9" font-family="Outfit">Skalar vs Vektor</text>
+        <line x1="85" y1="163" x2="52" y2="152" stroke="rgba(96,165,250,0.3)" stroke-width="1.3"/>
+        <rect x="4" y="142" width="52" height="20" rx="4" fill="rgba(96,165,250,0.08)" stroke="rgba(96,165,250,0.25)" stroke-width="1"/>
+        <text x="30" y="156" text-anchor="middle" fill="#bfdbfe" font-size="9" font-family="Outfit">skalar: T°</text>
+        <line x1="85" y1="183" x2="52" y2="193" stroke="rgba(96,165,250,0.3)" stroke-width="1.3"/>
+        <rect x="4" y="183" width="52" height="20" rx="4" fill="rgba(96,165,250,0.08)" stroke="rgba(96,165,250,0.25)" stroke-width="1"/>
+        <text x="30" y="197" text-anchor="middle" fill="#bfdbfe" font-size="9" font-family="Outfit">vektor: F</text>
+
+        <!-- KOMPONEN -->
+        <line x1="357" y1="196" x2="188" y2="268" stroke="rgba(129,140,248,0.45)" stroke-width="1.8" marker-end="url(#mm)"/>
+        <ellipse cx="147" cy="282" rx="60" ry="26" fill="rgba(129,140,248,0.12)" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="147" y="278" text-anchor="middle" fill="#818cf8" font-size="12" font-family="Outfit" font-weight="700">Komponen</text>
+        <text x="147" y="292" text-anchor="middle" fill="#a5b4fc" font-size="9" font-family="Outfit">Ax, Ay, Az</text>
+        <line x1="90" y1="272" x2="52" y2="260" stroke="rgba(129,140,248,0.3)" stroke-width="1.3"/>
+        <rect x="4" y="250" width="52" height="20" rx="4" fill="rgba(129,140,248,0.08)" stroke="rgba(129,140,248,0.25)" stroke-width="1"/>
+        <text x="30" y="264" text-anchor="middle" fill="#c7d2fe" font-size="9" font-family="Outfit">cosθ, sinθ</text>
+        <line x1="90" y1="289" x2="52" y2="300" stroke="rgba(129,140,248,0.3)" stroke-width="1.3"/>
+        <rect x="4" y="290" width="52" height="20" rx="4" fill="rgba(129,140,248,0.08)" stroke="rgba(129,140,248,0.25)" stroke-width="1"/>
+        <text x="30" y="304" text-anchor="middle" fill="#c7d2fe" font-size="9" font-family="Outfit">Pythagoras</text>
+
+        <!-- OPERASI -->
+        <line x1="503" y1="152" x2="672" y2="85" stroke="rgba(251,191,36,0.45)" stroke-width="1.8" marker-end="url(#mm)"/>
+        <ellipse cx="713" cy="72" rx="62" ry="26" fill="rgba(251,191,36,0.1)" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="713" y="68" text-anchor="middle" fill="#fbbf24" font-size="12" font-family="Outfit" font-weight="700">Operasi</text>
+        <text x="713" y="82" text-anchor="middle" fill="#fde68a" font-size="9" font-family="Outfit">+, −, ×</text>
+        <line x1="773" y1="63" x2="808" y2="52" stroke="rgba(251,191,36,0.3)" stroke-width="1.3"/>
+        <rect x="806" y="42" width="50" height="20" rx="4" fill="rgba(251,191,36,0.08)" stroke="rgba(251,191,36,0.25)" stroke-width="1"/>
+        <text x="831" y="56" text-anchor="middle" fill="#fef08a" font-size="9" font-family="Outfit">A+B=R</text>
+        <line x1="773" y1="78" x2="808" y2="88" stroke="rgba(251,191,36,0.3)" stroke-width="1.3"/>
+        <rect x="806" y="78" width="50" height="20" rx="4" fill="rgba(251,191,36,0.08)" stroke="rgba(251,191,36,0.25)" stroke-width="1"/>
+        <text x="831" y="92" text-anchor="middle" fill="#fef08a" font-size="9" font-family="Outfit">A−B</text>
+
+        <!-- METODE -->
+        <line x1="505" y1="170" x2="672" y2="175" stroke="rgba(245,158,11,0.45)" stroke-width="1.8" marker-end="url(#mm)"/>
+        <ellipse cx="718" cy="175" rx="62" ry="26" fill="rgba(245,158,11,0.1)" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="718" y="171" text-anchor="middle" fill="#f59e0b" font-size="12" font-family="Outfit" font-weight="700">Metode</text>
+        <text x="718" y="185" text-anchor="middle" fill="#fcd34d" font-size="9" font-family="Outfit">Grafis + Analitis</text>
+        <line x1="778" y1="165" x2="808" y2="155" stroke="rgba(245,158,11,0.3)" stroke-width="1.3"/>
+        <rect x="806" y="145" width="50" height="20" rx="4" fill="rgba(245,158,11,0.08)" stroke="rgba(245,158,11,0.25)" stroke-width="1"/>
+        <text x="831" y="159" text-anchor="middle" fill="#fef3c7" font-size="9" font-family="Outfit">Segitiga</text>
+        <line x1="778" y1="183" x2="808" y2="193" stroke="rgba(245,158,11,0.3)" stroke-width="1.3"/>
+        <rect x="806" y="183" width="50" height="20" rx="4" fill="rgba(245,158,11,0.08)" stroke="rgba(245,158,11,0.25)" stroke-width="1"/>
+        <text x="831" y="197" text-anchor="middle" fill="#fef3c7" font-size="9" font-family="Outfit">Analitis</text>
+
+        <!-- APLIKASI -->
+        <line x1="503" y1="196" x2="672" y2="268" stroke="rgba(34,197,94,0.45)" stroke-width="1.8" marker-end="url(#mm)"/>
+        <ellipse cx="713" cy="282" rx="62" ry="26" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="713" y="278" text-anchor="middle" fill="#22c55e" font-size="12" font-family="Outfit" font-weight="700">Aplikasi</text>
+        <text x="713" y="292" text-anchor="middle" fill="#86efac" font-size="9" font-family="Outfit">GPS, Drone, BMKG</text>
+        <line x1="773" y1="272" x2="808" y2="262" stroke="rgba(34,197,94,0.3)" stroke-width="1.3"/>
+        <rect x="806" y="252" width="50" height="20" rx="4" fill="rgba(34,197,94,0.08)" stroke="rgba(34,197,94,0.25)" stroke-width="1"/>
+        <text x="831" y="266" text-anchor="middle" fill="#bbf7d0" font-size="9" font-family="Outfit">Navigasi</text>
+        <line x1="773" y1="289" x2="808" y2="300" stroke="rgba(34,197,94,0.3)" stroke-width="1.3"/>
+        <rect x="806" y="290" width="50" height="20" rx="4" fill="rgba(34,197,94,0.08)" stroke="rgba(34,197,94,0.25)" stroke-width="1"/>
+        <text x="831" y="304" text-anchor="middle" fill="#bbf7d0" font-size="9" font-family="Outfit">Lingkungan</text>
+      </svg>
+    </div>
+  </div>
+  <div class="slot-badge">22 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 23 — RINGKASAN RUMUS LENGKAP     -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p3-slide" id="s23" data-sec="p3">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:16px;">
+    <div class="s-accent">
+      <span class="chip chip-ghost">Cheat Sheet</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">📋 Ringkasan Rumus — Simpan Ini!</div>
+    <div class="g2" style="gap:14px;flex:1;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="formula-card" style="padding:16px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--g5);margin-bottom:10px;text-align:left;">Komponen Vektor</div>
+          <div>$$A_x = A\cos\theta \qquad A_y = A\sin\theta$$</div>
+          <div style="margin-top:10px;">$$A = \sqrt{A_x^2+A_y^2} \qquad \theta = \arctan\!\left(\frac{A_y}{A_x}\right)$$</div>
+        </div>
+        <div class="formula-card" style="padding:16px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--g5);margin-bottom:10px;text-align:left;">Resultan (Metode Grafis)</div>
+          <div>$$R = \sqrt{A^2+B^2+2AB\cos\theta}$$</div>
+          <div style="font-size:11px;color:var(--g5);margin-top:6px;text-align:left;">θ = sudut antara A dan B</div>
+        </div>
+        <div class="formula-card" style="padding:16px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--g5);margin-bottom:10px;text-align:left;">Kasus Khusus Mudah 🎯</div>
+          <div>$$\theta=0°: R=A+B \qquad \theta=180°: R=|A-B|$$</div>
+          <div style="margin-top:8px;">$$\theta=90°: R=\sqrt{A^2+B^2}$$</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="formula-card" style="padding:16px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--g5);margin-bottom:10px;text-align:left;">Metode Analitis (untuk banyak vektor)</div>
+          <div>$$R_x = \sum A_i\cos\theta_i \qquad R_y = \sum A_i\sin\theta_i$$</div>
+          <div style="margin-top:10px;">$$R = \sqrt{R_x^2+R_y^2} \qquad \theta_R = \arctan\!\left(\frac{R_y}{R_x}\right)$$</div>
+        </div>
+        <div class="formula-card" style="padding:16px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--g5);margin-bottom:10px;text-align:left;">Vektor 3D</div>
+          <div>$$\vec{A} = A_x\hat{i}+A_y\hat{j}+A_z\hat{k}$$</div>
+          <div style="margin-top:10px;">$$|\vec{A}| = \sqrt{A_x^2+A_y^2+A_z^2}$$</div>
+        </div>
+        <div class="card" style="padding:14px;border-color:rgba(251,191,36,0.3);background:rgba(251,191,36,0.05);">
+          <div style="font-weight:700;color:var(--amber-l);margin-bottom:6px;font-size:12px;">⭐ Tips Emas:</div>
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;color:var(--g4);">
+            <div>✓ Searah → jumlahkan langsung</div>
+            <div>✓ Berlawanan → kurangkan</div>
+            <div>✓ Tegak lurus → Pythagoras</div>
+            <div>✓ Sembarang sudut → analitis / kosinus</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">23 / 28</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE BARU — TUGAS: KERTAS BERPETAK    -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p2-slide" id="s-tugas" data-sec="p2">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="chip chip-amber">📝 Tugas Praktik</span>
+      <div class="accent-line"></div>
+      <span class="chip chip-ghost" style="font-size:10px;">Kertas berpetak · Pythagoras</span>
+    </div>
+    <div class="t-h1">Menggambar Vektor di Kertas Berpetak</div>
+
+    <div class="g2" style="gap:20px;flex:1;align-items:start;">
+
+      <!-- ── KIRI: Tutorial cara menggambar ── -->
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card-blue" style="padding:16px;">
+          <div style="font-weight:700;color:var(--blue-l);font-size:13px;margin-bottom:12px;">📐 Cara Menggambar Vektor di Kertas Berpetak</div>
+          <div style="display:flex;flex-direction:column;gap:9px;font-size:12px;color:var(--g3);">
+            <div style="display:flex;gap:8px;">
+              <span style="color:var(--cyan-l);font-weight:700;min-width:18px;">1.</span>
+              <span>Setiap <strong style="color:var(--cyan-l);">1 kotak = 1 satuan</strong> (misal: 1 m atau 1 N)</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <span style="color:var(--cyan-l);font-weight:700;min-width:18px;">2.</span>
+              <span>Tentukan titik pangkal <strong>O</strong> di tengah kertas</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <span style="color:var(--cyan-l);font-weight:700;min-width:18px;">3.</span>
+              <span>Gambar vektor <span class="vec">A</span>: hitung kotak sesuai arah (kanan = +x, atas = +y)</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <span style="color:var(--cyan-l);font-weight:700;min-width:18px;">4.</span>
+              <span>Gambar vektor <span class="vec">B</span> dari ujung <span class="vec">A</span> (metode segitiga)</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <span style="color:var(--cyan-l);font-weight:700;min-width:18px;">5.</span>
+              <span>Hitung komponen total: <strong>Rx = jumlah kotak arah x</strong>, <strong>Ry = jumlah kotak arah y</strong></span>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <span style="color:var(--cyan-l);font-weight:700;min-width:18px;">6.</span>
+              <span>Hitung resultan: $R = \sqrt{R_x^2 + R_y^2}$ (Pythagoras!)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contoh soal -->
+        <div class="card-amber" style="padding:15px;">
+          <div style="font-weight:700;color:var(--amber-l);font-size:13px;margin-bottom:10px;">✏️ Contoh yang Digambar</div>
+          <div style="font-size:12px;color:var(--g3);line-height:1.8;">
+            <span class="vec" style="color:var(--cyan);">A</span> = <strong>4 kotak ke kanan</strong> (Rx = 4)<br>
+            <span class="vec" style="color:var(--blue-l);">B</span> = <strong>3 kotak ke atas</strong> (Ry = 3)<br><br>
+            <span style="color:var(--g4);">Total: Rx = 4, Ry = 3</span>
+          </div>
+          <div class="math-box amber" style="margin-top:10px;font-size:0.9rem;text-align:center;">
+            $$R = \sqrt{4^2 + 3^2} = \sqrt{16+9} = \sqrt{25} = \mathbf{5 \text{ satuan}}$$
+          </div>
+        </div>
+      </div>
+
+      <!-- ── KANAN: Diagram kertas berpetak SVG ── -->
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="v-canvas" style="padding:0;overflow:hidden;border-radius:12px;">
+          <svg viewBox="0 0 320 280" width="100%" style="display:block;">
+            <defs>
+              <marker id="ta" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#22d3ee"/></marker>
+              <marker id="tb" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#60a5fa"/></marker>
+              <marker id="tr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#f59e0b"/></marker>
+              <marker id="taxis" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#94a3b8"/></marker>
+            </defs>
+
+            <!-- Grid background -->
+            <rect x="0" y="0" width="320" height="280" fill="#060f1e"/>
+            <!-- Grid lines vertical -->
+            <g stroke="rgba(59,130,246,0.12)" stroke-width="0.8">
+              <line x1="0"   y1="0" x2="0"   y2="280"/>
+              <line x1="30"  y1="0" x2="30"  y2="280"/>
+              <line x1="60"  y1="0" x2="60"  y2="280"/>
+              <line x1="90"  y1="0" x2="90"  y2="280"/>
+              <line x1="120" y1="0" x2="120" y2="280"/>
+              <line x1="150" y1="0" x2="150" y2="280"/>
+              <line x1="180" y1="0" x2="180" y2="280"/>
+              <line x1="210" y1="0" x2="210" y2="280"/>
+              <line x1="240" y1="0" x2="240" y2="280"/>
+              <line x1="270" y1="0" x2="270" y2="280"/>
+              <line x1="300" y1="0" x2="300" y2="280"/>
+              <line x1="320" y1="0" x2="320" y2="280"/>
+            </g>
+            <!-- Grid lines horizontal -->
+            <g stroke="rgba(59,130,246,0.12)" stroke-width="0.8">
+              <line x1="0" y1="0"   x2="320" y2="0"/>
+              <line x1="0" y1="30"  x2="320" y2="30"/>
+              <line x1="0" y1="60"  x2="320" y2="60"/>
+              <line x1="0" y1="90"  x2="320" y2="90"/>
+              <line x1="0" y1="120" x2="320" y2="120"/>
+              <line x1="0" y1="150" x2="320" y2="150"/>
+              <line x1="0" y1="180" x2="320" y2="180"/>
+              <line x1="0" y1="210" x2="320" y2="210"/>
+              <line x1="0" y1="240" x2="320" y2="240"/>
+              <line x1="0" y1="270" x2="320" y2="270"/>
+            </g>
+
+            <!-- Highlight major axis lines -->
+            <line x1="0" y1="180" x2="320" y2="180" stroke="rgba(148,163,184,0.25)" stroke-width="1.2"/>
+            <line x1="60" y1="0" x2="60" y2="280" stroke="rgba(148,163,184,0.25)" stroke-width="1.2"/>
+
+            <!-- Axis labels (x: right, y: up) -->
+            <text x="285" y="174" fill="rgba(148,163,184,0.6)" font-size="10" font-family="Outfit">+x</text>
+            <text x="65"  y="16"  fill="rgba(148,163,184,0.6)" font-size="10" font-family="Outfit">+y</text>
+
+            <!-- O = (60, 180), setiap kotak = 30px -->
+            <!-- Vektor A: 4 kotak ke kanan → ujung A = (60+4×30, 180) = (180, 180) -->
+            <line x1="60" y1="180" x2="173" y2="180"
+                  stroke="#22d3ee" stroke-width="2.5" marker-end="url(#ta)"/>
+            <!-- Label A -->
+            <text x="113" y="173" fill="#22d3ee" font-size="12" font-family="Outfit" font-weight="800">A</text>
+            <text x="119" y="165" fill="#22d3ee" font-size="8">→</text>
+            <text x="100" y="196" fill="rgba(34,211,238,0.65)" font-size="9" font-family="Outfit">4 kotak → Rx=4</text>
+
+            <!-- Vektor B: 3 kotak ke atas dari ujung A → ujung B = (180, 180-3×30) = (180, 90) -->
+            <line x1="180" y1="180" x2="180" y2="97"
+                  stroke="#60a5fa" stroke-width="2.5" marker-end="url(#tb)"/>
+            <!-- Label B -->
+            <text x="186" y="143" fill="#60a5fa" font-size="12" font-family="Outfit" font-weight="800">B</text>
+            <text x="192" y="135" fill="#60a5fa" font-size="8">→</text>
+            <text x="186" y="174" fill="rgba(96,165,250,0.65)" font-size="9" font-family="Outfit">3↑ Ry=3</text>
+
+            <!-- Resultan R: O → ujung B = (60,180) → (180,90) -->
+            <line x1="60" y1="180" x2="176" y2="97"
+                  stroke="#f59e0b" stroke-width="2.5"
+                  stroke-dasharray="7,3" marker-end="url(#tr)"/>
+            <text x="103" y="127" fill="#f59e0b" font-size="12" font-family="Outfit" font-weight="800">R=5</text>
+            <text x="112" y="119" fill="#f59e0b" font-size="8">→</text>
+
+            <!-- Right angle mark at (180,180) -->
+            <rect x="170" y="170" width="10" height="10"
+                  fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+
+            <!-- Kotak Rx dashed helper -->
+            <line x1="60" y1="90" x2="180" y2="90"
+                  stroke="rgba(245,158,11,0.2)" stroke-width="1" stroke-dasharray="4,3"/>
+            <line x1="60" y1="180" x2="60" y2="90"
+                  stroke="rgba(245,158,11,0.2)" stroke-width="1" stroke-dasharray="4,3"/>
+
+            <!-- Titik O -->
+            <circle cx="60" cy="180" r="5" fill="#22d3ee"/>
+            <text x="42" y="198" fill="rgba(255,255,255,0.7)" font-size="11" font-family="Outfit" font-weight="700">O</text>
+          </svg>
+        </div>
+
+        <!-- Soal Tugas -->
+        <div class="card-indigo" style="padding:14px;">
+          <div style="font-weight:700;color:var(--indigo);font-size:13px;margin-bottom:10px;">📋 Tugas untuk Kamu</div>
+          <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--g3);">
+            <div style="display:flex;gap:8px;"><span style="color:var(--green-l);font-weight:700;">①</span><span>Gambar <span class="vec">A</span> = 5 kotak ke kanan, <span class="vec">B</span> = 12 kotak ke atas. Hitung R!</span></div>
+            <div style="display:flex;gap:8px;"><span style="color:var(--amber-l);font-weight:700;">②</span><span>Gambar <span class="vec">P</span> = 6 kotak ke kanan, <span class="vec">Q</span> = 8 kotak ke kanan. Hitung R!</span></div>
+            <div style="display:flex;gap:8px;"><span style="color:var(--red-l);font-weight:700;">③</span><span>Gambar <span class="vec">F</span>₁ = 3 kotak ke kanan, 4 kotak ke atas. Berapa |<span class="vec">F</span>₁|?</span></div>
+          </div>
+          <div class="math-box indigo" style="margin-top:10px;font-size:0.85rem;text-align:center;">
+            $$R = \sqrt{R_x^2 + R_y^2}$$
+          </div>
+          <div style="font-size:10px;color:var(--g5);margin-top:8px;">Jawaban ①: 13 · Jawaban ②: 14 · Jawaban ③: 5</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">Tugas</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 24-28 — REFLEKSI + PENUTUP       -->
+<!-- ════════════════════════════════════════ -->
+<div class="slide p3-slide" id="s24" data-sec="p3">
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;gap:18px;">
+    <div class="s-accent">
+      <span class="chip chip-ghost">Refleksi</span>
+      <div class="accent-line"></div>
+    </div>
+    <div class="t-h1">Refleksi Pribadi ✍️</div>
+    <div class="g2" style="gap:16px;flex:1;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:13px;color:var(--g4);padding-top:4px;">Luangkan 3 menit untuk merenung — tidak ada jawaban salah!</div>
+        <div class="card" style="padding:16px;border-left:3px solid var(--blue);">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--blue-l);margin-bottom:6px;">HARI INI SAYA BELAJAR BAHWA...</div>
+          <div style="height:44px;border-bottom:1px dashed rgba(255,255,255,0.08);"></div>
+        </div>
+        <div class="card" style="padding:16px;border-left:3px solid var(--cyan);">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--cyan-l);margin-bottom:6px;">YANG PALING MENARIK BAGIKU ADALAH...</div>
+          <div style="height:44px;border-bottom:1px dashed rgba(255,255,255,0.08);"></div>
+        </div>
+        <div class="card" style="padding:16px;border-left:3px solid var(--indigo);">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--indigo);margin-bottom:6px;">SAYA MASIH INGIN TAHU TENTANG...</div>
+          <div style="height:44px;border-bottom:1px dashed rgba(255,255,255,0.08);"></div>
+        </div>
+        <div class="card" style="padding:16px;border-left:3px solid var(--green);">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--green-l);margin-bottom:6px;">VEKTOR AKAN AKU GUNAKAN UNTUK...</div>
+          <div style="height:44px;border-bottom:1px dashed rgba(255,255,255,0.08);"></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card-blue" style="padding:16px;">
+          <div style="font-weight:700;color:var(--blue-l);margin-bottom:10px;font-size:13px;">✅ Cek Pencapaianmu</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;gap:10px;align-items:center;font-size:12px;color:var(--g3);">
+              <span style="font-size:16px;">☐</span>Bisa bedakan skalar dan vektor
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;font-size:12px;color:var(--g3);">
+              <span style="font-size:16px;">☐</span>Bisa urai vektor ke komponen x dan y
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;font-size:12px;color:var(--g3);">
+              <span style="font-size:16px;">☐</span>Bisa pakai metode segitiga & jajar genjang
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;font-size:12px;color:var(--g3);">
+              <span style="font-size:16px;">☐</span>Bisa hitung resultan dengan metode analitis
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;font-size:12px;color:var(--g3);">
+              <span style="font-size:16px;">☐</span>Bisa hubungkan vektor dengan teknologi nyata
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;font-size:12px;color:var(--g3);">
+              <span style="font-size:16px;">☐</span>Selesaikan soal HOTS kontekstual
+            </div>
+          </div>
+        </div>
+        <div class="card" style="padding:14px;display:flex;gap:10px;align-items:center;">
+          <span style="font-size:22px;">🌟</span>
+          <div style="font-size:12px;color:var(--g4);line-height:1.6;">Fisika bukan tentang menghafal rumus. Fisika adalah cara kamu <strong style="color:var(--white);">memahami dunia</strong> — dari drone di udara, kapal di laut, sampai game di tanganmu.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slot-badge">24 / 28</div>
+</div>
+
+<!-- SLIDE 25 — SCOREBOARD AKHIR -->
+<div class="slide" id="s25" data-sec="p3" style="background:linear-gradient(135deg,#020617,#0a1628,#0d2040);min-height:500px;">
+  <div class="deco" style="width:500px;height:500px;background:radial-gradient(circle,rgba(59,130,246,0.14),transparent 70%);top:-150px;right:-100px;"></div>
+  <div class="sp" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:22px;position:relative;">
+    <div style="font-size:56px;">🏆</div>
+    <div class="t-h1 grad-blue">Kamu sudah selesai!</div>
+    <div style="font-size:1rem;color:var(--g4);max-width:480px;line-height:1.7;">
+      Tiga pertemuan, 24 slide, dan kamu sudah punya senjata baru:<br>
+      <strong style="color:var(--white);">kemampuan berpikir dengan vektor</strong>.
+    </div>
+    <!-- XP display -->
+    <div class="card-blue" style="padding:20px 32px;display:flex;flex-direction:column;align-items:center;gap:8px;">
+      <div style="font-size:12px;color:var(--g4);letter-spacing:0.08em;text-transform:uppercase;">Total XP yang kamu kumpulkan</div>
+      <div style="font-size:3rem;font-weight:900;color:var(--amber-l);" id="final-xp">0 ⭐</div>
+      <div id="xp-rank" style="font-size:13px;color:var(--g4);">— jawab kuis untuk mendapat XP —</div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:4px;">
+      <span class="chip chip-blue">✓ Vektor teridentifikasi</span>
+      <span class="chip chip-cyan">✓ Operasi dikuasai</span>
+      <span class="chip chip-indigo">✓ Aplikasi dipahami</span>
+      <span class="chip chip-green">✓ Siap ke materi selanjutnya</span>
+    </div>
+    <div style="font-size:13px;color:var(--g5);max-width:440px;margin-top:8px;">
+      "Setiap kali kamu pakai Google Maps, ingat — kamu sedang menerapkan fisika vektor yang sudah kamu pelajari hari ini." 🗺️
+    </div>
+  </div>
+  <div class="slot-badge">25 / 28</div>
+</div>
+
+</div><!-- END slides-vp -->
+
+<!-- DOT NAV -->
+<div id="dot-nav">
+  <button class="d-dot active" onclick="goSlide(1)" title="Cover"></button>
+  <button class="d-dot" onclick="goSlide(2)" title="Roadmap"></button>
+  <button class="d-dot p1" onclick="goSlide(3)" title="P1 Fenomena"></button>
+  <button class="d-dot p1" onclick="goSlide(4)" title="P1 Skalar/Vektor"></button>
+  <button class="d-dot p1" onclick="goSlide(5)" title="P1 Kuis"></button>
+  <button class="d-dot p1" onclick="goSlide(6)" title="P1 Notasi"></button>
+  <button class="d-dot p1" onclick="goSlide(7)" title="P1 Contoh"></button>
+  <button class="d-dot p1" onclick="goSlide(8)" title="P1 Ringkasan"></button>
+  <button class="d-dot p2" onclick="goSlide(9)" title="P2 Segitiga"></button>
+  <button class="d-dot p2" onclick="goSlide(10)" title="P2 Jajar Genjang"></button>
+  <button class="d-dot p2" onclick="goSlide(11)" title="P2 Analitis"></button>
+  <button class="d-dot p2" onclick="goSlide(12)" title="P2 Contoh"></button>
+  <button class="d-dot p2" onclick="goSlide(13)" title="P2 Pengurangan"></button>
+  <button class="d-dot p2" onclick="goSlide(14)" title="P2 Kuis"></button>
+  <button class="d-dot p2" onclick="goSlide(15)" title="P2 Latihan"></button>
+  <button class="d-dot p3" onclick="goSlide(16)" title="P3 GPS"></button>
+  <button class="d-dot p3" onclick="goSlide(17)" title="P3 Teknologi"></button>
+  <button class="d-dot p3" onclick="goSlide(18)" title="P3 Lingkungan"></button>
+  <button class="d-dot p3" onclick="goSlide(19)" title="P3 HOTS Nelayan"></button>
+  <button class="d-dot p3" onclick="goSlide(20)" title="P3 Kuis Final"></button>
+  <button class="d-dot p3" onclick="goSlide(21)" title="P3 Latihan HOTS"></button>
+  <button class="d-dot p3" onclick="goSlide(22)" title="P3 Mind Map"></button>
+  <button class="d-dot p3" onclick="goSlide(23)" title="P3 Rumus"></button>
+  <button class="d-dot p3" onclick="goSlide(24)" title="P3 Refleksi"></button>
+  <button class="d-dot p3" onclick="goSlide(25)" title="Penutup"></button>
+  <button class="d-dot p2" onclick="document.getElementById('s-tugas').scrollIntoView({behavior:'smooth'})" title="Tugas Berpetak"></button>
+</div>
+
+<script>
+// ── SLIDE STATE ──
+const allSlides = Array.from(document.querySelectorAll('.slide[id^="s"]'));
+const allDots   = Array.from(document.querySelectorAll('.d-dot'));
+let cur = 0;
+let totalXP = 0;
+const answeredQuizzes = new Set();
+
+// ── XP SYSTEM ──
+function addXP(pts) {
+  totalXP += pts;
+  document.getElementById('xp-count').textContent = totalXP;
+  const fe = document.getElementById('final-xp');
+  if (fe) fe.textContent = totalXP + ' ⭐';
+  updateRank();
+}
+function updateRank() {
+  const el = document.getElementById('xp-rank');
+  if (!el) return;
+  if (totalXP >= 60) el.textContent = '🏆 Juara Kelas!';
+  else if (totalXP >= 40) el.textContent = '🥇 Luar biasa!';
+  else if (totalXP >= 20) el.textContent = '👍 Bagus sekali!';
+  else if (totalXP > 0)  el.textContent = '🌱 Terus semangat!';
+}
+
+// ── QUIZ HANDLER ──
+function answerQuiz(qid, choice, correct, feedback) {
+  if (answeredQuizzes.has(qid)) return;
+  answeredQuizzes.add(qid);
+  const wrap = document.getElementById(qid);
+  if (!wrap) return;
+  // Lock all options
+  wrap.querySelectorAll('.quiz-opt').forEach(o => {
+    o.classList.add('locked');
+    const letter = o.querySelector('.quiz-letter').textContent;
+    if (letter === choice) {
+      o.classList.add(correct ? 'correct' : 'wrong');
+    }
+    if (!correct) {
+      // Highlight correct answer (always B or C depending)
+    }
+  });
+  // Show feedback
+  const fb = document.getElementById(qid + '-fb');
+  if (fb) {
+    fb.className = 'quiz-feedback show ' + (correct ? 'ok' : 'no');
+    fb.innerHTML = `<span style="font-size:18px;">${correct?'🎉':'💡'}</span><span>${feedback}</span>`;
+  }
+  if (correct) addXP(10);
+
+  // Check if pair done → show score
+  const pairs = {q1:'q12',q2:'q12',q3:'q34',q4:'q34',q5:'q56',q6:'q56'};
+  const scoreId = pairs[qid];
+  if (scoreId) {
+    const other = Object.entries(pairs).find(([k,v]) => v===scoreId && k!==qid);
+    if (other && answeredQuizzes.has(other[0])) {
+      const sc = document.getElementById(scoreId + '-score');
+      if (sc) { sc.className = 'quiz-score show'; sc.textContent = `Kamu sudah menjawab kedua soal ini! Total XP sekarang: ${totalXP} ⭐`; }
+    }
+  }
+}
+
+// ── REVEAL HANDLER ──
+function toggleReveal(id) {
+  const body = document.getElementById(id);
+  const ico  = document.getElementById(id + '-ico');
+  if (!body) return;
+  const isOpen = body.classList.toggle('open');
+  if (ico) ico.textContent = isOpen ? '🔼 tutup' : '👆 buka';
+}
+
+// ── SLIDE NAVIGATION ──
+function goSlide(n) {
+  const idx = n - 1;
+  if (idx < 0 || idx >= allSlides.length) return;
+  cur = idx;
+  allSlides[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  updateNav();
+}
+
+function goSection(sec) {
+  if (sec === 'intro') { goSlide(1); return; }
+  const el = document.getElementById(sec);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function navNext() { if (cur < allSlides.length-1) goSlide(cur+2); }
+function navPrev() { if (cur > 0) goSlide(cur); }
+
+function updateNav() {
+  // Dots
+  allDots.forEach((d,i) => d.classList.toggle('active', i === cur));
+  // Progress bar
+  const pct = ((cur+1)/allSlides.length)*100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  // Slide counter
+  document.getElementById('slide-info').textContent = `${cur+1} / ${allSlides.length}`;
+  // Nav pills
+  const sec = allSlides[cur]?.dataset?.sec || 'intro';
+  document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+  const map = {intro:0,p1:1,p2:2,p3:3};
+  document.querySelectorAll('.nav-pill')[map[sec]??0]?.classList.add('active');
+}
+
+// ── INTERSECTION OBSERVER ──
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting && e.intersectionRatio > 0.3) {
+      const id = e.target.id; // s1, s2, ...
+      const n = parseInt(id.replace('s',''));
+      if (!isNaN(n)) { cur = n-1; updateNav(); }
+    }
+  });
+}, { threshold: 0.3 });
+allSlides.forEach(s => io.observe(s));
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (e.key==='ArrowRight'||e.key==='ArrowDown') navNext();
+  if (e.key==='ArrowLeft'||e.key==='ArrowUp')   navPrev();
+});
+
+// ── INIT ──
+updateNav();
+window.addEventListener('load', () => {
+  if (window.MathJax) MathJax.typesetPromise().catch(console.error);
+});
+
+// ══════════════════════════════════════════════
+// CLICK-TO-REVEAL STEP SYSTEM
+// Setiap slide: konten muncul satu per satu saat diklik
+// ══════════════════════════════════════════════
+(function initStepReveal() {
+
+  // Selectors yang akan dibuat step-by-step per slide
+  // Urutan penting: lebih spesifik dulu
+  const STEP_SELECTORS = [
+    '.s-accent',
+    '.t-h1',
+    '.t-h2',
+    '.t-display',
+    '.t-body',
+    // Grid children (roadmap, feature cards, dll)
+    '.g2 > *',
+    '.g3 > *',
+    '.g4 > *',
+    '.g21 > *',
+    '.g12 > *',
+    // Step items (timeline/langkah)
+    '.step-item',
+    // Quiz options
+    '.quiz-opt',
+    // Reveal cards
+    '.reveal-card',
+    // Formula/math boxes
+    '.formula-card',
+    '.math-box',
+    // V-canvas diagrams
+    '.v-canvas',
+    // Standalone cards (not already in grid)
+    '.card',
+    '.card-blue',
+    '.card-cyan',
+    '.card-indigo',
+    '.card-green',
+    '.card-amber',
+    '.card-red',
+  ];
+
+  // CSS untuk step system
+  const style = document.createElement('style');
+  style.textContent = `
+    .step-el {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: none;
+      pointer-events: none;
+    }
+    .step-el.step-shown {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.4s cubic-bezier(0.22,0.61,0.36,1),
+                  transform 0.4s cubic-bezier(0.22,0.61,0.36,1);
+      pointer-events: auto;
+    }
+    /* Slide cover & divider: semua langsung terlihat */
+    .cover-slide .step-el,
+    .divider-slide .step-el {
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: auto !important;
+    }
+    /* Click-prompt badge */
+    .step-prompt {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: rgba(34,211,238,0.1);
+      border: 1px solid rgba(34,211,238,0.3);
+      font-size: 11px;
+      color: var(--cyan-l);
+      cursor: pointer;
+      z-index: 10;
+      animation: pulse-prompt 2s ease infinite;
+      user-select: none;
+      white-space: nowrap;
+    }
+    @keyframes pulse-prompt {
+      0%,100% { box-shadow: 0 0 0 0 rgba(34,211,238,0.25); }
+      50%      { box-shadow: 0 0 0 6px rgba(34,211,238,0); }
+    }
+    .step-prompt.done {
+      background: rgba(34,197,94,0.1);
+      border-color: rgba(34,197,94,0.3);
+      color: var(--green-l);
+      animation: none;
+    }
+    /* Counter badge */
+    .step-counter {
+      position: absolute;
+      top: 16px;
+      right: 80px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--g5);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gbr);
+      padding: 3px 10px;
+      border-radius: 20px;
+      z-index: 10;
+      letter-spacing: 0.06em;
+    }
+  `;
+  document.head.appendChild(style);
+
+  function setupSlide(slide) {
+    if (slide.dataset.stepInit) return;
+    slide.dataset.stepInit = '1';
+
+    const isCover = slide.classList.contains('cover-slide') ||
+                    slide.classList.contains('divider-slide');
+    if (isCover) return; // cover & divider: show all immediately
+
+    // Collect elements in DOM order (de-duped)
+    const seen = new WeakSet();
+    const steps = [];
+
+    STEP_SELECTORS.forEach(sel => {
+      slide.querySelectorAll(sel).forEach(el => {
+        if (seen.has(el)) return;
+        // Skip elements that are descendants of another already-collected element
+        let dominated = false;
+        for (const s of steps) {
+          if (s.contains(el)) { dominated = true; break; }
+        }
+        if (dominated) return;
+        seen.add(el);
+        steps.push(el);
+      });
+    });
+
+    if (steps.length === 0) return;
+
+    // Apply hidden class to all steps
+    steps.forEach(el => el.classList.add('step-el'));
+
+    // Track current step index
+    slide._stepIdx = 0;
+    slide._steps   = steps;
+
+    // Create click-prompt badge
+    const prompt = document.createElement('div');
+    prompt.className = 'step-prompt';
+    prompt.innerHTML = `<span>👆</span><span>Klik untuk lanjut</span><span id="step-cnt-${slide.id}" style="opacity:0.6;margin-left:4px;">0/${steps.length}</span>`;
+    slide.appendChild(prompt);
+
+    // Click advances one step
+    function advance() {
+      const idx = slide._stepIdx;
+      if (idx >= steps.length) return;
+
+      steps[idx].classList.add('step-shown');
+      slide._stepIdx++;
+
+      // Update counter
+      const cnt = document.getElementById(`step-cnt-${slide.id}`);
+      if (cnt) cnt.textContent = `${slide._stepIdx}/${steps.length}`;
+
+      if (slide._stepIdx >= steps.length) {
+        prompt.className = 'step-prompt done';
+        prompt.innerHTML = `<span>✅</span><span>Semua tampil · Klik lagi untuk reset</span>`;
+        prompt.onclick = () => resetSlide(slide);
+      } else {
+        prompt.innerHTML = `<span>👆</span><span>Klik untuk lanjut</span><span style="opacity:0.6;margin-left:4px;">${slide._stepIdx}/${steps.length}</span>`;
+      }
+    }
+
+    function resetSlide(s) {
+      s._steps.forEach(el => el.classList.remove('step-shown'));
+      s._stepIdx = 0;
+      prompt.className = 'step-prompt';
+      prompt.innerHTML = `<span>👆</span><span>Klik untuk mulai</span><span style="opacity:0.6;margin-left:4px;">0/${s._steps.length}</span>`;
+      prompt.onclick = null;
+    }
+
+    // Klik di mana saja pada slide = advance
+    slide.addEventListener('click', function(e) {
+      // Jangan advance jika klik pada elemen interaktif (quiz, reveal, button, dll)
+      const tag = e.target.tagName;
+      if (['BUTTON','INPUT','A'].includes(tag)) return;
+      if (e.target.closest('.quiz-opt') ||
+          e.target.closest('.reveal-card') ||
+          e.target.closest('.step-prompt') ||
+          e.target.closest('#dot-nav') ||
+          e.target.closest('#top-nav')) return;
+      advance();
+    });
+
+    // Keyboard: spasi / kanan saat slide ini aktif
+    document.addEventListener('keydown', function(e) {
+      if (e.key === ' ' || e.key === 'ArrowRight') {
+        // Cek apakah slide ini yang sedang di-view
+        const rect = slide.getBoundingClientRect();
+        const visible = rect.top < window.innerHeight * 0.7 && rect.bottom > window.innerHeight * 0.1;
+        if (visible && slide._stepIdx < (slide._steps?.length || 0)) {
+          e.preventDefault();
+          advance();
+        }
+      }
+    });
+  }
+
+  // Observe slides entering viewport untuk setup
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) setupSlide(entry.target);
+    });
+  }, { threshold: 0.05 });
+
+  document.querySelectorAll('.slide').forEach(s => obs.observe(s));
+
+})();
+
+
+</script>
+</body>
+</html>
