@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Mobile VR viewport — no scaling, full screen -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#020810" />
+  <meta name="description" content="SAKO Digital Mission VR — Game edukasi WebVR Pandu Digital. Jelajahi 8 room, kalahkan boss digital, raih gelar PANDU DIGITAL!" />
+  <title>SAKO Digital Mission — Ready for the Future</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+
+  <!-- A-Frame 1.5 — loads before our modules -->
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+
+  <script type="module" crossorigin src="/assets/index-C6BMQSSe.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-3PToq9xL.css">
+</head>
+<body>
+
+  <!-- ============ UI LAYER (HTML overlay) ============ -->
+  <div id="ui-layer">
+
+    <!-- SPLASH SCREEN -->
+    <div id="screen-splash" class="screen-cover">
+      <canvas id="particle-canvas"></canvas>
+      <div class="splash-content">
+        <div class="splash-logo">
+          <div class="logo-ring"></div>
+          <div class="logo-inner">🥾</div>
+        </div>
+        <h1 class="splash-title">SAKO<br/><span class="text-cyan">DIGITAL</span><br/>MISSION</h1>
+        <p class="splash-sub font-mono">READY FOR THE FUTURE · VR EDITION</p>
+        <div class="splash-badges">
+          <span class="badge-chip">📱 Mobile VR</span>
+          <span class="badge-chip">🥽 Cardboard</span>
+          <span class="badge-chip">8 Rooms</span>
+        </div>
+        <button class="btn btn-primary btn-xl" id="btn-start">🚀 MULAI PETUALANGAN</button>
+        <button class="btn btn-ghost btn-lg" id="btn-continue" style="display:none">▶ LANJUTKAN</button>
+        <button class="btn btn-ghost btn-sm" id="btn-reset" style="display:none;opacity:0.5">↺ Reset</button>
+        <p class="splash-hint font-mono">
+          📱 HP: Gunakan Google Cardboard<br/>
+          💻 Desktop: WASD + Mouse
+        </p>
+      </div>
+    </div>
+
+    <!-- NAME INPUT SCREEN -->
+    <div id="screen-name" class="screen-cover hidden">
+      <div class="center-card glass-card">
+        <div class="card-icon">🥾</div>
+        <h2 class="glow-text">IDENTIFIKASI PANDU</h2>
+        <p class="text-muted" style="margin:0.5rem 0 1.5rem">Siapa namamu, calon Pandu Digital?</p>
+        <form id="name-form">
+          <input class="name-input" type="text" id="player-name"
+            placeholder="MASUKKAN NAMAMU..."
+            maxlength="20" autocomplete="off" autofocus />
+          <button type="submit" class="btn btn-primary btn-xl" style="width:100%">
+            🚀 SIAP BERMISI!
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- HUD (visible during VR play) -->
+    <div id="hud" class="hidden">
+      <div class="hud-left">
+        <span class="hud-name font-mono" id="hud-name">PANDU</span>
+        <span class="hud-level text-green font-mono" id="hud-level">LV1</span>
+      </div>
+      <div class="hud-center">
+        <span class="hud-room font-mono text-cyan" id="hud-room">HUB</span>
+      </div>
+      <div class="hud-right">
+        <span class="hud-xp text-gold font-mono" id="hud-xp">0 XP</span>
+        <div class="progress-bar hud-xp-bar">
+          <div class="progress-fill" id="hud-xp-fill" style="width:0%"></div>
+        </div>
+        <span class="hud-badges font-mono" id="hud-badges">🎖 0</span>
+        <button class="btn btn-ghost btn-sm" id="btn-exit-vr">← KELUAR</button>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast-container"></div>
+
+    <!-- MODAL -->
+    <div id="modal-overlay" class="hidden">
+      <div class="modal-box" id="modal-box">
+        <button class="modal-close" id="modal-close">✕</button>
+        <div id="modal-content"></div>
+      </div>
+    </div>
+
+    <!-- CARDBOARD VR BUTTON — bottom center, visible when in VR mode -->
+    <button id="btn-cardboard" class="cardboard-btn hidden" title="Masuk Cardboard VR">
+      🥽 CARDBOARD VR
+    </button>
+
+    <!-- AUDIO TOGGLE -->
+    <button id="btn-audio" class="audio-btn" title="Toggle Audio">🔊</button>
+  </div>
+
+  <!-- ============ A-FRAME SCENE LAYER ============ -->
+  <div id="scene-layer" style="display:none;position:fixed;inset:0;z-index:1">
+    <!-- a-scene injected by main.js -->
+  </div>
+
+</body>
+</html>
