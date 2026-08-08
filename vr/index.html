@@ -18,8 +18,8 @@
   <!-- A-Frame 1.5 — loads before our modules -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 
-  <script type="module" crossorigin src="./assets/index-C6BMQSSe.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-3PToq9xL.css">
+  <script type="module" crossorigin src="./assets/index-C_Waxqes.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-D-JPDNPG.css">
 </head>
 <body>
 
@@ -83,7 +83,117 @@
           <div class="progress-fill" id="hud-xp-fill" style="width:0%"></div>
         </div>
         <span class="hud-badges font-mono" id="hud-badges">🎖 0</span>
+        <button class="btn btn-gold btn-sm" id="btn-editor-toggle">✏️ EDITOR</button>
         <button class="btn btn-ghost btn-sm" id="btn-exit-vr">← KELUAR</button>
+      </div>
+    </div>
+
+    <!-- EDITOR DRAWER PANEL -->
+    <div id="editor-drawer" class="editor-drawer hidden">
+      <div class="editor-header">
+        <span class="editor-title">🛠️ 3D ROOM EDITOR</span>
+        <button class="btn btn-ghost btn-sm" id="btn-close-editor">✕ TUTUP</button>
+      </div>
+
+      <!-- Object Outliner / Selector Section (Minecraft Creative Mode) -->
+      <div class="editor-section">
+        <div class="editor-label">📋 PILIH OBJEK RUANGAN:</div>
+        <select id="select-room-objects" class="form-input" style="margin-bottom:0.5rem;background:#030c1a;color:#ffffff;border-color:#06b6d4;padding:0.4rem;border-radius:6px;width:100%">
+          <option value="">-- Pilih Objek Untuk Edit / Ganti --</option>
+        </select>
+      </div>
+
+      <!-- Add Object Section -->
+      <div class="editor-section">
+        <div class="editor-label">TAMBAH OBJEK 3D / LOGO:</div>
+        <div class="editor-btn-group">
+          <label class="btn btn-ghost btn-sm file-btn">
+            📦 Upload .GLB
+            <input type="file" id="file-input-glb" accept=".glb,.gltf" style="display:none" />
+          </label>
+          <label class="btn btn-ghost btn-sm file-btn">
+            🖼️ Upload PNG Logo
+            <input type="file" id="file-input-png" accept="image/png,image/jpeg,image/webp" style="display:none" />
+          </label>
+          <button class="btn btn-ghost btn-sm" id="btn-add-text">🔤 Teks 3D</button>
+          <button class="btn btn-ghost btn-sm" id="btn-add-portal">🚪 Portal 3D</button>
+        </div>
+      </div>
+
+      <!-- Selected Object Inspector -->
+      <div id="editor-inspector" class="editor-section hidden">
+        <div class="editor-label" id="inspector-title">OBJEK TERPILIH:</div>
+        
+        <div class="control-row">
+          <label>POS X:</label>
+          <input type="range" id="input-pos-x" min="-8" max="8" step="0.1" value="0" />
+          <span class="val-badge" id="val-pos-x">0</span>
+        </div>
+        <div class="control-row">
+          <label>POS Y:</label>
+          <input type="range" id="input-pos-y" min="0" max="5" step="0.1" value="1" />
+          <span class="val-badge" id="val-pos-y">1</span>
+        </div>
+        <div class="control-row">
+          <label>POS Z:</label>
+          <input type="range" id="input-pos-z" min="-8" max="8" step="0.1" value="-3" />
+          <span class="val-badge" id="val-pos-z">-3</span>
+        </div>
+
+        <div class="control-row">
+          <label>PUTAR (Y):</label>
+          <input type="range" id="input-rot-y" min="0" max="360" step="5" value="0" />
+          <span class="val-badge" id="val-rot-y">0°</span>
+        </div>
+
+        <div class="control-row">
+          <label>UKURAN:</label>
+          <input type="range" id="input-scale" min="0.1" max="5" step="0.1" value="1" />
+          <span class="val-badge" id="val-scale">1x</span>
+        </div>
+
+        <!-- Blender-Style Quick Gizmo D-Pad (No Slider Needed!) -->
+        <div class="editor-label" style="margin-top:0.75rem;color:var(--gold)">🕹️ GIZMO BLENDER CONTROL:</div>
+        
+        <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:0.3rem;margin-bottom:0.6rem">
+          <div></div>
+          <button class="btn btn-ghost btn-sm" id="btn-gizmo-fwd" title="Geser Maju (-Z)">⬆️ MAJU</button>
+          <div></div>
+          <button class="btn btn-ghost btn-sm" id="btn-gizmo-left" title="Geser Kiri (-X)">⬅️ KIRI</button>
+          <button class="btn btn-ghost btn-sm" id="btn-gizmo-up" title="Naik (+Y)">🔝 NAIK</button>
+          <button class="btn btn-ghost btn-sm" id="btn-gizmo-right" title="Geser Kanan (+X)">➡️ KANAN</button>
+          <div></div>
+          <button class="btn btn-ghost btn-sm" id="btn-gizmo-back" title="Geser Mundur (+Z)">⬇️ MUNDUR</button>
+          <button class="btn btn-ghost btn-sm" id="btn-gizmo-down" title="Turun (-Y)">🔻 TURUN</button>
+        </div>
+
+        <div style="display:flex;gap:0.3rem;margin-bottom:0.6rem">
+          <button class="btn btn-ghost btn-sm" id="btn-gizmo-rot-l" style="flex:1">↺ -15° PUTAR</button>
+          <button class="btn btn-ghost btn-sm" id="btn-gizmo-rot-r" style="flex:1">↻ +15° PUTAR</button>
+        </div>
+
+        <div style="display:flex;gap:0.3rem;margin-bottom:0.6rem">
+          <button class="btn btn-ghost btn-sm" id="btn-gizmo-scale-up" style="flex:1">🔍 + PERBESAR</button>
+          <button class="btn btn-ghost btn-sm" id="btn-gizmo-scale-down" style="flex:1">🔍 - PERKECIL</button>
+        </div>
+
+        <div class="editor-btn-group" style="margin-top:0.5rem">
+          <label class="btn btn-gold btn-sm file-btn">
+            🔄 Ganti Model / Logo
+            <input type="file" id="file-input-replace" accept=".glb,.gltf,image/png,image/jpeg,image/webp" style="display:none" />
+          </label>
+          <button class="btn btn-danger btn-sm" id="btn-delete-obj">🗑️ HAPUS OBJEK</button>
+        </div>
+      </div>
+
+      <!-- Save & Export Actions -->
+      <div class="editor-footer">
+        <button class="btn btn-green btn-sm" id="btn-save-layout">💾 SIMPAN LAYOUT</button>
+        <button class="btn btn-ghost btn-sm" id="btn-export-json">📤 EXPORT</button>
+        <label class="btn btn-ghost btn-sm file-btn">
+          📥 IMPORT
+          <input type="file" id="file-input-json" accept=".json" style="display:none" />
+        </label>
       </div>
     </div>
 
