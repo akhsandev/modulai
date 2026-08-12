@@ -454,7 +454,7 @@
             <span class="step-number">4</span>
             <div>
               <h2 class="text-base font-bold text-white">Studio Kamera Selfie (Portrait 3:4)</h2>
-              <p class="text-xs text-slate-400">Foto resolusi HD (1080p), terkompresi maks 700 KB (JPEG)</p>
+              <p class="text-xs text-slate-400">Foto resolusi 2K Quad HD (1440p), terkompresi maks 700 KB (JPEG)</p>
             </div>
           </div>
           <span id="camera-status-tag"
@@ -473,7 +473,7 @@
               Panduan Foto Close-Up (Face Recognition SCS)
             </h4>
             <p class="text-[11px] text-cyan-300/90 leading-relaxed">
-              Dekatkan wajah ke kamera hingga memenuhi oval guide. Ambil foto <strong>Close-Up (Wajah terlihat utuh & jelas dari dahi s.d. dagu)</strong> tanpa masker agar dikenali sistem kecerdasan buatan Face Recognition SCS.
+              Dekatkan wajah ke kamera hingga memenuhi oval guide. Ambil foto <strong>Close-Up 2K (Wajah terlihat utuh & jelas dari dahi s.d. dagu)</strong> tanpa masker agar dikenali sistem kecerdasan buatan Face Recognition SCS.
             </p>
           </div>
         </div>
@@ -536,7 +536,7 @@
 
         <!-- COMPRESSED SIZE TAG INDICATOR -->
         <p id="compressed-size-tag" class="text-xs font-semibold text-emerald-400 font-mono text-center hidden">
-          <i class="fa-solid fa-file-image mr-1"></i> Ukuran Terkompresi: <span id="img-kb-size">0 KB</span> (Maks 700 KB JPEG - 1080p)
+          <i class="fa-solid fa-file-image mr-1"></i> Ukuran Terkompresi: <span id="img-kb-size">0 KB</span> (Maks 700 KB JPEG - 1440p)
         </p>
 
         <!-- CAMERA CONTROLS BAR -->
@@ -1176,8 +1176,8 @@
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
             facingMode: facingMode,
-            width: { ideal: 1280 },
-            height: { ideal: 960 }
+            width: { ideal: 1920 },
+            height: { ideal: 1440 }
           },
           audio: false
         });
@@ -1220,15 +1220,15 @@
     }
 
     /* ==========================================================================
-       IMAGE COMPRESSION (MAX 700KB & PORTRAIT 1080P 3:4 RATIO)
+       IMAGE COMPRESSION (MAX 700KB & PORTRAIT 2K 1440P 3:4 RATIO)
        ========================================================================== */
 
     function compressImageToBase64(imageOrCanvas, maxKb = 700) {
       const maxBytes = maxKb * 1024;
       
-      // Resolution 3:4 Portrait HD 1080p (1080x1440)
-      let targetW = 1080;
-      let targetH = 1440;
+      // Resolution 3:4 Portrait 2K Quad HD 1440p (1440x1920)
+      let targetW = 1440;
+      let targetH = 1920;
 
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = targetW;
@@ -1248,12 +1248,12 @@
         sizeBytes = Math.round((dataUrl.length - 22) * 3 / 4);
       }
 
-      // If still larger than 700KB, scale down canvas resolution (810x1080)
+      // If still larger than 700KB, scale down canvas resolution (1080x1440)
       if (sizeBytes > maxBytes) {
-        tempCanvas.width = 810;
-        tempCanvas.height = 1080;
+        tempCanvas.width = 1080;
+        tempCanvas.height = 1440;
         const ctx2 = tempCanvas.getContext('2d');
-        ctx2.drawImage(imageOrCanvas, 0, 0, 810, 1080);
+        ctx2.drawImage(imageOrCanvas, 0, 0, 1080, 1440);
         quality = 0.75;
         dataUrl = tempCanvas.toDataURL('image/jpeg', quality);
         sizeBytes = Math.round((dataUrl.length - 22) * 3 / 4);
@@ -1272,10 +1272,10 @@
       const video = document.getElementById('webcam-video');
       const preview = document.getElementById('image-preview');
 
-      // Create snapshot canvas for mirror check (1080p)
+      // Create snapshot canvas for mirror check (1440p)
       const snapCanvas = document.createElement('canvas');
-      snapCanvas.width = video.videoWidth || 1080;
-      snapCanvas.height = video.videoHeight || 1440;
+      snapCanvas.width = video.videoWidth || 1440;
+      snapCanvas.height = video.videoHeight || 1920;
       const snapCtx = snapCanvas.getContext('2d');
 
       if (facingMode === 'user') {
