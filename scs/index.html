@@ -463,9 +463,24 @@
           </span>
         </div>
 
+        <!-- Face Recognition Guidance Alert Banner -->
+        <div class="p-3.5 rounded-xl bg-cyan-950/40 border border-cyan-500/30 flex items-start gap-3">
+          <div class="p-2 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0">
+            <i class="fa-solid fa-face-viewfinder text-lg"></i>
+          </div>
+          <div class="space-y-1">
+            <h4 class="text-xs font-bold text-cyan-200 uppercase tracking-wider">
+              Panduan Foto Close-Up (Face Recognition SCS)
+            </h4>
+            <p class="text-[11px] text-cyan-300/90 leading-relaxed">
+              Dekatkan wajah ke kamera hingga memenuhi oval guide. Ambil foto <strong>Close-Up (Wajah terlihat utuh & jelas dari dahi s.d. dagu)</strong> tanpa masker agar dikenali sistem kecerdasan buatan Face Recognition SCS.
+            </p>
+          </div>
+        </div>
+
         <!-- CAMERA DISPLAY FRAME CONTAINER (PORTRAIT 3:4) -->
         <div
-          class="relative bg-slate-950 rounded-2xl overflow-hidden aspect-[3/4] max-w-xs sm:max-w-sm mx-auto border border-indigo-500/30 shadow-2xl flex items-center justify-center">
+          class="relative bg-slate-950 rounded-2xl overflow-hidden aspect-[3/4] max-w-xs sm:max-w-sm mx-auto border border-cyan-500/40 shadow-2xl flex items-center justify-center">
 
           <!-- Live Video Stream -->
           <video id="webcam-video" autoplay playsinline class="w-full h-full object-cover hidden"></video>
@@ -494,17 +509,27 @@
             </button>
           </div>
 
-          <!-- Futuristic Corner Reticles Overlay -->
+          <!-- Futuristic Corner Reticles & Face Recognition Oval Guide -->
           <div id="camera-overlay-reticle"
-            class="hidden pointer-events-none absolute inset-0 p-4 flex flex-col justify-between">
-            <div class="flex justify-between">
-              <div class="w-6 h-6 border-t-2 border-l-2 border-indigo-400"></div>
-              <div class="w-6 h-6 border-t-2 border-r-2 border-indigo-400"></div>
+            class="hidden pointer-events-none absolute inset-0 p-4 flex flex-col justify-between items-center">
+            
+            <div class="flex justify-between w-full">
+              <div class="w-6 h-6 border-t-2 border-l-2 border-cyan-400"></div>
+              <div class="w-6 h-6 border-t-2 border-r-2 border-cyan-400"></div>
             </div>
-            <div class="flex justify-between">
-              <div class="w-6 h-6 border-b-2 border-l-2 border-indigo-400"></div>
-              <div class="w-6 h-6 border-b-2 border-r-2 border-indigo-400"></div>
+
+            <!-- Oval Face Recognition Alignment Target -->
+            <div class="relative w-48 h-64 border-2 border-dashed border-cyan-400/90 rounded-[50%] flex items-center justify-center shadow-[0_0_25px_rgba(34,211,238,0.35)] animate-pulse">
+              <div class="text-[10px] font-extrabold text-cyan-300 bg-slate-950/85 px-2.5 py-1 rounded-full border border-cyan-500/50 tracking-wider uppercase text-center max-w-[140px] shadow-lg">
+                🎯 Wajah Close-Up Pas Di Oval Ini
+              </div>
             </div>
+
+            <div class="flex justify-between w-full">
+              <div class="w-6 h-6 border-b-2 border-l-2 border-cyan-400"></div>
+              <div class="w-6 h-6 border-b-2 border-r-2 border-cyan-400"></div>
+            </div>
+
           </div>
 
         </div>
@@ -1580,7 +1605,7 @@
         waText += `${idx + 1}. *${p.full_name}* (NISN: ${cleanNisn})\n`;
       });
 
-      waText += `\n📌 *Mohon segera melakukan unggah foto selfie melalui link berikut:*\n`;
+      waText += `\n📌 *Mohon segera melakukan unggah foto selfie CLOSE-UP (Wajah terlihat utuh & jelas agar dikenali Face Recognition SCS) melalui link berikut:*\n`;
       waText += `${window.location.href.split('#')[0]}\n`;
       waText += `-----------------------------------------\n`;
       waText += `Terima kasih atas kerjasamanya.`;
