@@ -229,9 +229,14 @@
       </div>
 
       <!-- Action & Config Buttons -->
-      <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+      <div class="flex items-center gap-2.5 w-full md:w-auto justify-end flex-wrap">
+        <button onclick="openAdminLoginModal()"
+          class="neu-btn px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-indigo-300 flex items-center gap-2 hover:text-white hover:border-indigo-500/50">
+          <i class="fa-solid fa-user-shield text-cyan-400"></i>
+          <span>Panel Admin</span>
+        </button>
         <button id="btn-open-config"
-          class="neu-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 flex items-center gap-2 hover:text-white">
+          class="neu-btn px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 flex items-center gap-2 hover:text-white">
           <i class="fa-solid fa-gear text-indigo-400"></i>
           <span>Pengaturan Endpoint</span>
         </button>
@@ -441,15 +446,15 @@
     <!-- ======================================================================== -->
     <div class="lg:col-span-7 space-y-6">
 
-      <!-- BENTO CARD 4: LIVE CAMERA STUDIO FRAME -->
+      <!-- BENTO CARD 4: LIVE CAMERA STUDIO FRAME (PORTRAIT 3:4) -->
       <div class="glass-panel p-5 sm:p-6 space-y-5">
 
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
             <span class="step-number">4</span>
             <div>
-              <h2 class="text-base font-bold text-white">Studio Kamera Selfie</h2>
-              <p class="text-xs text-slate-400">Pastikan wajah terlihat jelas dan cukup cahaya</p>
+              <h2 class="text-base font-bold text-white">Studio Kamera Selfie (Portrait 3:4)</h2>
+              <p class="text-xs text-slate-400">Foto resolusi HD (1080p), terkompresi maks 700 KB (JPEG)</p>
             </div>
           </div>
           <span id="camera-status-tag"
@@ -458,9 +463,9 @@
           </span>
         </div>
 
-        <!-- CAMERA DISPLAY FRAME CONTAINER -->
+        <!-- CAMERA DISPLAY FRAME CONTAINER (PORTRAIT 3:4) -->
         <div
-          class="relative bg-slate-950 rounded-2xl overflow-hidden aspect-[4/3] border border-slate-800 shadow-2xl flex items-center justify-center">
+          class="relative bg-slate-950 rounded-2xl overflow-hidden aspect-[3/4] max-w-xs sm:max-w-sm mx-auto border border-indigo-500/30 shadow-2xl flex items-center justify-center">
 
           <!-- Live Video Stream -->
           <video id="webcam-video" autoplay playsinline class="w-full h-full object-cover hidden"></video>
@@ -503,6 +508,11 @@
           </div>
 
         </div>
+
+        <!-- COMPRESSED SIZE TAG INDICATOR -->
+        <p id="compressed-size-tag" class="text-xs font-semibold text-emerald-400 font-mono text-center hidden">
+          <i class="fa-solid fa-file-image mr-1"></i> Ukuran Terkompresi: <span id="img-kb-size">0 KB</span> (Maks 700 KB JPEG - 1080p)
+        </p>
 
         <!-- CAMERA CONTROLS BAR -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
@@ -650,6 +660,118 @@
         <button onclick="closeToastModal()"
           class="btn-glow-primary px-6 py-2.5 rounded-xl text-xs font-extrabold text-white">
           Tutup & Selesai
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================== -->
+  <!-- MODAL ADMIN LOGIN (Pass: scssmansa)                                        -->
+  <!-- ========================================================================== -->
+  <div id="modal-admin-login" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+    <div class="glass-panel max-w-md w-full p-6 space-y-5 border border-indigo-500/40">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-user-shield text-cyan-400"></i> Autentikasi Panel Admin SCS
+        </h3>
+        <button onclick="closeAdminLoginModal()" class="text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            Password Administrator
+          </label>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-4 top-3.5 text-slate-400 text-sm"></i>
+            <input type="password" id="input-admin-pass" onkeydown="if(event.key==='Enter') verifyAdminPassword()" placeholder="Masukkan password admin..." class="w-full neu-input py-3 pl-11 pr-4 rounded-xl text-sm font-bold text-white">
+          </div>
+          <p id="admin-login-error" class="text-xs text-red-400 mt-2 hidden font-semibold">
+            <i class="fa-solid fa-circle-xmark mr-1"></i> Password salah! Silakan coba lagi.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 pt-2">
+        <button onclick="closeAdminLoginModal()" class="neu-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-300">
+          Batal
+        </button>
+        <button onclick="verifyAdminPassword()" class="btn-glow-primary px-5 py-2 rounded-xl text-xs font-bold text-white">
+          Masuk Admin
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================== -->
+  <!-- MODAL PANEL ADMIN & WA BROADCAST STUDIO                                   -->
+  <!-- ========================================================================== -->
+  <div id="modal-admin-panel" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
+    <div class="glass-panel max-w-2xl w-full p-6 space-y-5 border border-cyan-500/40 max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+            ADMIN STUDIO
+          </span>
+          <h3 class="text-base sm:text-lg font-bold text-white">
+            Broadcast Absensi WhatsApp Per Kelas
+          </h3>
+        </div>
+        <button onclick="closeAdminPanelModal()" class="text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Select Class to Broadcast -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            Pilih Rombel Kelas Untuk Broadcast WA
+          </label>
+          <div class="relative">
+            <select id="admin-select-class" onchange="loadAdminUnuploadedList()" class="w-full neu-input py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-slate-900 border border-indigo-500/30 appearance-none cursor-pointer pr-10">
+              <option value="" disabled selected class="bg-slate-950 text-slate-400">-- Pilih Kelas --</option>
+              <!-- JS Populates 33 Classes -->
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-indigo-400">
+              <i class="fa-solid fa-chevron-down text-xs"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Summary & Unuploaded List Box -->
+        <div id="admin-broadcast-results" class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3 hidden">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <span id="admin-pending-count-badge" class="px-3 py-1 rounded-lg text-xs font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              Terdeteksi 0 Siswa Belum Upload
+            </span>
+            <button onclick="copyWhatsappBroadcastText()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold transition shadow-lg shadow-emerald-600/30 flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i>
+              <span>Copy Broadcast WA</span>
+            </button>
+          </div>
+
+          <!-- Live WhatsApp Message Format Preview Box -->
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+              Pratinjau Format Pesan Broadcast WhatsApp:
+            </label>
+            <textarea id="admin-wa-text-preview" readonly rows="8" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-emerald-300 leading-relaxed focus:outline-none select-all"></textarea>
+          </div>
+        </div>
+
+        <div id="admin-broadcast-empty" class="p-5 rounded-xl bg-slate-900/50 border border-slate-800 text-center text-xs text-slate-400">
+          Pilih kelas di atas untuk melihat daftar siswa yang belum mengunggah foto dan membuat format pesan broadcast WhatsApp.
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2 border-t border-slate-800">
+        <button onclick="closeAdminPanelModal()" class="neu-btn px-5 py-2 rounded-xl text-xs font-bold text-slate-300">
+          Tutup Panel
         </button>
       </div>
 
@@ -1072,25 +1194,74 @@
       initCamera();
     }
 
+    /* ==========================================================================
+       IMAGE COMPRESSION (MAX 700KB & PORTRAIT 1080P 3:4 RATIO)
+       ========================================================================== */
+
+    function compressImageToBase64(imageOrCanvas, maxKb = 700) {
+      const maxBytes = maxKb * 1024;
+      
+      // Resolution 3:4 Portrait HD 1080p (1080x1440)
+      let targetW = 1080;
+      let targetH = 1440;
+
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = targetW;
+      tempCanvas.height = targetH;
+      const ctx = tempCanvas.getContext('2d');
+
+      ctx.drawImage(imageOrCanvas, 0, 0, targetW, targetH);
+
+      let quality = 0.88;
+      let dataUrl = tempCanvas.toDataURL('image/jpeg', quality);
+      let sizeBytes = Math.round((dataUrl.length - 22) * 3 / 4);
+
+      // Loop reduction quality if size exceeds 700KB
+      while (sizeBytes > maxBytes && quality > 0.20) {
+        quality -= 0.05;
+        dataUrl = tempCanvas.toDataURL('image/jpeg', quality);
+        sizeBytes = Math.round((dataUrl.length - 22) * 3 / 4);
+      }
+
+      // If still larger than 700KB, scale down canvas resolution (810x1080)
+      if (sizeBytes > maxBytes) {
+        tempCanvas.width = 810;
+        tempCanvas.height = 1080;
+        const ctx2 = tempCanvas.getContext('2d');
+        ctx2.drawImage(imageOrCanvas, 0, 0, 810, 1080);
+        quality = 0.75;
+        dataUrl = tempCanvas.toDataURL('image/jpeg', quality);
+        sizeBytes = Math.round((dataUrl.length - 22) * 3 / 4);
+      }
+
+      const finalKb = (sizeBytes / 1024).toFixed(1);
+      return {
+        dataUrl: dataUrl,
+        sizeKb: finalKb
+      };
+    }
+
     function takeSnapshot() {
       if (!mediaStream) return;
 
       const video = document.getElementById('webcam-video');
-      const canvas = document.getElementById('photo-canvas');
       const preview = document.getElementById('image-preview');
 
-      canvas.width = video.videoWidth || 640;
-      canvas.height = video.videoHeight || 480;
+      // Create snapshot canvas for mirror check (1080p)
+      const snapCanvas = document.createElement('canvas');
+      snapCanvas.width = video.videoWidth || 1080;
+      snapCanvas.height = video.videoHeight || 1440;
+      const snapCtx = snapCanvas.getContext('2d');
 
-      const ctx = canvas.getContext('2d');
-      // Mirror image if front camera
       if (facingMode === 'user') {
-        ctx.translate(canvas.width, 0);
-        ctx.scale(-1, 1);
+        snapCtx.translate(snapCanvas.width, 0);
+        snapCtx.scale(-1, 1);
       }
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      snapCtx.drawImage(video, 0, 0, snapCanvas.width, snapCanvas.height);
 
-      capturedBase64Image = canvas.toDataURL('image/jpeg', 0.85);
+      // Compress to 3:4 JPEG <= 700KB (1080p)
+      const comp = compressImageToBase64(snapCanvas, 700);
+      capturedBase64Image = comp.dataUrl;
 
       preview.src = capturedBase64Image;
       preview.classList.remove('hidden');
@@ -1101,6 +1272,14 @@
       document.getElementById('btn-capture').disabled = true;
       document.getElementById('btn-retake').disabled = false;
 
+      // Display Compressed KB Tag
+      const kbTag = document.getElementById('compressed-size-tag');
+      const kbVal = document.getElementById('img-kb-size');
+      if (kbTag && kbVal) {
+        kbVal.textContent = comp.sizeKb + ' KB';
+        kbTag.classList.remove('hidden');
+      }
+
       // Enable Submit Button if person is selected
       if (selectedPerson) {
         document.getElementById('btn-submit-photo').disabled = false;
@@ -1110,6 +1289,7 @@
     function resetSnapshot() {
       capturedBase64Image = null;
       document.getElementById('image-preview').classList.add('hidden');
+      document.getElementById('compressed-size-tag').classList.add('hidden');
       document.getElementById('btn-submit-photo').disabled = true;
       initCamera();
     }
@@ -1120,23 +1300,36 @@
 
       const reader = new FileReader();
       reader.onload = function (e) {
-        capturedBase64Image = e.target.result;
+        const img = new Image();
+        img.onload = function () {
+          // Compress uploaded image to 3:4 JPEG <= 700KB (1080p)
+          const comp = compressImageToBase64(img, 700);
+          capturedBase64Image = comp.dataUrl;
 
-        const preview = document.getElementById('image-preview');
-        preview.src = capturedBase64Image;
-        preview.classList.remove('hidden');
+          const preview = document.getElementById('image-preview');
+          preview.src = capturedBase64Image;
+          preview.classList.remove('hidden');
 
-        document.getElementById('webcam-video').classList.add('hidden');
-        document.getElementById('camera-placeholder').classList.add('hidden');
+          document.getElementById('webcam-video').classList.add('hidden');
+          document.getElementById('camera-placeholder').classList.add('hidden');
 
-        stopCamera();
+          stopCamera();
 
-        document.getElementById('btn-capture').disabled = true;
-        document.getElementById('btn-retake').disabled = false;
+          document.getElementById('btn-capture').disabled = true;
+          document.getElementById('btn-retake').disabled = false;
 
-        if (selectedPerson) {
-          document.getElementById('btn-submit-photo').disabled = false;
-        }
+          const kbTag = document.getElementById('compressed-size-tag');
+          const kbVal = document.getElementById('img-kb-size');
+          if (kbTag && kbVal) {
+            kbVal.textContent = comp.sizeKb + ' KB';
+            kbTag.classList.remove('hidden');
+          }
+
+          if (selectedPerson) {
+            document.getElementById('btn-submit-photo').disabled = false;
+          }
+        };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
@@ -1281,6 +1474,134 @@
         alert("Terjadi kesalahan koneksi saat mengunggah dari HP. Silakan periksa jaringan internet Anda atau coba lagi.");
         submitBtn.disabled = false;
       }
+    }
+
+    /* ==========================================================================
+       ADMIN PANEL & BROADCAST WA LOGIC (Pass: scssmansa)
+       ========================================================================== */
+
+    let isAdminAuthenticated = false;
+
+    function openAdminLoginModal() {
+      if (isAdminAuthenticated) {
+        openAdminPanelModal();
+        return;
+      }
+      document.getElementById('input-admin-pass').value = '';
+      document.getElementById('admin-login-error').classList.add('hidden');
+      document.getElementById('modal-admin-login').classList.remove('hidden');
+    }
+
+    function closeAdminLoginModal() {
+      document.getElementById('modal-admin-login').classList.add('hidden');
+    }
+
+    function verifyAdminPassword() {
+      const pass = document.getElementById('input-admin-pass').value.trim();
+      if (pass === 'scssmansa' || pass === 'SCSSMANSA') {
+        isAdminAuthenticated = true;
+        closeAdminLoginModal();
+        openAdminPanelModal();
+      } else {
+        document.getElementById('admin-login-error').classList.remove('hidden');
+      }
+    }
+
+    function openAdminPanelModal() {
+      initAdminClassDropdown();
+      document.getElementById('modal-admin-panel').classList.remove('hidden');
+    }
+
+    function closeAdminPanelModal() {
+      document.getElementById('modal-admin-panel').classList.add('hidden');
+    }
+
+    function initAdminClassDropdown() {
+      const select = document.getElementById('admin-select-class');
+      select.innerHTML = '<option value="" disabled selected class="bg-slate-950 text-slate-400">-- Pilih Kelas --</option>';
+
+      CLASSES_LIST.forEach(cls => {
+        const opt = document.createElement('option');
+        opt.value = cls;
+        opt.textContent = `Kelas ${cls}`;
+        select.appendChild(opt);
+      });
+    }
+
+    async function loadAdminUnuploadedList() {
+      const select = document.getElementById('admin-select-class');
+      const cls = select.value;
+      if (!cls) return;
+
+      const resultsBox = document.getElementById('admin-broadcast-results');
+      const emptyBox = document.getElementById('admin-broadcast-empty');
+      const previewTextarea = document.getElementById('admin-wa-text-preview');
+      const badge = document.getElementById('admin-pending-count-badge');
+
+      resultsBox.classList.remove('hidden');
+      emptyBox.classList.add('hidden');
+      previewTextarea.value = "Memuat data dari server database SCS...";
+
+      let list = [];
+
+      if (!GAS_API_URL) {
+        list = getMockPeopleData('Siswa', cls);
+      } else {
+        try {
+          const resp = await fetch(`${GAS_API_URL}?action=getNames&category=Siswa&className=${encodeURIComponent(cls)}`);
+          const json = await resp.json();
+          if (json.success && Array.isArray(json.data)) {
+            list = json.data;
+          } else {
+            list = getMockPeopleData('Siswa', cls);
+          }
+        } catch (e) {
+          list = getMockPeopleData('Siswa', cls);
+        }
+      }
+
+      // Filter unuploaded students (Photo_Status !== 'Done')
+      const unuploaded = list.filter(p => p.photo_status !== 'Done');
+
+      badge.textContent = `Terdeteksi ${unuploaded.length} Siswa Belum Upload di Kelas ${cls}`;
+
+      if (unuploaded.length === 0) {
+        previewTextarea.value = `🎉 Hore! Seluruh siswa di Kelas ${cls} SUDAH MENGUNGGAH foto absensi SCS 100%.`;
+        return;
+      }
+
+      let waText = `📢 *PENGUMUMAN PENGUMPULAN FOTO ABSENSI SCS*\n`;
+      waText += `🏫 *SMAN 1 SOPPENG — KELAS ${cls}*\n`;
+      waText += `-----------------------------------------\n`;
+      waText += `Diberitahukan kepada siswa(i) yang *BELUM* mengunggah foto selfie absensi SCS:\n\n`;
+
+      unuploaded.forEach((p, idx) => {
+        const cleanNisn = normalizeNisn(p.nisn_nip, 'Siswa');
+        waText += `${idx + 1}. *${p.full_name}* (NISN: ${cleanNisn})\n`;
+      });
+
+      waText += `\n📌 *Mohon segera melakukan unggah foto selfie melalui link berikut:*\n`;
+      waText += `${window.location.href.split('#')[0]}\n`;
+      waText += `-----------------------------------------\n`;
+      waText += `Terima kasih atas kerjasamanya.`;
+
+      previewTextarea.value = waText;
+    }
+
+    function copyWhatsappBroadcastText() {
+      const textarea = document.getElementById('admin-wa-text-preview');
+      if (!textarea || !textarea.value) return;
+
+      navigator.clipboard.writeText(textarea.value).then(() => {
+        showToastModal(
+          "Broadcast WA Berhasil Disalin!",
+          "Format pesan broadcast WhatsApp untuk kelas terpilih telah disalin ke clipboard HP/Komputer Anda. Silakan paste di grup WA kelas."
+        );
+      }).catch(err => {
+        textarea.select();
+        document.execCommand('copy');
+        showToastModal("Broadcast WA Disalin!", "Teks pesan broadcast telah disalin.");
+      });
     }
 
     /* ==========================================================================
