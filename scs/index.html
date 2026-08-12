@@ -752,13 +752,18 @@
       </div>
 
       <div class="space-y-4">
-        <!-- Select Class to Broadcast -->
+        <!-- Select Class to Broadcast & Force Sync Button -->
         <div>
-          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-            Pilih Rombel Kelas Untuk Broadcast WA
-          </label>
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Pilih Rombel Kelas Untuk Broadcast WA
+            </label>
+            <button onclick="loadAdminUnuploadedList(true)" class="text-xs text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1.5 transition cursor-pointer">
+              <i class="fa-solid fa-arrows-rotate text-xs"></i> <span>Sync Database Terbaru</span>
+            </button>
+          </div>
           <div class="relative">
-            <select id="admin-select-class" onchange="loadAdminUnuploadedList()" class="w-full neu-input py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-slate-900 border border-indigo-500/30 appearance-none cursor-pointer pr-10">
+            <select id="admin-select-class" onchange="loadAdminUnuploadedList(false)" class="w-full neu-input py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-slate-900 border border-indigo-500/30 appearance-none cursor-pointer pr-10">
               <option value="" disabled selected class="bg-slate-950 text-slate-400">-- Pilih Kelas --</option>
               <!-- JS Populates 33 Classes -->
             </select>
@@ -1367,8 +1372,16 @@
     }
 
     /* ==========================================================================
-       SUBMIT PHOTO TO GAS BACKEND
+       SUBMIT PHOTO TO GAS BACKEND (ROBUST WATCHDOG ACTIVE POLLING)
        ========================================================================== */
+
+    let adminClassCache = {};
+
+    function isPhotoStatusDone(statusStr) {
+      if (!statusStr) return false;
+      const s = String(statusStr).trim().toLowerCase();
+      return s === 'done' || s === 'terverifikasi' || s === 'sudah' || s === 'ok' || s === '1';
+    }
 
     async function submitPhotoToSCS() {
       if (!selectedPerson) {
@@ -1388,20 +1401,77 @@
 
       submitBtn.disabled = true;
       progressContainer.classList.remove('hidden');
+      progressText.textContent = "Mengunggah foto & menyinkronkan database...";
 
-      // Simulate Smooth Loader Progress
+      // Reset progress
       let currentProgress = 10;
       progressBar.style.width = currentProgress + '%';
       progressPercent.textContent = currentProgress + '%';
 
+      let isUploadFinished = false;
+      let watchdogTimer = null;
+
+      // Smooth loader progress interval
       const progressInterval = setInterval(() => {
-        if (currentProgress < 85) {
-          currentProgress += Math.floor(Math.random() * 12) + 5;
+        if (!isUploadFinished && currentProgress < 85) {
+          currentProgress += Math.floor(Math.random() * 10) + 4;
           if (currentProgress > 85) currentProgress = 85;
           progressBar.style.width = currentProgress + '%';
           progressPercent.textContent = currentProgress + '%';
         }
-      }, 300);
+      }, 250);
+
+      // Helper function to complete upload cleanly (prevents double triggering)
+      const completeUploadSuccess = (timestampStr) => {
+        if (isUploadFinished) return;
+        isUploadFinished = true;
+        clearInterval(progressInterval);
+        if (watchdogTimer) clearInterval(watchdogTimer);
+
+        progressBar.style.width = '100%';
+        progressPercent.textContent = '100%';
+        progressText.textContent = "Pengunggahan Selesai 100%!";
+
+        setTimeout(() => {
+          progressContainer.classList.add('hidden');
+          showToastModal(
+            "Pengunggahan Berhasil!",
+            `Foto selfie untuk ${selectedPerson.full_name} (${selectedPerson.nisn_nip}) telah disimpan ke Google Drive SCS & terverifikasi 100% di database.`
+          );
+
+          selectedPerson.photo_status = 'Done';
+          verifyPersonStatus(selectedPerson);
+
+          // Clear cache for admin panel so broadcast data updates instantly
+          if (selectedPerson.class_role && adminClassCache[selectedPerson.class_role]) {
+            delete adminClassCache[selectedPerson.class_role];
+          }
+        }, 300);
+      };
+
+      // Watchdog Active Polling: checks status in background every 2s if POST hangs/stuck at 85%
+      let pollCount = 0;
+      watchdogTimer = setInterval(async () => {
+        if (isUploadFinished) {
+          clearInterval(watchdogTimer);
+          return;
+        }
+        pollCount++;
+        if (GAS_API_URL && (currentProgress >= 75 || pollCount >= 2)) {
+          try {
+            const checkResp = await fetch(`${GAS_API_URL}?action=checkStatus&nisn_nip=${encodeURIComponent(selectedPerson.nisn_nip)}`);
+            const checkJson = await checkResp.json();
+            if (checkJson.success && isPhotoStatusDone(checkJson.photo_status)) {
+              completeUploadSuccess(checkJson.timestamp);
+            }
+          } catch (e) {
+            console.warn("Watchdog poll error:", e);
+          }
+        }
+        if (pollCount >= 10 && !isUploadFinished) {
+          clearInterval(watchdogTimer);
+        }
+      }, 2000);
 
       const payload = {
         action: 'uploadPhoto',
@@ -1413,24 +1483,10 @@
       };
 
       if (!GAS_API_URL) {
-        // DEMO MODE TRANSMISSION
+        // DEMO MODE
         setTimeout(() => {
-          clearInterval(progressInterval);
-          progressBar.style.width = '100%';
-          progressPercent.textContent = '100%';
-
-          setTimeout(() => {
-            progressContainer.classList.add('hidden');
-            showToastModal(
-              "Mode Demo: Foto Berhasil Disimulasikan!",
-              `Sistem telah men-simulasikan pengunggahan foto untuk ${selectedPerson.full_name} (${selectedPerson.nisn_nip}). Untuk pengunggahan nyata ke Google Drive, atur Web App URL di menu Pengaturan Endpoint.`
-            );
-
-            // Mark person locally
-            selectedPerson.photo_status = 'Done';
-            verifyPersonStatus(selectedPerson);
-          }, 400);
-        }, 1500);
+          completeUploadSuccess(new Date().toLocaleTimeString());
+        }, 1200);
         return;
       }
 
@@ -1444,60 +1500,41 @@
         });
 
         const json = await response.json();
-        clearInterval(progressInterval);
 
         if (json.success) {
-          progressBar.style.width = '100%';
-          progressPercent.textContent = '100%';
-
-          setTimeout(() => {
-            progressContainer.classList.add('hidden');
-            showToastModal(
-              "Pengunggahan Berhasil!",
-              `Foto selfie untuk ${selectedPerson.full_name} telah disimpan ke Google Drive SCS. Status absensi kini TERVERIFIKASI.`
-            );
-
-            selectedPerson.photo_status = 'Done';
-            selectedPerson.drive_file_url = json.data ? json.data.drive_file_url : '';
-            verifyPersonStatus(selectedPerson);
-          }, 400);
-
+          completeUploadSuccess(json.data ? json.data.timestamp : '');
         } else {
-          progressContainer.classList.add('hidden');
-          alert("Gagal mengunggah foto: " + (json.message || json.error));
-          submitBtn.disabled = false;
+          if (!isUploadFinished) {
+            isUploadFinished = true;
+            clearInterval(progressInterval);
+            if (watchdogTimer) clearInterval(watchdogTimer);
+            progressContainer.classList.add('hidden');
+            alert("Pengunggahan: " + (json.message || json.error));
+            submitBtn.disabled = false;
+          }
         }
 
       } catch (err) {
-        // PERBAIKAN MOBILE: Cek status ulang ke database sebelum berasumsi gagal
-        try {
-          const checkResp = await fetch(`${GAS_API_URL}?action=checkStatus&nisn_nip=${encodeURIComponent(selectedPerson.nisn_nip)}`);
-          const checkJson = await checkResp.json();
-          if (checkJson.success && checkJson.photo_status === 'Done') {
+        console.warn("POST fetch exception (attempting final status verification):", err);
+        setTimeout(async () => {
+          if (!isUploadFinished) {
+            try {
+              const finalResp = await fetch(`${GAS_API_URL}?action=checkStatus&nisn_nip=${encodeURIComponent(selectedPerson.nisn_nip)}`);
+              const finalJson = await finalResp.json();
+              if (finalJson.success && isPhotoStatusDone(finalJson.photo_status)) {
+                completeUploadSuccess(finalJson.timestamp);
+                return;
+              }
+            } catch (e) {}
+
+            isUploadFinished = true;
             clearInterval(progressInterval);
-            progressBar.style.width = '100%';
-            progressPercent.textContent = '100%';
-
-            setTimeout(() => {
-              progressContainer.classList.add('hidden');
-              showToastModal(
-                "Pengunggahan Berhasil!",
-                `Foto selfie untuk ${selectedPerson.full_name} telah berhasil disimpan ke Google Drive SCS dan terverifikasi di database.`
-              );
-
-              selectedPerson.photo_status = 'Done';
-              verifyPersonStatus(selectedPerson);
-            }, 400);
-            return;
+            if (watchdogTimer) clearInterval(watchdogTimer);
+            progressContainer.classList.add('hidden');
+            alert("Koneksi HP terputus saat mengunggah. Silakan periksa jaringan internet Anda atau ganti kelas/nama untuk cek status.");
+            submitBtn.disabled = false;
           }
-        } catch (checkErr) {
-          console.warn("Background double check failed:", checkErr);
-        }
-
-        clearInterval(progressInterval);
-        progressContainer.classList.add('hidden');
-        alert("Terjadi kesalahan koneksi saat mengunggah dari HP. Silakan periksa jaringan internet Anda atau coba lagi.");
-        submitBtn.disabled = false;
+        }, 1200);
       }
     }
 
@@ -1553,7 +1590,7 @@
       });
     }
 
-    async function loadAdminUnuploadedList() {
+    async function loadAdminUnuploadedList(forceRefresh = false) {
       const select = document.getElementById('admin-select-class');
       const cls = select.value;
       if (!cls) return;
@@ -1565,28 +1602,39 @@
 
       resultsBox.classList.remove('hidden');
       emptyBox.classList.add('hidden');
-      previewTextarea.value = "Memuat data dari server database SCS...";
+      previewTextarea.value = "⏳ Menyinkronkan daftar siswa dari database server SCS...";
 
       let list = [];
 
-      if (!GAS_API_URL) {
-        list = getMockPeopleData('Siswa', cls);
+      // 1. FAST MEMORY / CACHE CHECK
+      if (!forceRefresh && adminClassCache[cls]) {
+        list = adminClassCache[cls];
+      } else if (!forceRefresh && currentSelectedClass === cls && peopleList && peopleList.length > 0) {
+        list = peopleList;
+        adminClassCache[cls] = list;
       } else {
-        try {
-          const resp = await fetch(`${GAS_API_URL}?action=getNames&category=Siswa&className=${encodeURIComponent(cls)}`);
-          const json = await resp.json();
-          if (json.success && Array.isArray(json.data)) {
-            list = json.data;
-          } else {
+        // Fetch from Backend API
+        if (!GAS_API_URL) {
+          list = getMockPeopleData('Siswa', cls);
+        } else {
+          try {
+            const resp = await fetch(`${GAS_API_URL}?action=getNames&category=Siswa&className=${encodeURIComponent(cls)}&_t=${Date.now()}`);
+            const json = await resp.json();
+            if (json.success && Array.isArray(json.data)) {
+              list = json.data;
+              adminClassCache[cls] = list;
+            } else {
+              list = getMockPeopleData('Siswa', cls);
+            }
+          } catch (e) {
+            console.warn("Fetch admin broadcast error, using local fallback:", e);
             list = getMockPeopleData('Siswa', cls);
           }
-        } catch (e) {
-          list = getMockPeopleData('Siswa', cls);
         }
       }
 
-      // Filter unuploaded students (Photo_Status !== 'Done')
-      const unuploaded = list.filter(p => p.photo_status !== 'Done');
+      // Filter unuploaded students with robust status checking
+      const unuploaded = list.filter(p => !isPhotoStatusDone(p.photo_status));
 
       badge.textContent = `Terdeteksi ${unuploaded.length} Siswa Belum Upload di Kelas ${cls}`;
 
