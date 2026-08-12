@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Pengumpulan Foto Absensi SCS - SMAN 1 Soppeng</title>
+
+  <!-- SEO & Meta Metadata -->
+  <meta name="description"
+    content="Sistem Pengumpulan Foto & Selfie Siswa/Guru untuk Integrasi Data Absensi SCS (Smart Controlling School) SMAN 1 Soppeng, Provinsi Sulawesi Selatan.">
+  <meta name="author" content="SMAN 1 Soppeng & SCS Sulsel">
+
+  <!-- Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            scs: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+              accent: '#06b6d4',
+              emerald: '#10b981',
+              gold: '#f59e0b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ==========================================================================
+       CUSTOM STYLES: GLASSMORPHISM + NEUMORPHISM + BENTO UI
+       ========================================================================== */
+
+    body {
+      background: radial-gradient(circle at 10% 20%, rgba(30, 27, 75, 0.9) 0%, rgba(15, 23, 42, 1) 90%),
+        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.15) 0%, rgba(15, 23, 42, 0) 50%);
+      background-attachment: fixed;
+      color: #f8fafc;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* Glassmorphism Card Base */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      border-radius: 1.25rem;
+    }
+
+    .glass-card-interactive {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-card-interactive:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+      box-shadow: 0 25px 60px rgba(99, 102, 241, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Neumorphic Soft UI Buttons & Inputs */
+    .neu-btn {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5),
+        -3px -3px 8px rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.2s ease;
+    }
+
+    .neu-btn:hover:not(:disabled) {
+      background: linear-gradient(145deg, #334155, #1e293b);
+      box-shadow: 6px 6px 14px rgba(0, 0, 0, 0.6),
+        -4px -4px 10px rgba(255, 255, 255, 0.06);
+      transform: translateY(-1px);
+    }
+
+    .neu-btn:active:not(:disabled) {
+      box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.7),
+        inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+      transform: translateY(1px);
+    }
+
+    .neu-input {
+      background: rgba(15, 23, 42, 0.8);
+      box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.6),
+        inset -2px -2px 6px rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    .neu-input:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.7),
+        0 0 15px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Glowing Primary Action Button */
+    .btn-glow-primary {
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5),
+        0 8px 10px -6px rgba(99, 102, 241, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .btn-glow-primary:hover:not(:disabled) {
+      background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+      box-shadow: 0 15px 35px -5px rgba(99, 102, 241, 0.7),
+        0 10px 15px -5px rgba(99, 102, 241, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* Camera Frame Reticle */
+    .camera-frame {
+      position: relative;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+    }
+
+    .camera-frame::before {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border: 2px dashed rgba(255, 255, 255, 0.3);
+      border-radius: 0.75rem;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Step Badge styling */
+    .step-number {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      color: white;
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.4);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 102, 241, 0.7);
+    }
+  </style>
+</head>
+
+<body class="p-3 sm:p-6 md:p-8 antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- ========================================================================== -->
+  <!-- HEADER & BRANDING PANEL                                                   -->
+  <!-- ========================================================================== -->
+  <header class="max-w-7xl mx-auto mb-6 sm:mb-8">
+    <div class="glass-panel p-4 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+
+      <!-- Logo & Institution Info -->
+      <div class="flex items-center gap-4 text-center md:text-left">
+        <div
+          class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 p-0.5 shadow-lg shadow-indigo-500/30 flex-shrink-0">
+          <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+            <i class="fa-solid fa-camera-rotate text-2xl text-indigo-400"></i>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center justify-center md:justify-start gap-2 flex-wrap mb-1">
+            <span
+              class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+              SCS PROVINSI SULAWESI SELATAN
+            </span>
+            <span id="api-status-badge"
+              class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Backend Connected
+            </span>
+          </div>
+          <h1
+            class="text-xl sm:text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-300">
+            Portal Pengumpulan Foto Absensi SCS
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-400 font-medium">
+            SMAN 1 Soppeng — Integrasi Smart Controlling School
+          </p>
+        </div>
+      </div>
+
+      <!-- Action & Config Buttons -->
+      <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+        <button id="btn-open-config"
+          class="neu-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 flex items-center gap-2 hover:text-white">
+          <i class="fa-solid fa-gear text-indigo-400"></i>
+          <span>Pengaturan Endpoint</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================== -->
+  <!-- MAIN BENTO GRID CONTAINER                                                 -->
+  <!-- ========================================================================== -->
+  <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- ======================================================================== -->
+    <!-- LEFT COLUMN: SELECTION & STATUS CHECK (5 COLS)                           -->
+    <!-- ======================================================================== -->
+    <div class="lg:col-span-5 space-y-6">
+
+      <!-- BENTO CARD 1: KATEGORI & KELAS -->
+      <div class="glass-panel relative z-30 p-5 sm:p-6 space-y-5">
+
+        <!-- Step Header -->
+        <div class="flex items-center gap-3">
+          <span class="step-number">1</span>
+          <div>
+            <h2 class="text-base font-bold text-white">Pilih Peran & Rombel</h2>
+            <p class="text-xs text-slate-400">Tentukan kategori pengguna SCS</p>
+          </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="grid grid-cols-2 gap-2 p-1.5 rounded-xl bg-slate-900/80 border border-slate-800">
+          <button id="tab-siswa" onclick="switchCategory('Siswa')"
+            class="py-2.5 px-4 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-user-graduate"></i>
+            <span>Siswa</span>
+          </button>
+          <button id="tab-guru" onclick="switchCategory('Guru/Staf')"
+            class="py-2.5 px-4 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 text-slate-400 hover:text-white flex items-center justify-center gap-2">
+            <i class="fa-solid fa-chalkboard-user"></i>
+            <span>Guru & Staf</span>
+          </button>
+        </div>
+
+        <!-- Class Selector Grid (Only shown when Siswa selected) -->
+        <div id="class-selection-container" class="space-y-4">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold text-slate-200 uppercase tracking-wider">
+              Tingkat & Rombel Kelas (33 Rombel)
+            </label>
+            <span id="selected-class-badge"
+              class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-slate-800 text-slate-400 border border-slate-700 transition-all">
+              Belum Pilih Kelas
+            </span>
+          </div>
+
+          <!-- Beautified Grouped Class Dropdown -->
+          <div class="relative">
+            <select id="select-class" onchange="onClassSelectDropdownChanged()"
+              class="w-full neu-input py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-slate-900/90 border border-indigo-500/30 focus:border-indigo-400 appearance-none cursor-pointer pr-10 shadow-lg shadow-slate-950/50">
+              <option value="" disabled selected class="bg-slate-950 text-slate-400 font-normal">-- 🏫 Pilih Rombel Kelas (33 Rombel) --</option>
+              <!-- JS Populates 33 Classes in Optgroups -->
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-indigo-400">
+              <i class="fa-solid fa-chevron-down text-xs"></i>
+            </div>
+          </div>
+
+          <!-- Interactive Grade Level Pills & Grid Selector -->
+          <div class="space-y-2.5 pt-1">
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span class="font-semibold text-slate-300">Pilih Cepat Berdasarkan Tingkat:</span>
+            </div>
+
+            <!-- Grade Level Tabs -->
+            <div class="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
+              <button type="button" id="tab-grade-X" onclick="setGradeTab('X')"
+                class="py-2 px-2 rounded-lg font-bold transition-all bg-indigo-600 text-white shadow-md shadow-indigo-600/30 flex items-center justify-center gap-1.5 border border-indigo-400/40">
+                <i class="fa-solid fa-graduation-cap text-xs"></i> Kelas 10 (X)
+              </button>
+              <button type="button" id="tab-grade-XI" onclick="setGradeTab('XI')"
+                class="py-2 px-2 rounded-lg font-bold transition-all text-slate-400 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800 flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-bolt text-xs"></i> Kelas 11 (XI)
+              </button>
+              <button type="button" id="tab-grade-XII" onclick="setGradeTab('XII')"
+                class="py-2 px-2 rounded-lg font-bold transition-all text-slate-400 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800 flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-trophy text-xs"></i> Kelas 12 (XII)
+              </button>
+            </div>
+
+            <!-- 11 Grid Pills Container for Selected Grade -->
+            <div id="class-pills-grid" class="grid grid-cols-4 sm:grid-cols-6 gap-1.5 pt-1">
+              <!-- JS Populates 11 Interactive Glass Buttons -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BENTO CARD 2: PILIH NAMA (AUTO-COMPLETE SEARCHABLE) -->
+      <div class="glass-panel relative z-20 p-5 sm:p-6 space-y-5">
+
+        <div class="flex items-center gap-3">
+          <span class="step-number">2</span>
+          <div>
+            <h2 class="text-base font-bold text-white">Identitas Diri</h2>
+            <p class="text-xs text-slate-400">Cari nama sesuai daftar master SCS</p>
+          </div>
+        </div>
+
+        <div class="space-y-3 relative">
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+            Nama Lengkap / NISN / NIP
+          </label>
+
+          <!-- Search Input -->
+          <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400 text-sm"></i>
+            <input type="text" id="input-search-name" onkeyup="filterNameList()" onfocus="showNameDropdown()"
+              placeholder="Ketik nama atau NISN/NIP..."
+              class="w-full neu-input py-3 pl-11 pr-10 rounded-xl text-sm font-medium text-white placeholder-slate-500">
+            <button id="btn-clear-search" onclick="clearNameSearch()"
+              class="hidden absolute right-3 top-3 text-slate-400 hover:text-white p-1">
+              <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+          </div>
+
+          <!-- Dropdown Results List (Floating above Card 3 with z-50) -->
+          <div id="dropdown-name-results"
+            class="hidden absolute z-50 w-full left-0 right-0 top-full mt-2 bg-slate-900/98 backdrop-blur-2xl border border-indigo-500/40 rounded-2xl shadow-2xl shadow-slate-950/95 max-h-64 overflow-y-auto divide-y divide-slate-800/60">
+            <div class="p-3 text-center text-xs text-slate-400">
+              Silakan pilih kelas terlebih dahulu.
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Person Details Box -->
+        <div id="box-selected-person" class="hidden p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
+          <div class="flex justify-between items-start">
+            <div>
+              <span id="selected-person-role"
+                class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                SISWA - X-1
+              </span>
+              <h3 id="selected-person-name" class="text-sm font-extrabold text-white mt-1">
+                -
+              </h3>
+              <p id="selected-person-nisn" class="text-xs text-slate-400 font-mono">
+                NISN: -
+              </p>
+            </div>
+            <button onclick="clearSelectedPerson()" class="text-xs text-slate-400 hover:text-red-400 transition">
+              <i class="fa-solid fa-arrow-rotate-left"></i> Ganti
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BENTO CARD 3: SYSTEM STATUS VERIFICATION -->
+      <div class="glass-panel relative z-10 p-5 sm:p-6 space-y-4">
+
+        <div class="flex items-center gap-3">
+          <span class="step-number">3</span>
+          <div>
+            <h2 class="text-base font-bold text-white">Verifikasi Status Foto</h2>
+            <p class="text-xs text-slate-400">Pengecekan otomatis di database SCS</p>
+          </div>
+        </div>
+
+        <!-- Initial Placeholder Status -->
+        <div id="status-box-idle"
+          class="p-5 rounded-xl bg-slate-900/40 border border-slate-800/80 text-center space-y-2">
+          <i class="fa-solid fa-shield-halved text-2xl text-slate-500"></i>
+          <p class="text-xs text-slate-400">Pilih nama Anda di atas untuk memeriksa status pengumpulan foto absensi.</p>
+        </div>
+
+        <!-- Loading Checking Status -->
+        <div id="status-box-loading"
+          class="hidden p-5 rounded-xl bg-slate-900/40 border border-slate-800 text-center space-y-3">
+          <i class="fa-solid fa-circle-notch fa-spin text-2xl text-indigo-400"></i>
+          <p class="text-xs font-semibold text-indigo-300">Memeriksa database Google Sheets...</p>
+        </div>
+
+        <!-- STATUS: DONE (Locked) -->
+        <div id="status-box-done"
+          class="hidden p-5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-center space-y-3">
+          <div
+            class="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center mx-auto text-emerald-400 text-xl shadow-lg shadow-emerald-500/20">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <div>
+            <span
+              class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider">
+              SUDAH MENGUNGGAH FOTO
+            </span>
+            <h3 class="text-sm font-bold text-white mt-2">Data Absensi SCS Terverifikasi</h3>
+            <p id="done-timestamp" class="text-xs text-emerald-400/90 font-mono mt-1">
+              Diunggah pada: -
+            </p>
+          </div>
+          <div class="pt-2 flex justify-center gap-2">
+            <a id="btn-view-drive-file" href="#" target="_blank"
+              class="px-4 py-2 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/50 border border-emerald-500/40 text-xs font-bold text-emerald-200 transition flex items-center gap-1.5">
+              <i class="fa-brands fa-google-drive"></i> lihat Foto di Drive
+            </a>
+          </div>
+        </div>
+
+        <!-- STATUS: PENDING (Unlocked) -->
+        <div id="status-box-pending"
+          class="hidden p-5 rounded-xl bg-amber-950/30 border border-amber-500/30 text-center space-y-3">
+          <div
+            class="w-12 h-12 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center mx-auto text-amber-400 text-xl shadow-lg shadow-amber-500/20">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div>
+            <span
+              class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
+              BELUM MENGUNGGAH FOTO
+            </span>
+            <h3 class="text-sm font-bold text-white mt-2">Akses Kamera Terbuka</h3>
+            <p class="text-xs text-amber-300/80 mt-1">
+              Silakan ambil foto selfie langsung di studio kamera di sebelah kanan.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ======================================================================== -->
+    <!-- RIGHT COLUMN: LIVE CAMERA STUDIO & SUBMISSION (7 COLS)                   -->
+    <!-- ======================================================================== -->
+    <div class="lg:col-span-7 space-y-6">
+
+      <!-- BENTO CARD 4: LIVE CAMERA STUDIO FRAME -->
+      <div class="glass-panel p-5 sm:p-6 space-y-5">
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="step-number">4</span>
+            <div>
+              <h2 class="text-base font-bold text-white">Studio Kamera Selfie</h2>
+              <p class="text-xs text-slate-400">Pastikan wajah terlihat jelas dan cukup cahaya</p>
+            </div>
+          </div>
+          <span id="camera-status-tag"
+            class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700">
+            Kamera Off
+          </span>
+        </div>
+
+        <!-- CAMERA DISPLAY FRAME CONTAINER -->
+        <div
+          class="relative bg-slate-950 rounded-2xl overflow-hidden aspect-[4/3] border border-slate-800 shadow-2xl flex items-center justify-center">
+
+          <!-- Live Video Stream -->
+          <video id="webcam-video" autoplay playsinline class="w-full h-full object-cover hidden"></video>
+
+          <!-- Captured Photo Canvas (Hidden) -->
+          <canvas id="photo-canvas" class="w-full h-full object-cover hidden"></canvas>
+
+          <!-- Image Preview Tag -->
+          <img id="image-preview" class="w-full h-full object-cover hidden" alt="Selfie Preview">
+
+          <!-- Initial Camera Overlay Placeholder -->
+          <div id="camera-placeholder" class="text-center p-6 space-y-4">
+            <div
+              class="w-20 h-20 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto text-indigo-400 text-3xl shadow-inner">
+              <i class="fa-solid fa-camera"></i>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-slate-300">Kamera Belum Aktif</p>
+              <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
+                Pilih nama siswa/guru yang belum mengunggah foto di sebelah kiri untuk mengaktifkan kamera.
+              </p>
+            </div>
+            <button id="btn-start-camera" onclick="initCamera()"
+              class="btn-glow-primary px-6 py-2.5 rounded-xl text-xs font-extrabold text-white">
+              <i class="fa-solid fa-video mr-1.5"></i> Buka Kamera
+            </button>
+          </div>
+
+          <!-- Futuristic Corner Reticles Overlay -->
+          <div id="camera-overlay-reticle"
+            class="hidden pointer-events-none absolute inset-0 p-4 flex flex-col justify-between">
+            <div class="flex justify-between">
+              <div class="w-6 h-6 border-t-2 border-l-2 border-indigo-400"></div>
+              <div class="w-6 h-6 border-t-2 border-r-2 border-indigo-400"></div>
+            </div>
+            <div class="flex justify-between">
+              <div class="w-6 h-6 border-b-2 border-l-2 border-indigo-400"></div>
+              <div class="w-6 h-6 border-b-2 border-r-2 border-indigo-400"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CAMERA CONTROLS BAR -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
+
+          <button id="btn-capture" onclick="takeSnapshot()" disabled
+            class="neu-btn py-3 px-3 rounded-xl text-xs font-bold text-white disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+            <i class="fa-solid fa-circle-dot text-indigo-400 text-sm"></i>
+            <span>Ambil Foto</span>
+          </button>
+
+          <button id="btn-switch-cam" onclick="switchCameraFacing()" disabled
+            class="neu-btn py-3 px-3 rounded-xl text-xs font-bold text-slate-300 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+            <i class="fa-solid fa-camera-rotate text-sm"></i>
+            <span>Switch Cam</span>
+          </button>
+
+          <button id="btn-retake" onclick="resetSnapshot()" disabled
+            class="neu-btn py-3 px-3 rounded-xl text-xs font-bold text-amber-400 hover:text-amber-300 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+            <i class="fa-solid fa-rotate-right text-sm"></i>
+            <span>Foto Ulang</span>
+          </button>
+
+          <!-- File Upload Fallback -->
+          <label for="file-upload-input"
+            class="neu-btn py-3 px-3 rounded-xl text-xs font-bold text-slate-300 hover:text-white cursor-pointer flex items-center justify-center gap-2">
+            <i class="fa-solid fa-upload text-sm text-cyan-400"></i>
+            <span>Upload File</span>
+          </label>
+          <input type="file" id="file-upload-input" accept="image/*" onchange="handleFileUpload(event)" class="hidden">
+
+        </div>
+
+      </div>
+
+      <!-- BENTO CARD 5: SUBMIT & TRANSMIT PANEL -->
+      <div class="glass-panel p-5 sm:p-6 space-y-4">
+
+        <div class="flex items-center gap-3">
+          <span class="step-number">5</span>
+          <div>
+            <h2 class="text-base font-bold text-white">Kirim Data Foto</h2>
+            <p class="text-xs text-slate-400">Simpan ke Google Drive & Database SCS SMAN 1 Soppeng</p>
+          </div>
+        </div>
+
+        <!-- Progress Bar Indicator -->
+        <div id="upload-progress-container" class="hidden space-y-2">
+          <div class="flex justify-between text-xs font-semibold">
+            <span id="upload-progress-text" class="text-indigo-400">Mengenkripsi & Mengunggah Foto...</span>
+            <span id="upload-progress-percent" class="text-white">0%</span>
+          </div>
+          <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-800">
+            <div id="upload-progress-bar"
+              class="bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400 h-full w-0 transition-all duration-300">
+            </div>
+          </div>
+        </div>
+
+        <!-- Primary Submission Button -->
+        <button id="btn-submit-photo" onclick="submitPhotoToSCS()" disabled
+          class="w-full btn-glow-primary py-4 px-6 rounded-xl text-sm sm:text-base font-extrabold text-white tracking-wide uppercase disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-xl">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span>Kirim Foto Ke Database SCS</span>
+        </button>
+
+        <div class="text-center">
+          <p class="text-[11px] text-slate-500">
+            <i class="fa-solid fa-lock mr-1"></i> Data foto akan tersimpan di Google Drive SMAN 1 Soppeng dengan
+            penamaan otomatis `<NISN /NIP>.jpg`.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================================================== -->
+  <!-- MODAL PENGATURAN ENDPOINT GAS                                             -->
+  <!-- ========================================================================== -->
+  <div id="modal-config"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+    <div class="glass-panel max-w-lg w-full p-6 space-y-5 border border-indigo-500/30">
+
+      <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-indigo-400"></i> Configuration Endpoint GAS
+        </h3>
+        <button onclick="closeConfigModal()" class="text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            Google Apps Script Web App URL
+          </label>
+          <input type="text" id="input-gas-url" placeholder="https://script.google.com/macros/s/.../exec"
+            class="w-full neu-input p-3 rounded-xl text-xs font-mono text-white">
+          <p class="text-[11px] text-slate-400 mt-1.5">
+            Tempelkan URL Web App hasil deployment Google Apps Script (Code.gs) Anda di sini.
+          </p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/20 text-xs text-indigo-200 space-y-1">
+          <p class="font-bold"><i class="fa-solid fa-circle-info mr-1"></i> Mode Pengujian (Demo):</p>
+          <p class="text-indigo-300/80">Jika URL dikosongkan, sistem akan berjalan dalam mode simulasi/mock lokal.</p>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 pt-2">
+        <button onclick="closeConfigModal()" class="neu-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-300">
+          Batal
+        </button>
+        <button onclick="saveGasUrlConfig()" class="btn-glow-primary px-5 py-2 rounded-xl text-xs font-bold text-white">
+          Simpan Endpoint
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================== -->
+  <!-- TOAST NOTIFICATION MODAL                                                   -->
+  <!-- ========================================================================== -->
+  <div id="toast-modal"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+    <div class="glass-panel max-w-md w-full p-6 text-center space-y-4 border border-emerald-500/40">
+
+      <div id="toast-icon-bg"
+        class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center mx-auto text-emerald-400 text-3xl shadow-xl shadow-emerald-500/20">
+        <i id="toast-icon" class="fa-solid fa-check"></i>
+      </div>
+
+      <div>
+        <h3 id="toast-title" class="text-lg font-extrabold text-white">Pengunggahan Berhasil!</h3>
+        <p id="toast-message" class="text-xs text-slate-300 mt-2">
+          Foto selfie telah berhasil disimpan ke Google Drive dan status absensi SCS Anda telah diperbarui menjadi DONE.
+        </p>
+      </div>
+
+      <div class="pt-2">
+        <button onclick="closeToastModal()"
+          class="btn-glow-primary px-6 py-2.5 rounded-xl text-xs font-extrabold text-white">
+          Tutup & Selesai
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================== -->
+  <!-- FRONTEND LOGIC JAVASCRIPT                                                 -->
+  <!-- ========================================================================== -->
+  <script>
+    /* ==========================================================================
+       APP STATE & CONFIGURATION
+       ========================================================================== */
+
+    // Web App URL default (User dapat mengubahnya via UI pengatran)
+    let GAS_API_URL = localStorage.getItem('SCS_GAS_API_URL') || 'https://script.google.com/macros/s/AKfycbyGNG1g-m-_Yw-itPblmzynfrU9Do2GaSac-5SiRqAQpglWB1wfY_1KT7VoPCNoUNTS/exec';
+
+    const CLASSES_LIST = [
+      "X-1", "X-2", "X-3", "X-4", "X-5", "X-6", "X-7", "X-8", "X-9", "X-10", "X-11",
+      "XI-1", "XI-2", "XI-3", "XI-4", "XI-5", "XI-6", "XI-7", "XI-8", "XI-9", "XI-10", "XI-11",
+      "XII-1", "XII-2", "XII-3", "XII-4", "XII-5", "XII-6", "XII-7", "XII-8", "XII-9", "XII-10", "XII-11"
+    ];
+
+    let currentCategory = 'Siswa';
+    let currentSelectedClass = '';
+    let currentActiveGrade = 'X';
+    let peopleList = [];
+    let selectedPerson = null;
+
+    // Camera Stream States
+    let mediaStream = null;
+    let facingMode = 'user'; // 'user' (front camera) or 'environment' (rear camera)
+    let capturedBase64Image = null;
+
+    /* ==========================================================================
+       INITIALIZATION & DOM EVENTS
+       ========================================================================== */
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initClassDropdown();
+      checkApiStatus();
+
+      document.getElementById('input-gas-url').value = GAS_API_URL;
+
+      // Close autocomplete on click outside
+      document.addEventListener('click', (e) => {
+        const container = document.getElementById('dropdown-name-results');
+        const input = document.getElementById('input-search-name');
+        if (!container.contains(e.target) && e.target !== input) {
+          container.classList.add('hidden');
+        }
+      });
+    });
+
+    function initClassDropdown() {
+      const select = document.getElementById('select-class');
+      select.innerHTML = '<option value="" disabled selected class="bg-slate-950 text-slate-400 font-normal">-- 🏫 Pilih Rombel Kelas (33 Rombel) --</option>';
+
+      const grades = [
+        { prefix: 'X', label: '🎓 TINGKAT X (KELAS 10)' },
+        { prefix: 'XI', label: '⚡ TINGKAT XI (KELAS 11)' },
+        { prefix: 'XII', label: '🏆 TINGKAT XII (KELAS 12)' }
+      ];
+
+      grades.forEach(g => {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = `─── ${g.label} ───`;
+        optgroup.className = "bg-slate-950 text-indigo-400 font-bold p-1";
+
+        CLASSES_LIST.filter(c => c.startsWith(g.prefix + '-')).forEach(cls => {
+          const opt = document.createElement('option');
+          opt.value = cls;
+          opt.textContent = `  Rombel ${cls}`;
+          opt.className = "bg-slate-900 text-white font-semibold py-1.5";
+          optgroup.appendChild(opt);
+        });
+
+        select.appendChild(optgroup);
+      });
+
+      renderClassPillsGrid(currentActiveGrade);
+    }
+
+    function setGradeTab(grade) {
+      currentActiveGrade = grade;
+
+      ['X', 'XI', 'XII'].forEach(g => {
+        const btn = document.getElementById(`tab-grade-${g}`);
+        if (!btn) return;
+        if (g === grade) {
+          btn.className = "py-2 px-2 rounded-lg font-bold transition-all bg-indigo-600 text-white shadow-md shadow-indigo-600/30 flex items-center justify-center gap-1.5 border border-indigo-400/40";
+        } else {
+          btn.className = "py-2 px-2 rounded-lg font-bold transition-all text-slate-400 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800 flex items-center justify-center gap-1.5";
+        }
+      });
+
+      renderClassPillsGrid(grade);
+    }
+
+    function renderClassPillsGrid(grade) {
+      const container = document.getElementById('class-pills-grid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const classesInGrade = CLASSES_LIST.filter(c => c.startsWith(grade + '-'));
+
+      classesInGrade.forEach(cls => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const isSelected = (cls === currentSelectedClass);
+
+        if (isSelected) {
+          btn.className = "py-2 px-2 rounded-xl text-xs font-extrabold bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-600 text-white shadow-lg shadow-indigo-600/40 border border-indigo-400 scale-[1.03] transition-all flex items-center justify-center gap-1";
+          btn.innerHTML = `<i class="fa-solid fa-circle-check text-[10px] text-cyan-300"></i> ${cls}`;
+        } else {
+          btn.className = "py-2 px-2 rounded-xl text-xs font-bold bg-slate-900/80 hover:bg-indigo-600/30 hover:border-indigo-500/60 border border-slate-800 text-slate-300 transition-all flex items-center justify-center gap-1";
+          btn.textContent = cls;
+        }
+
+        btn.onclick = () => selectClassFromPill(cls);
+        container.appendChild(btn);
+      });
+    }
+
+    function selectClassFromPill(cls) {
+      const select = document.getElementById('select-class');
+      select.value = cls;
+
+      if (cls.startsWith('X-')) currentActiveGrade = 'X';
+      else if (cls.startsWith('XI-')) currentActiveGrade = 'XI';
+      else if (cls.startsWith('XII-')) currentActiveGrade = 'XII';
+
+      setGradeTab(currentActiveGrade);
+      onClassChanged(cls);
+    }
+
+    function onClassSelectDropdownChanged() {
+      const select = document.getElementById('select-class');
+      const cls = select.value;
+
+      if (cls.startsWith('X-')) currentActiveGrade = 'X';
+      else if (cls.startsWith('XI-')) currentActiveGrade = 'XI';
+      else if (cls.startsWith('XII-')) currentActiveGrade = 'XII';
+
+      setGradeTab(currentActiveGrade);
+      onClassChanged(cls);
+    }
+
+    function onClassChanged(overrideCls) {
+      const select = document.getElementById('select-class');
+      currentSelectedClass = overrideCls || select.value;
+
+      // Update badge
+      const badge = document.getElementById('selected-class-badge');
+      if (badge) {
+        if (currentSelectedClass) {
+          badge.textContent = `Kelas ${currentSelectedClass}`;
+          badge.className = "px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shadow-sm";
+        } else {
+          badge.textContent = "Belum Pilih Kelas";
+          badge.className = "px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-slate-800 text-slate-400 border border-slate-700";
+        }
+      }
+
+      renderClassPillsGrid(currentActiveGrade);
+      clearSelectedPerson();
+      fetchNamesForSelectedGroup();
+    }
+
+    function checkApiStatus() {
+      const badge = document.getElementById('api-status-badge');
+      if (!badge) return;
+      if (GAS_API_URL.trim() !== '') {
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Backend Connected`;
+        badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5";
+      } else {
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Demo Mode (Set URL)`;
+        badge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center gap-1.5 cursor-pointer";
+        badge.onclick = openConfigModal;
+      }
+    }
+
+    function switchCategory(cat) {
+      currentCategory = cat;
+      const tabSiswa = document.getElementById('tab-siswa');
+      const tabGuru = document.getElementById('tab-guru');
+      const classContainer = document.getElementById('class-selection-container');
+
+      if (cat === 'Siswa') {
+        tabSiswa.className = "py-2.5 px-4 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2";
+        tabGuru.className = "py-2.5 px-4 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 text-slate-400 hover:text-white flex items-center justify-center gap-2";
+        classContainer.classList.remove('hidden');
+        clearSelectedPerson();
+      } else {
+        tabGuru.className = "py-2.5 px-4 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2";
+        tabSiswa.className = "py-2.5 px-4 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 text-slate-400 hover:text-white flex items-center justify-center gap-2";
+        classContainer.classList.add('hidden');
+        currentSelectedClass = 'Guru_Staf';
+        clearSelectedPerson();
+        fetchNamesForSelectedGroup();
+      }
+    }
+
+    function selectQuickClass(cls) {
+      selectClassFromPill(cls);
+    }
+
+    /* ==========================================================================
+       FETCH NAMES & AUTOCOMPLETE SEARCH
+       ========================================================================== */
+
+    async function fetchNamesForSelectedGroup() {
+      const input = document.getElementById('input-search-name');
+      const dropdown = document.getElementById('dropdown-name-results');
+
+      input.value = '';
+      dropdown.innerHTML = `<div class="p-3 text-center text-xs text-indigo-300"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat daftar dari server...</div>`;
+      dropdown.classList.remove('hidden');
+
+      if (!GAS_API_URL) {
+        // DEMO MOCK DATA
+        setTimeout(() => {
+          peopleList = getMockPeopleData(currentCategory, currentSelectedClass);
+          renderNameDropdown(peopleList);
+        }, 400);
+        return;
+      }
+
+      try {
+        const url = `${GAS_API_URL}?action=getNames&category=${encodeURIComponent(currentCategory)}&className=${encodeURIComponent(currentSelectedClass)}`;
+        const resp = await fetch(url);
+        const json = await resp.json();
+
+        if (json.success && Array.isArray(json.data)) {
+          peopleList = json.data;
+          renderNameDropdown(peopleList);
+        } else {
+          dropdown.innerHTML = `<div class="p-3 text-center text-xs text-red-400">Gagal memuat nama: ${json.error || 'Response error'}</div>`;
+        }
+      } catch (err) {
+        dropdown.innerHTML = `<div class="p-3 text-center text-xs text-amber-400">Gagal koneksi server. Menggunakan mode cadangan...</div>`;
+        peopleList = getMockPeopleData(currentCategory, currentSelectedClass);
+        setTimeout(() => renderNameDropdown(peopleList), 600);
+      }
+    }
+
+    function renderNameDropdown(list) {
+      const dropdown = document.getElementById('dropdown-name-results');
+      dropdown.innerHTML = '';
+
+      if (!list || list.length === 0) {
+        dropdown.innerHTML = `<div class="p-3 text-center text-xs text-slate-400">Tidak ada data nama ditemukan.</div>`;
+        return;
+      }
+
+      list.forEach(person => {
+        const item = document.createElement('div');
+        item.className = "p-3 hover:bg-indigo-600/20 cursor-pointer flex items-center justify-between transition border-b border-slate-800/40 last:border-0";
+
+        const isDone = person.photo_status === 'Done';
+        const badgeHtml = isDone
+          ? `<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">SUDAH UPLOAD</span>`
+          : `<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/30">BELUM UPLOAD</span>`;
+
+        item.innerHTML = `
+          <div>
+            <p class="text-xs font-bold text-white">${escapeHtml(person.full_name)}</p>
+            <p class="text-[10px] text-slate-400 font-mono">NISN/NIP: ${escapeHtml(person.nisn_nip)}</p>
+          </div>
+          <div>${badgeHtml}</div>
+        `;
+
+        item.onclick = () => selectPerson(person);
+        dropdown.appendChild(item);
+      });
+    }
+
+    function filterNameList() {
+      const input = document.getElementById('input-search-name');
+      const query = input.value.toLowerCase().trim();
+      const clearBtn = document.getElementById('btn-clear-search');
+
+      if (query.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+
+      const filtered = peopleList.filter(p =>
+        p.full_name.toLowerCase().includes(query) ||
+        String(p.nisn_nip).toLowerCase().includes(query)
+      );
+
+      renderNameDropdown(filtered);
+      document.getElementById('dropdown-name-results').classList.remove('hidden');
+    }
+
+    function showNameDropdown() {
+      if (peopleList.length > 0) {
+        renderNameDropdown(peopleList);
+        document.getElementById('dropdown-name-results').classList.remove('hidden');
+      } else {
+        fetchNamesForSelectedGroup();
+      }
+    }
+
+    function clearNameSearch() {
+      const input = document.getElementById('input-search-name');
+      input.value = '';
+      filterNameList();
+    }
+
+    /* ==========================================================================
+       SELECT PERSON & VERIFY STATUS
+       ========================================================================== */
+
+    function selectPerson(person) {
+      selectedPerson = person;
+      document.getElementById('dropdown-name-results').classList.add('hidden');
+
+      // Update Selected Person Box
+      const box = document.getElementById('box-selected-person');
+      document.getElementById('selected-person-role').textContent = `${person.class_role || currentCategory}`;
+      document.getElementById('selected-person-name').textContent = person.full_name;
+      document.getElementById('selected-person-nisn').textContent = `NISN/NIP: ${person.nisn_nip}`;
+      box.classList.remove('hidden');
+
+      document.getElementById('input-search-name').value = person.full_name;
+
+      // Verify Status
+      verifyPersonStatus(person);
+    }
+
+    function clearSelectedPerson() {
+      selectedPerson = null;
+      document.getElementById('box-selected-person').classList.add('hidden');
+      document.getElementById('input-search-name').value = '';
+
+      // Reset Status Boxes
+      document.getElementById('status-box-idle').classList.remove('hidden');
+      document.getElementById('status-box-loading').classList.add('hidden');
+      document.getElementById('status-box-done').classList.add('hidden');
+      document.getElementById('status-box-pending').classList.add('hidden');
+
+      // Stop Camera
+      stopCamera();
+      disableSubmissionControls();
+    }
+
+    async function verifyPersonStatus(person) {
+      const boxIdle = document.getElementById('status-box-idle');
+      const boxLoading = document.getElementById('status-box-loading');
+      const boxDone = document.getElementById('status-box-done');
+      const boxPending = document.getElementById('status-box-pending');
+
+      boxIdle.classList.add('hidden');
+      boxLoading.classList.remove('hidden');
+      boxDone.classList.add('hidden');
+      boxPending.classList.add('hidden');
+
+      let statusData = { photo_status: person.photo_status, drive_file_url: person.drive_file_url };
+
+      if (GAS_API_URL) {
+        try {
+          const resp = await fetch(`${GAS_API_URL}?action=checkStatus&nisn_nip=${encodeURIComponent(person.nisn_nip)}`);
+          const json = await resp.json();
+          if (json.success && json.found) {
+            statusData = json;
+          }
+        } catch (e) {
+          console.warn("Status check network error, falling back to local object status.");
+        }
+      }
+
+      boxLoading.classList.add('hidden');
+
+      if (statusData.photo_status === 'Done') {
+        // LOCK CAMERA & SHOW DONE CARD
+        document.getElementById('done-timestamp').textContent = `Diunggah pada: ${statusData.timestamp || 'Telah Tersimpan'}`;
+        if (statusData.drive_file_url) {
+          document.getElementById('btn-view-drive-file').href = statusData.drive_file_url;
+          document.getElementById('btn-view-drive-file').classList.remove('hidden');
+        } else {
+          document.getElementById('btn-view-drive-file').classList.add('hidden');
+        }
+        boxDone.classList.remove('hidden');
+
+        stopCamera();
+        disableSubmissionControls();
+      } else {
+        // UNLOCK CAMERA & ENABLE STUDIO
+        boxPending.classList.remove('hidden');
+        initCamera();
+      }
+    }
+
+    /* ==========================================================================
+       CAMERA STUDIO & CAPTURE LOGIC
+       ========================================================================== */
+
+    async function initCamera() {
+      const video = document.getElementById('webcam-video');
+      const canvas = document.getElementById('photo-canvas');
+      const preview = document.getElementById('image-preview');
+      const placeholder = document.getElementById('camera-placeholder');
+      const reticle = document.getElementById('camera-overlay-reticle');
+      const tag = document.getElementById('camera-status-tag');
+
+      stopCamera();
+
+      try {
+        tag.textContent = "Kamera On";
+        tag.className = "px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: facingMode,
+            width: { ideal: 1280 },
+            height: { ideal: 960 }
+          },
+          audio: false
+        });
+
+        video.srcObject = mediaStream;
+        video.classList.remove('hidden');
+        canvas.classList.add('hidden');
+        preview.classList.add('hidden');
+        placeholder.classList.add('hidden');
+        reticle.classList.remove('hidden');
+
+        document.getElementById('btn-capture').disabled = false;
+        document.getElementById('btn-switch-cam').disabled = false;
+        document.getElementById('btn-retake').disabled = true;
+
+      } catch (err) {
+        console.error("Camera access error:", err);
+        tag.textContent = "Kamera Error";
+        tag.className = "px-2.5 py-1 rounded-lg text-xs font-semibold bg-red-500/20 text-red-300 border border-red-500/30";
+        alert("Gagal mengakses kamera. Silakan pastikan Anda memberikan izin kamera di browser atau gunakan tombol 'Upload File'.");
+      }
+    }
+
+    function stopCamera() {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+        mediaStream = null;
+      }
+      const video = document.getElementById('webcam-video');
+      video.classList.add('hidden');
+
+      const tag = document.getElementById('camera-status-tag');
+      tag.textContent = "Kamera Off";
+      tag.className = "px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700";
+    }
+
+    function switchCameraFacing() {
+      facingMode = (facingMode === 'user') ? 'environment' : 'user';
+      initCamera();
+    }
+
+    function takeSnapshot() {
+      if (!mediaStream) return;
+
+      const video = document.getElementById('webcam-video');
+      const canvas = document.getElementById('photo-canvas');
+      const preview = document.getElementById('image-preview');
+
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+
+      const ctx = canvas.getContext('2d');
+      // Mirror image if front camera
+      if (facingMode === 'user') {
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+      }
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      capturedBase64Image = canvas.toDataURL('image/jpeg', 0.85);
+
+      preview.src = capturedBase64Image;
+      preview.classList.remove('hidden');
+      video.classList.add('hidden');
+
+      stopCamera();
+
+      document.getElementById('btn-capture').disabled = true;
+      document.getElementById('btn-retake').disabled = false;
+
+      // Enable Submit Button if person is selected
+      if (selectedPerson) {
+        document.getElementById('btn-submit-photo').disabled = false;
+      }
+    }
+
+    function resetSnapshot() {
+      capturedBase64Image = null;
+      document.getElementById('image-preview').classList.add('hidden');
+      document.getElementById('btn-submit-photo').disabled = true;
+      initCamera();
+    }
+
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        capturedBase64Image = e.target.result;
+
+        const preview = document.getElementById('image-preview');
+        preview.src = capturedBase64Image;
+        preview.classList.remove('hidden');
+
+        document.getElementById('webcam-video').classList.add('hidden');
+        document.getElementById('camera-placeholder').classList.add('hidden');
+
+        stopCamera();
+
+        document.getElementById('btn-capture').disabled = true;
+        document.getElementById('btn-retake').disabled = false;
+
+        if (selectedPerson) {
+          document.getElementById('btn-submit-photo').disabled = false;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function disableSubmissionControls() {
+      document.getElementById('btn-capture').disabled = true;
+      document.getElementById('btn-switch-cam').disabled = true;
+      document.getElementById('btn-retake').disabled = true;
+      document.getElementById('btn-submit-photo').disabled = true;
+    }
+
+    /* ==========================================================================
+       SUBMIT PHOTO TO GAS BACKEND
+       ========================================================================== */
+
+    async function submitPhotoToSCS() {
+      if (!selectedPerson) {
+        alert("Pilih identitas siswa/guru terlebih dahulu!");
+        return;
+      }
+      if (!capturedBase64Image) {
+        alert("Ambil foto selfie atau unggah file foto terlebih dahulu!");
+        return;
+      }
+
+      const submitBtn = document.getElementById('btn-submit-photo');
+      const progressContainer = document.getElementById('upload-progress-container');
+      const progressBar = document.getElementById('upload-progress-bar');
+      const progressPercent = document.getElementById('upload-progress-percent');
+      const progressText = document.getElementById('upload-progress-text');
+
+      submitBtn.disabled = true;
+      progressContainer.classList.remove('hidden');
+
+      // Simulate Smooth Loader Progress
+      let currentProgress = 10;
+      progressBar.style.width = currentProgress + '%';
+      progressPercent.textContent = currentProgress + '%';
+
+      const progressInterval = setInterval(() => {
+        if (currentProgress < 85) {
+          currentProgress += Math.floor(Math.random() * 12) + 5;
+          if (currentProgress > 85) currentProgress = 85;
+          progressBar.style.width = currentProgress + '%';
+          progressPercent.textContent = currentProgress + '%';
+        }
+      }, 300);
+
+      const payload = {
+        action: 'uploadPhoto',
+        nisn_nip: selectedPerson.nisn_nip,
+        category: currentCategory,
+        class_name: selectedPerson.class_role || currentSelectedClass,
+        image_base64: capturedBase64Image,
+        image_mime: 'image/jpeg'
+      };
+
+      if (!GAS_API_URL) {
+        // DEMO MODE TRANSMISSION
+        setTimeout(() => {
+          clearInterval(progressInterval);
+          progressBar.style.width = '100%';
+          progressPercent.textContent = '100%';
+
+          setTimeout(() => {
+            progressContainer.classList.add('hidden');
+            showToastModal(
+              "Mode Demo: Foto Berhasil Disimulasikan!",
+              `Sistem telah men-simulasikan pengunggahan foto untuk ${selectedPerson.full_name} (${selectedPerson.nisn_nip}). Untuk pengunggahan nyata ke Google Drive, atur Web App URL di menu Pengaturan Endpoint.`
+            );
+
+            // Mark person locally
+            selectedPerson.photo_status = 'Done';
+            verifyPersonStatus(selectedPerson);
+          }, 400);
+        }, 1500);
+        return;
+      }
+
+      try {
+        const response = await fetch(GAS_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const json = await response.json();
+        clearInterval(progressInterval);
+
+        if (json.success) {
+          progressBar.style.width = '100%';
+          progressPercent.textContent = '100%';
+
+          setTimeout(() => {
+            progressContainer.classList.add('hidden');
+            showToastModal(
+              "Pengunggahan Berhasil!",
+              `Foto selfie untuk ${selectedPerson.full_name} telah disimpan ke Google Drive SCS. Status absensi kini TERVERIFIKASI.`
+            );
+
+            selectedPerson.photo_status = 'Done';
+            selectedPerson.drive_file_url = json.data ? json.data.drive_file_url : '';
+            verifyPersonStatus(selectedPerson);
+          }, 400);
+
+        } else {
+          progressContainer.classList.add('hidden');
+          alert("Gagal mengunggah foto: " + (json.message || json.error));
+          submitBtn.disabled = false;
+        }
+
+      } catch (err) {
+        clearInterval(progressInterval);
+        progressContainer.classList.add('hidden');
+        alert("Terjadi kesalahan koneksi ke server Google Apps Script. Silakan periksa koneksi internet Anda atau coba lagi.");
+        submitBtn.disabled = false;
+      }
+    }
+
+    /* ==========================================================================
+       MODALS & UTILITIES
+       ========================================================================== */
+
+    function openConfigModal() {
+      document.getElementById('modal-config').classList.remove('hidden');
+    }
+
+    function closeConfigModal() {
+      document.getElementById('modal-config').classList.add('hidden');
+    }
+
+    function saveGasUrlConfig() {
+      const url = document.getElementById('input-gas-url').value.trim();
+      GAS_API_URL = url;
+      localStorage.setItem('SCS_GAS_API_URL', url);
+      checkApiStatus();
+      closeConfigModal();
+      clearSelectedPerson();
+    }
+
+    function showToastModal(title, message) {
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-message').textContent = message;
+      document.getElementById('toast-modal').classList.remove('hidden');
+    }
+
+    function closeToastModal() {
+      document.getElementById('toast-modal').classList.add('hidden');
+    }
+
+    document.getElementById('btn-open-config').onclick = openConfigModal;
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Mock Generator for Offline Demo
+    function getMockPeopleData(cat, cls) {
+      if (cat === 'Guru/Staf') {
+        return [
+          { nisn_nip: '197508122005011003', full_name: 'Drs. H. Syahrir, M.Pd', class_role: 'Guru_Staf', photo_status: 'Pending' },
+          { nisn_nip: '198203152008012014', full_name: 'St. Aminah, S.Pd., M.Si', class_role: 'Guru_Staf', photo_status: 'Done', drive_file_url: '#' },
+          { nisn_nip: '198811042011011002', full_name: 'Muhammad Aris, S.Kom', class_role: 'Guru_Staf', photo_status: 'Pending' }
+        ];
+      }
+      const activeCls = cls || 'X-1';
+      return [
+        { nisn_nip: '0061234501', full_name: `Andi Muhammad (${activeCls})`, class_role: activeCls, photo_status: 'Pending' },
+        { nisn_nip: '0061234502', full_name: `Siti Nurhaliza (${activeCls})`, class_role: activeCls, photo_status: 'Done', drive_file_url: '#' },
+        { nisn_nip: '0061234503', full_name: `Fathir Rahman (${activeCls})`, class_role: activeCls, photo_status: 'Pending' }
+      ];
+    }
+  </script>
+</body>
+
+</html>
