@@ -204,10 +204,8 @@
       <!-- Logo & Institution Info -->
       <div class="flex items-center gap-4 text-center md:text-left">
         <div
-          class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 p-0.5 shadow-lg shadow-indigo-500/30 flex-shrink-0">
-          <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
-            <i class="fa-solid fa-camera-rotate text-2xl text-indigo-400"></i>
-          </div>
+          class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-900/90 border border-indigo-500/30 p-1.5 shadow-lg shadow-indigo-500/20 flex-shrink-0 flex items-center justify-center">
+          <img src="https://arafx.vercel.app/logo.png" alt="Logo SMAN 1 Soppeng" class="w-full h-full object-contain filter drop-shadow" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png';">
         </div>
         <div>
           <div class="flex items-center justify-center md:justify-start gap-2 flex-wrap mb-1">
@@ -265,7 +263,7 @@
         </div>
 
         <!-- Category Tabs -->
-        <div class="grid grid-cols-2 gap-2 p-1.5 rounded-xl bg-slate-900/80 border border-slate-800">
+        <div class="grid grid-cols-2 gap-2 p-1.5 rounded-xl bg-slate-950/80 border border-slate-800">
           <button id="tab-siswa" onclick="switchCategory('Siswa')"
             class="py-2.5 px-4 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
             <i class="fa-solid fa-user-graduate"></i>
@@ -278,11 +276,11 @@
           </button>
         </div>
 
-        <!-- Class Selector Grid (Only shown when Siswa selected) -->
-        <div id="class-selection-container" class="space-y-4">
+        <!-- Class Selector (1 Single Method) -->
+        <div id="class-selection-container" class="space-y-3 pt-1">
           <div class="flex items-center justify-between">
             <label class="block text-xs font-bold text-slate-200 uppercase tracking-wider">
-              Tingkat & Rombel Kelas (33 Rombel)
+              Pilih Rombel Kelas (33 Rombel)
             </label>
             <span id="selected-class-badge"
               class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-slate-800 text-slate-400 border border-slate-700 transition-all">
@@ -290,43 +288,15 @@
             </span>
           </div>
 
-          <!-- Beautified Grouped Class Dropdown -->
+          <!-- 1 SINGLE BEAUTIFIED DROPDOWN -->
           <div class="relative">
-            <select id="select-class" onchange="onClassSelectDropdownChanged()"
-              class="w-full neu-input py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-slate-900/90 border border-indigo-500/30 focus:border-indigo-400 appearance-none cursor-pointer pr-10 shadow-lg shadow-slate-950/50">
-              <option value="" disabled selected class="bg-slate-950 text-slate-400 font-normal">-- 🏫 Pilih Rombel Kelas (33 Rombel) --</option>
+            <select id="select-class" onchange="onClassChanged()"
+              class="w-full neu-input py-3.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-slate-900/90 border border-indigo-500/40 focus:border-indigo-400 appearance-none cursor-pointer pr-10 shadow-lg shadow-slate-950/50">
+              <option value="" disabled selected class="bg-slate-950 text-slate-400 font-normal">-- 🏫 Klik Untuk Pilih Rombel Kelas --</option>
               <!-- JS Populates 33 Classes in Optgroups -->
             </select>
             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-indigo-400">
               <i class="fa-solid fa-chevron-down text-xs"></i>
-            </div>
-          </div>
-
-          <!-- Interactive Grade Level Pills & Grid Selector -->
-          <div class="space-y-2.5 pt-1">
-            <div class="flex items-center justify-between text-[11px] text-slate-400">
-              <span class="font-semibold text-slate-300">Pilih Cepat Berdasarkan Tingkat:</span>
-            </div>
-
-            <!-- Grade Level Tabs -->
-            <div class="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
-              <button type="button" id="tab-grade-X" onclick="setGradeTab('X')"
-                class="py-2 px-2 rounded-lg font-bold transition-all bg-indigo-600 text-white shadow-md shadow-indigo-600/30 flex items-center justify-center gap-1.5 border border-indigo-400/40">
-                <i class="fa-solid fa-graduation-cap text-xs"></i> Kelas 10 (X)
-              </button>
-              <button type="button" id="tab-grade-XI" onclick="setGradeTab('XI')"
-                class="py-2 px-2 rounded-lg font-bold transition-all text-slate-400 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800 flex items-center justify-center gap-1.5">
-                <i class="fa-solid fa-bolt text-xs"></i> Kelas 11 (XI)
-              </button>
-              <button type="button" id="tab-grade-XII" onclick="setGradeTab('XII')"
-                class="py-2 px-2 rounded-lg font-bold transition-all text-slate-400 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800 flex items-center justify-center gap-1.5">
-                <i class="fa-solid fa-trophy text-xs"></i> Kelas 12 (XII)
-              </button>
-            </div>
-
-            <!-- 11 Grid Pills Container for Selected Grade -->
-            <div id="class-pills-grid" class="grid grid-cols-4 sm:grid-cols-6 gap-1.5 pt-1">
-              <!-- JS Populates 11 Interactive Glass Buttons -->
             </div>
           </div>
         </div>
@@ -361,10 +331,10 @@
             </button>
           </div>
 
-          <!-- Dropdown Results List (Floating above Card 3 with z-50) -->
+          <!-- Dropdown Results List (100% Opaque Solid Dark Background - NO Transparency) -->
           <div id="dropdown-name-results"
-            class="hidden absolute z-50 w-full left-0 right-0 top-full mt-2 bg-slate-900/98 backdrop-blur-2xl border border-indigo-500/40 rounded-2xl shadow-2xl shadow-slate-950/95 max-h-64 overflow-y-auto divide-y divide-slate-800/60">
-            <div class="p-3 text-center text-xs text-slate-400">
+            class="hidden absolute z-[100] w-full left-0 right-0 top-full mt-2 bg-[#090D16] border-2 border-indigo-500/80 rounded-2xl shadow-2xl shadow-black max-h-64 overflow-y-auto divide-y divide-slate-800">
+            <div class="p-3 text-center text-xs text-slate-400 bg-[#090D16]">
               Silakan pilih kelas terlebih dahulu.
             </div>
           </div>
@@ -759,73 +729,6 @@
 
         select.appendChild(optgroup);
       });
-
-      renderClassPillsGrid(currentActiveGrade);
-    }
-
-    function setGradeTab(grade) {
-      currentActiveGrade = grade;
-
-      ['X', 'XI', 'XII'].forEach(g => {
-        const btn = document.getElementById(`tab-grade-${g}`);
-        if (!btn) return;
-        if (g === grade) {
-          btn.className = "py-2 px-2 rounded-lg font-bold transition-all bg-indigo-600 text-white shadow-md shadow-indigo-600/30 flex items-center justify-center gap-1.5 border border-indigo-400/40";
-        } else {
-          btn.className = "py-2 px-2 rounded-lg font-bold transition-all text-slate-400 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800 flex items-center justify-center gap-1.5";
-        }
-      });
-
-      renderClassPillsGrid(grade);
-    }
-
-    function renderClassPillsGrid(grade) {
-      const container = document.getElementById('class-pills-grid');
-      if (!container) return;
-      container.innerHTML = '';
-
-      const classesInGrade = CLASSES_LIST.filter(c => c.startsWith(grade + '-'));
-
-      classesInGrade.forEach(cls => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        const isSelected = (cls === currentSelectedClass);
-
-        if (isSelected) {
-          btn.className = "py-2 px-2 rounded-xl text-xs font-extrabold bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-600 text-white shadow-lg shadow-indigo-600/40 border border-indigo-400 scale-[1.03] transition-all flex items-center justify-center gap-1";
-          btn.innerHTML = `<i class="fa-solid fa-circle-check text-[10px] text-cyan-300"></i> ${cls}`;
-        } else {
-          btn.className = "py-2 px-2 rounded-xl text-xs font-bold bg-slate-900/80 hover:bg-indigo-600/30 hover:border-indigo-500/60 border border-slate-800 text-slate-300 transition-all flex items-center justify-center gap-1";
-          btn.textContent = cls;
-        }
-
-        btn.onclick = () => selectClassFromPill(cls);
-        container.appendChild(btn);
-      });
-    }
-
-    function selectClassFromPill(cls) {
-      const select = document.getElementById('select-class');
-      select.value = cls;
-
-      if (cls.startsWith('X-')) currentActiveGrade = 'X';
-      else if (cls.startsWith('XI-')) currentActiveGrade = 'XI';
-      else if (cls.startsWith('XII-')) currentActiveGrade = 'XII';
-
-      setGradeTab(currentActiveGrade);
-      onClassChanged(cls);
-    }
-
-    function onClassSelectDropdownChanged() {
-      const select = document.getElementById('select-class');
-      const cls = select.value;
-
-      if (cls.startsWith('X-')) currentActiveGrade = 'X';
-      else if (cls.startsWith('XI-')) currentActiveGrade = 'XI';
-      else if (cls.startsWith('XII-')) currentActiveGrade = 'XII';
-
-      setGradeTab(currentActiveGrade);
-      onClassChanged(cls);
     }
 
     function onClassChanged(overrideCls) {
@@ -844,7 +747,6 @@
         }
       }
 
-      renderClassPillsGrid(currentActiveGrade);
       clearSelectedPerson();
       fetchNamesForSelectedGroup();
     }
@@ -937,7 +839,7 @@
 
       list.forEach(person => {
         const item = document.createElement('div');
-        item.className = "p-3 hover:bg-indigo-600/20 cursor-pointer flex items-center justify-between transition border-b border-slate-800/40 last:border-0";
+        item.className = "p-3.5 bg-[#090D16] hover:bg-indigo-900/60 cursor-pointer flex items-center justify-between transition border-b border-slate-800 last:border-0";
 
         const isDone = person.photo_status === 'Done';
         const badgeHtml = isDone
