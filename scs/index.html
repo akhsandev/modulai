@@ -1225,8 +1225,38 @@
     }
 
     /* ==========================================================================
-       IMAGE COMPRESSION (MAX 700KB & PORTRAIT 2K 1440P 3:4 RATIO)
+       IMAGE COMPRESSION (MAX 700KB & PORTRAIT 2K 1440P 3:4 RATIO - OBJECT FIT COVER FILL)
        ========================================================================== */
+
+    /**
+     * Gambar objek/foto ke canvas target dengan mode FILL (Center Crop Cover) tanpa gepeng/stretch
+     */
+    function drawImageCover(ctx, sourceImg, targetW, targetH) {
+      const srcW = sourceImg.width || sourceImg.videoWidth || targetW;
+      const srcH = sourceImg.height || sourceImg.videoHeight || targetH;
+
+      const srcRatio = srcW / srcH;
+      const targetRatio = targetW / targetH;
+
+      let renderW = targetW;
+      let renderH = targetH;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      if (srcRatio > targetRatio) {
+        // Sumber gambar lebih lebar dari frame 3:4 (landsekap): penuhi tinggi, potong samping kanan-kiri
+        renderH = targetH;
+        renderW = srcW * (targetH / srcH);
+        offsetX = (targetW - renderW) / 2;
+      } else {
+        // Sumber gambar lebih tinggi dari frame 3:4: penuhi lebar, potong atas-bawah
+        renderW = targetW;
+        renderH = srcH * (targetW / srcW);
+        offsetY = (targetH - renderH) / 2;
+      }
+
+      ctx.drawImage(sourceImg, offsetX, offsetY, renderW, renderH);
+    }
 
     function compressImageToBase64(imageOrCanvas, maxKb = 700) {
       const maxBytes = maxKb * 1024;
@@ -1240,7 +1270,8 @@
       tempCanvas.height = targetH;
       const ctx = tempCanvas.getContext('2d');
 
-      ctx.drawImage(imageOrCanvas, 0, 0, targetW, targetH);
+      // Fill proporsional (Center Crop) tanpa gepeng/stretch
+      drawImageCover(ctx, imageOrCanvas, targetW, targetH);
 
       let quality = 0.88;
       let dataUrl = tempCanvas.toDataURL('image/jpeg', quality);
@@ -1258,7 +1289,7 @@
         tempCanvas.width = 1080;
         tempCanvas.height = 1440;
         const ctx2 = tempCanvas.getContext('2d');
-        ctx2.drawImage(imageOrCanvas, 0, 0, 1080, 1440);
+        drawImageCover(ctx2, imageOrCanvas, 1080, 1440);
         quality = 0.75;
         dataUrl = tempCanvas.toDataURL('image/jpeg', quality);
         sizeBytes = Math.round((dataUrl.length - 22) * 3 / 4);
