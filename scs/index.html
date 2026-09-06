@@ -205,13 +205,11 @@
       <div class="flex items-center gap-4 text-center md:text-left">
         <div
           class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-900/90 border border-indigo-500/30 p-1.5 shadow-lg shadow-indigo-500/20 flex-shrink-0 flex items-center justify-center">
-          <img src="https://arafx.vercel.app/logo.png" alt="Logo SMAN 1 Soppeng"
-            class="w-full h-full object-contain filter drop-shadow"
-            onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png';">
+          <img src="https://arafx.vercel.app/logo.png" alt="Logo SMAN 1 Soppeng" class="w-full h-full object-contain filter drop-shadow" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png';">
         </div>
         <div>
           <div class="flex items-center justify-center md:justify-start gap-2 flex-wrap mb-1">
-            <span
+            <span id="header-system-badge"
               class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
               SCS PROVINSI SULAWESI SELATAN
             </span>
@@ -220,11 +218,11 @@
               <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Backend Connected
             </span>
           </div>
-          <h1
+          <h1 id="header-main-title"
             class="text-xl sm:text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-300">
             Portal Pengumpulan Foto Absensi SCS
           </h1>
-          <p class="text-xs sm:text-sm text-slate-400 font-medium">
+          <p id="header-sub-title" class="text-xs sm:text-sm text-slate-400 font-medium">
             SMAN 1 Soppeng — Integrasi Smart Controlling School
           </p>
         </div>
@@ -248,6 +246,38 @@
   </header>
 
   <!-- ========================================================================== -->
+  <!-- DASHBOARD CALLOUT: PANDUAN SISWA KELAS 3 UNTUK PILIH ROMBEL XII (TKA)      -->
+  <!-- ========================================================================== -->
+  <section class="max-w-7xl mx-auto mb-6 px-3 sm:px-0">
+    <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-red-950/90 via-rose-950/80 to-slate-950 border-2 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.25)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div class="flex items-start gap-3.5">
+        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-red-600/30 border border-red-500/50 text-red-300 text-lg sm:text-xl flex items-center justify-center shrink-0 mt-0.5">
+          <i class="fa-solid fa-graduation-cap text-amber-300"></i>
+        </div>
+        <div class="space-y-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-red-600 text-white shadow-sm">
+              PANDUAN KHUSUS KELAS 3 (KELAS XII)
+            </span>
+            <span class="text-xs font-bold text-amber-300">
+              <i class="fa-solid fa-bullhorn mr-1"></i> Keperluan Tes Kompetensi Akademik (TKA)
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm font-semibold text-rose-100 leading-relaxed">
+            Untuk siswa <strong class="text-white font-black">Kelas 3 (Kelas XII)</strong> yang ingin mengunggah foto untuk <strong class="text-amber-300 font-black underline">keperluan TKA</strong>, silakan langsung pilih rombel <strong class="text-white font-black bg-red-900/60 px-2 py-0.5 rounded border border-red-500/40">XII-1 s.d. XII-11</strong> pada pilihan rombel di bawah. <span class="text-rose-300 italic font-medium">(Khusus kelas 3 bukan SCS lagi, wajib pas foto seragam putih abu-abu dengan latar merah).</span>
+          </p>
+        </div>
+      </div>
+      <div class="shrink-0 w-full md:w-auto">
+        <button onclick="focusClassXIISelection()" class="w-full md:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white text-xs sm:text-sm font-black shadow-xl shadow-red-600/40 flex items-center justify-center gap-2 transition transform hover:scale-105 active:scale-95">
+          <i class="fa-solid fa-arrow-right text-amber-300"></i>
+          <span>PILIH ROMBEL KELAS XII (TKA)</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================== -->
   <!-- MAIN BENTO GRID CONTAINER                                                 -->
   <!-- ========================================================================== -->
   <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -265,7 +295,7 @@
           <span class="step-number">1</span>
           <div>
             <h2 class="text-base font-bold text-white">Pilih Peran & Rombel</h2>
-            <p class="text-xs text-slate-400">Tentukan kategori pengguna SCS</p>
+            <p id="step-1-subtitle" class="text-xs text-slate-400">Tentukan kategori pengguna SCS</p>
           </div>
         </div>
 
@@ -295,12 +325,22 @@
             </span>
           </div>
 
+          <!-- Panduan Cepat Kelas 3 -->
+          <div class="p-2.5 rounded-xl bg-red-950/40 border border-red-500/40 flex items-center justify-between gap-2">
+            <div class="text-[11px] font-semibold text-rose-200 flex items-center gap-1.5">
+              <i class="fa-solid fa-graduation-cap text-amber-300 text-xs shrink-0"></i>
+              <span>Siswa Kelas 3 (TKA): Pilih rombel <strong>XII-1 s.d. XII-11</strong></span>
+            </div>
+            <button type="button" onclick="focusClassXIISelection()" class="px-2 py-1 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold text-[10px] shrink-0 shadow transition">
+              Pilih XII
+            </button>
+          </div>
+
           <!-- 1 SINGLE BEAUTIFIED DROPDOWN -->
           <div class="relative">
             <select id="select-class" onchange="onClassChanged()"
               class="w-full neu-input py-3.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-slate-900/90 border border-indigo-500/40 focus:border-indigo-400 appearance-none cursor-pointer pr-10 shadow-lg shadow-slate-950/50">
-              <option value="" disabled selected class="bg-slate-950 text-slate-400 font-normal">-- 🏫 Klik Untuk Pilih
-                Rombel Kelas --</option>
+              <option value="" disabled selected class="bg-slate-950 text-slate-400 font-normal">-- 🏫 Klik Untuk Pilih Rombel Kelas --</option>
               <!-- JS Populates 33 Classes in Optgroups -->
             </select>
             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-indigo-400">
@@ -318,7 +358,7 @@
           <span class="step-number">2</span>
           <div>
             <h2 class="text-base font-bold text-white">Identitas Diri</h2>
-            <p class="text-xs text-slate-400">Cari nama sesuai daftar master SCS</p>
+            <p id="step-2-subtitle" class="text-xs text-slate-400">Cari nama sesuai daftar master SCS</p>
           </div>
         </div>
 
@@ -377,8 +417,8 @@
         <div class="flex items-center gap-3">
           <span class="step-number">3</span>
           <div>
-            <h2 class="text-base font-bold text-white">Verifikasi Status Foto</h2>
-            <p class="text-xs text-slate-400">Pengecekan otomatis di database SCS</p>
+            <h2 id="step-3-title" class="text-base font-bold text-white">Verifikasi Status Foto</h2>
+            <p id="step-3-subtitle" class="text-xs text-slate-400">Pengecekan otomatis di database SCS</p>
           </div>
         </div>
 
@@ -386,7 +426,7 @@
         <div id="status-box-idle"
           class="p-5 rounded-xl bg-slate-900/40 border border-slate-800/80 text-center space-y-2">
           <i class="fa-solid fa-shield-halved text-2xl text-slate-500"></i>
-          <p class="text-xs text-slate-400">Pilih nama Anda di atas untuk memeriksa status pengumpulan foto absensi.</p>
+          <p id="status-idle-text" class="text-xs text-slate-400">Pilih nama Anda di atas untuk memeriksa status pengumpulan foto absensi.</p>
         </div>
 
         <!-- Loading Checking Status -->
@@ -408,7 +448,7 @@
               class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider">
               SUDAH MENGUNGGAH FOTO
             </span>
-            <h3 class="text-sm font-bold text-white mt-2">Data Absensi SCS Terverifikasi</h3>
+            <h3 id="status-done-title" class="text-sm font-bold text-white mt-2">Data Absensi SCS Terverifikasi</h3>
             <p id="done-timestamp" class="text-xs text-emerald-400/90 font-mono mt-1">
               Diunggah pada: -
             </p>
@@ -416,7 +456,7 @@
           <div class="pt-1">
             <p class="text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
               <i class="fa-solid fa-shield-halved text-emerald-400"></i>
-              <span>Foto tersimpan aman di database privat SCS admin SMAN 1 Soppeng.</span>
+              <span id="status-done-footer">Foto tersimpan aman di database privat SCS admin SMAN 1 Soppeng.</span>
             </p>
           </div>
         </div>
@@ -433,8 +473,8 @@
               class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
               BELUM MENGUNGGAH FOTO
             </span>
-            <h3 class="text-sm font-bold text-white mt-2">Akses Kamera Terbuka</h3>
-            <p class="text-xs text-amber-300/80 mt-1">
+            <h3 id="status-pending-title" class="text-sm font-bold text-white mt-2">Akses Kamera Terbuka</h3>
+            <p id="status-pending-text" class="text-xs text-amber-300/80 mt-1">
               Silakan ambil foto selfie langsung di studio kamera di sebelah kanan.
             </p>
           </div>
@@ -449,15 +489,15 @@
     <!-- ======================================================================== -->
     <div class="lg:col-span-7 space-y-6">
 
-      <!-- BENTO CARD 4: LIVE CAMERA STUDIO FRAME (PORTRAIT 3:4) -->
+      <!-- BENTO CARD 4: LIVE CAMERA STUDIO FRAME & UPLOAD PAS FOTO -->
       <div class="glass-panel p-5 sm:p-6 space-y-5">
 
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
             <span class="step-number">4</span>
             <div>
-              <h2 class="text-base font-bold text-white">Studio Kamera Selfie (Portrait 3:4)</h2>
-              <p class="text-xs text-slate-400">Foto resolusi 2K Quad HD (1440p), terkompresi maks 700 KB (JPEG)</p>
+              <h2 id="studio-title" class="text-base sm:text-lg font-bold text-white">Studio Kamera Selfie (Portrait 3:4)</h2>
+              <p id="studio-subtitle" class="text-xs text-slate-400">Foto resolusi 2K Quad HD (1440p), terkompresi maks 700 KB (JPEG)</p>
             </div>
           </div>
           <span id="camera-status-tag"
@@ -466,8 +506,8 @@
           </span>
         </div>
 
-        <!-- Face Recognition Guidance Alert Banner -->
-        <div class="p-3.5 rounded-xl bg-cyan-950/40 border border-cyan-500/30 flex items-start gap-3">
+        <!-- 1. FACE RECOGNITION GUIDANCE ALERT BANNER (STANDAR: KELAS X, XI & GURU) -->
+        <div id="banner-guidance-selfie" class="p-3.5 rounded-xl bg-cyan-950/40 border border-cyan-500/30 flex items-start gap-3">
           <div class="p-2 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0">
             <i class="fa-solid fa-face-viewfinder text-lg"></i>
           </div>
@@ -476,27 +516,133 @@
               Panduan Foto Close-Up (Face Recognition SCS)
             </h4>
             <p class="text-[11px] text-cyan-300/90 leading-relaxed">
-              Dekatkan wajah ke kamera hingga memenuhi oval guide. Ambil foto <strong>Close-Up 2K (Wajah terlihat utuh &
-                jelas dari dahi s.d. dagu)</strong> tanpa masker agar dikenali sistem kecerdasan buatan Face Recognition
-              SCS.
+              Dekatkan wajah ke kamera hingga memenuhi oval guide. Ambil foto <strong>Close-Up 2K (Wajah terlihat utuh & jelas dari dahi s.d. dagu)</strong> tanpa masker agar dikenali sistem kecerdasan buatan Face Recognition SCS.
             </p>
           </div>
         </div>
 
-        <!-- CAMERA DISPLAY FRAME CONTAINER (PORTRAIT 3:4) -->
+        <!-- 2. SPECIAL GUIDANCE BANNER KHUSUS KELAS 3 / XII (TKA - TES KOMPETENSI AKADEMIK) -->
+        <div id="banner-guidance-class-xii" class="hidden p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-red-950/95 via-rose-950/90 to-slate-950 border-2 border-red-500 shadow-[0_0_35px_rgba(239,68,68,0.45)] space-y-4">
+          
+          <div class="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-red-500/30">
+            <span class="px-3.5 py-1.5 rounded-lg bg-red-600 text-white text-xs sm:text-sm font-black uppercase tracking-widest animate-pulse flex items-center gap-2 shadow-lg shadow-red-600/60">
+              <i class="fa-solid fa-graduation-cap text-amber-300 text-base"></i> KHUSUS KELAS 3 (KELAS XII) — KEPERLUAN TKA (BUKAN SCS)
+            </span>
+            <span class="px-3 py-1 rounded-full bg-slate-900 border border-red-500/50 text-red-300 font-extrabold text-xs">
+              ⛔ BUKAN FOTO SELFIE / BUKAN SCS
+            </span>
+          </div>
+
+          <div class="space-y-2">
+            <h3 class="text-lg sm:text-xl font-black text-white leading-snug flex items-center gap-2">
+              <span class="text-red-400">🔴</span> UPLOAD FOTO UNTUK KEPERLUAN TKA (TES KOMPETENSI AKADEMIK)
+            </h3>
+            <p class="text-xs sm:text-sm font-bold text-rose-100 leading-relaxed bg-red-900/30 p-3.5 rounded-xl border border-red-500/30">
+              Khusus kelas 3, keterangannya adalah <strong class="text-white font-black underline">Upload Foto untuk Keperluan TKA (Tes Kompetensi Akademik)</strong>, jadi <strong class="text-amber-300 font-black">BUKAN SCS LAGI</strong>. Siswa kelas 3 tidak melakukan foto selfie, melainkan <strong class="text-white font-black">wajib upload pas foto baju seragam putih abu-abu dengan latar merah</strong>. <span class="text-rose-300 italic font-medium">(Untuk kelas X dan XI tetap sistem absensi SCS selfie).</span>
+            </p>
+          </div>
+
+          <!-- 4 Aturan Pas Foto Kelas XII (Ukuran Font Besar & Mudah Dibaca) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            
+            <div class="p-3.5 rounded-xl bg-slate-900/90 border border-red-500/40 flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-red-600/30 border border-red-500/50 text-red-300 font-black text-sm flex items-center justify-center shrink-0">
+                1
+              </div>
+              <div class="space-y-0.5">
+                <p class="text-xs sm:text-sm font-black text-white">Baju Seragam Putih Abu-Abu</p>
+                <p class="text-[11px] sm:text-xs text-rose-200/90 leading-snug">Wajib mengenakan kemeja seragam putih abu-abu lengkap dan rapi (atribut dasi & logo sekolah).</p>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-900/90 border border-red-500/40 flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-red-600/30 border border-red-500/50 text-red-300 font-black text-sm flex items-center justify-center shrink-0">
+                2
+              </div>
+              <div class="space-y-0.5">
+                <p class="text-xs sm:text-sm font-black text-white">Latar Belakang (Background) MERAH</p>
+                <p class="text-[11px] sm:text-xs text-rose-200/90 leading-snug">Warna latar belakang foto wajib <strong>MERAH POLOS</strong> standar pas foto resmi ijazah & kartu ujian TKA.</p>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-900/90 border border-red-500/40 flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-red-600/30 border border-red-500/50 text-red-300 font-black text-sm flex items-center justify-center shrink-0">
+                3
+              </div>
+              <div class="space-y-0.5">
+                <p class="text-xs sm:text-sm font-black text-white">Pose Pas Foto Formal</p>
+                <p class="text-[11px] sm:text-xs text-rose-200/90 leading-snug">Posisi badan dan pandangan mata tegak lurus menghadap kamera (bukan miring/gaya bebas/selfie).</p>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-900/90 border border-red-500/40 flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-red-600/30 border border-red-500/50 text-red-300 font-black text-sm flex items-center justify-center shrink-0">
+                4
+              </div>
+              <div class="space-y-0.5">
+                <p class="text-xs sm:text-sm font-black text-white">Wajah Terang & Tajam</p>
+                <p class="text-[11px] sm:text-xs text-rose-200/90 leading-snug">Foto tidak buram, pencahayaan jelas, tidak memakai kacamata hitam atau masker.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 2 FOTO CONTOH RESMI PAS FOTO TKA (PUTRA & PUTRI) -->
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-red-500/50 space-y-3">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <span class="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">
+                <i class="fa-solid fa-camera-retro text-amber-300"></i> CONTOH STANDAR PAS FOTO TKA KELAS 3 (LATAR MERAH):
+              </span>
+              <span class="text-[11px] font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">
+                ✅ Format Sesuai Ketentuan
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 max-w-sm mx-auto sm:max-w-none">
+              <!-- Contoh 1: Siswa Putra -->
+              <div class="space-y-1.5 text-center">
+                <div class="relative rounded-xl overflow-hidden border-2 border-red-500/60 shadow-lg aspect-[3/4] bg-slate-950">
+                  <img src="0081376977.jpg" alt="Contoh Pas Foto Siswa Putra Latar Merah" class="w-full h-full object-cover">
+                  <span class="absolute bottom-1.5 left-1.5 right-1.5 py-0.5 bg-slate-950/85 rounded text-[10px] font-black text-white border border-slate-700 shadow">
+                    Siswa (Putra)
+                  </span>
+                </div>
+                <p class="text-[11px] text-rose-200 font-semibold">Seragam putih abu-abu berdasi, latar merah polos</p>
+              </div>
+
+              <!-- Contoh 2: Siswi Putri -->
+              <div class="space-y-1.5 text-center">
+                <div class="relative rounded-xl overflow-hidden border-2 border-red-500/60 shadow-lg aspect-[3/4] bg-slate-950">
+                  <img src="0078496993.jpg" alt="Contoh Pas Foto Siswi Putri Latar Merah" class="w-full h-full object-cover">
+                  <span class="absolute bottom-1.5 left-1.5 right-1.5 py-0.5 bg-slate-950/85 rounded text-[10px] font-black text-white border border-slate-700 shadow">
+                    Siswi (Putri)
+                  </span>
+                </div>
+                <p class="text-[11px] text-rose-200 font-semibold">Seragam putih jilbab putih, latar merah polos</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-[11px] sm:text-xs text-rose-200 bg-red-950/60 p-2.5 rounded-xl border border-red-500/30 text-center font-semibold">
+            <i class="fa-solid fa-circle-info mr-1 text-amber-300"></i> Pengumpulan foto ini khusus untuk kelengkapan berkas & kartu ujian <strong>Tes Kompetensi Akademik (TKA)</strong> SMAN 1 Soppeng.
+          </div>
+
+        </div>
+
+        <!-- CAMERA / PHOTO DISPLAY FRAME CONTAINER (PORTRAIT 3:4) -->
         <div
           class="relative bg-slate-950 rounded-2xl overflow-hidden aspect-[3/4] max-w-xs sm:max-w-sm mx-auto border border-cyan-500/40 shadow-2xl flex items-center justify-center">
 
-          <!-- Live Video Stream -->
+          <!-- Live Video Stream (Used for Kelas X & XI & Guru) -->
           <video id="webcam-video" autoplay playsinline class="w-full h-full object-cover hidden"></video>
 
           <!-- Captured Photo Canvas (Hidden) -->
           <canvas id="photo-canvas" class="w-full h-full object-cover hidden"></canvas>
 
           <!-- Image Preview Tag -->
-          <img id="image-preview" class="w-full h-full object-cover hidden" alt="Selfie Preview">
+          <img id="image-preview" class="w-full h-full object-cover hidden" alt="Photo Preview">
 
-          <!-- Initial Camera Overlay Placeholder -->
+          <!-- Initial Camera Overlay Placeholder (Standard for Kelas X, XI & Guru) -->
           <div id="camera-placeholder" class="text-center p-6 space-y-4">
             <div
               class="w-20 h-20 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto text-indigo-400 text-3xl shadow-inner">
@@ -514,20 +660,47 @@
             </button>
           </div>
 
-          <!-- Futuristic Corner Reticles & Face Recognition Oval Guide -->
+          <!-- SPECIAL PLACEHOLDER UNTUK KELAS 3 (PAS FOTO TKA) -->
+          <div id="placeholder-class-xii" class="hidden text-center p-4 space-y-3">
+            <div class="space-y-1">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-red-600 text-white shadow-sm">
+                KHUSUS KELAS 3 — KEPERLUAN TKA
+              </span>
+              <p class="text-sm sm:text-base font-black text-white">Upload File Pas Foto Resmi (Latar Merah)</p>
+              <p class="text-[11px] text-rose-200/90 max-w-xs mx-auto leading-tight">
+                Khusus kelas 3 untuk keperluan <strong>TKA</strong> (bukan SCS). Wajib baju putih abu-abu latar merah.
+              </p>
+            </div>
+
+            <!-- Mini Thumbnails 2 Foto Contoh -->
+            <div class="grid grid-cols-2 gap-2 max-w-[200px] mx-auto">
+              <div class="rounded-lg overflow-hidden border border-red-500/50 aspect-[3/4] bg-slate-950 shadow">
+                <img src="0081376977.jpg" alt="Contoh Putra" class="w-full h-full object-cover">
+              </div>
+              <div class="rounded-lg overflow-hidden border border-red-500/50 aspect-[3/4] bg-slate-950 shadow">
+                <img src="0078496993.jpg" alt="Contoh Putri" class="w-full h-full object-cover">
+              </div>
+            </div>
+
+            <label for="file-upload-input"
+              class="inline-flex cursor-pointer px-5 py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white text-xs sm:text-sm font-black shadow-xl shadow-red-600/40 items-center justify-center gap-2 transition transform hover:scale-105">
+              <i class="fa-solid fa-cloud-arrow-up text-base"></i>
+              <span>PILIH FILE FOTO TKA (LATAR MERAH)</span>
+            </label>
+          </div>
+
+          <!-- Futuristic Corner Reticles & Face Recognition Oval Guide (Standard: Kelas X & XI) -->
           <div id="camera-overlay-reticle"
             class="hidden pointer-events-none absolute inset-0 p-4 flex flex-col justify-between items-center">
-
+            
             <div class="flex justify-between w-full">
               <div class="w-6 h-6 border-t-2 border-l-2 border-cyan-400"></div>
               <div class="w-6 h-6 border-t-2 border-r-2 border-cyan-400"></div>
             </div>
 
             <!-- Oval Face Recognition Alignment Target -->
-            <div
-              class="relative w-48 h-64 border-2 border-dashed border-cyan-400/90 rounded-[50%] flex items-center justify-center shadow-[0_0_25px_rgba(34,211,238,0.35)] animate-pulse">
-              <div
-                class="text-[10px] font-extrabold text-cyan-300 bg-slate-950/85 px-2.5 py-1 rounded-full border border-cyan-500/50 tracking-wider uppercase text-center max-w-[140px] shadow-lg">
+            <div class="relative w-48 h-64 border-2 border-dashed border-cyan-400/90 rounded-[50%] flex items-center justify-center shadow-[0_0_25px_rgba(34,211,238,0.35)] animate-pulse">
+              <div class="text-[10px] font-extrabold text-cyan-300 bg-slate-950/85 px-2.5 py-1 rounded-full border border-cyan-500/50 tracking-wider uppercase text-center max-w-[140px] shadow-lg">
                 🎯 Wajah Close-Up Pas Di Oval Ini
               </div>
             </div>
@@ -543,12 +716,11 @@
 
         <!-- COMPRESSED SIZE TAG INDICATOR -->
         <p id="compressed-size-tag" class="text-xs font-semibold text-emerald-400 font-mono text-center hidden">
-          <i class="fa-solid fa-file-image mr-1"></i> Ukuran Terkompresi: <span id="img-kb-size">0 KB</span> (Maks 700
-          KB JPEG - 1440p)
+          <i class="fa-solid fa-file-image mr-1"></i> Ukuran Terkompresi: <span id="img-kb-size">0 KB</span> (Maks 700 KB JPEG - 1440p)
         </p>
 
-        <!-- CAMERA CONTROLS BAR -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
+        <!-- CAMERA CONTROLS BAR (STANDARD FOR KELAS X, XI & GURU) -->
+        <div id="controls-standard" class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
 
           <button id="btn-capture" onclick="takeSnapshot()" disabled
             class="neu-btn py-3 px-3 rounded-xl text-xs font-bold text-white disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2">
@@ -574,9 +746,29 @@
             <i class="fa-solid fa-upload text-sm text-cyan-400"></i>
             <span>Upload File</span>
           </label>
-          <input type="file" id="file-upload-input" accept="image/*" onchange="handleFileUpload(event)" class="hidden">
 
         </div>
+
+        <!-- SPECIAL CONTROLS BAR KHUSUS KELAS XII -->
+        <div id="controls-class-xii" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+          
+          <!-- Primary Upload Button -->
+          <label for="file-upload-input"
+            class="py-3.5 px-4 rounded-xl text-xs sm:text-sm font-black text-white cursor-pointer flex items-center justify-center gap-2.5 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 shadow-xl shadow-red-600/40 transition">
+            <i class="fa-solid fa-cloud-arrow-up text-base"></i>
+            <span>Upload File Pas Foto TKA Latar Merah</span>
+          </label>
+
+          <!-- Reset / Ganti Foto Button -->
+          <button id="btn-retake-xii" onclick="resetSnapshot()" disabled
+            class="neu-btn py-3.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-amber-400 hover:text-amber-300 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+            <i class="fa-solid fa-rotate-right text-sm"></i>
+            <span>Ganti / Pilih File Lain</span>
+          </button>
+
+        </div>
+
+        <input type="file" id="file-upload-input" accept="image/*" onchange="handleFileUpload(event)" class="hidden">
 
       </div>
 
@@ -586,8 +778,8 @@
         <div class="flex items-center gap-3">
           <span class="step-number">5</span>
           <div>
-            <h2 class="text-base font-bold text-white">Kirim Data Foto</h2>
-            <p class="text-xs text-slate-400">Simpan ke Google Drive & Database SCS SMAN 1 Soppeng</p>
+            <h2 id="submit-card-title" class="text-base font-bold text-white">Kirim Data Foto</h2>
+            <p id="submit-card-subtitle" class="text-xs text-slate-400">Simpan ke Google Drive & Database SCS SMAN 1 Soppeng</p>
           </div>
         </div>
 
@@ -608,11 +800,11 @@
         <button id="btn-submit-photo" onclick="submitPhotoToSCS()" disabled
           class="w-full btn-glow-primary py-4 px-6 rounded-xl text-sm sm:text-base font-extrabold text-white tracking-wide uppercase disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-xl">
           <i class="fa-solid fa-paper-plane"></i>
-          <span>Kirim Foto Ke Database SCS</span>
+          <span id="btn-submit-text">Kirim Foto Ke Database SCS</span>
         </button>
 
         <div class="text-center">
-          <p class="text-[11px] text-slate-500">
+          <p id="submit-info-text" class="text-[11px] text-slate-500">
             <i class="fa-solid fa-lock mr-1"></i> Data foto akan tersimpan di Google Drive SMAN 1 Soppeng dengan
             penamaan otomatis `<NISN /NIP>.jpg`.
           </p>
@@ -702,8 +894,7 @@
   <!-- ========================================================================== -->
   <!-- MODAL ADMIN LOGIN (Pass: scssmansa)                                        -->
   <!-- ========================================================================== -->
-  <div id="modal-admin-login"
-    class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+  <div id="modal-admin-login" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
     <div class="glass-panel max-w-md w-full p-6 space-y-5 border border-indigo-500/40">
       <div class="flex justify-between items-center pb-3 border-b border-slate-800">
         <h3 class="text-base font-bold text-white flex items-center gap-2">
@@ -721,9 +912,7 @@
           </label>
           <div class="relative">
             <i class="fa-solid fa-lock absolute left-4 top-3.5 text-slate-400 text-sm"></i>
-            <input type="password" id="input-admin-pass" onkeydown="if(event.key==='Enter') verifyAdminPassword()"
-              placeholder="Masukkan password admin..."
-              class="w-full neu-input py-3 pl-11 pr-4 rounded-xl text-sm font-bold text-white">
+            <input type="password" id="input-admin-pass" onkeydown="if(event.key==='Enter') verifyAdminPassword()" placeholder="Masukkan password admin..." class="w-full neu-input py-3 pl-11 pr-4 rounded-xl text-sm font-bold text-white">
           </div>
           <p id="admin-login-error" class="text-xs text-red-400 mt-2 hidden font-semibold">
             <i class="fa-solid fa-circle-xmark mr-1"></i> Password salah! Silakan coba lagi.
@@ -735,8 +924,7 @@
         <button onclick="closeAdminLoginModal()" class="neu-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-300">
           Batal
         </button>
-        <button onclick="verifyAdminPassword()"
-          class="btn-glow-primary px-5 py-2 rounded-xl text-xs font-bold text-white">
+        <button onclick="verifyAdminPassword()" class="btn-glow-primary px-5 py-2 rounded-xl text-xs font-bold text-white">
           Masuk Admin
         </button>
       </div>
@@ -746,16 +934,13 @@
   <!-- ========================================================================== -->
   <!-- MODAL PANEL ADMIN & WA BROADCAST STUDIO                                   -->
   <!-- ========================================================================== -->
-  <div id="modal-admin-panel"
-    class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
-    <div
-      class="glass-panel max-w-3xl w-full p-5 sm:p-6 space-y-5 border border-cyan-500/40 max-h-[92vh] overflow-y-auto">
-
+  <div id="modal-admin-panel" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
+    <div class="glass-panel max-w-3xl w-full p-5 sm:p-6 space-y-5 border border-cyan-500/40 max-h-[92vh] overflow-y-auto">
+      
       <!-- Admin Header -->
       <div class="flex justify-between items-center pb-3 border-b border-slate-800">
         <div class="flex items-center gap-2 flex-wrap">
-          <span
-            class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
             ADMIN STUDIO
           </span>
           <h3 class="text-base sm:text-lg font-bold text-white">
@@ -768,8 +953,7 @@
       </div>
 
       <!-- Admin Tab Switcher -->
-      <div
-        class="grid grid-cols-2 gap-2 p-1.5 rounded-xl bg-slate-950/90 border border-slate-800 text-xs sm:text-sm font-bold">
+      <div class="grid grid-cols-2 gap-2 p-1.5 rounded-xl bg-slate-950/90 border border-slate-800 text-xs sm:text-sm font-bold">
         <button id="admin-tab-btn-per-class" onclick="switchAdminTab('per-class')"
           class="py-2 px-3 rounded-lg transition-all bg-indigo-600 text-white shadow-md shadow-indigo-600/30 flex items-center justify-center gap-2">
           <i class="fa-solid fa-bullhorn"></i>
@@ -792,14 +976,12 @@
             <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
               Pilih Rombel Kelas Untuk Broadcast WA
             </label>
-            <button onclick="loadAdminUnuploadedList(true)"
-              class="text-xs text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1.5 transition cursor-pointer">
+            <button onclick="loadAdminUnuploadedList(true)" class="text-xs text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1.5 transition cursor-pointer">
               <i class="fa-solid fa-arrows-rotate text-xs"></i> <span>Sync Database Terbaru</span>
             </button>
           </div>
           <div class="relative">
-            <select id="admin-select-class" onchange="loadAdminUnuploadedList(false)"
-              class="w-full neu-input py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-slate-900 border border-indigo-500/30 appearance-none cursor-pointer pr-10">
+            <select id="admin-select-class" onchange="loadAdminUnuploadedList(false)" class="w-full neu-input py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-slate-900 border border-indigo-500/30 appearance-none cursor-pointer pr-10">
               <option value="" disabled selected class="bg-slate-950 text-slate-400">-- Pilih Kelas --</option>
               <!-- JS Populates 33 Classes -->
             </select>
@@ -810,15 +992,12 @@
         </div>
 
         <!-- Status Summary & Unuploaded List Box -->
-        <div id="admin-broadcast-results"
-          class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3 hidden">
+        <div id="admin-broadcast-results" class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3 hidden">
           <div class="flex items-center justify-between flex-wrap gap-2">
-            <span id="admin-pending-count-badge"
-              class="px-3 py-1 rounded-lg text-xs font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+            <span id="admin-pending-count-badge" class="px-3 py-1 rounded-lg text-xs font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/30">
               Terdeteksi 0 Siswa Belum Upload
             </span>
-            <button onclick="copyWhatsappBroadcastText()"
-              class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold transition shadow-lg shadow-emerald-600/30 flex items-center gap-2">
+            <button onclick="copyWhatsappBroadcastText()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold transition shadow-lg shadow-emerald-600/30 flex items-center gap-2">
               <i class="fa-solid fa-copy"></i>
               <span>Copy Broadcast WA</span>
             </button>
@@ -829,15 +1008,12 @@
             <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
               Pratinjau Format Pesan Broadcast WhatsApp:
             </label>
-            <textarea id="admin-wa-text-preview" readonly rows="8"
-              class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-emerald-300 leading-relaxed focus:outline-none select-all"></textarea>
+            <textarea id="admin-wa-text-preview" readonly rows="8" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-emerald-300 leading-relaxed focus:outline-none select-all"></textarea>
           </div>
         </div>
 
-        <div id="admin-broadcast-empty"
-          class="p-5 rounded-xl bg-slate-900/50 border border-slate-800 text-center text-xs text-slate-400">
-          Pilih kelas di atas untuk melihat daftar siswa yang belum mengunggah foto dan membuat format pesan broadcast
-          WhatsApp.
+        <div id="admin-broadcast-empty" class="p-5 rounded-xl bg-slate-900/50 border border-slate-800 text-center text-xs text-slate-400">
+          Pilih kelas di atas untuk melihat daftar siswa yang belum mengunggah foto dan membuat format pesan broadcast WhatsApp.
         </div>
       </div>
 
@@ -845,7 +1021,7 @@
       <!-- TAB CONTENT 2: REKAPITULASI KESELURUHAN (33 KELAS)                  -->
       <!-- =================================================================== -->
       <div id="admin-view-overall-recap" class="space-y-4 hidden">
-
+        
         <!-- Header & Action Bar -->
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div>
@@ -857,12 +1033,10 @@
             </p>
           </div>
           <div class="flex items-center gap-2">
-            <button onclick="loadOverallRecapData(true)"
-              class="neu-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-cyan-300 hover:text-white flex items-center gap-1.5">
+            <button onclick="loadOverallRecapData(true)" class="neu-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-cyan-300 hover:text-white flex items-center gap-1.5">
               <i class="fa-solid fa-arrows-rotate text-xs"></i> <span>Refresh Data</span>
             </button>
-            <button onclick="copyOverallRecapWhatsappText()"
-              class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold transition shadow-md shadow-emerald-600/30 flex items-center gap-1.5">
+            <button onclick="copyOverallRecapWhatsappText()" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold transition shadow-md shadow-emerald-600/30 flex items-center gap-1.5">
               <i class="fa-solid fa-copy"></i> <span>Copy Rekap WA</span>
             </button>
           </div>
@@ -874,8 +1048,7 @@
             <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Siswa Terkumpul</p>
             <div class="flex items-baseline justify-between">
               <p id="recap-stat-student-done" class="text-xl font-extrabold text-emerald-400">0 / 0</p>
-              <span id="recap-stat-student-pct"
-                class="text-xs font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">0%</span>
+              <span id="recap-stat-student-pct" class="text-xs font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">0%</span>
             </div>
             <p class="text-[10px] text-slate-500">Siswa seluruh 33 rombel</p>
           </div>
@@ -893,8 +1066,7 @@
             <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Guru & Staf Terkumpul</p>
             <div class="flex items-baseline justify-between">
               <p id="recap-stat-teacher-done" class="text-xl font-extrabold text-indigo-300">0 / 0</p>
-              <span id="recap-stat-teacher-pct"
-                class="text-xs font-extrabold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">0%</span>
+              <span id="recap-stat-teacher-pct" class="text-xs font-extrabold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">0%</span>
             </div>
             <p class="text-[10px] text-slate-500">Pendidik & Tenaga Kependidikan</p>
           </div>
@@ -907,9 +1079,7 @@
             <span id="recap-overall-bar-pct" class="text-cyan-300">0%</span>
           </div>
           <div class="w-full bg-slate-950 rounded-full h-3.5 overflow-hidden border border-slate-800 p-0.5">
-            <div id="recap-overall-bar-fill"
-              class="bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400 h-full rounded-full transition-all duration-700 w-0">
-            </div>
+            <div id="recap-overall-bar-fill" class="bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400 h-full rounded-full transition-all duration-700 w-0"></div>
           </div>
         </div>
 
@@ -933,8 +1103,7 @@
               Format Broadcast WhatsApp Rekapitulasi:
             </label>
           </div>
-          <textarea id="admin-recap-wa-preview" readonly rows="8"
-            class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-emerald-300 leading-relaxed focus:outline-none select-all"></textarea>
+          <textarea id="admin-recap-wa-preview" readonly rows="8" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-emerald-300 leading-relaxed focus:outline-none select-all"></textarea>
         </div>
 
       </div>
@@ -1033,24 +1202,233 @@
       });
     }
 
+    function isGradeXII(cls) {
+      if (!cls) return false;
+      const c = String(cls).trim().toUpperCase();
+      return c.startsWith('XII') || c.startsWith('12') || c.startsWith('XII-');
+    }
+
+    function updateStudioForGradeXII(isXII) {
+      // Header Elements
+      const headerBadge = document.getElementById('header-system-badge');
+      const headerTitle = document.getElementById('header-main-title');
+      const headerSubtitle = document.getElementById('header-sub-title');
+
+      // Step 1 & 2 Subtitles
+      const step1Subtitle = document.getElementById('step-1-subtitle');
+      const step2Subtitle = document.getElementById('step-2-subtitle');
+
+      // Step 3 Verification Elements
+      const step3Title = document.getElementById('step-3-title');
+      const step3Subtitle = document.getElementById('step-3-subtitle');
+      const statusIdleText = document.getElementById('status-idle-text');
+      const statusDoneTitle = document.getElementById('status-done-title');
+      const statusDoneFooter = document.getElementById('status-done-footer');
+      const statusPendingTitle = document.getElementById('status-pending-title');
+      const statusPendingText = document.getElementById('status-pending-text');
+
+      // Step 4 Studio Elements
+      const bannerSelfie = document.getElementById('banner-guidance-selfie');
+      const bannerXII = document.getElementById('banner-guidance-class-xii');
+      const studioTitle = document.getElementById('studio-title');
+      const studioSubtitle = document.getElementById('studio-subtitle');
+      const cameraPlaceholder = document.getElementById('camera-placeholder');
+      const placeholderXII = document.getElementById('placeholder-class-xii');
+      const controlsStandard = document.getElementById('controls-standard');
+      const controlsXII = document.getElementById('controls-class-xii');
+      const cameraTag = document.getElementById('camera-status-tag');
+      const reticle = document.getElementById('camera-overlay-reticle');
+      const video = document.getElementById('webcam-video');
+
+      // Card 5 Submit Elements
+      const submitCardTitle = document.getElementById('submit-card-title');
+      const submitCardSubtitle = document.getElementById('submit-card-subtitle');
+      const btnSubmitText = document.getElementById('btn-submit-text');
+      const submitInfoText = document.getElementById('submit-info-text');
+
+      if (isXII) {
+        // Mode Khusus Kelas 3 (XII): KEPERLUAN TKA (TES KOMPETENSI AKADEMIK) — BUKAN SCS LAGI
+        if (headerBadge) {
+          headerBadge.textContent = "KEPERLUAN TKA (TES KOMPETENSI AKADEMIK)";
+          headerBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-500/10 text-red-300 border border-red-500/30";
+        }
+        if (headerTitle) {
+          headerTitle.textContent = "Portal Upload Foto untuk Keperluan TKA";
+        }
+        if (headerSubtitle) {
+          headerSubtitle.textContent = "SMAN 1 Soppeng — Khusus Kelas 3 (Bukan SCS, Upload Foto Baju Putih Abu-Abu & Latar Merah)";
+        }
+
+        if (step1Subtitle) {
+          step1Subtitle.textContent = "Tentukan rombel kelas 3 untuk keperluan TKA";
+        }
+        if (step2Subtitle) {
+          step2Subtitle.textContent = "Cari nama siswa kelas 3 sesuai daftar peserta TKA";
+        }
+
+        if (step3Title) {
+          step3Title.textContent = "Verifikasi Status Foto TKA";
+        }
+        if (step3Subtitle) {
+          step3Subtitle.textContent = "Pengecekan otomatis di database TKA (Bukan SCS)";
+        }
+        if (statusIdleText) {
+          statusIdleText.textContent = "Pilih nama Anda di atas untuk memeriksa status upload foto untuk keperluan TKA (Tes Kompetensi Akademik).";
+        }
+        if (statusDoneTitle) {
+          statusDoneTitle.textContent = "Pas Foto TKA Terverifikasi";
+        }
+        if (statusDoneFooter) {
+          statusDoneFooter.textContent = "Pas foto tersimpan aman di database privat TKA SMAN 1 Soppeng.";
+        }
+        if (statusPendingTitle) {
+          statusPendingTitle.textContent = "Upload Foto TKA Terbuka";
+        }
+        if (statusPendingText) {
+          statusPendingText.textContent = "Khusus kelas 3, silakan upload file foto berseragam putih abu-abu dan latar merah untuk keperluan TKA di panel sebelah kanan.";
+        }
+
+        if (bannerSelfie) bannerSelfie.classList.add('hidden');
+        if (bannerXII) bannerXII.classList.remove('hidden');
+
+        if (studioTitle) studioTitle.textContent = "Upload Foto untuk Keperluan TKA (Tes Kompetensi Akademik)";
+        if (studioSubtitle) studioSubtitle.textContent = "Khusus Kelas 3: Upload foto baju putih abu-abu latar merah (Bukan SCS lagi / Bukan Foto Selfie)";
+
+        stopCamera();
+        if (video) video.classList.add('hidden');
+        if (reticle) reticle.classList.add('hidden');
+
+        if (!capturedBase64Image) {
+          if (cameraPlaceholder) cameraPlaceholder.classList.add('hidden');
+          if (placeholderXII) placeholderXII.classList.remove('hidden');
+        }
+
+        if (controlsStandard) controlsStandard.classList.add('hidden');
+        if (controlsXII) controlsXII.classList.remove('hidden');
+
+        if (cameraTag) {
+          cameraTag.textContent = "Mode Foto TKA (Bukan SCS)";
+          cameraTag.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-red-500/20 text-red-300 border border-red-500/40";
+        }
+
+        // Card 5 TKA Texts
+        if (submitCardTitle) submitCardTitle.textContent = "Kirim Foto Keperluan TKA";
+        if (submitCardSubtitle) submitCardSubtitle.textContent = "Simpan ke Google Drive & Database Berkas TKA SMAN 1 Soppeng (Bukan SCS)";
+        if (btnSubmitText) btnSubmitText.textContent = "Kirim Foto Ke Database TKA";
+        if (submitInfoText) {
+          submitInfoText.innerHTML = `<i class="fa-solid fa-graduation-cap mr-1 text-red-400"></i> Data foto akan tersimpan di Google Drive SMAN 1 Soppeng khusus untuk kelengkapan berkas Tes Kompetensi Akademik (TKA).`;
+        }
+
+      } else {
+        // Mode Standar (Kelas X, XI & Guru - Tetap Absensi SCS & Selfie Face Recognition)
+        if (headerBadge) {
+          headerBadge.textContent = "SCS PROVINSI SULAWESI SELATAN";
+          headerBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20";
+        }
+        if (headerTitle) {
+          headerTitle.textContent = "Portal Pengumpulan Foto Absensi SCS";
+        }
+        if (headerSubtitle) {
+          headerSubtitle.textContent = "SMAN 1 Soppeng — Integrasi Smart Controlling School";
+        }
+
+        if (step1Subtitle) {
+          step1Subtitle.textContent = "Tentukan kategori pengguna SCS";
+        }
+        if (step2Subtitle) {
+          step2Subtitle.textContent = "Cari nama sesuai daftar master SCS";
+        }
+
+        if (step3Title) {
+          step3Title.textContent = "Verifikasi Status Foto";
+        }
+        if (step3Subtitle) {
+          step3Subtitle.textContent = "Pengecekan otomatis di database SCS";
+        }
+        if (statusIdleText) {
+          statusIdleText.textContent = "Pilih nama Anda di atas untuk memeriksa status pengumpulan foto absensi.";
+        }
+        if (statusDoneTitle) {
+          statusDoneTitle.textContent = "Data Absensi SCS Terverifikasi";
+        }
+        if (statusDoneFooter) {
+          statusDoneFooter.textContent = "Foto tersimpan aman di database privat SCS admin SMAN 1 Soppeng.";
+        }
+        if (statusPendingTitle) {
+          statusPendingTitle.textContent = "Akses Kamera Terbuka";
+        }
+        if (statusPendingText) {
+          statusPendingText.textContent = "Silakan ambil foto selfie langsung di studio kamera di sebelah kanan.";
+        }
+
+        if (bannerSelfie) bannerSelfie.classList.remove('hidden');
+        if (bannerXII) bannerXII.classList.add('hidden');
+
+        if (studioTitle) studioTitle.textContent = "Studio Kamera Selfie (Portrait 3:4)";
+        if (studioSubtitle) studioSubtitle.textContent = "Foto resolusi 2K Quad HD (1440p), terkompresi maks 700 KB (JPEG)";
+
+        if (placeholderXII) placeholderXII.classList.add('hidden');
+        if (!capturedBase64Image && !mediaStream) {
+          if (cameraPlaceholder) cameraPlaceholder.classList.remove('hidden');
+        }
+
+        if (controlsStandard) controlsStandard.classList.remove('hidden');
+        if (controlsXII) controlsXII.classList.add('hidden');
+
+        if (!mediaStream && cameraTag) {
+          cameraTag.textContent = "Kamera Off";
+          cameraTag.className = "px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700";
+        }
+
+        // Card 5 SCS Texts
+        if (submitCardTitle) submitCardTitle.textContent = "Kirim Data Foto";
+        if (submitCardSubtitle) submitCardSubtitle.textContent = "Simpan ke Google Drive & Database SCS SMAN 1 Soppeng";
+        if (btnSubmitText) btnSubmitText.textContent = "Kirim Foto Ke Database SCS";
+        if (submitInfoText) {
+          submitInfoText.innerHTML = `<i class="fa-solid fa-lock mr-1"></i> Data foto akan tersimpan di Google Drive SMAN 1 Soppeng dengan penamaan otomatis &lt;NISN /NIP&gt;.jpg.`;
+        }
+      }
+    }
+
     function onClassChanged(overrideCls) {
       const select = document.getElementById('select-class');
       currentSelectedClass = overrideCls || select.value;
+
+      const isXII = (currentCategory === 'Siswa' && isGradeXII(currentSelectedClass));
 
       // Update badge
       const badge = document.getElementById('selected-class-badge');
       if (badge) {
         if (currentSelectedClass) {
           badge.textContent = `Kelas ${currentSelectedClass}`;
-          badge.className = "px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shadow-sm";
+          badge.className = isXII
+            ? "px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-red-500/20 text-red-300 border border-red-500/40 shadow-sm"
+            : "px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shadow-sm";
         } else {
           badge.textContent = "Belum Pilih Kelas";
           badge.className = "px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-slate-800 text-slate-400 border border-slate-700";
         }
       }
 
+      updateStudioForGradeXII(isXII);
       clearSelectedPerson();
       fetchNamesForSelectedGroup();
+    }
+
+    function focusClassXIISelection() {
+      if (currentCategory !== 'Siswa') {
+        switchCategory('Siswa');
+      }
+      const select = document.getElementById('select-class');
+      if (!currentSelectedClass || !isGradeXII(currentSelectedClass)) {
+        select.value = 'XII-1';
+        onClassChanged('XII-1');
+      }
+      const container = document.getElementById('class-selection-container');
+      if (container) {
+        container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      select.focus();
     }
 
     function checkApiStatus() {
@@ -1076,12 +1454,14 @@
         tabSiswa.className = "py-2.5 px-4 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2";
         tabGuru.className = "py-2.5 px-4 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 text-slate-400 hover:text-white flex items-center justify-center gap-2";
         classContainer.classList.remove('hidden');
+        updateStudioForGradeXII(isGradeXII(currentSelectedClass));
         clearSelectedPerson();
       } else {
         tabGuru.className = "py-2.5 px-4 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2";
         tabSiswa.className = "py-2.5 px-4 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 text-slate-400 hover:text-white flex items-center justify-center gap-2";
         classContainer.classList.add('hidden');
         currentSelectedClass = 'Guru_Staf';
+        updateStudioForGradeXII(false);
         clearSelectedPerson();
         fetchNamesForSelectedGroup();
       }
@@ -1295,9 +1675,23 @@
         stopCamera();
         disableSubmissionControls();
       } else {
-        // UNLOCK CAMERA & ENABLE STUDIO
+        // UNLOCK STUDIO
         boxPending.classList.remove('hidden');
-        initCamera();
+
+        const targetClass = person.class_role || currentSelectedClass;
+        const isXII = (currentCategory === 'Siswa' && isGradeXII(targetClass));
+        updateStudioForGradeXII(isXII);
+
+        if (isXII) {
+          // KELAS XII: BUKAN FOTO SELFIE! NONAKTIFKAN KAMERA LIVE & TAMPILKAN PLACEHOLDER PAS FOTO
+          stopCamera();
+          document.getElementById('webcam-video').classList.add('hidden');
+          document.getElementById('camera-placeholder').classList.add('hidden');
+          document.getElementById('placeholder-class-xii').classList.remove('hidden');
+        } else {
+          // KELAS X & XI & GURU: SELFIE CLOSE-UP DENGAN KAMERA LIVE
+          initCamera();
+        }
       }
     }
 
@@ -1401,7 +1795,7 @@
 
     function compressImageToBase64(imageOrCanvas, maxKb = 700) {
       const maxBytes = maxKb * 1024;
-
+      
       // Resolution 3:4 Portrait 2K Quad HD 1440p (1440x1920)
       let targetW = 1440;
       let targetH = 1920;
@@ -1493,7 +1887,18 @@
       document.getElementById('image-preview').classList.add('hidden');
       document.getElementById('compressed-size-tag').classList.add('hidden');
       document.getElementById('btn-submit-photo').disabled = true;
-      initCamera();
+
+      const targetClass = selectedPerson ? (selectedPerson.class_role || currentSelectedClass) : currentSelectedClass;
+      const isXII = (currentCategory === 'Siswa' && isGradeXII(targetClass));
+
+      if (isXII) {
+        document.getElementById('placeholder-class-xii').classList.remove('hidden');
+        const retakeXII = document.getElementById('btn-retake-xii');
+        if (retakeXII) retakeXII.disabled = true;
+      } else {
+        document.getElementById('btn-retake').disabled = true;
+        initCamera();
+      }
     }
 
     function handleFileUpload(event) {
@@ -1514,11 +1919,14 @@
 
           document.getElementById('webcam-video').classList.add('hidden');
           document.getElementById('camera-placeholder').classList.add('hidden');
+          document.getElementById('placeholder-class-xii').classList.add('hidden');
 
           stopCamera();
 
           document.getElementById('btn-capture').disabled = true;
           document.getElementById('btn-retake').disabled = false;
+          const retakeXII = document.getElementById('btn-retake-xii');
+          if (retakeXII) retakeXII.disabled = false;
 
           const kbTag = document.getElementById('compressed-size-tag');
           const kbVal = document.getElementById('img-kb-size');
@@ -1540,6 +1948,8 @@
       document.getElementById('btn-capture').disabled = true;
       document.getElementById('btn-switch-cam').disabled = true;
       document.getElementById('btn-retake').disabled = true;
+      const retakeXII = document.getElementById('btn-retake-xii');
+      if (retakeXII) retakeXII.disabled = true;
       document.getElementById('btn-submit-photo').disabled = true;
     }
 
@@ -1606,10 +2016,14 @@
 
         setTimeout(() => {
           progressContainer.classList.add('hidden');
-          showToastModal(
-            "Pengunggahan Berhasil!",
-            `Foto selfie untuk ${selectedPerson.full_name} (${selectedPerson.nisn_nip}) telah disimpan ke Google Drive SCS & terverifikasi 100% di database.`
-          );
+
+          const isXII = (currentCategory === 'Siswa' && isGradeXII(selectedPerson.class_role || currentSelectedClass));
+          const toastTitle = isXII ? "Upload Foto TKA Berhasil!" : "Pengunggahan Berhasil!";
+          const toastMsg = isXII 
+            ? `Foto untuk keperluan TKA (Tes Kompetensi Akademik) khusus kelas 3 siswa ${selectedPerson.full_name} (${selectedPerson.nisn_nip}) telah disimpan ke Google Drive & terverifikasi 100% di database TKA SMAN 1 Soppeng.`
+            : `Foto selfie untuk ${selectedPerson.full_name} (${selectedPerson.nisn_nip}) telah disimpan ke Google Drive SCS & terverifikasi 100% di database absensi SCS.`;
+
+          showToastModal(toastTitle, toastMsg);
 
           selectedPerson.photo_status = 'Done';
           verifyPersonStatus(selectedPerson);
@@ -1697,7 +2111,7 @@
                 completeUploadSuccess(finalJson.timestamp);
                 return;
               }
-            } catch (e) { }
+            } catch (e) {}
 
             isUploadFinished = true;
             clearInterval(progressInterval);
@@ -1834,22 +2248,45 @@
 
       badge.textContent = `Terdeteksi ${unuploaded.length} Siswa Belum Upload di Kelas ${cls}`;
 
+      const isXII = isGradeXII(cls);
+
       if (unuploaded.length === 0) {
-        previewTextarea.value = `🎉 Hore! Seluruh siswa di Kelas ${cls} SUDAH MENGUNGGAH foto absensi SCS 100%.`;
+        previewTextarea.value = isXII 
+          ? `🎉 Hore! Seluruh siswa di Kelas ${cls} SUDAH MENGUNGGAH foto untuk keperluan TKA 100%.`
+          : `🎉 Hore! Seluruh siswa di Kelas ${cls} SUDAH MENGUNGGAH foto absensi SCS 100%.`;
         return;
       }
 
-      let waText = `📢 *PENGUMUMAN PENGUMPULAN FOTO ABSENSI SCS*\n`;
-      waText += `🏫 *SMAN 1 SOPPENG — KELAS ${cls}*\n`;
+      let waText = isXII 
+        ? `📢 *PENGUMUMAN PENGUMPULAN FOTO UNTUK KEPERLUAN TKA (TES KOMPETENSI AKADEMIK)*\n`
+        : `📢 *PENGUMUMAN PENGUMPULAN FOTO ABSENSI SCS*\n`;
+
+      waText += isXII
+        ? `🏫 *SMAN 1 SOPPENG — KHUSUS KELAS 3 (${cls})*\n`
+        : `🏫 *SMAN 1 SOPPENG — KELAS ${cls}*\n`;
       waText += `-----------------------------------------\n`;
-      waText += `Diberitahukan kepada siswa(i) yang *BELUM* mengunggah foto selfie absensi SCS:\n\n`;
+
+      waText += isXII 
+        ? `Diberitahukan kepada siswa(i) Kelas 3 yang *BELUM* mengunggah foto untuk keperluan *Tes Kompetensi Akademik (TKA)* (Bukan SCS / Bukan Foto Selfie):\n\n`
+        : `Diberitahukan kepada siswa(i) yang *BELUM* mengunggah foto selfie absensi SCS:\n\n`;
 
       unuploaded.forEach((p, idx) => {
         const cleanNisn = normalizeNisn(p.nisn_nip, 'Siswa');
         waText += `${idx + 1}. *${p.full_name}* (NISN: ${cleanNisn})\n`;
       });
 
-      waText += `\n📌 *Mohon segera melakukan unggah foto selfie CLOSE-UP (Wajah terlihat utuh & jelas agar dikenali Face Recognition SCS) melalui link berikut:*\n`;
+      if (isXII) {
+        waText += `\n🚨 *KETENTUAN KHUSUS KELAS 3 (BUKAN SCS / BUKAN SELFIE):*\n`;
+        waText += `Khusus siswa kelas 3, keterangannya adalah *UPLOAD FOTO UNTUK KEPERLUAN TKA (TES KOMPETENSI AKADEMIK)*, jadi *BUKAN SCS LAGI*. Siswa kelas 3 wajib mengunggah file pas foto formal dengan ketentuan:\n`;
+        waText += `1. 👔 *Mengenakan Baju Seragam Putih Abu-Abu Rapi* (Lengkap dengan atribut dasi & logo sekolah).\n`;
+        waText += `2. 🔴 *LATAR BELAKANG / BACKGROUND MERAH POLOS* (Standar pas foto resmi ijazah & kartu ujian TKA).\n`;
+        waText += `3. 🧍‍♂️ *Pose Pas Foto Formal* (Menghadap tegak lurus ke depan, bukan foto gaya bebas/selfie).\n`;
+        waText += `4. 📸 *Format Portrait 3:4 & Wajah Terlihat Terang/Jelas*.\n\n`;
+        waText += `*(Catatan: Untuk kelas X dan XI tetap absensi SCS foto selfie)*.\n\n`;
+        waText += `📌 *Silakan upload file foto TKA Anda melalui link berikut:*\n`;
+      } else {
+        waText += `\n📌 *Mohon segera melakukan unggah foto selfie CLOSE-UP (Wajah terlihat utuh & jelas agar dikenali Face Recognition SCS) melalui link berikut:*\n`;
+      }
       waText += `${window.location.href.split('#')[0]}\n`;
       waText += `-----------------------------------------\n`;
       waText += `Terima kasih atas kerjasamanya.`;
@@ -1964,7 +2401,7 @@
       const waPreviewEl = document.getElementById('admin-recap-wa-preview');
 
       timeTag.textContent = `Sinkronisasi: ${data.timestamp || 'Realtime'}`;
-
+      
       const st = data.overallStudent || { total: 0, done: 0, pending: 0, percentage: 0 };
       const tc = data.teacherStats || { total: 0, done: 0, pending: 0, percentage: 0 };
 
@@ -1980,9 +2417,9 @@
 
       // Render 3 Tiers (X, XI, XII)
       const tiers = [
-        { name: "🎓 Tingkat Kelas X", prefix: "X-" },
-        { name: "⚡ Tingkat Kelas XI", prefix: "XI-" },
-        { name: "🏆 Tingkat Kelas XII", prefix: "XII-" }
+        { name: "🎓 Tingkat Kelas X (Foto Selfie SCS)", prefix: "X-" },
+        { name: "⚡ Tingkat Kelas XI (Foto Selfie SCS)", prefix: "XI-" },
+        { name: "🏆 Tingkat Kelas XII / 3 (Pas Foto TKA)", prefix: "XII-" }
       ];
 
       let html = '';
@@ -2011,10 +2448,10 @@
         tierClasses.forEach(c => {
           const cs = (data.classes && data.classes[c]) ? data.classes[c] : { total: 0, done: 0, pending: 0, percentage: 0 };
           const isComplete = cs.total > 0 && cs.done >= cs.total;
-          const statusBadgeClass = isComplete
-            ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
-            : cs.done > 0
-              ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/30"
+          const statusBadgeClass = isComplete 
+            ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30" 
+            : cs.done > 0 
+              ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/30" 
               : "bg-amber-500/20 text-amber-300 border-amber-500/30";
 
           html += `
@@ -2039,8 +2476,8 @@
       breakdownContainer.innerHTML = html;
 
       // Build WhatsApp Recap Text
-      let wa = `📊 *REKAPITULASI PROGRES PENGUMPULAN FOTO ABSENSI SCS*\n`;
-      wa += `🏫 *SMAN 1 SOPPENG*\n`;
+      let wa = `📊 *REKAPITULASI PROGRES PENGUMPULAN FOTO SEKOLAH*\n`;
+      wa += `🏫 *SMAN 1 SOPPENG (SCS & TKA KELAS 3)*\n`;
       wa += `📅 *Update:* ${data.timestamp || 'Realtime'}\n`;
       wa += `-----------------------------------------\n`;
       wa += `📈 *TOTAL KEMAJUAN SEKOLAH:*\n`;
@@ -2061,10 +2498,10 @@
       });
 
       wa += `=========================================\n`;
-      wa += `📌 *Portal Pengumpulan Foto Selfie SCS:*\n`;
+      wa += `📌 *Portal Pengumpulan Foto Absensi SCS (Kelas X & XI) & Pas Foto TKA (Kelas 3):*\n`;
       wa += `${window.location.href.split('#')[0]}\n`;
       wa += `-----------------------------------------\n`;
-      wa += `Mohon bantuan Bapak/Ibu Wali Kelas untuk terus mengarahkan siswa yang belum upload agar absensi SCS sekolah dapat tuntas 100%. Terima kasih. 🙏`;
+      wa += `Mohon bantuan Bapak/Ibu Wali Kelas untuk terus mengarahkan siswa yang belum upload agar pengumpulan foto dapat tuntas 100%. Terima kasih. 🙏`;
 
       waPreviewEl.value = wa;
     }
