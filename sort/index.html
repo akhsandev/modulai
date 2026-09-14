@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SORTING LAB — Think. Drag. Sort. Prove It.</title>
+  <meta name="description" content="Aplikasi Web Edukasi Interaktif Pembelajaran Sorting Algorithm SMA berbentuk Game Viewport UI.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Firebase Web SDK Compat CDN -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <!-- Ambient Dynamic Background Canvas / Particle Layer -->
+  <div id="bg-canvas-container" class="bg-canvas-container">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- PORTRAIT OVERLAY FOR MOBILE DEVICES -->
+  <div id="portrait-warning" class="portrait-overlay hidden">
+    <div class="portrait-card glass-panel">
+      <div class="rotate-icon-wrapper">
+        <i data-lucide="rotate-ccw"></i>
+      </div>
+      <h2>Please Rotate Your Device</h2>
+      <p>Sorting Lab dirancang untuk pengalaman optimal pada mode landscape.</p>
+    </div>
+  </div>
+
+  <!-- APP CONTAINER (100vw, 100vh viewport) -->
+  <div id="app" class="app-viewport">
+
+    <!-- GLOBAL GAME TOP HUD BAR (Appears on secondary screens) -->
+    <header id="global-hud" class="global-hud glass-panel hidden">
+      <div class="hud-left">
+        <button id="btn-hud-back" class="btn-icon" title="Kembali ke Menu Utama">
+          <i data-lucide="arrow-left"></i>
+        </button>
+        <div class="brand-badge">
+          <span class="brand-text">SORTING LAB</span>
+          <span id="hud-algorithm-badge" class="mode-badge">BUBBLE SORT</span>
+        </div>
+      </div>
+
+      <div class="hud-center" id="hud-stats-container">
+        <div class="hud-stat">
+          <i data-lucide="footprints" class="stat-icon"></i>
+          <span class="stat-label">MOVES:</span>
+          <span id="hud-moves-count" class="stat-val">00</span>
+        </div>
+        <div class="hud-stat">
+          <i data-lucide="arrow-right-left" class="stat-icon"></i>
+          <span class="stat-label">SWAPS:</span>
+          <span id="hud-swaps-count" class="stat-val">00</span>
+        </div>
+        <div class="hud-stat">
+          <i data-lucide="timer" class="stat-icon"></i>
+          <span class="stat-label">TIME:</span>
+          <span id="hud-timer" class="stat-val">00:00</span>
+        </div>
+      </div>
+
+      <div class="hud-right">
+        <div class="player-profile-badge">
+          <i data-lucide="user-check" class="profile-icon"></i>
+          <span id="hud-student-name">Siswa CS</span>
+        </div>
+
+        <!-- TEACHER / ADMIN AUTH CONTROLS -->
+        <div id="hud-admin-badge-container" class="admin-badge-container">
+          <button id="btn-open-admin-login" class="btn-admin-login-pill">
+            <i data-lucide="lock"></i>
+            <span>LOGIN GURU</span>
+          </button>
+          <div id="hud-admin-active-tag" class="admin-active-tag hidden">
+            <i data-lucide="shield-check"></i>
+            <span>MODE ADMIN</span>
+            <button id="btn-admin-logout" class="btn-mini-logout">Logout</button>
+          </div>
+        </div>
+
+        <button id="btn-sound-toggle" class="btn-icon" title="Toggle Sound FX">
+          <i data-lucide="volume-2" id="sound-icon"></i>
+        </button>
+        <button id="btn-open-settings" class="btn-icon" title="Pengaturan">
+          <i data-lucide="settings"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- ==================== SCREEN 1: MAIN MENU ==================== -->
+    <section id="screen-menu" class="screen active">
+      <div class="menu-container">
+        
+        <!-- Header Logo Area -->
+        <div class="menu-hero">
+          <div class="logo-badge-container">
+            <div class="logo-glow"></div>
+            <div class="logo-icon-box">
+              <i data-lucide="arrow-up-narrow-wide"></i>
+            </div>
+          </div>
+          <h1 class="game-title">SORTING <span class="highlight-text">LAB</span></h1>
+          <p class="game-tagline">THINK. DRAG. SORT. PROVE IT.</p>
+        </div>
+
+        <!-- Bento Grid Game Options -->
+        <div class="bento-menu-grid">
+          
+          <!-- Card 1: Play Challenge -->
+          <div id="btn-menu-play" class="bento-card glass-panel ripple-target">
+            <div class="card-glow purple-glow"></div>
+            <div class="bento-content">
+              <div class="bento-icon-wrapper purple">
+                <i data-lucide="gamepad-2"></i>
+              </div>
+              <div class="bento-text">
+                <h3>SOLO PRACTICE</h3>
+                <p>Latihan mandiri 5 algoritma sorting interaktif.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Multiplayer Arena -->
+          <div id="btn-menu-multiplayer" class="bento-card bento-hero glass-panel ripple-target">
+            <div class="card-glow blue-glow"></div>
+            <div class="bento-content">
+              <div class="bento-icon-wrapper blue">
+                <i data-lucide="zap"></i>
+              </div>
+              <div class="bento-text">
+                <h2>MULTIPLAYER ARENA</h2>
+                <p>Adu kecepatan sorting real-time antar siswa di kelas! (Maks 5 Players/Room)</p>
+              </div>
+              <div class="bento-action">
+                <span class="action-btn-text">MASUK LOBBY</span>
+                <i data-lucide="chevron-right"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: How to Play -->
+          <div id="btn-menu-how" class="bento-card glass-panel ripple-target">
+            <div class="card-glow cyan-glow"></div>
+            <div class="bento-content">
+              <div class="bento-icon-wrapper blue">
+                <i data-lucide="help-circle"></i>
+              </div>
+              <div class="bento-text">
+                <h3>HOW TO PLAY</h3>
+                <p>Panduan singkat 4 langkah cara bermain & menyelesaikan misi.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Learn Algorithms -->
+          <div id="btn-menu-learn" class="bento-card glass-panel ripple-target">
+            <div class="card-glow green-glow"></div>
+            <div class="bento-content">
+              <div class="bento-icon-wrapper green">
+                <i data-lucide="book-open"></i>
+              </div>
+              <div class="bento-text">
+                <h3>LEARN ALGORITHMS</h3>
+                <p>Pelajari konsep & logika 5 algoritma sorting interaktif.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5: Progress & Teacher Review -->
+          <div id="btn-menu-progress" class="bento-card glass-panel ripple-target">
+            <div class="card-glow orange-glow"></div>
+            <div class="bento-content">
+              <div class="bento-icon-wrapper orange">
+                <i data-lucide="award"></i>
+              </div>
+              <div class="bento-text">
+                <h3>PROGRESS & REVIEW</h3>
+                <p>Lihat riwayat latihan, hasil verifikasi & nilai dari Guru.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 6: Settings -->
+          <div id="btn-menu-settings" class="bento-card glass-panel ripple-target">
+            <div class="card-glow pink-glow"></div>
+            <div class="bento-content">
+              <div class="bento-icon-wrapper pink">
+                <i data-lucide="sliders"></i>
+              </div>
+              <div class="bento-text">
+                <h3>SETTINGS</h3>
+                <p>Atur nama siswa, efek suara audio & reset data lokal.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Menu Footer / Student Status -->
+        <div class="menu-footer">
+          <span class="version-tag">Sorting Lab v2.6 CS-HighSchool Edition</span>
+          <div class="student-prompt-badge" id="btn-prompt-name">
+            <i data-lucide="user-check"></i>
+            <span>Nama Siswa: <strong id="menu-student-name-display">Siswa CS</strong></span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== SCREEN 2: SELECT ALGORITHM ==================== -->
+    <section id="screen-select" class="screen hidden">
+      <div class="screen-container">
+        
+        <div class="screen-header">
+          <h2 class="screen-title">PILIH ALGORITMA SORTING</h2>
+          <p class="screen-subtitle">Pilih salah satu dari 5 algoritma berikut untuk memulai tantangan sorting manual.</p>
+        </div>
+
+        <div class="algo-cards-grid">
+          
+          <!-- Bubble Sort -->
+          <div class="algo-card glass-panel purple" data-algo="bubble">
+            <div class="card-badge easy">EASY</div>
+            <div class="algo-card-icon purple">
+              <i data-lucide="sparkles"></i>
+            </div>
+            <h3 class="algo-title">Bubble Sort</h3>
+            <p class="algo-desc">Bandingkan elemen bersebelahan dan tukar jika posisinya salah hingga elemen terbesar mengapung ke ujung.</p>
+            <div class="algo-meta">
+              <span>Time: <code>O(n²)</code></span>
+              <span>Space: <code>O(1)</code></span>
+            </div>
+            <button class="btn-select-algo purple" data-algo="bubble">
+              <span>SELECT</span>
+              <i data-lucide="arrow-right"></i>
+            </button>
+          </div>
+
+          <!-- Selection Sort -->
+          <div class="algo-card glass-panel blue" data-algo="selection">
+            <div class="card-badge easy">EASY</div>
+            <div class="algo-card-icon blue">
+              <i data-lucide="mouse-pointer-click"></i>
+            </div>
+            <h3 class="algo-title">Selection Sort</h3>
+            <p class="algo-desc">Cari elemen terkecil dari bagian belum terurut, lalu tukar ke posisi paling awal bagian tersebut.</p>
+            <div class="algo-meta">
+              <span>Time: <code>O(n²)</code></span>
+              <span>Space: <code>O(1)</code></span>
+            </div>
+            <button class="btn-select-algo blue" data-algo="selection">
+              <span>SELECT</span>
+              <i data-lucide="arrow-right"></i>
+            </button>
+          </div>
+
+          <!-- Insertion Sort -->
+          <div class="algo-card glass-panel green" data-algo="insertion">
+            <div class="card-badge medium">MEDIUM</div>
+            <div class="algo-card-icon green">
+              <i data-lucide="arrow-down-to-line"></i>
+            </div>
+            <h3 class="algo-title">Insertion Sort</h3>
+            <p class="algo-desc">Sisipkan setiap elemen ke posisi yang tepat pada sub-array kiri yang sudah terurut secara bertahap.</p>
+            <div class="algo-meta">
+              <span>Time: <code>O(n²)</code></span>
+              <span>Space: <code>O(1)</code></span>
+            </div>
+            <button class="btn-select-algo green" data-algo="insertion">
+              <span>SELECT</span>
+              <i data-lucide="arrow-right"></i>
+            </button>
+          </div>
+
+          <!-- Merge Sort -->
+          <div class="algo-card glass-panel orange" data-algo="merge">
+            <div class="card-badge hard">HARD</div>
+            <div class="algo-card-icon orange">
+              <i data-lucide="git-merge"></i>
+            </div>
+            <h3 class="algo-title">Merge Sort</h3>
+            <p class="algo-desc">Bagi data menjadi dua bagian (Divide), urutkan masing-masing sub-array, lalu gabungkan kembali (Merge).</p>
+            <div class="algo-meta">
+              <span>Time: <code>O(n log n)</code></span>
+              <span>Space: <code>O(n)</code></span>
+            </div>
+            <button class="btn-select-algo orange" data-algo="merge">
+              <span>SELECT</span>
+              <i data-lucide="arrow-right"></i>
+            </button>
+          </div>
+
+          <!-- Quick Sort -->
+          <div class="algo-card glass-panel pink" data-algo="quick">
+            <div class="card-badge hard">HARD</div>
+            <div class="algo-card-icon pink">
+              <i data-lucide="zap"></i>
+            </div>
+            <h3 class="algo-title">Quick Sort</h3>
+            <p class="algo-desc">Pilih elemen Pivot, partisi data sehingga elemen &lt; pivot di kiri dan &gt; pivot di kanan, lalu ulangi rekurstif.</p>
+            <div class="algo-meta">
+              <span>Time: <code>O(n log n)</code></span>
+              <span>Space: <code>O(log n)</code></span>
+            </div>
+            <button class="btn-select-algo pink" data-algo="quick">
+              <span>SELECT</span>
+              <i data-lucide="arrow-right"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== SCREEN 3: GAME SETUP ==================== -->
+    <section id="screen-setup" class="screen hidden">
+      <div class="screen-container center-content">
+        
+        <div class="setup-box glass-panel">
+          <div class="setup-header">
+            <div id="setup-algo-icon" class="algo-icon-large purple">
+              <i data-lucide="sparkles"></i>
+            </div>
+            <div>
+              <h2 id="setup-algo-title">BUBBLE SORT</h2>
+              <p id="setup-algo-subtitle">Tujuan: Urutkan angka dari terkecil hingga terbesar.</p>
+            </div>
+          </div>
+
+          <div class="setup-body">
+            
+            <!-- Option 1: Number Count -->
+            <div class="setup-option-group">
+              <label class="option-label">
+                <i data-lucide="list-ordered"></i>
+                <span>Jumlah Angka (Data Count):</span>
+              </label>
+              <div class="segmented-control" id="control-count">
+                <button class="segment-btn active" data-val="5">5 Angka</button>
+                <button class="segment-btn" data-val="7">7 Angka</button>
+                <button class="segment-btn" data-val="10">10 Angka</button>
+              </div>
+            </div>
+
+            <!-- Option 2: Data Condition -->
+            <div class="setup-option-group">
+              <label class="option-label">
+                <i data-lucide="shuffle"></i>
+                <span>Kondisi Data Awal:</span>
+              </label>
+              <div class="segmented-control" id="control-condition">
+                <button class="segment-btn active" data-val="random">Acak (Random)</button>
+                <button class="segment-btn" data-val="nearly">Hampir Terurut</button>
+                <button class="segment-btn" data-val="reverse">Terbalik (Reversed)</button>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="setup-footer">
+            <button id="btn-start-challenge" class="btn-primary-gradient">
+              <i data-lucide="play-circle"></i>
+              <span>START SORTING CHALLENGE</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== SCREEN 4: SORTING ARENA (MAIN GAMEPLAY) ==================== -->
+    <section id="screen-arena" class="screen hidden">
+      <div class="arena-viewport">
+        
+        <!-- Arena Guidance Strip / Target Description -->
+        <div class="arena-instruction-bar glass-panel">
+          <div class="instruction-content">
+            <i data-lucide="info" class="info-icon"></i>
+            <span id="arena-instruction-text">Drag angka dan pindahkan ke slot baru untuk mengurutkannya dari TERKECIL ke TERBESAR.</span>
+          </div>
+          <div class="arena-algo-tag" id="arena-algo-tag">
+            <span>BUBBLE SORT</span>
+          </div>
+        </div>
+                <!-- Live Opponent Progress Panel (Multiplayer Mode Only) -->
+        <div id="arena-multiplayer-hud" class="arena-multiplayer-hud glass-panel hidden">
+          <div class="multiplayer-hud-title">
+            <i data-lucide="users"></i>
+            <span>MATCH RACE PROGRESS</span>
+          </div>
+          <div id="multiplayer-opponents-list" class="multiplayer-opponents-list">
+            <!-- Dynamic opponent progress bars -->
+          </div>
+        </div>
+
+        <!-- Main Workspace Area -->
+        <div class="arena-workspace">
+          
+          <!-- Quick Pivot / Sub-array Helper Bar (for Merge & Quick Sort) -->
+          <div id="arena-sub-helper" class="sub-helper-bar hidden">
+            <div class="helper-badge" id="helper-badge-text">Pointers & Sub-arrays</div>
+            <div id="helper-indicators-container" class="indicators-container"></div>
+          </div>
+
+          <!-- THE DRAG & DROP ARENA CONTAINER -->
+          <div id="sorting-arena-cards" class="sorting-arena-cards">
+            <!-- Dynamic floating glass cards generated via JS -->
+          </div>
+
+          <!-- Drop Target Slots Visual Guide -->
+          <div id="arena-slots-bg" class="arena-slots-bg">
+            <!-- Dynamic slots indicator -->
+          </div>
+
+        </div>
+
+        <!-- Compact Bottom Control Bar & Floating Move History -->
+        <div class="arena-bottom-bar">
+          
+          <!-- History Drawer Toggle / Compact History Log -->
+          <div class="compact-history-panel glass-panel">
+            <div class="history-panel-header">
+              <i data-lucide="history"></i>
+              <span>MOVE HISTORY</span>
+              <span id="history-count-badge" class="badge-mini">0</span>
+            </div>
+            <div id="history-log-list" class="history-log-list">
+              <div class="history-empty">Belum ada langkah diambil</div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="arena-action-buttons">
+            <button id="btn-arena-undo" class="btn-secondary-glass" title="Batalkan langkah terakhir">
+              <i data-lucide="undo-2"></i>
+              <span>UNDO</span>
+            </button>
+
+            <button id="btn-arena-reset" class="btn-secondary-glass" title="Reset array ke kondisi awal">
+              <i data-lucide="rotate-ccw"></i>
+              <span>RESET</span>
+            </button>
+
+            <button id="btn-arena-verify" class="btn-success-gradient glow-btn">
+              <i data-lucide="check-circle-2"></i>
+              <span>SELESAI & VERIFIKASI</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== SCREEN 5: MULTIPLAYER LOBBY ==================== -->
+    <section id="screen-multiplayer-lobby" class="screen hidden">
+      <div class="lobby-viewport">
+        <div class="lobby-header glass-panel">
+          <div class="lobby-title-box">
+            <i data-lucide="zap" id="lobby-header-icon" class="lobby-icon"></i>
+            <div>
+              <h2 id="lobby-browser-title">MULTIPLAYER MATCH BROWSER</h2>
+              <p id="lobby-browser-subtitle">Pilih Room terbuka yang dibuat oleh Guru untuk bergabung dalam pertandingan (Maksimal 5 Players/Room).</p>
+            </div>
+          </div>
+          <div class="teacher-auth-controls">
+            <button id="btn-create-room-trigger" class="btn-primary-gradient hidden">
+              <i data-lucide="plus-circle"></i>
+              <span>BUAT ROOM BARU (GURU)</span>
+            </button>
+            <button id="btn-login-guru-lobby" class="btn-secondary-glass">
+              <i data-lucide="lock"></i>
+              <span>LOGIN GURU / ADMIN</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="rooms-container">
+          <div id="multiplayer-rooms-empty" class="rooms-empty glass-panel hidden">
+            <i data-lucide="ghost"></i>
+            <h3 id="empty-rooms-title">Belum ada Room Terbuka</h3>
+            <p id="empty-rooms-desc">Menunggu Guru membuat room pertandingan kelas baru...</p>
+          </div>
+          <div id="multiplayer-rooms-list" class="multiplayer-rooms-grid">
+            <!-- Dynamic room cards -->
+          </div>
+        </div>
+
+        <div class="lobby-footer">
+          <button id="btn-back-from-multiplayer" class="btn-secondary-glass">
+            <i data-lucide="arrow-left"></i>
+            <span>KEMBALI KE MENU</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==================== SCREEN 6: TEACHER SPECTATOR DASHBOARD ==================== -->
+    <section id="screen-teacher-spectator" class="screen hidden">
+      <div class="spectator-viewport">
+        <div class="spectator-header glass-panel">
+          <div class="spectator-title-box">
+            <i data-lucide="eye" class="spectator-icon"></i>
+            <div>
+              <h2 id="spectator-room-title">TEACHER LIVE SPECTATOR DASHBOARD</h2>
+              <p id="spectator-room-meta">MONITORING DERETAN KARTU & PROGRESS SISWA REAL-TIME</p>
+            </div>
+          </div>
+          <button id="btn-spectator-close" class="btn-danger-glass">
+            <i data-lucide="x-circle"></i>
+            <span>AKHIRI SPECTATOR MODE</span>
+          </button>
+        </div>
+
+        <div id="spectator-students-grid" class="spectator-students-grid">
+          <!-- Dynamic 5 Student Live Monitoring Cards -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==================== MODAL: TEACHER LOGIN ==================== -->
+    <div id="modal-teacher-login" class="modal-backdrop hidden">
+      <div class="modal-card glass-panel bento-modal auth-modal">
+        <div class="modal-header">
+          <h2><i data-lucide="lock" class="title-icon green"></i> LOGIN GURU / ADMIN</h2>
+          <button class="btn-modal-close btn-icon" data-modal="modal-teacher-login">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="settings-body">
+          <p class="auth-intro-text">Masukkan Email dan Password Guru untuk mengontrol room pertandingan multiplayer kelas.</p>
+
+          <div id="teacher-login-error" class="status-banner banner-danger hidden" style="margin-bottom: 12px; padding: 10px;">
+            <span id="teacher-login-error-text">Email atau Password Guru salah!</span>
+          </div>
+
+          <div class="setting-item flex-col">
+            <label for="teacher-login-email">Email Guru:</label>
+            <input type="email" id="teacher-login-email" class="input-glass" placeholder="guru@sortinglab.com" value="guru@sortinglab.com">
+          </div>
+
+          <div class="setting-item flex-col">
+            <label for="teacher-login-pass">Password Guru:</label>
+            <input type="password" id="teacher-login-pass" class="input-glass" placeholder="guru123" value="guru123">
+          </div>
+          
+          <p class="auth-hint">Default Login Guru: <strong>guru@sortinglab.com</strong> / <strong>guru123</strong></p>
+        </div>
+
+        <div class="modal-footer">
+          <button id="btn-submit-teacher-login" class="btn-primary-gradient">
+            <i data-lucide="key-round"></i>
+            <span>LOGIN GURU</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== MODAL 6: CREATE ROOM MODAL ==================== -->
+    <div id="modal-create-room" class="modal-backdrop hidden">
+      <div class="modal-card glass-panel bento-modal">
+        <div class="modal-header">
+          <h2><i data-lucide="plus-square"></i> BUAT ROOM MULTIPLAYER BARU</h2>
+          <button class="btn-modal-close btn-icon" data-modal="modal-create-room">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="settings-body">
+          <div class="setting-item">
+            <div>
+              <h4>Nama Room Pertandingan</h4>
+              <p>Misal: Kelas 10-A Match 1</p>
+            </div>
+            <input type="text" id="input-room-name" class="input-glass" placeholder="Nama Room..." value="Kelas 10-A Race">
+          </div>
+
+          <div class="setting-item">
+            <div>
+              <h4>Algoritma Sorting</h4>
+              <p>Algoritma yang akan dilatih dalam room ini.</p>
+            </div>
+            <select id="select-room-algo" class="input-glass">
+              <option value="bubble">Bubble Sort</option>
+              <option value="selection">Selection Sort</option>
+              <option value="insertion">Insertion Sort</option>
+              <option value="merge">Merge Sort</option>
+              <option value="quick">Quick Sort</option>
+            </select>
+          </div>
+
+          <div class="setting-item">
+            <div>
+              <h4>Jumlah Angka Array</h4>
+              <p>Pilih tingkat kesulitan jumlah elemen.</p>
+            </div>
+            <select id="select-room-count" class="input-glass">
+              <option value="5">5 Angka (Sedang)</option>
+              <option value="7">7 Angka (Tantangan)</option>
+              <option value="10">10 Angka (Expert)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="btn-submit-create-room" class="btn-primary-gradient">
+            <span>BUAT ROOM & MASUK LOBBY</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== MODAL 7: ROOM WAITING LOBBY ==================== -->
+    <div id="modal-room-lobby" class="modal-backdrop hidden">
+      <div class="modal-card glass-panel bento-modal large-modal">
+        <div class="modal-header">
+          <div>
+            <h2 id="lobby-room-title">ROOM LOBBY</h2>
+            <p id="lobby-room-meta" class="text-muted">BUBBLE SORT • 5 ANGKA</p>
+          </div>
+          <button class="btn-modal-close btn-icon" data-modal="modal-room-lobby">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="room-lobby-body">
+          <div class="slots-header">
+            <h3>PLAYERS JOINED (<span id="lobby-joined-count">1</span> / 5)</h3>
+            <span class="badge-mini cyan">MAKSIMAL 5 PLAYERS</span>
+          </div>
+
+          <div id="lobby-player-slots" class="lobby-player-slots-grid">
+            <!-- 5 Player Slots Cards dynamically rendered -->
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="btn-lobby-delete-room" class="btn-danger-glass hidden">
+            <i data-lucide="trash-2"></i>
+            <span>HAPUS ROOM (GURU)</span>
+          </button>
+          
+          <button id="btn-lobby-leave-room" class="btn-secondary-glass hidden">
+            <i data-lucide="log-out"></i>
+            <span>KELUAR ROOM</span>
+          </button>
+
+          <button id="btn-lobby-start-match" class="btn-success-gradient glow-btn hidden">
+            <i data-lucide="play-circle"></i>
+            <span>START MULTIPLAYER MATCH</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== MODAL 8: VICTORY PODIUM MODAL ==================== -->
+    <div id="modal-victory-podium" class="modal-backdrop hidden">
+      <div class="modal-card glass-panel bento-modal podium-modal">
+        <div class="modal-header center-header">
+          <div class="podium-title-box">
+            <div class="trophy-hero-icon">🏆</div>
+            <h2>HASIL MATCH MULTIPLAYER</h2>
+            <p>Klasemen Akhir Pertandingan Sorting Race</p>
+          </div>
+        </div>
+
+        <div id="podium-rankings-list" class="podium-rankings-list">
+          <!-- Dynamic 1st, 2nd, 3rd place rank cards -->
+        </div>
+
+        <div class="modal-footer center-footer">
+          <button class="btn-primary-gradient btn-modal-close" data-modal="modal-victory-podium">
+            <span>KEMBALI KE LOBBY</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== MODAL 1: HOW TO PLAY ==================== -->
+    <div id="modal-how-to-play" class="modal-backdrop hidden">
+      <div class="modal-card glass-panel bento-modal">
+        <div class="modal-header">
+          <h2><i data-lucide="help-circle"></i> HOW TO PLAY</h2>
+          <button class="btn-modal-close btn-icon" data-modal="modal-how-to-play">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="tutorial-cards-grid">
+          
+          <div class="tuto-card">
+            <div class="tuto-num">1</div>
+            <div class="tuto-icon purple"><i data-lucide="mouse-pointer"></i></div>
+            <h4>Pilih Algoritma</h4>
+            <p>Pilih algoritma sorting yang ingin kamu latih dari 5 pilihan yang tersedia.</p>
+          </div>
+
+          <div class="tuto-card">
+            <div class="tuto-num">2</div>
+            <div class="tuto-icon blue"><i data-lucide="hand-metal"></i></div>
+            <h4>Drag & Drop Card</h4>
+            <p>Klik/sentuh dan geser kartu angka ke posisi target untuk menukar posisinya.</p>
+          </div>
+
+          <div class="tuto-card">
+            <div class="tuto-num">3</div>
+            <div class="tuto-icon green"><i data-lucide="brain-circuit"></i></div>
+            <h4>Gunakan Pikiranmu</h4>
+            <p>Aplikasi tidak otomatis menukar. Kamu yang menentukan setiap langkah sorting!</p>
+          </div>
+
+          <div class="tuto-card">
+            <div class="tuto-num">4</div>
+            <div class="tuto-icon orange"><i data-lucide="award"></i></div>
+            <h4>Verifikasi & Review</h4>
+            <p>Tekan Selesai untuk melihat statistik langkah, mengecek kebenaran, & dinilai Guru.</p>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-primary-gradient btn-modal-close" data-modal="modal-how-to-play">
+            <span>PAHAM, LETS GO!</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== MODAL 2: LEARN ALGORITHMS ==================== -->
+    <div id="modal-learn" class="modal-backdrop hidden">
+      <div class="modal-card glass-panel bento-modal large-modal">
+        <div class="modal-header">
+          <h2><i data-lucide="book-open"></i> LEARN SORTING ALGORITHMS</h2>
+          <button class="btn-modal-close btn-icon" data-modal="modal-learn">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="learn-body">
+          <!-- Algorithm Tabs -->
+          <div class="learn-tabs" id="learn-tabs">
+            <button class="learn-tab active" data-tab="bubble">Bubble Sort</button>
+            <button class="learn-tab" data-tab="selection">Selection Sort</button>
+            <button class="learn-tab" data-tab="insertion">Insertion Sort</button>
+            <button class="learn-tab" data-tab="merge">Merge Sort</button>
+            <button class="learn-tab" data-tab="quick">Quick Sort</button>
+          </div>
+
+          <!-- Tab Content Display -->
+          <div id="learn-tab-content" class="learn-content-box">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-primary-gradient btn-modal-close" data-modal="modal-learn">
+            <span>COBA SEKARANG</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== MODAL 3: VERIFICATION & TEACHER REVIEW ==================== -->
+    <div id="modal-review" class="modal-backdrop hidden">
+      <div class="modal-card glass-panel bento-modal review-modal">
+        <div class="modal-header">
+          <div class="review-title-box">
+            <i data-lucide="clipboard-check" class="title-icon green"></i>
+            <div>
+              <h2>HASIL & VERIFIKASI SORTING</h2>
+              <p>Laporan analisis langkah siswa dan lembar evaluasi Guru.</p>
+            </div>
+          </div>
+          <button class="btn-modal-close btn-icon" data-modal="modal-review">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="review-grid">
+          
+          <!-- Left Column: Verification Results & Stats -->
+          <div class="review-left">
+            
+            <!-- Result Banner -->
+            <div id="review-status-banner" class="status-banner banner-success">
+              <div class="banner-icon">
+                <i data-lucide="check-circle" id="review-banner-icon"></i>
+              </div>
+              <div>
+                <h3 id="review-banner-title">SORTING SELESAI & BENAR!</h3>
+                <p id="review-banner-desc">Semua angka telah terurut sempurna dari terkecil ke terbesar.</p>
+              </div>
+            </div>
+
+            <!-- Array Comparison -->
+            <div class="review-array-box">
+              <div class="array-comp-item">
+                <label>HASIL AKHIR SISWA:</label>
+                <div id="review-final-array" class="mini-card-row"></div>
+              </div>
+              <div class="array-comp-item">
+                <label>REFERENSI IDEAL:</label>
+                <div id="review-ideal-array" class="mini-card-row"></div>
+              </div>
+            </div>
+
+            <!-- Stat Badges Grid -->
+            <div class="review-stats-grid">
+              <div class="review-stat-card">
+                <span class="lbl">TOTAL MOVES</span>
+                <span id="review-stat-moves" class="val">0</span>
+              </div>
+              <div class="review-stat-card">
+                <span class="lbl">TOTAL SWAPS</span>
+                <span id="review-stat-swaps" class="val">0</span>
+              </div>
+              <div class="review-stat-card">
+                <span class="lbl">WAKTU</span>
+                <span id="review-stat-time" class="val">00:00</span>
+              </div>
+              <div class="review-stat-card">
+                <span class="lbl">KRAPATAN ALGORITMA</span>
+                <span id="review-stat-accuracy" class="val highlight">100%</span>
+              </div>
+            </div>
+
+            <!-- Full Step Logs Accordion -->
+            <div class="review-step-logs">
+              <label><i data-lucide="list"></i> DAFTAR LANGKAH SISWA:</label>
+              <div id="review-logs-container" class="review-logs-container">
+                <!-- Step log list -->
+              </div>
+            </div>
+
+            <!-- Algorithm Compliance Detection Card -->
+            <div class="compliance-card glass-panel">
+              <div class="compliance-header">
+                <i data-lucide="shield-check" class="compliance-icon"></i>
+                <label>DETEKSI KESESUAIAN KAIDAH ALGORITMA:</label>
+              </div>
+              <div id="review-compliance-badge" class="status-banner banner-success">
+                <h4 id="review-compliance-status">SANGAT TEPAT (100% Sesuai Kaidah)</h4>
+              </div>
+              <p id="review-compliance-summary" class="compliance-summary-text">Proses berpikir siswa 100% konsisten mengikuti kaidah resmi algoritma BUBBLE SORT.</p>
+              
+              <div class="compliance-audits-list" id="review-compliance-list">
+                <!-- Dynamic step compliance audits -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Column: Teacher Evaluation Panel -->
+          <div class="review-right glass-panel">
+            <div class="teacher-panel-header">
+              <i data-lucide="user-check"></i>
+              <h3>PENILAIAN GURU (TEACHER REVIEW)</h3>
+            </div>
+
+            <div class="teacher-form-group">
+              <label for="teacher-student-name">Nama Siswa:</label>
+              <input type="text" id="teacher-student-name" class="input-glass" placeholder="Masukkan nama siswa...">
+            </div>
+
+            <div class="teacher-form-group">
+              <label for="teacher-score">Nilai Guru (0 - 100):</label>
+              <div class="score-input-wrapper">
+                <input type="number" id="teacher-score" class="input-glass score-input" min="0" max="100" placeholder="100">
+                <span class="score-max">/ 100</span>
+              </div>
+            </div>
+
+            <div class="teacher-form-group">
+              <label for="teacher-notes">Catatan & Umpan Balik Guru:</label>
+              <textarea id="teacher-notes" class="input-glass textarea-glass" rows="4" placeholder="Tuliskan catatan evaluasi proses berpikir siswa di sini..."></textarea>
+            </div>
+
+            <div class="teacher-actions">
+              <button id="btn-save-teacher-review" class="btn-success-gradient">
+                <i data-lucide="save"></i>
+                <span>SIMPAN REVIEW GURU</span>
+              </button>
+            </div>
+            <div id="teacher-save-alert" class="save-alert hidden">✓ Review berhasil disimpan ke LocalStorage!</div>
+
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button id="btn-review-play-again" class="btn-primary-gradient">
+            <i data-lucide="rotate-ccw"></i>
+            <span>MAIN LAGI</span>
+          </button>
+          <button class="btn-secondary-glass btn-modal-close" data-modal="modal-review">
+            <span>TUTUP</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== MODAL 4: PROGRESS & HISTORY ==================== -->
+    <div id="modal-progress" class="modal-backdrop hidden">
+      <div class="modal-card glass-panel bento-modal large-modal">
+        <div class="modal-header">
+          <h2><i data-lucide="award"></i> RIWAYAT LATIHAN & REVIEW GURU</h2>
+          <button class="btn-modal-close btn-icon" data-modal="modal-progress">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="progress-body">
+          <div id="progress-empty" class="progress-empty-state">
+            <i data-lucide="inbox"></i>
+            <p>Belum ada riwayat tantangan yang tersimpan.</p>
+          </div>
+
+          <div id="progress-list-container" class="progress-cards-grid">
+            <!-- Dynamic list of saved sessions -->
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-secondary-glass btn-modal-close" data-modal="modal-progress">
+            <span>TUTUP</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== MODAL 5: SETTINGS ==================== -->
+    <div id="modal-settings" class="modal-backdrop hidden">
+      <div class="modal-card glass-panel bento-modal">
+        <div class="modal-header">
+          <h2><i data-lucide="sliders"></i> PENGATURAN APLIKASI</h2>
+          <button class="btn-modal-close btn-icon" data-modal="modal-settings">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="settings-body">
+          
+          <div class="setting-item">
+            <div>
+              <h4>Nama Siswa (Default)</h4>
+              <p>Nama ini akan muncul pada laporan verifikasi Guru.</p>
+            </div>
+            <input type="text" id="setting-student-name-input" class="input-glass" placeholder="Nama Siswa">
+          </div>
+
+          <div class="setting-item">
+            <div>
+              <h4>Efek Suara Audio (Sound FX)</h4>
+              <p>Aktifkan audio responsif saat drag, drop, dan verifikasi.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="setting-sound-toggle" checked>
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <div class="setting-item border-top">
+            <div>
+              <h4 class="text-danger">Reset Data Lokal</h4>
+              <p>Hapus seluruh riwayat latihan dan review guru dari browser ini.</p>
+            </div>
+            <button id="btn-reset-storage" class="btn-danger-glass">
+              <i data-lucide="trash-2"></i>
+              <span>RESET DATA</span>
+            </button>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button id="btn-save-settings" class="btn-primary-gradient">
+            <span>SIMPAN & TUTUP</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/audio.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/multiplayer.js"></script>
+  <script src="js/game-state.js"></script>
+  <script src="js/algorithms.js"></script>
+  <script src="js/history.js"></script>
+  <script src="js/drag-drop.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
