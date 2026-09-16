@@ -1,0 +1,2552 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Kartu Pelajar SMAN 1 Soppeng | Verifikasi Data & Upload Pas Foto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@600;700;900&display=swap"
+    rel="stylesheet">
+
+  <script>
+    // =========================================================================
+    // ⚙️ KONFIGURASI UTAMA GOOGLE APPS SCRIPT (EMBED URL DI SINI)
+    // =========================================================================
+    // Siswa tinggal membuka file index.html ini dan langsung memilih nama & upload foto!
+    // Cukup ganti nilai URL di bawah dengan Web App URL hasil Deploy Google Apps Script Anda:
+    window.EMBEDDED_GAS_URL = "https://script.google.com/macros/s/AKfycbx_GANTI_DENGAN_URL_DEPLOY_APPS_SCRIPT_ANDA/exec";
+  </script>
+
+  <style>
+    :root {
+      --bg: #FBF8F1;
+      --surface: #FFFFFF;
+      --black: #000000;
+      --yellow: #FFE600;
+      --red: #FF334B;
+      --red-bg: #FFE5E8;
+      --green: #00E599;
+      --green-dark: #00875A;
+      --cyan: #00F0FF;
+      --purple: #8B5CF6;
+      --blue: #3B82F6;
+      --orange: #FF7A00;
+      --border: 3.5px solid #000000;
+      --border-thin: 2px solid #000000;
+      --shadow: 5px 5px 0px #000000;
+      --shadow-lg: 8px 8px 0px #000000;
+      --shadow-sm: 3px 3px 0px #000000;
+      --radius: 12px;
+      --radius-sm: 6px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--black);
+      min-height: 100vh;
+      line-height: 1.5;
+      background-image: radial-gradient(#000000 1.2px, transparent 1.2px);
+      background-size: 24px 24px;
+      padding-bottom: 80px;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+
+    /* Neo-Brutalism Utilities */
+    .neo-box {
+      background: var(--surface);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .neo-box-yellow {
+      background: var(--yellow);
+    }
+
+    .neo-box-red {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .neo-box-cyan {
+      background: var(--cyan);
+    }
+
+    .neo-box-green {
+      background: var(--green);
+    }
+
+    .neo-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      background: var(--yellow);
+      color: var(--black);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.1s ease;
+      user-select: none;
+    }
+
+    .neo-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 7px 7px 0px var(--black);
+    }
+
+    .neo-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px var(--black);
+    }
+
+    .neo-btn-red {
+      background: var(--red);
+      color: #FFFFFF;
+    }
+
+    .neo-btn-cyan {
+      background: var(--cyan);
+      color: var(--black);
+    }
+
+    .neo-btn-green {
+      background: var(--green);
+      color: var(--black);
+    }
+
+    .neo-btn-yellow {
+      background: var(--yellow);
+      color: var(--black);
+    }
+
+    .neo-btn-white {
+      background: #FFFFFF;
+      color: var(--black);
+    }
+
+    .neo-btn-black {
+      background: var(--black);
+      color: #FFFFFF;
+    }
+
+    .neo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      border: var(--border-thin);
+      box-shadow: 2px 2px 0px var(--black);
+      border-radius: 999px;
+    }
+
+    .neo-badge-pending {
+      background: var(--yellow);
+      color: #000;
+    }
+
+    .neo-badge-done {
+      background: var(--green);
+      color: #000;
+    }
+
+    .neo-badge-danger {
+      background: var(--red);
+      color: #fff;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* Ticker */
+    .ticker-wrap {
+      background: var(--black);
+      color: var(--yellow);
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 10px 0;
+      border-bottom: var(--border);
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+    }
+
+    .ticker-move {
+      display: inline-block;
+      animation: ticker 28s linear infinite;
+    }
+
+    @keyframes ticker {
+      0% {
+        transform: translate3d(0, 0, 0);
+      }
+
+      100% {
+        transform: translate3d(-50%, 0, 0);
+      }
+    }
+
+    /* Header */
+    header {
+      padding: 24px 0 16px;
+    }
+
+    .header-card {
+      padding: 20px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: #FFFFFF;
+      position: relative;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .school-logo-frame {
+      width: 76px;
+      height: 76px;
+      background: #FFFFFF;
+      border: var(--border);
+      box-shadow: var(--shadow-sm);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      flex-shrink: 0;
+    }
+
+    .school-logo-frame img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .brand-text h1 {
+      font-size: 1.5rem;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .brand-text p {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Stepper Bar */
+    .stepper-nav {
+      margin: 24px 0 32px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .stepper-nav {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .step-item {
+      padding: 12px;
+      background: #FFFFFF;
+      border: var(--border);
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      opacity: 0.55;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .step-item.active {
+      opacity: 1;
+      background: var(--yellow);
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0px #000;
+    }
+
+    .step-item.completed {
+      opacity: 1;
+      background: #D1FADF;
+    }
+
+    .step-number {
+      width: 28px;
+      height: 28px;
+      background: #000;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .step-item.active .step-number {
+      background: #000;
+      color: var(--yellow);
+    }
+
+    /* Section Views */
+    .view-section {
+      display: none;
+      animation: fadeIn 0.2s ease forwards;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* STEP 1: PILIH KELAS & NAMA */
+    .filter-panel {
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-desc {
+      font-size: 0.95rem;
+      color: #444;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    /* Class Pills */
+    .class-pills-label {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .class-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .class-pill {
+      padding: 8px 16px;
+      border: var(--border-thin);
+      background: #FFFFFF;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0px #000;
+      transition: all 0.1s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .class-pill:hover {
+      background: #f0f0f0;
+      transform: translate(-1px, -1px);
+    }
+
+    .class-pill.active {
+      background: var(--yellow);
+      box-shadow: 3px 3px 0px #000;
+      transform: translate(-2px, -2px);
+    }
+
+    /* Search Bar */
+    .search-box-container {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 16px 20px 16px 52px;
+      font-size: 1.05rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+      border: var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+      outline: none;
+      background: #FFFFFF;
+      transition: all 0.15s ease;
+    }
+
+    .search-input:focus {
+      box-shadow: var(--shadow);
+      transform: translate(-2px, -2px);
+      background: #FFFDE6;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.3rem;
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #000;
+      color: #fff;
+      border: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      z-index: 2;
+      flex-shrink: 0;
+    }
+
+    /* Students List Grid */
+    .students-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .students-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 360px) {
+      .students-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .student-card {
+      padding: 18px;
+      background: #FFFFFF;
+      border: var(--border);
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .student-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow);
+    }
+
+    .student-card.is-done {
+      border-left: 8px solid var(--green);
+    }
+
+    .student-card.is-pending {
+      border-left: 8px solid var(--yellow);
+    }
+
+    .student-info-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .student-name {
+      font-size: 1.1rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+
+    .student-meta {
+      font-size: 0.82rem;
+      color: #555;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .data-warning-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      background: var(--red-bg);
+      color: var(--red);
+      border: 1.5px solid var(--red);
+      padding: 2px 8px;
+      border-radius: 4px;
+      width: fit-content;
+      margin-top: 4px;
+    }
+
+    /* STEP 2: CEK & EDIT DATA */
+    .data-check-panel {
+      padding: 28px;
+    }
+
+    .alert-banner {
+      padding: 16px 20px;
+      background: #FFF3CD;
+      border: var(--border);
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius-sm);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .alert-banner.danger {
+      background: #FFE5E8;
+      border-color: var(--black);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      background: #FFFFFF;
+      box-shadow: var(--shadow-sm);
+      outline: none;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      background: #FFFEEB;
+      box-shadow: var(--shadow);
+      transform: translate(-1px, -1px);
+    }
+
+    .form-input[readonly] {
+      background: #EEEEEE;
+      cursor: not-allowed;
+      color: #444;
+    }
+
+    .input-need-fix {
+      border: 3.5px solid var(--red) !important;
+      background: #FFF8F8 !important;
+    }
+
+    .form-hint {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #666;
+    }
+
+    .form-hint.text-danger {
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    /* STEP 3: UPLOAD FOTO MERAH */
+    .photo-panel {
+      padding: 28px;
+    }
+
+    .guide-box {
+      padding: 20px;
+      background: #FFFFFF;
+      border: var(--border);
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius-sm);
+      margin-bottom: 24px;
+    }
+
+    .guide-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .guide-item {
+      padding: 12px;
+      background: #F9F9F9;
+      border: var(--border-thin);
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .guide-badge {
+      width: 32px;
+      height: 32px;
+      background: var(--red);
+      color: #fff;
+      border-radius: 6px;
+      border: 2px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .upload-container {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 860px) {
+      .upload-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .upload-dropzone {
+      border: 3.5px dashed var(--black);
+      background: #FFFDF5;
+      padding: 36px 20px;
+      border-radius: var(--radius);
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      transition: all 0.2s ease;
+      min-height: 320px;
+    }
+
+    .upload-dropzone:hover,
+    .upload-dropzone.dragover {
+      background: #FFF5D0;
+      border-color: var(--black);
+      transform: scale(1.01);
+    }
+
+    .dropzone-icon {
+      width: 72px;
+      height: 72px;
+      background: var(--yellow);
+      border: var(--border);
+      box-shadow: var(--shadow-sm);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .preview-box {
+      border: var(--border);
+      box-shadow: var(--shadow);
+      background: #FFFFFF;
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      min-height: 320px;
+    }
+
+    .photo-canvas-wrap {
+      width: 240px;
+      height: 320px;
+      border: var(--border);
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      position: relative;
+      background: #B91C1C;
+      /* Background merah formal pas foto */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #previewCanvas {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .canvas-face-guide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .face-oval {
+      width: 130px;
+      height: 170px;
+      border: 2.5px dashed rgba(255, 255, 255, 0.85);
+      border-radius: 50%;
+      margin-top: -30px;
+      box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.15);
+    }
+
+    .face-shoulder-line {
+      width: 190px;
+      height: 2px;
+      border-top: 2px dashed rgba(255, 255, 255, 0.7);
+      margin-top: 15px;
+    }
+
+    .red-check-banner {
+      margin-top: 14px;
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-align: center;
+      border: var(--border-thin);
+    }
+
+    .red-check-ok {
+      background: #D1FADF;
+      color: #027A48;
+      border-color: #027A48;
+    }
+
+    .red-check-warn {
+      background: #FEF08A;
+      color: #854D0E;
+      border-color: #854D0E;
+    }
+
+    /* STEP 4: SELESAI / KARTU DIGITAL */
+    .success-panel {
+      padding: 32px;
+      text-align: center;
+    }
+
+    .stamp-done {
+      display: inline-block;
+      padding: 12px 32px;
+      background: var(--green);
+      color: #000;
+      border: 4px solid #000;
+      box-shadow: var(--shadow);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      transform: rotate(-3deg);
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+
+    /* Digital Student Card */
+    .card-preview-wrapper {
+      max-width: 580px;
+      margin: 0 auto 32px;
+    }
+
+    .digital-card {
+      background: #FFFFFF;
+      border: 4px solid #000000;
+      box-shadow: var(--shadow-lg);
+      border-radius: 16px;
+      overflow: hidden;
+      text-align: left;
+      position: relative;
+    }
+
+    .card-top-bar {
+      background: var(--yellow);
+      border-bottom: 3.5px solid #000;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .card-top-logo {
+      width: 54px;
+      height: 54px;
+      background: #fff;
+      border: 2.5px solid #000;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px;
+    }
+
+    .card-top-logo img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .card-top-text h3 {
+      font-size: 1.15rem;
+      margin-bottom: 2px;
+    }
+
+    .card-top-text p {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .card-body-content {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 560px) {
+      .card-body-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card-photo-frame {
+      width: 140px;
+      height: 186px;
+      border: 3px solid #000;
+      box-shadow: 3px 3px 0px #000;
+      background: #B91C1C;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .card-photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-data-table {
+      font-size: 0.85rem;
+    }
+
+    .card-data-row {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      padding: 4px 0;
+      border-bottom: 1px dashed #ddd;
+    }
+
+    .card-data-label {
+      font-weight: 700;
+      color: #666;
+    }
+
+    .card-data-val {
+      font-weight: 800;
+      color: #000;
+    }
+
+    .card-footer-bar {
+      background: #F4F0EA;
+      border-top: 2.5px solid #000;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 16px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #FFFFFF;
+      border: 4px solid #000;
+      box-shadow: 10px 10px 0px #000;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 580px;
+      padding: 28px;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: var(--yellow);
+      border: 2px solid #000;
+      box-shadow: 2px 2px 0px #000;
+      border-radius: 6px;
+      width: 32px;
+      height: 32px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Camera Modal */
+    #cameraVideo {
+      width: 100%;
+      border: 3px solid #000;
+      border-radius: 8px;
+      transform: scaleX(-1);
+      /* Mirror camera */
+      background: #000;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--yellow);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      padding: 14px 20px;
+      border-radius: var(--radius-sm);
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 0.95rem;
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      animation: slideUp 0.2s ease forwards;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 20000;
+      color: #FFFFFF;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .loading-overlay.open {
+      display: flex;
+    }
+
+    .spinner-brutal {
+      width: 60px;
+      height: 60px;
+      background: var(--yellow);
+      border: 4px solid #000;
+      box-shadow: 5px 5px 0px #fff;
+      animation: spinBox 1s infinite ease-in-out;
+    }
+
+    @keyframes spinBox {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      50% {
+        transform: rotate(180deg) scale(1.1);
+        background: var(--cyan);
+      }
+
+      100% {
+        transform: rotate(360deg);
+        background: var(--yellow);
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      .digital-card,
+      .digital-card * {
+        visibility: visible;
+      }
+
+      .digital-card {
+        position: absolute;
+        left: 50%;
+        top: 20px;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 600px;
+        box-shadow: none !important;
+        border: 2px solid #000 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOP RUNNING MARQUEE / TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker-move">🔴 WAJIB PAS FOTO LATAR BELAKANG MERAH POLOS ★ FORMAT FORMAL 3X4 SERAGAM SEKOLAH SMAN 1 SOPPENG ★ PASTIKAN DATA DAPODIK LENGKAP ★ SISWA YANG SUDAH UPLOAD BERSTATUS "DONE" TIDAK BISA UPLOAD ULANG ★ VERIFIKASI SEKARANG JUGA! ★ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🔴 WAJIB PAS FOTO LATAR BELAKANG MERAH POLOS ★ FORMAT FORMAL 3X4 SERAGAM SEKOLAH SMAN 1 SOPPENG ★ PASTIKAN DATA DAPODIK LENGKAP ★ SISWA YANG SUDAH UPLOAD BERSTATUS "DONE" TIDAK BISA UPLOAD ULANG ★ VERIFIKASI SEKARANG JUGA! ★</div>
+  </div>
+
+  <div class="container">
+    <!-- HEADER BRANDING -->
+    <header>
+      <div class="header-card neo-box">
+        <div class="brand-section">
+          <div class="school-logo-frame">
+            <img src="https://arafx.vercel.app/logo.png" alt="Logo SMAN 1 Soppeng"
+              onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' fill=\'%23FFE600\'/><text x=\'50\' y=\'55\' font-family=\'Arial\' font-size=\'18\' font-weight=\'bold\' text-anchor=\'middle\'>SMAN 1</text></svg>';">
+          </div>
+          <div class="brand-text">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+              <span class="neo-badge neo-badge-pending">OFFICIAL PORTAL</span>
+              <span class="neo-badge" style="background: #00F0FF;">TAHUN 2026/2027</span>
+            </div>
+            <h1>SMAN 1 SOPPENG</h1>
+            <p>Sistem Verifikasi Data Dapodik & Unggah Pas Foto Kartu Pelajar</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <div class="neo-badge neo-badge-done" style="font-size: 0.85rem; padding: 6px 14px;">
+            🟢 SERVER AKTIF / SIAP DIGUNAKAN
+          </div>
+          <button class="neo-btn neo-btn-white" id="btnOpenConfig" title="Konfigurasi URL Google Apps Script"
+            style="padding: 8px 14px; font-size: 0.8rem;">
+            ⚙️ ADMIN
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- STEPPER PROGRESS NAVIGATION -->
+    <nav class="stepper-nav" aria-label="Progress Alur Siswa">
+      <div class="step-item active" id="stepIndicator1" onclick="navigateToStep(1)">
+        <div class="step-number">1</div>
+        <div>
+          <div style="font-size: 0.72rem; color: #555;">LANGKAH 1</div>
+          <div>Pilih Nama</div>
+        </div>
+      </div>
+      <div class="step-item" id="stepIndicator2" onclick="navigateToStep(2)">
+        <div class="step-number">2</div>
+        <div>
+          <div style="font-size: 0.72rem; color: #555;">LANGKAH 2</div>
+          <div>Cek & Edit Data</div>
+        </div>
+      </div>
+      <div class="step-item" id="stepIndicator3" onclick="navigateToStep(3)">
+        <div class="step-number">3</div>
+        <div>
+          <div style="font-size: 0.72rem; color: #555;">LANGKAH 3</div>
+          <div>Upload Foto Merah</div>
+        </div>
+      </div>
+      <div class="step-item" id="stepIndicator4" onclick="navigateToStep(4)">
+        <div class="step-number">4</div>
+        <div>
+          <div style="font-size: 0.72rem; color: #555;">LANGKAH 4</div>
+          <div>Kartu Bukti</div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- =================================================================== -->
+    <!-- STEP 1: PILIH KELAS & CARI NAMA SISWA                               -->
+    <!-- =================================================================== -->
+    <section class="view-section active" id="viewStep1">
+      <div class="filter-panel neo-box">
+        <h2 class="section-title">
+          <span>🏫</span> PILIH KELAS & CARI NAMA ANDA
+        </h2>
+        <p class="section-desc">
+          Silakan pilih kelas Anda terlebih dahulu, kemudian gunakan kolom pencarian untuk menemukan nama Anda dengan
+          cepat.
+        </p>
+
+        <!-- Filter Kelas -->
+        <span class="class-pills-label">PILIH KELAS:</span>
+        <div class="class-pills" id="classPillsContainer">
+          <!-- Diisi otomatis oleh Javascript -->
+        </div>
+
+        <!-- Kolom Pencarian Nama / NISN -->
+        <div class="search-box-container">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" class="search-input"
+            placeholder="Ketik Nama Lengkap atau NISN Anda di sini untuk mencari..." autocomplete="off">
+          <button class="search-clear" id="searchClearBtn" title="Hapus pencarian">✕</button>
+        </div>
+
+        <div class="students-stats">
+          <div>
+            <span id="displayCountLabel">Menampilkan 0 Siswa</span>
+            <span id="activeClassLabel" style="margin-left: 8px; font-weight: 800; color: #2563EB;"></span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <span class="neo-badge neo-badge-pending" id="badgePendingCount">0 Pending</span>
+            <span class="neo-badge neo-badge-done" id="badgeDoneCount">0 Done</span>
+          </div>
+        </div>
+
+        <!-- Daftar Kartu Siswa -->
+        <div class="students-grid" id="studentsGrid">
+          <!-- Card Siswa di-render otomatis -->
+        </div>
+
+        <!-- State Empty / Tidak Ada Hasil -->
+        <div id="noResultsBox" style="display: none; padding: 40px; text-align: center;">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">🤔</div>
+          <h3 style="font-size: 1.2rem;">Nama Siswa Tidak Ditemukan</h3>
+          <p style="color: #666; font-size: 0.9rem; margin-top: 4px;">Pastikan ejaan nama sesuai data Dapodik atau coba
+            cari berdasarkan NISN.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- STEP 2: CEK DATA & LENGKAPI DATA KOSONG (-)                         -->
+    <!-- =================================================================== -->
+    <section class="view-section" id="viewStep2">
+      <div class="data-check-panel neo-box">
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <button class="neo-btn neo-btn-white" onclick="navigateToStep(1)">
+            ⬅️ GANTI SISWA / PILIH KEMBALI
+          </button>
+          <div id="step2StatusBadge">
+            <!-- Badge Status Pending / Done -->
+          </div>
+        </div>
+
+        <h2 class="section-title">
+          <span>📋</span> VERIFIKASI KELENGKAPAN DATA SISWA
+        </h2>
+        <p class="section-desc">
+          Periksa data identitas Anda di bawah ini. Jika ada kolom yang kosong atau bertanda <strong>(-)</strong>,
+          silakan lengkapi sebelum mengunggah foto.
+        </p>
+
+        <!-- Banner jika ada data kosong (-) -->
+        <div class="alert-banner danger" id="incompleteNotice" style="display: none;">
+          <div style="font-size: 1.6rem; flex-shrink: 0;">⚠️</div>
+          <div>
+            <div style="font-weight: 800; font-family: 'Space Grotesk'; font-size: 1rem;">DATA BELUM LENGKAP ATAU
+              BERTANDA (-)</div>
+            <p style="margin-top: 2px;">Terdapat kolom yang belum terisi (seperti Alamat atau TTL). Silakan isi dengan
+              data yang benar di bawah ini. Data yang Anda ketik akan otomatis menimpa dan memperbarui data di
+              spreadsheet.</p>
+          </div>
+        </div>
+
+        <!-- Banner jika status sudah DONE -->
+        <div class="alert-banner" id="alreadyDoneNotice"
+          style="display: none; background: #D1FADF; border-color: #000;">
+          <div style="font-size: 1.6rem; flex-shrink: 0;">✅</div>
+          <div>
+            <div style="font-weight: 800; font-family: 'Space Grotesk'; font-size: 1rem;">DATA & FOTO ANDA SUDAH
+              TERVERIFIKASI (STATUS: DONE)</div>
+            <p style="margin-top: 2px;">Data Anda sudah lengkap dan foto berlatar merah sudah berhasil tersimpan. Anda
+              tidak perlu mengupload foto lagi.</p>
+          </div>
+        </div>
+
+        <!-- Form Edit Siswa -->
+        <form id="studentDataForm" onsubmit="event.preventDefault(); goToPhotoStep();">
+          <div class="form-grid">
+            <!-- Nama Lengkap (Dapodik) -->
+            <div class="form-group">
+              <label class="form-label" for="editNama">
+                <span>Nama Lengkap (Dapodik)</span>
+                <span class="neo-badge neo-badge-pending" style="font-size: 0.65rem;">DAPODIK</span>
+              </label>
+              <input type="text" id="editNama" class="form-input" readonly>
+            </div>
+
+            <!-- Kelas -->
+            <div class="form-group">
+              <label class="form-label" for="editKelas">
+                <span>Kelas</span>
+              </label>
+              <input type="text" id="editKelas" class="form-input" readonly>
+            </div>
+
+            <!-- NIS / NISN -->
+            <div class="form-group">
+              <label class="form-label" for="editNisn">
+                <span>NIS / NISN</span>
+              </label>
+              <input type="text" id="editNisn" class="form-input" readonly>
+            </div>
+
+            <!-- Jenis Kelamin -->
+            <div class="form-group">
+              <label class="form-label" for="editJk">
+                <span>Jenis Kelamin</span>
+              </label>
+              <select id="editJk" class="form-select">
+                <option value="LAKI-LAKI">LAKI-LAKI</option>
+                <option value="PEREMPUAN">PEREMPUAN</option>
+              </select>
+            </div>
+
+            <!-- Tempat, Tanggal Lahir (TTL) -->
+            <div class="form-group">
+              <label class="form-label" for="editTtl">
+                <span>Tempat, Tanggal Lahir (TTL)</span>
+                <span id="ttlBadgeAlert"></span>
+              </label>
+              <input type="text" id="editTtl" class="form-input" placeholder="Contoh: SOPPENG, 12 MEI 2010" required>
+              <span class="form-hint" id="ttlHint">Format: KOTA, TANGGAL BULAN TAHUN</span>
+            </div>
+
+            <!-- QR ID / Siswa ID -->
+            <div class="form-group">
+              <label class="form-label" for="editQrId">
+                <span>QR ID Siswa</span>
+              </label>
+              <input type="text" id="editQrId" class="form-input" readonly>
+            </div>
+
+            <!-- Alamat Lengkap (Seringkali berisi '-') -->
+            <div class="form-group full-width">
+              <label class="form-label" for="editAlamat">
+                <span>Alamat Tempat Tinggal / Domisili</span>
+                <span id="alamatBadgeAlert"></span>
+              </label>
+              <textarea id="editAlamat" class="form-textarea" rows="2"
+                placeholder="Masukkan alamat lengkap (Nama Jalan/Dusun/Desa, RT/RW, Kelurahan, Kecamatan)..."
+                required></textarea>
+              <span class="form-hint" id="alamatHint">Wajib diisi dengan alamat lengkap domisili siswa saat ini.</span>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 14px; flex-wrap: wrap;">
+            <button type="button" class="neo-btn neo-btn-white" onclick="navigateToStep(1)">
+              BATAL
+            </button>
+            <button type="submit" class="neo-btn neo-btn-yellow" id="btnProceedToPhoto">
+              LANJUT KE UPLOAD FOTO ➜
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- STEP 3: UPLOAD PAS FOTO BERLATAR MERAH                              -->
+    <!-- =================================================================== -->
+    <section class="view-section" id="viewStep3">
+      <div class="photo-panel neo-box">
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <button class="neo-btn neo-btn-white" onclick="navigateToStep(2)">
+            ⬅️ KEMBALI CEK DATA
+          </button>
+          <div id="step3StudentTag" class="neo-badge" style="background: #00F0FF; font-size: 0.9rem;">
+            <!-- Nama Siswa & Kelas -->
+          </div>
+        </div>
+
+        <h2 class="section-title">
+          <span>📸</span> UPLOAD PAS FOTO BERLATAR MERAH (3X4)
+        </h2>
+        <p class="section-desc">
+          Foto ini akan dicetak langsung pada <strong>Kartu Pelajar SMAN 1 Soppeng</strong>. Pastikan foto memenuhi
+          standar resmi sekolah.
+        </p>
+
+        <!-- KOTAK KHUSUS JIKA SUDAH DONE (TERKUNCI) -->
+        <div id="lockedPhotoContainer" style="display: none; margin-bottom: 24px;">
+          <div class="alert-banner" style="background: #FFE5E8; border: 4px solid #000; box-shadow: var(--shadow);">
+            <div style="font-size: 2.2rem; flex-shrink: 0;">🔒</div>
+            <div>
+              <div style="font-family: 'Space Grotesk'; font-size: 1.25rem; font-weight: 900; color: #B91C1C;">
+                FOTO & DATA ANDA TELAH TERVERIFIKASI (STATUS: DONE)
+              </div>
+              <p style="margin-top: 4px; font-weight: 600;">
+                Siswa atas nama ini sudah menyelesaikan proses upload foto dan data telah dikunci di database Google
+                Spreadsheet. Untuk menjaga keaslian data kartu pelajar, <strong>siswa tidak dapat mengunggah foto
+                  ulang</strong>.
+              </p>
+              <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="neo-btn neo-btn-green" onclick="populateDigitalCard(); navigateToStep(4)">
+                  LIHAT KARTU BUKTI DIGITAL ➜
+                </button>
+                <button class="neo-btn neo-btn-white" onclick="navigateToStep(1)">
+                  PILIH SISWA LAIN
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORM UPLOAD FOTO AKTIF (JIKA MASIH PENDING) -->
+        <div id="activeUploadContainer">
+          <!-- Panduan Ketentuan Pas Foto -->
+          <div class="guide-box">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+              <h3 style="font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+                <span>📌</span> SYARAT WAJIB PAS FOTO KARTU PELAJAR:
+              </h3>
+              <span class="neo-badge neo-badge-danger">LATAR BELAKANG MERAH</span>
+            </div>
+
+            <div class="guide-list">
+              <div class="guide-item">
+                <div class="guide-badge">🔴</div>
+                <div>Latar Belakang <strong>Merah Polos</strong> (bukan biru/pemandangan)</div>
+              </div>
+              <div class="guide-item">
+                <div class="guide-badge">👔</div>
+                <div>Mengenakan <strong>Seragam Sekolah Lengkap</strong> & rapi berkerah</div>
+              </div>
+              <div class="guide-item">
+                <div class="guide-badge">👤</div>
+                <div>Wajah <strong>Menghadap Tegak Lurus</strong> ke kamera (tidak miring/selfie)</div>
+              </div>
+              <div class="guide-item">
+                <div class="guide-badge">✨</div>
+                <div>Pencahayaan terang & jelas, <strong>tidak memakai kacamata hitam/filter</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upload Dropzone & Canvas Preview -->
+          <div class="upload-container">
+            <!-- Sisi Kiri: Upload File -->
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div class="upload-dropzone" id="dropZone" onclick="document.getElementById('fileInput').click()" style="cursor: pointer;">
+                <div class="dropzone-icon">📂</div>
+                <div style="font-family: 'Space Grotesk'; font-size: 1.15rem; font-weight: 800;">
+                  KLIK DI SINI ATAU TARIK FOTO
+                </div>
+                <p style="font-size: 0.85rem; color: #666; max-width: 280px;">
+                  Pilih dari <strong>Galeri HP / File Manager</strong>.<br>
+                  Format JPG, PNG, WEBP. Maks. 10 MB (dikompres otomatis).
+                </p>
+
+                <button type="button" class="neo-btn neo-btn-yellow" style="font-size: 1rem; padding: 14px 32px; margin-top: 4px;"
+                  onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
+                  📁 PILIH FOTO DARI GALERI / FILE
+                </button>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+              </div>
+
+              <!-- Opsi Panduan & Reset -->
+              <div
+                style="background: #fff; padding: 14px; border: var(--border-thin); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: space-between;">
+                <label
+                  style="font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;"
+                  for="toggleGuideCheck">
+                  <input type="checkbox" id="toggleGuideCheck" checked style="width: 18px; height: 18px;">
+                  Tampilkan Garis Panduan Wajah (Oval)
+                </label>
+                <button type="button" class="neo-btn neo-btn-white" style="padding: 4px 10px; font-size: 0.75rem; display: none;"
+                  id="btnResetPhoto">
+                  HAPUS FOTO
+                </button>
+              </div>
+            </div>
+
+            <!-- Sisi Kanan: Pratinjau Foto 3:4 & Cek Latar Merah -->
+            <div class="preview-box">
+              <span class="neo-badge neo-badge-pending" style="position: absolute; top: 12px; left: 16px;">
+                PRATINJAU 3:4
+              </span>
+
+              <div class="photo-canvas-wrap" id="canvasWrapper">
+                <canvas id="previewCanvas" width="600" height="800"></canvas>
+
+                <div class="canvas-face-guide" id="faceGuideOverlay">
+                  <div class="face-oval"></div>
+                  <div class="face-shoulder-line"></div>
+                </div>
+              </div>
+
+              <!-- Hasil Deteksi Latar Belakang Merah -->
+              <div id="redDetectAlert" class="red-check-banner red-check-warn">
+                ⚠️ Belum ada foto yang dipilih. Silakan upload pas foto latar merah Anda.
+              </div>
+
+              <div style="font-size: 0.75rem; color: #666; margin-top: 8px; text-align: center;">
+                *Pastikan posisi kepala pas di dalam oval garis putus-putus.
+              </div>
+            </div>
+          </div>
+
+          <!-- Tombol Kirim / Submit -->
+          <div style="display: flex; justify-content: flex-end; gap: 14px; flex-wrap: wrap;">
+            <button type="button" class="neo-btn neo-btn-white" onclick="navigateToStep(2)">
+              ⬅️ KEMBALI KE DATA
+            </button>
+            <button type="button" class="neo-btn neo-btn-green" id="btnSubmitAll"
+              style="font-size: 1.1rem; padding: 14px 32px;">
+              🚀 SIMPAN DATA & UPLOAD FOTO RESMI
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- STEP 4: SELESAI & KARTU TANDA BUKTI DIGITAL                         -->
+    <!-- =================================================================== -->
+    <section class="view-section" id="viewStep4">
+      <div class="success-panel neo-box">
+        <div class="stamp-done">
+          VERIFIED & DONE ★
+        </div>
+
+        <h2 style="font-size: 1.8rem; margin-bottom: 8px;">
+          DATA & FOTO BERHASIL DIVERIFIKASI!
+        </h2>
+        <p style="font-size: 1rem; color: #444; max-width: 600px; margin: 0 auto 28px; font-weight: 600;">
+          Terima kasih! Pas foto latar merah dan data diri Anda telah tercatat dengan aman di database pembuatan Kartu
+          Pelajar SMAN 1 Soppeng.
+        </p>
+
+        <!-- KARTU DIGITAL SISWA SMAN 1 SOPPENG -->
+        <div class="card-preview-wrapper">
+          <div class="digital-card" id="studentDigitalCard">
+            <!-- Header Kartu -->
+            <div class="card-top-bar">
+              <div class="card-top-logo">
+                <img src="https://arafx.vercel.app/logo.png" alt="Logo SMAN 1 Soppeng">
+              </div>
+              <div class="card-top-text">
+                <h3>SMAN 1 SOPPENG</h3>
+                <p>KARTU TANDA BUKTI VERIFIKASI SISWA</p>
+              </div>
+            </div>
+
+            <!-- Konten Kartu -->
+            <div class="card-body-content">
+              <!-- Foto -->
+              <div class="card-photo-frame">
+                <img id="cardPhotoImg" src="" alt="Pas Foto Siswa">
+              </div>
+
+              <!-- Tabel Data -->
+              <div class="card-data-table">
+                <div class="card-data-row">
+                  <span class="card-data-label">NAMA</span>
+                  <span class="card-data-val" id="cardValNama">-</span>
+                </div>
+                <div class="card-data-row">
+                  <span class="card-data-label">KELAS</span>
+                  <span class="card-data-val" id="cardValKelas">-</span>
+                </div>
+                <div class="card-data-row">
+                  <span class="card-data-label">NISN</span>
+                  <span class="card-data-val" id="cardValNisn">-</span>
+                </div>
+                <div class="card-data-row">
+                  <span class="card-data-label">TTL</span>
+                  <span class="card-data-val" id="cardValTtl">-</span>
+                </div>
+                <div class="card-data-row">
+                  <span class="card-data-label">L/P</span>
+                  <span class="card-data-val" id="cardValJk">-</span>
+                </div>
+                <div class="card-data-row">
+                  <span class="card-data-label">ALAMAT</span>
+                  <span class="card-data-val" id="cardValAlamat">-</span>
+                </div>
+                <div class="card-data-row" style="border-bottom: none; margin-top: 6px;">
+                  <span class="card-data-label">STATUS</span>
+                  <span class="neo-badge neo-badge-done" style="font-size: 0.72rem; padding: 2px 8px;">TERVERIFIKASI
+                    (DONE)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer Kartu -->
+            <div class="card-footer-bar">
+              <div id="cardQrCodeWrapper" style="display: flex; align-items: center; gap: 8px;">
+                <div id="cardQrCodeBox"
+                  style="width: 44px; height: 44px; background: #fff; border: 1.5px solid #000; padding: 2px;">
+                  <img id="cardQrImg" src="" style="width: 100%; height: 100%;" alt="QR">
+                </div>
+                <div>
+                  <div style="font-size: 0.7rem; color: #555;">ID DOKUMEN:</div>
+                  <div id="cardValQrId" style="font-size: 0.75rem; font-family: 'Space Grotesk'; font-weight: 800;">-
+                  </div>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 0.68rem; color: #666;">TANGGAL TERBIT:</div>
+                <div id="cardValDate" style="font-size: 0.78rem;">-</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tombol Aksi -->
+        <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+          <button class="neo-btn neo-btn-cyan" onclick="window.print()">
+            🖨️ CETAK / SIMPAN BUKTI (PDF)
+          </button>
+          <button class="neo-btn neo-btn-yellow" onclick="resetToHome()">
+            🔄 KEMBALI KE AWAL (SISWA LAIN)
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </div> <!-- End .container -->
+
+  <!-- Camera modal removed -->
+
+  <!-- =================================================================== -->
+  <!-- MODAL: PENGATURAN API GOOGLE APPS SCRIPT                            -->
+  <!-- =================================================================== -->
+  <div class="modal-overlay" id="configModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeConfigModal()">✕</button>
+      <h3 style="font-size: 1.3rem; margin-bottom: 8px;">⚙️ PENGATURAN GOOGLE APPS SCRIPT</h3>
+      <p style="font-size: 0.88rem; color: #666; margin-bottom: 20px;">
+        Hubungkan aplikasi ini secara langsung ke Google Spreadsheet & Google Drive sekolah Anda dengan memasukkan URL
+        Web App Google Apps Script.
+      </p>
+
+      <div class="form-group" style="margin-bottom: 16px;">
+        <label class="form-label" for="gasUrlInput">URL Web App (Google Apps Script)</label>
+        <input type="url" id="gasUrlInput" class="form-input"
+          placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+        <span class="form-hint">Dapatkan dari menu Deploy > New deployment > Web app di editor Google Apps
+          Script.</span>
+      </div>
+
+      <div
+        style="background: #F4F0EA; border: var(--border-thin); padding: 14px; border-radius: 8px; margin-bottom: 20px;">
+        <div style="font-weight: 800; font-size: 0.85rem; margin-bottom: 4px;">STATUS KONEKSI SAAT INI:</div>
+        <div id="apiConnectionStatus" style="font-size: 0.9rem; font-weight: 700;">
+          🟡 Mode Demo / Penyimpanan Browser Aktif
+        </div>
+        <div style="margin-top: 10px; display: flex; gap: 8px;">
+          <button type="button" class="neo-btn neo-btn-white" style="font-size: 0.8rem; padding: 6px 14px;"
+            id="btnTestConnection">
+            ⚡ TEST KONEKSI
+          </button>
+          <button type="button" class="neo-btn neo-btn-white" style="font-size: 0.8rem; padding: 6px 14px;"
+            id="btnSyncFromSheet">
+            📥 SYNC DARI SHEET
+          </button>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <button type="button" class="neo-btn neo-btn-white" style="font-size: 0.8rem; color: #B91C1C;"
+          id="btnResetLocalStorage">
+          RESET DATA DEMO
+        </button>
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="neo-btn neo-btn-white" onclick="closeConfigModal()">TUTUP</button>
+          <button type="button" class="neo-btn neo-btn-yellow" id="btnSaveConfig">SIMPAN PENGATURAN</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING OVERLAY -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner-brutal"></div>
+    <div style="font-size: 1.3rem; font-weight: 900; letter-spacing: 0.5px;" id="loadingText">
+      MEMPROSES DATA...
+    </div>
+    <div style="font-size: 0.85rem; opacity: 0.9;">Mohon tunggu, jangan menutup halaman ini</div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toastBox">
+    <span id="toastIcon">🔔</span>
+    <span id="toastMsg">Notifikasi</span>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- JAVASCRIPT LOGIC & EMBEDDED STUDENTS DATA                           -->
+  <!-- =================================================================== -->
+  <script>
+    // =========================================================================
+    // ⚙️ KONFIGURASI URL GOOGLE APPS SCRIPT (DI-EMBED LANGSUNG DI SINI)
+    // Siswa cukup buka index.html ini langsung di browser dan mulai mengisi data & upload foto!
+    // Ganti URL di bawah dengan Web App URL hasil Deploy Google Apps Script sekolah Anda:
+    // =========================================================================
+    const EMBEDDED_GAS_URL = "https://script.google.com/macros/s/AKfycbznhJ8ZbwnbGQdzL_sR_k-8plMd6VA7Llrzta7GdA54s7WyiE_ke2xHLj9n-QYVvraJ/exec";
+
+    // Gunakan URL yang di-embed langsung, atau URL tersimpan di browser
+    let gasWebAppUrl = (EMBEDDED_GAS_URL && !EMBEDDED_GAS_URL.includes("GANTI_DENGAN_URL"))
+      ? EMBEDDED_GAS_URL
+      : (localStorage.getItem('SMAN1_GAS_URL') || '');
+
+    // Embedded Data 387 Siswa Kelas X SMAN 1 Soppeng dari KARTU_PERPUS_KELAS_X.csv
+    const INITIAL_STUDENTS = [{ "no": "1", "kelas": "X. 1", "nama": "A. AFIQA ARSAD", "ttl": "SOPPENG, 7 NOVEMBER 2010", "nisn": "19873/0104224865", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0104224865-659", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "2", "kelas": "X. 1", "nama": "A. USWATUN HAZANA", "ttl": "LABAE, 11 APRIL 2010", "nisn": "19874/3106821945", "jk": "PEREMPUAN", "alamat": "JL. MALAKA RAYA", "qrId": "STUDENT:3106821945-340", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "3", "kelas": "X. 1", "nama": "AFIKAH. M", "ttl": "LEMBAH SUBUR, 15 APRIL 2011", "nisn": "19487/0115849634", "jk": "PEREMPUAN", "alamat": "LEMBAH SUBUR", "qrId": "STUDENT:0115849634-818", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "4", "kelas": "X. 1", "nama": "AFRILIA", "ttl": "KUBBA, 27 APRIL 2011", "nisn": "19488/0115600026", "jk": "PEREMPUAN", "alamat": "JL. POROS BULU DUA", "qrId": "STUDENT:0115600026-221", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "5", "kelas": "X. 1", "nama": "AHMAD FAATIH NUR", "ttl": "MAKASSAR, 8 JUNI 2010", "nisn": "19489/0109129417", "jk": "LAKI-LAKI", "alamat": "BTN PEPABRI", "qrId": "STUDENT:0109129417-801", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "6", "kelas": "X. 1", "nama": "AINUN QALBI", "ttl": "WATANSOPPENG, 7 APRIL 2011", "nisn": "19490/0115396475", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0115396475-523", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "7", "kelas": "X. 1", "nama": "AISYA", "ttl": "SOPPENG, 14 DESEMBER 2010", "nisn": "19491/0106540113", "jk": "PEREMPUAN", "alamat": "ABBATUNGE", "qrId": "STUDENT:0106540113-841", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "8", "kelas": "X. 1", "nama": "ANDI AZYLAH SAVINATUL HUSNA", "ttl": "SOPPENG, 17 AGUSTUS 2010", "nisn": "19492/0101125688", "jk": "PEREMPUAN", "alamat": "JL.ALLAPORENG SUMBER JATI", "qrId": "STUDENT:0101125688-325", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "9", "kelas": "X. 1", "nama": "ANDI MISCHA ZHAFIRAH YUSRA", "ttl": "MAKASSAR, 17 SEPTEMBER 2010", "nisn": "19493/0104573231", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0104573231-651", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "10", "kelas": "X. 1", "nama": "ANDI NISFATUL ANDARA PIAWA", "ttl": "WATANSOPPENG, 23 FEBRUARI 2011", "nisn": "19494/0117438891", "jk": "PEREMPUAN", "alamat": "WATANCITTA", "qrId": "STUDENT:0117438891-891", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "11", "kelas": "X. 1", "nama": "ASYIFA QALBI", "ttl": "PISING, 17 JANUARI 2011", "nisn": "19495/0113840329", "jk": "PEREMPUAN", "alamat": "PISING", "qrId": "STUDENT:0113840329-668", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "12", "kelas": "X. 1", "nama": "AZKA' AIF", "ttl": "CIROWALI, 11 FEBRUARI 2011", "nisn": "19496/0112452245", "jk": "PEREMPUAN", "alamat": "LAWO", "qrId": "STUDENT:0112452245-892", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "13", "kelas": "X. 1", "nama": "DIYAH NUR INAYA", "ttl": "SOPPENG, 5 FEBRUARI 2011", "nisn": "19497/0117041419", "jk": "PEREMPUAN", "alamat": "AKKAMPENG", "qrId": "STUDENT:0117041419-377", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "14", "kelas": "X. 1", "nama": "FITA", "ttl": "LEBBAE, 25 MEI 2011", "nisn": "19498/0113304470", "jk": "PEREMPUAN", "alamat": "LEBBAE", "qrId": "STUDENT:0113304470-263", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "15", "kelas": "X. 1", "nama": "HALIFAH YUSRAH", "ttl": "GANRA, 14 OKTOBER 2010", "nisn": "19499/0101658932", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0101658932-209", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "16", "kelas": "X. 1", "nama": "IFFAH ASFI LATIFAH", "ttl": "SOPPENG, 20 DESEMBER 2010", "nisn": "19500/0109759468", "jk": "PEREMPUAN", "alamat": "LAPAJUNG", "qrId": "STUDENT:0109759468-746", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "17", "kelas": "X. 1", "nama": "IMEL PUTRI INAYATUL RAHMAN", "ttl": "PANGKEP, 20 MEI 2010", "nisn": "19501/0108158826", "jk": "PEREMPUAN", "alamat": "JL. KESATRIA", "qrId": "STUDENT:0108158826-466", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "18", "kelas": "X. 1", "nama": "JELITA AZZAHRA GUNTUR", "ttl": "SOPPENG, 2 JUNI 2011", "nisn": "19502/0115053061", "jk": "PEREMPUAN", "alamat": "LAJOA", "qrId": "STUDENT:0115053061-868", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "19", "kelas": "X. 1", "nama": "MUH. FIKO SAVERIO", "ttl": "PARE - PARE, 30 DESEMBER 2010", "nisn": "19503/0105935596", "jk": "LAKI-LAKI", "alamat": "JLN. KAYANGAN", "qrId": "STUDENT:0105935596-525", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "20", "kelas": "X. 1", "nama": "MUH. NUR ASHAR", "ttl": "TAKALALA, 7 MARET 2011", "nisn": "19504/0117447436", "jk": "LAKI-LAKI", "alamat": "JL. MANGKAWANI", "qrId": "STUDENT:0117447436-595", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "21", "kelas": "X. 1", "nama": "MUHAMMAD ANNUR SYAWAL", "ttl": "SOPPENG, 21 SEPTEMBER 2010", "nisn": "19505/0109778696", "jk": "LAKI-LAKI", "alamat": "SALOTUNGO", "qrId": "STUDENT:0109778696-541", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "22", "kelas": "X. 1", "nama": "MUHAMMAD DAWAM FURQAN DANIAL", "ttl": "SOPPENG, 27 OKTOBER 2011", "nisn": "19506/3119547021", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:3119547021-587", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "23", "kelas": "X. 1", "nama": "NADHIFAH AWALIYAH", "ttl": "SOPPENG, 16 OKTOBER 2010", "nisn": "19507/0108735373", "jk": "PEREMPUAN", "alamat": "TENGAPADANGE", "qrId": "STUDENT:0108735373-427", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "24", "kelas": "X. 1", "nama": "NUR ALISHA AZKADINA", "ttl": "SOPPENG, 11 APRIL 2011", "nisn": "19508/0118922948", "jk": "PEREMPUAN", "alamat": "LAWO", "qrId": "STUDENT:0118922948-844", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "25", "kelas": "X. 1", "nama": "NUR ASRINAH ACHAR", "ttl": "SANGATTA, 2 JUNI 2011", "nisn": "19509/0112221684", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0112221684-103", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "26", "kelas": "X. 1", "nama": "NUR AZISAH", "ttl": "EMPAGAE, 9 JANUARI 2011", "nisn": "19510/0111228531", "jk": "PEREMPUAN", "alamat": "EMPAGAE", "qrId": "STUDENT:0111228531-109", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "27", "kelas": "X. 1", "nama": "NUR QHUMAIRA MAULINDA", "ttl": "WATANSOPPENG, 20 FEBRUARI 2011", "nisn": "19511/0114537881", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0114537881-826", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "28", "kelas": "X. 1", "nama": "NUR SAFITRI", "ttl": "GANRA, 1 JULI 2011", "nisn": "19512/0115703309", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0115703309-861", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "29", "kelas": "X. 1", "nama": "NURUL KALBI", "ttl": "SOPPENG, 23 FEBRUARI 2011", "nisn": "19513/0119658577", "jk": "PEREMPUAN", "alamat": "TANAH BELLANGE", "qrId": "STUDENT:0119658577-293", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "30", "kelas": "X. 1", "nama": "RESKY ADITYA", "ttl": "SOPPENG, 2 AGUSTUS 2010", "nisn": "19515/0104892693", "jk": "LAKI-LAKI", "alamat": "ONGKOE", "qrId": "STUDENT:0104892693-538", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "31", "kelas": "X. 1", "nama": "RAHMI ROSARI", "ttl": "PANGKEP, 11 JANUARI 2011", "nisn": "19514/0113588996", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0113588996-501", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "32", "kelas": "X. 1", "nama": "SALSA MUTMAINNAH", "ttl": "JAMPUSERENGE, 5 APRIL 2011", "nisn": "19516/0111759014", "jk": "PEREMPUAN", "alamat": "JAMPUSERENGE", "qrId": "STUDENT:0111759014-263", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "33", "kelas": "X. 1", "nama": "UMMUL QUR'AN", "ttl": "PAOMALLIMPOE, 19 NOVEMBER 2010", "nisn": "19517/0106115131", "jk": "PEREMPUAN", "alamat": "PAOMALLIMPOE", "qrId": "STUDENT:0106115131-873", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "34", "kelas": "X. 1", "nama": "VEXIOVANGELO JETVIXILY ABELL GOSAL", "ttl": "MAKASSAR, 5 MEI 2011", "nisn": "19518/0119266430", "jk": "LAKI-LAKI", "alamat": "JL. PEMUDA", "qrId": "STUDENT:0119266430-523", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "35", "kelas": "X. 1", "nama": "ZASKIAH MUTMAINNAH SOFIAN", "ttl": "CABENGE, 28 JUNI 2011", "nisn": "19519/0112988234", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0112988234-941", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "36", "kelas": "X. 2", "nama": "AL FATIH RIFTAQI AFIF", "ttl": "SOPPENG, 1 FEBRUARI 2011", "nisn": "19520/0116834253", "jk": "LAKI-LAKI", "alamat": "BTN PERUMNAS ANGGREK PERMAI", "qrId": "STUDENT:0116834253-156", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "37", "kelas": "X. 2", "nama": "ALIAH ASYIFA KIRANA", "ttl": "UJUNG, 27 JUNI 2011", "nisn": "19521/0119176812", "jk": "PEREMPUAN", "alamat": "LAPPA WATU_WATU", "qrId": "STUDENT:0119176812-905", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "38", "kelas": "X. 2", "nama": "ALQIYA AINUN MAHYA", "ttl": "SOPPENG, 16 NOVEMBER 2010", "nisn": "19522/0102160120", "jk": "PEREMPUAN", "alamat": "JL. KAYANGAN", "qrId": "STUDENT:0102160120-377", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "39", "kelas": "X. 2", "nama": "ANDI ELYSA AZAHRA SURAEDIPUTRI", "ttl": "MAKASSAR, 21 JUNI 2011", "nisn": "19523/0114834527", "jk": "PEREMPUAN", "alamat": "LAEMPA", "qrId": "STUDENT:0114834527-905", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "40", "kelas": "X. 2", "nama": "ANDI INAYAH AZ-ZAHRA.H", "ttl": "SOPPENG, 7 APRIL 2011", "nisn": "19524/0122017040", "jk": "PEREMPUAN", "alamat": "BTN MARWAH GRAND LAND BLOK R. 17", "qrId": "STUDENT:0122017040-346", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "41", "kelas": "X. 2", "nama": "ANDI MUH. RIFQY ASFIRANDA", "ttl": "TINCO, 24 JUNI 2010", "nisn": "19525/0107434936", "jk": "LAKI-LAKI", "alamat": "DONRI-DONRI", "qrId": "STUDENT:0107434936-744", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "42", "kelas": "X. 2", "nama": "ANDI WECOLLI PATAPPARI", "ttl": "WATANSOPPENG, 15 JULI 2010", "nisn": "19526/0101362790", "jk": "PEREMPUAN", "alamat": "JL. KEMAKMURAN", "qrId": "STUDENT:0101362790-635", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "43", "kelas": "X. 2", "nama": "ANNISA HUSNUL KHOTIMAH", "ttl": "SOPPENG, 23 MEI 2011", "nisn": "19527/0117820709", "jk": "PEREMPUAN", "alamat": "PER. BUKIT TOBANI PERMAI", "qrId": "STUDENT:0117820709-657", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "44", "kelas": "X. 2", "nama": "AQILA ZAKHLATIVA AYUNNISA", "ttl": "SOPPENG, 10 MEI 2011", "nisn": "19528/0119042164", "jk": "PEREMPUAN", "alamat": "TONRONGE", "qrId": "STUDENT:0119042164-511", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "45", "kelas": "X. 2", "nama": "AULYA", "ttl": "SOPPENG, 27 MEI 2011", "nisn": "19529/0119775519", "jk": "PEREMPUAN", "alamat": "TODDANG SALOE", "qrId": "STUDENT:0119775519-832", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "46", "kelas": "X. 2", "nama": "FADEL FATURRAHMAN", "ttl": "SOLIE, 1 APRIL 2011", "nisn": "19530/0114022526", "jk": "LAKI-LAKI", "alamat": "PISING", "qrId": "STUDENT:0114022526-563", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "47", "kelas": "X. 2", "nama": "FAIQA KHADIJAH", "ttl": "SOPPENG, 12 JUNI 2011", "nisn": "19531/0113822976", "jk": "PEREMPUAN", "alamat": "BELO", "qrId": "STUDENT:0113822976-526", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "48", "kelas": "X. 2", "nama": "FIHRIYAH", "ttl": "SOPPENG, 7 MEI 2011", "nisn": "19532/0118242533", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0118242533-647", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "49", "kelas": "X. 2", "nama": "KAMELIA", "ttl": "LABOKONG, 26 APRIL 2011", "nisn": "19533/0116696109", "jk": "PEREMPUAN", "alamat": "H. MUH. TANG", "qrId": "STUDENT:0116696109-885", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "50", "kelas": "X. 2", "nama": "MALIKHA AURORAH", "ttl": "SOLIE, 18 JANUARI 2011", "nisn": "19534/0112198856", "jk": "PEREMPUAN", "alamat": "PISING", "qrId": "STUDENT:0112198856-394", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "51", "kelas": "X. 2", "nama": "MAURA KIBRI KASIM", "ttl": "WAMENA, 2 JUNI 2011", "nisn": "19535/0119968441", "jk": "PEREMPUAN", "alamat": "MATTOANGING", "qrId": "STUDENT:0119968441-756", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "52", "kelas": "X. 2", "nama": "MUH. AGUS RAMADHANA", "ttl": "BATU-BATU SOPPENG, 11 AGUSTUS 2010", "nisn": "19536/0105306746", "jk": "LAKI-LAKI", "alamat": "PAKKANREBETE", "qrId": "STUDENT:0105306746-950", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "53", "kelas": "X. 2", "nama": "MUH. FAIZ ZAHRAN RAMADHAN", "ttl": "SOPPENG, 12 AGUSTUS 2010", "nisn": "19538/0104127409", "jk": "LAKI-LAKI", "alamat": "KEMAKMURAN", "qrId": "STUDENT:0104127409-913", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "54", "kelas": "X. 2", "nama": "MUH. FAQIL ALFARABHY", "ttl": "SOPPENG, 19 OKTOBER 2010", "nisn": "19539/0106637284", "jk": "LAKI-LAKI", "alamat": "AKKAMPENGG", "qrId": "STUDENT:0106637284-754", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "55", "kelas": "X. 2", "nama": "MUH. JUSUF AL JOVIANTO", "ttl": "WATANSOPPENG, 9 JUNI 2011", "nisn": "19540/0115592426", "jk": "LAKI-LAKI", "alamat": "JL. AMBO TANG", "qrId": "STUDENT:0115592426-795", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "56", "kelas": "X. 2", "nama": "MUH. AL'AQIL FIKRAN", "ttl": "CABENGE, 3 FEBRUARI 2011", "nisn": "19537/0113473861", "jk": "LAKI-LAKI", "alamat": "JL. PEMILIHAN", "qrId": "STUDENT:0113473861-336", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "57", "kelas": "X. 2", "nama": "MUHAMMAD ARIEF ARSAD", "ttl": "WATAMPONE, 14 APRIL 2011", "nisn": "19541/0118500159", "jk": "LAKI-LAKI", "alamat": "TANA CABI", "qrId": "STUDENT:0118500159-554", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "58", "kelas": "X. 2", "nama": "MUHAMMAD SYAHRIL ILHAM", "ttl": "POLEWALI, 25 OKTOBER 2010", "nisn": "19542/0104255425", "jk": "LAKI-LAKI", "alamat": "POLEWALI", "qrId": "STUDENT:0104255425-617", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "59", "kelas": "X. 2", "nama": "NABILAH NUR AZIFAH", "ttl": "WATANSOPPENG, 16 JANUARI 2011", "nisn": "19543/0119939726", "jk": "PEREMPUAN", "alamat": "SALOTUNGO", "qrId": "STUDENT:0119939726-694", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "60", "kelas": "X. 2", "nama": "NADIRAH RAHMAN", "ttl": "TAKALAR, 17 FEBRUARI 2011", "nisn": "19544/0116630034", "jk": "PEREMPUAN", "alamat": "JL.ASMIL DENKAV 1 KM 28", "qrId": "STUDENT:0116630034-166", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "61", "kelas": "X. 2", "nama": "NAYLA NUR RAMADHANI", "ttl": "SOPPENG, 7 SEPTEMBER 2010", "nisn": "19545/0104414616", "jk": "PEREMPUAN", "alamat": "BTN PEPABRI", "qrId": "STUDENT:0104414616-412", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "62", "kelas": "X. 2", "nama": "NUR FADHILA FEBRIANA", "ttl": "SOPPENG, 1 FEBRUARI 2011", "nisn": "19546/0114752261", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0114752261-540", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "63", "kelas": "X. 2", "nama": "NUR RISQI RAMADANI", "ttl": "SOPPENG, 24 AGUSTUS 2010", "nisn": "19547/0109628261", "jk": "PEREMPUAN", "alamat": "TENGAPADANGE", "qrId": "STUDENT:0109628261-848", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "64", "kelas": "X. 2", "nama": "PUTRI WANDANA", "ttl": "SOPPENG, 4 SEPTEMBER 2010", "nisn": "19548/0104711226", "jk": "PEREMPUAN", "alamat": "LAPPAMALOANG", "qrId": "STUDENT:0104711226-981", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "65", "kelas": "X. 2", "nama": "QURRATA A'YUN T.", "ttl": "SOPPENG, 25 MARET 2011", "nisn": "19549/0119065802", "jk": "PEREMPUAN", "alamat": "JALAN POROS TAKALALA", "qrId": "STUDENT:0119065802-931", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "66", "kelas": "X. 2", "nama": "RAHMAT SYAHADAT", "ttl": "LEWORENG, 13 AGUSTUS 2010", "nisn": "19550/0101450688", "jk": "LAKI-LAKI", "alamat": "JL.WIJAYA", "qrId": "STUDENT:0101450688-867", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "67", "kelas": "X. 2", "nama": "RIKA KARTIKA", "ttl": "KUTAI TIMUR, 28 MARET 2011", "nisn": "19551/0114895164", "jk": "PEREMPUAN", "alamat": "D KED", "qrId": "STUDENT:0114895164-282", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "68", "kelas": "X. 2", "nama": "SARI ULFA", "ttl": "LABAE, 25 AGUSTUS 2010", "nisn": "19552/0108687412", "jk": "PEREMPUAN", "alamat": "LABAE", "qrId": "STUDENT:0108687412-124", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "69", "kelas": "X. 2", "nama": "SIDRATUL AULIA MUBARAK", "ttl": "SOPPENG, 12 JUNI 2011", "nisn": "19553/0113587057", "jk": "PEREMPUAN", "alamat": "BAKKE", "qrId": "STUDENT:0113587057-268", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "70", "kelas": "X. 2", "nama": "ZHAFIRAH DWI SAPUTRI", "ttl": "MAKASSAR, 19 FEBRUARI 2011", "nisn": "19555/0126793601", "jk": "PEREMPUAN", "alamat": "MATTOANGING", "qrId": "STUDENT:0126793601-440", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "71", "kelas": "X. 2", "nama": "ZASKIA MARWAH", "ttl": "POLEWALI, 31 JANUARI 2011", "nisn": "19554/0117873240", "jk": "PEREMPUAN", "alamat": "POLEWALI", "qrId": "STUDENT:0117873240-381", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "72", "kelas": "X. 3", "nama": "ADIL PRANANDITA SAPUTRA", "ttl": "SOPPENG, 11 MARET 2011", "nisn": "19556/0112783618", "jk": "LAKI-LAKI", "alamat": "PERUMNAS ANGGREK PERMAI", "qrId": "STUDENT:0112783618-819", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "73", "kelas": "X. 3", "nama": "ADITYA REZKY ANNAWAF", "ttl": "PALOPO, 31 MARET 2011", "nisn": "19557/0113626385", "jk": "LAKI-LAKI", "alamat": "PERUM BENTENG LAND BLOK B NO.11", "qrId": "STUDENT:0113626385-503", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "74", "kelas": "X. 3", "nama": "AHMAD AFIEF KURNIAWAN", "ttl": "PAREPARE, 23 MEI 2011", "nisn": "19558/0111855062", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0111855062-562", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "75", "kelas": "X. 3", "nama": "AINUN ZIKRANI", "ttl": "SOPPENG, 22 NOVEMBER 2010", "nisn": "19559/0103569569", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0103569569-529", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "76", "kelas": "X. 3", "nama": "ALIYAN FAUZAN", "ttl": "JAMPU, 6 JUNI 2011", "nisn": "19560/0112691615", "jk": "LAKI-LAKI", "alamat": "JAMPU", "qrId": "STUDENT:0112691615-628", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "77", "kelas": "X. 3", "nama": "ANDI FAKHIRAH ARTANTI", "ttl": "MAKASSAR, 9 JUNI 2011", "nisn": "19561/0111829816", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0111829816-801", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "78", "kelas": "X. 3", "nama": "ANDI NURFAIRA", "ttl": "TANGERANG, 19 JUNI 2011", "nisn": "19562/0117978699", "jk": "PEREMPUAN", "alamat": "GRIYA CILEDUG", "qrId": "STUDENT:0117978699-356", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "79", "kelas": "X. 3", "nama": "ANNA ALTHAFUNNISA", "ttl": "MAKASSAR, 23 MEI 2011", "nisn": "19563/0114948277", "jk": "PEREMPUAN", "alamat": "TODDANG SALOE", "qrId": "STUDENT:0114948277-685", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "80", "kelas": "X. 3", "nama": "ASYIFAH AZZAHRA", "ttl": "MANNAGAE, 12 OKTOBER 2010", "nisn": "19564/3108485983", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:3108485983-608", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "81", "kelas": "X. 3", "nama": "AUFAA RIFQI FADHIL", "ttl": "SOPPENG, 22 FEBRUARI 2011", "nisn": "19565/0112747347", "jk": "LAKI-LAKI", "alamat": "SOPPENG", "qrId": "STUDENT:0112747347-184", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "82", "kelas": "X. 3", "nama": "AUREL EMIL", "ttl": "BATU-BATU, 10 AGUSTUS 2010", "nisn": "19566/0108110332", "jk": "PEREMPUAN", "alamat": "PADALI", "qrId": "STUDENT:0108110332-937", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "83", "kelas": "X. 3", "nama": "AYATULLAH MIRZA AL FARIZI", "ttl": "SOPPENG, 14 APRIL 2011", "nisn": "19567/0116133300", "jk": "LAKI-LAKI", "alamat": "LAWO", "qrId": "STUDENT:0116133300-530", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "84", "kelas": "X. 3", "nama": "CICA ANUGERAH", "ttl": "MATTOANGING, 29 MARET 2011", "nisn": "19568/0115604024", "jk": "PEREMPUAN", "alamat": "MATTOANGING", "qrId": "STUDENT:0115604024-151", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "85", "kelas": "X. 3", "nama": "DEWI SANDRA", "ttl": "MALAYSIA, 29 APRIL 2010", "nisn": "19569/0105261494", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0105261494-131", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "86", "kelas": "X. 3", "nama": "EVA AMELIA", "ttl": "SOPPENG, 15 JUNI 2011", "nisn": "19570/0117701305", "jk": "PEREMPUAN", "alamat": "CENRANA", "qrId": "STUDENT:0117701305-157", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "87", "kelas": "X. 3", "nama": "FAKHRUL IFTIKHAR ALIYAN", "ttl": "SOPPENG, 26 MEI 2011", "nisn": "19571/0118744121", "jk": "LAKI-LAKI", "alamat": "JL. WIJAYA", "qrId": "STUDENT:0118744121-740", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "88", "kelas": "X. 3", "nama": "FIKRI AFIF ZAIN", "ttl": "MANNAGAE, 5 MARET 2011", "nisn": "19572/0111543095", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0111543095-272", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "89", "kelas": "X. 3", "nama": "FILZAH IFWAT", "ttl": "CABENGE, 3 NOVEMBER 2010", "nisn": "19573/0102715672", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0102715672-664", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "90", "kelas": "X. 3", "nama": "HAJRIL", "ttl": "ALETELLUE, 4 JANUARI 2010", "nisn": "19574/0101431156", "jk": "LAKI-LAKI", "alamat": "ALETELLUE", "qrId": "STUDENT:0101431156-946", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "91", "kelas": "X. 3", "nama": "IFFA ATSIILAH RAMADHANI", "ttl": "SOPPENG, 2 SEPTEMBER 2010", "nisn": "19575/0101119390", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0101119390-768", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "92", "kelas": "X. 3", "nama": "JIHAN FARAHAH ARSYAD", "ttl": "SOPPENG, 25 JULI 2010", "nisn": "19576/0102772933", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0102772933-577", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "93", "kelas": "X. 3", "nama": "KHUSNUL MAQSURAH SUKRY", "ttl": "SOPPENG, 31 JULI 2010", "nisn": "19577/0102777492", "jk": "PEREMPUAN", "alamat": "JL. PESANTREN", "qrId": "STUDENT:0102777492-490", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "94", "kelas": "X. 3", "nama": "MUH. FEBRI ARISKI", "ttl": "SOPPENG, 9 FEBRUARI 2011", "nisn": "19579/0113587851", "jk": "LAKI-LAKI", "alamat": "KEMAKMURAN", "qrId": "STUDENT:0113587851-130", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "95", "kelas": "X. 3", "nama": "MUH. PAJROEL MOBAROQ", "ttl": "SOPPENG, 25 AGUSTUS 2010", "nisn": "19578/0108478812", "jk": "LAKI-LAKI", "alamat": "JL. KEMAKMURAN", "qrId": "STUDENT:0108478812-247", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "96", "kelas": "X. 3", "nama": "MUH.RASYA PRATAMA PUTRA", "ttl": "LAPAJUNG, 4 NOVEMBER 2010", "nisn": "19580/0103867874", "jk": "LAKI-LAKI", "alamat": "JL. BATU MASSILA", "qrId": "STUDENT:0103867874-156", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "97", "kelas": "X. 3", "nama": "NESHA ZAFIRAH", "ttl": "SOPPENG, 11 JULI 2010", "nisn": "19581/0108045870", "jk": "PEREMPUAN", "alamat": "ENREKENG", "qrId": "STUDENT:0108045870-347", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "98", "kelas": "X. 3", "nama": "NUR FEBRIANTI", "ttl": "LEWORENG, 13 FEBRUARI 2011", "nisn": "19582/0119054199", "jk": "PEREMPUAN", "alamat": "LEWORENG", "qrId": "STUDENT:0119054199-696", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "99", "kelas": "X. 3", "nama": "NUR SASKYA SABILA", "ttl": "LABOKONG, 7 AGUSTUS 2010", "nisn": "19583/0107913669", "jk": "PEREMPUAN", "alamat": "H. MUH. TANG", "qrId": "STUDENT:0107913669-746", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "100", "kelas": "X. 3", "nama": "NURBAYA", "ttl": "LAJAROKO, 10 FEBRUARI 2011", "nisn": "19584/0113941271", "jk": "PEREMPUAN", "alamat": "LAJAROKO", "qrId": "STUDENT:0113941271-937", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "101", "kelas": "X. 3", "nama": "NURUL WAHIDA", "ttl": "SOPPENG, 2 NOVEMBER 2010", "nisn": "19585/0116077897", "jk": "PEREMPUAN", "alamat": "CENRANA", "qrId": "STUDENT:0116077897-944", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "102", "kelas": "X. 3", "nama": "RIFQI AUNUR AL HAYYU", "ttl": "CIKKE'E, 23 FEBRUARI 2011", "nisn": "19586/0117542646", "jk": "LAKI-LAKI", "alamat": "CIKKEE LASETANG", "qrId": "STUDENT:0117542646-373", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "103", "kelas": "X. 3", "nama": "SEPTIARINI", "ttl": "CABENGE, 13 SEPTEMBER 2010", "nisn": "19587/0103380985", "jk": "PEREMPUAN", "alamat": "JL. KAYANGAN", "qrId": "STUDENT:0103380985-687", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "104", "kelas": "X. 3", "nama": "SYIFANA NOVITA H.", "ttl": "SOPPENG, 15 NOVEMBER 2010", "nisn": "19588/0108821372", "jk": "PEREMPUAN", "alamat": "JL. A. POTTO NO.100", "qrId": "STUDENT:0108821372-913", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "105", "kelas": "X. 3", "nama": "TASYA RAFIFAH GANI", "ttl": "SOPPENG, 6 OKTOBER 2010", "nisn": "19589/0103890907", "jk": "PEREMPUAN", "alamat": "JL. KARYA TAKALALA", "qrId": "STUDENT:0103890907-780", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "106", "kelas": "X. 3", "nama": "ZASKIA SYAFA MAULIDYA", "ttl": "BARATA, 12 FEBRUARI 2011", "nisn": "19591/0117276844", "jk": "PEREMPUAN", "alamat": "BARATA", "qrId": "STUDENT:0117276844-201", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "107", "kelas": "X. 3", "nama": "ZAKI WILDANAN", "ttl": "LOLLOE SOPPENG, 14 MEI 2011", "nisn": "19590/0116294731", "jk": "LAKI-LAKI", "alamat": "TOGIGI", "qrId": "STUDENT:0116294731-841", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "108", "kelas": "X. 4", "nama": "A. AISYA FAKHIRA AZKA", "ttl": "SOPPENG, 1 FEBRUARI 2011", "nisn": "19592/3113137247", "jk": "PEREMPUAN", "alamat": "JL. KAYANGAN NO 88", "qrId": "STUDENT:3113137247-139", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "109", "kelas": "X. 4", "nama": "A. FADEL ALHAFIIZH", "ttl": "WATANSOPPENG, 20 JANUARI 2011", "nisn": "19593/0116463087", "jk": "LAKI-LAKI", "alamat": "VILLA LAMAPPOLEWARE", "qrId": "STUDENT:0116463087-243", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "110", "kelas": "X. 4", "nama": "A. KHAERUNNISA", "ttl": "TAKALALA SOPPENG, 21 FEBRUARI 2011", "nisn": "19595/0112955399", "jk": "PEREMPUAN", "alamat": "TAKALALA", "qrId": "STUDENT:0112955399-361", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "111", "kelas": "X. 4", "nama": "A. SYAKUR PAWELLOI R. SALAM", "ttl": "SENTRAL, 20 NOVEMBER 2010", "nisn": "19596/0109254866", "jk": "LAKI-LAKI", "alamat": "KOMPLEKS PASAR SENTRAL", "qrId": "STUDENT:0109254866-836", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "112", "kelas": "X. 4", "nama": "A.FADLY WIADNAN PUTRA", "ttl": "MAKASSAR, 17 SEPTEMBER 2010", "nisn": "19594/0109044659", "jk": "LAKI-LAKI", "alamat": "MACANRE", "qrId": "STUDENT:0109044659-720", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "113", "kelas": "X. 4", "nama": "AFIFA ZAHIRAH AZHAR", "ttl": "SOLO, 12 DESEMBER 2010", "nisn": "19597/0109966373", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:19597-873", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "114", "kelas": "X. 4", "nama": "AFIQAH FADHILAH", "ttl": "SOPPENG, 19 SEPTEMBER 2010", "nisn": "19598/0102833391", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0102833391-297", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "115", "kelas": "X. 4", "nama": "AHMAD AIDAN GHANI", "ttl": "SOPPENG, 1 JUNI 2011", "nisn": "19600/0115501143", "jk": "LAKI-LAKI", "alamat": "LAWO", "qrId": "STUDENT:0115501143-713", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "116", "kelas": "X. 4", "nama": "AHMAD ALWAN SAPUTRA", "ttl": "SOPPENG, 15 APRIL 2011", "nisn": "19601/0119773591", "jk": "LAKI-LAKI", "alamat": "JL. BILA SELATAN", "qrId": "STUDENT:0119773591-700", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "117", "kelas": "X. 4", "nama": "AHMAD FITRAH SYAWAL", "ttl": "SOPPENG, 10 SEPTEMBER 2010", "nisn": "19602/0101649832", "jk": "LAKI-LAKI", "alamat": "JL. KEMAKMURAN", "qrId": "STUDENT:0101649832-738", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "118", "kelas": "X. 4", "nama": "AHMAD HABIB KAMIL", "ttl": "SOPPENG, 11 DESEMBER 2010", "nisn": "19603/0104745749", "jk": "LAKI-LAKI", "alamat": "BTN BUMI ANGGREK PERMAI", "qrId": "STUDENT:0104745749-826", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "119", "kelas": "X. 4", "nama": "AINUL", "ttl": "LEBBAE, 15 OKTOBER 2010", "nisn": "19604/0102309334", "jk": "PEREMPUAN", "alamat": "LEBBAE", "qrId": "STUDENT:0102309334-356", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "120", "kelas": "X. 4", "nama": "ANDI AHMAD RAIS", "ttl": "SOPPENG, 15 FEBRUARI 2011", "nisn": "19606/0116338311", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0116338311-849", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "121", "kelas": "X. 4", "nama": "ANDI DWI ANANDA PUTRI", "ttl": "LABAE, 10 DESEMBER 2010", "nisn": "19607/0106053414", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0106053414-124", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "122", "kelas": "X. 4", "nama": "ANDI MUH. SAFWAN YUSUF ZAIN", "ttl": "WATANSOPPENG, 29 JULI 2010", "nisn": "19608/0102679214", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0102679214-154", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "123", "kelas": "X. 4", "nama": "ANNISA MIFTAHUL KHAERAH", "ttl": "WATANSOPPENG, 19 JANUARI 2011", "nisn": "19609/0118521094", "jk": "PEREMPUAN", "alamat": "JL. KAYANGAN", "qrId": "STUDENT:0118521094-234", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "124", "kelas": "X. 4", "nama": "AQILAH DZIKRA RAMADHANI", "ttl": "SOPPENG, 11 AGUSTUS 2010", "nisn": "19610/0108850348", "jk": "PEREMPUAN", "alamat": "LABURAWUNG", "qrId": "STUDENT:0108850348-118", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "125", "kelas": "X. 4", "nama": "AULIA NUR UMAIRAH MUHLIS", "ttl": "MAKASSAR, 10 OKTOBER 2010", "nisn": "19611/0108333108", "jk": "PEREMPUAN", "alamat": "JL. MERDEKA", "qrId": "STUDENT:0108333108-588", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "126", "kelas": "X. 4", "nama": "AFRALYA DHEANITA", "ttl": "SOPPENG, 20 MARET 2011", "nisn": "19599/0113964879", "jk": "PEREMPUAN", "alamat": "TIMPALAJA", "qrId": "STUDENT:0113964879-526", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "127", "kelas": "X. 4", "nama": "ALFINZAH", "ttl": "TOGIGI, 7 NOVEMBER 2010", "nisn": "19605/0108972972", "jk": "LAKI-LAKI", "alamat": "TOGIGI", "qrId": "STUDENT:0108972972-527", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "128", "kelas": "X. 4", "nama": "GHINA KHALISAH", "ttl": "SOPPENG, 4 NOVEMBER 2010", "nisn": "19612/0109152054", "jk": "PEREMPUAN", "alamat": "LABESSI", "qrId": "STUDENT:0109152054-532", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "129", "kelas": "X. 4", "nama": "INAYATUL MUKMINA", "ttl": "SOPPENG, 9 DESEMBER 2010", "nisn": "19613/0108025557", "jk": "PEREMPUAN", "alamat": "BAKAE", "qrId": "STUDENT:0108025557-257", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "130", "kelas": "X. 4", "nama": "MAGVIRA", "ttl": "LEBBAE, 21 FEBRUARI 2011", "nisn": "19614/0112664694", "jk": "PEREMPUAN", "alamat": "LEBBAE", "qrId": "STUDENT:0112664694-894", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "131", "kelas": "X. 4", "nama": "MELIKA PUTRI", "ttl": "SOPPENG, 28 JANUARI 2011", "nisn": "19615/0113243874", "jk": "PEREMPUAN", "alamat": "PISING", "qrId": "STUDENT:0113243874-225", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "132", "kelas": "X. 4", "nama": "MIMI MARSHELLA", "ttl": "SENGKANG, 26 MEI 2011", "nisn": "19616/0115895110", "jk": "PEREMPUAN", "alamat": "JL. SUNU", "qrId": "STUDENT:0115895110-601", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "133", "kelas": "X. 4", "nama": "MUGNI ZAMAL JAWAD ISLAMUDDIN", "ttl": "MADELLO SOPPENG, 6 APRIL 2011", "nisn": "19617/0116752156", "jk": "LAKI-LAKI", "alamat": "MADELLO", "qrId": "STUDENT:0116752156-681", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "134", "kelas": "X. 4", "nama": "MUH ZAMI ANUGRAH", "ttl": "MAKASSAR, 14 MEI 2011", "nisn": "19618/3112830988", "jk": "LAKI-LAKI", "alamat": "LAPAJUNG", "qrId": "STUDENT:3112830988-985", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "135", "kelas": "X. 4", "nama": "MUH. FADIL RAMADHAN", "ttl": "SOPPENG, 13 AGUSTUS 2010", "nisn": "19619/0101082866", "jk": "LAKI-LAKI", "alamat": "JL. PASAR SENTRAL", "qrId": "STUDENT:0101082866-175", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "136", "kelas": "X. 4", "nama": "MUHAMMAD FADEL FAHLEVI", "ttl": "WATANSOPPENG, 8 JULI 2011", "nisn": "19620/0116821556", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0116821556-943", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "137", "kelas": "X. 4", "nama": "MUSYAHIDAH AULIA", "ttl": "SOPPENG, 5 DESEMBER 2010", "nisn": "19622/0101294340", "jk": "PEREMPUAN", "alamat": "PAKKANREBETE", "qrId": "STUDENT:0101294340-433", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "138", "kelas": "X. 4", "nama": "MUHAMMAD REZKI MAULANA", "ttl": "TAJUNCU, 15 FEBRUARI 2011", "nisn": "19621/0115162645", "jk": "LAKI-LAKI", "alamat": "TURUNGENG LAPPAE", "qrId": "STUDENT:0115162645-899", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "139", "kelas": "X. 4", "nama": "NUR ADILA", "ttl": "SOPPENG, 15 MEI 2009", "nisn": "19623/0094381850", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0094381850-114", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "140", "kelas": "X. 4", "nama": "NURUL ARTINA", "ttl": "SOPPENG, 29 SEPTEMBER 2010", "nisn": "19624/0109052576", "jk": "PEREMPUAN", "alamat": "JLN TAKORE", "qrId": "STUDENT:0109052576-486", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "141", "kelas": "X. 4", "nama": "ULVA NAIFAH", "ttl": "MALAKA, 5 AGUSTUS 2010", "nisn": "19625/0101456341", "jk": "PEREMPUAN", "alamat": "MALAKA RAYA", "qrId": "STUDENT:0101456341-774", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "142", "kelas": "X. 4", "nama": "ZALFA NURIZAH", "ttl": "WATANSOPPENG, 16 MARET 2011", "nisn": "19627/0114918084", "jk": "PEREMPUAN", "alamat": "MALLANROE", "qrId": "STUDENT:0114918084-602", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "143", "kelas": "X. 4", "nama": "ZAHWA DAMAYANTI", "ttl": "SOPPENG, 5 APRIL 2010", "nisn": "19626/0101325797", "jk": "PEREMPUAN", "alamat": "JL. DURIAN III GANG AYAM", "qrId": "STUDENT:0101325797-376", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "144", "kelas": "X. 5", "nama": "ADITYA PUTRA", "ttl": "SOPPENG, 24 OKTOBER 2010", "nisn": "19628/0109782427", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0109782427-301", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "145", "kelas": "X. 5", "nama": "ANDI AHMAD ADITYA MUKRAM", "ttl": "WATANSOPPENG, 5 DESEMBER 2010", "nisn": "19629/0107137231", "jk": "LAKI-LAKI", "alamat": "JL. MERDEKA", "qrId": "STUDENT:0107137231-306", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "146", "kelas": "X. 5", "nama": "ANDI QOID FAQIH", "ttl": "SOPPENG, 16 JUNI 2010", "nisn": "19631/0107206018", "jk": "LAKI-LAKI", "alamat": "JL. BILA UTARA NO. 154", "qrId": "STUDENT:0107206018-267", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "147", "kelas": "X. 5", "nama": "ANNA DIVA PUTRI HANIEF", "ttl": "MAROS, 23 JUNI 2011", "nisn": "19632/0111657791", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0111657791-110", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "148", "kelas": "X. 5", "nama": "AQIL SAITULLAH NASRUDDIN", "ttl": "SOPPENG, 13 APRIL 2011", "nisn": "19633/0119400425", "jk": "LAKI-LAKI", "alamat": "BTN ANGEREK RAYA", "qrId": "STUDENT:0119400425-750", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "149", "kelas": "X. 5", "nama": "AQILAH GIFANY AZKA SUHARWAN", "ttl": "LABESSI SOPPENG, 9 MARET 2011", "nisn": "19634/0118544824", "jk": "PEREMPUAN", "alamat": "LABESSI", "qrId": "STUDENT:0118544824-508", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "150", "kelas": "X. 5", "nama": "ASMA TUN HAMISYA", "ttl": "SOPPENG, 24 FEBRUARI 2011", "nisn": "19635/0114205531", "jk": "PEREMPUAN", "alamat": "DABBARE", "qrId": "STUDENT:0114205531-861", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "151", "kelas": "X. 5", "nama": "ASNI", "ttl": "ALAUMADDULANG, 6 MEI 2011", "nisn": "19636/0113137354", "jk": "PEREMPUAN", "alamat": "ALAUMADDULANG", "qrId": "STUDENT:0113137354-910", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "152", "kelas": "X. 5", "nama": "ANDI ASTRID AYUDIA", "ttl": "SENGKANG, 26 NOVEMBER 2010", "nisn": "19630/0107902905", "jk": "PEREMPUAN", "alamat": "JL. PEMUDA", "qrId": "STUDENT:0107902905-493", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "153", "kelas": "X. 5", "nama": "CALLYSTA YOISA FIODORA", "ttl": "SOPPENG, 10 AGUSTUS 2010", "nisn": "19637/0108143366", "jk": "PEREMPUAN", "alamat": "JLN.KAYANGAN", "qrId": "STUDENT:0108143366-662", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "154", "kelas": "X. 5", "nama": "DANIL ZULJUMAIDIL", "ttl": "TAJUNCU, 12 NOVEMBER 2010", "nisn": "19638/0109173728", "jk": "LAKI-LAKI", "alamat": "TAJUNCU", "qrId": "STUDENT:0109173728-951", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "155", "kelas": "X. 5", "nama": "FITRA RAMADANA", "ttl": "SOPPENG, 21 AGUSTUS 2010", "nisn": "19639/0107820462", "jk": "LAKI-LAKI", "alamat": "EMPAGAE", "qrId": "STUDENT:0107820462-100", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "156", "kelas": "X. 5", "nama": "HIDAYATULLAH", "ttl": "MAKASSAR, 27 DESEMBER 2010", "nisn": "19640/0108419640", "jk": "LAKI-LAKI", "alamat": "MASAGO", "qrId": "STUDENT:0108419640-341", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "157", "kelas": "X. 5", "nama": "HUMAIRAH ZHAFIRAH ZAHRA . R", "ttl": "SOPPENG, 18 JULI 2010", "nisn": "19641/0103593474", "jk": "PEREMPUAN", "alamat": "JL. MERDEKA", "qrId": "STUDENT:0103593474-253", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "158", "kelas": "X. 5", "nama": "HURRATURRAYYI", "ttl": "JOLLE, 12 JANUARI 2011", "nisn": "19642/3115715362", "jk": "PEREMPUAN", "alamat": "JAMPU-JAMPU", "qrId": "STUDENT:3115715362-251", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "159", "kelas": "X. 5", "nama": "IRFAN ARIFIN", "ttl": "UDDUNGENG, 5 JUNI 2011", "nisn": "19643/0117436622", "jk": "LAKI-LAKI", "alamat": "UDDUNGENG", "qrId": "STUDENT:0117436622-573", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "160", "kelas": "X. 5", "nama": "JANEETA NAJLA SABIRAH", "ttl": "WATANSOPPENG, 26 APRIL 2011", "nisn": "19644/0115917871", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0115917871-144", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "161", "kelas": "X. 5", "nama": "KAIZIAH PUTRI", "ttl": "BUNNE, 15 FEBRUARI 2011", "nisn": "19645/0113172203", "jk": "PEREMPUAN", "alamat": "LEBBA", "qrId": "STUDENT:0113172203-159", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "162", "kelas": "X. 5", "nama": "KHAIRIL MUFTI. M", "ttl": "SOPPENG, 28 APRIL 2011", "nisn": "19646/0116143396", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0116143396-807", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "163", "kelas": "X. 5", "nama": "M. IQBAL JAYLANI", "ttl": "ONGKOE, 1 NOVEMBER 2010", "nisn": "19647/0109300378", "jk": "LAKI-LAKI", "alamat": "ONGKOE", "qrId": "STUDENT:0109300378-446", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "164", "kelas": "X. 5", "nama": "MILFA ARSYIKA AZZAHRA", "ttl": "SOPPENG, 15 OKTOBER 2010", "nisn": "19648/0104134180", "jk": "PEREMPUAN", "alamat": "BTN MALAKA BLOK C NO.4", "qrId": "STUDENT:0104134180-516", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "165", "kelas": "X. 5", "nama": "MONALISA GITTI KUMALASARI", "ttl": "SOPPENG, 10 APRIL 2011", "nisn": "19649/0114335570", "jk": "PEREMPUAN", "alamat": "LOLLOE", "qrId": "STUDENT:0114335570-450", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "166", "kelas": "X. 5", "nama": "MUH. FITRA SUHERI", "ttl": "SOPPENG, 6 SEPTEMBER 2010", "nisn": "19651/0107357202", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0107357202-428", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "167", "kelas": "X. 5", "nama": "MUH.FAIZ DZULFIQAR ADHAR", "ttl": "WATANSOPPENG, 17 DESEMBER 2010", "nisn": "19650/0107298115", "jk": "LAKI-LAKI", "alamat": "JL.KEMAKMURAN", "qrId": "STUDENT:0107298115-947", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "168", "kelas": "X. 5", "nama": "MUH. MIFTAHUL RAYYAN S.", "ttl": "MAKASSAR, 14 MARET 2011", "nisn": "19652/0119664948", "jk": "LAKI-LAKI", "alamat": "JL. ASOKA", "qrId": "STUDENT:0119664948-861", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "169", "kelas": "X. 5", "nama": "NADILA ZHAFIRA TRI ANDHYRA", "ttl": "SOPPENG, 14 FEBRUARI 2011", "nisn": "19653/0115153769", "jk": "PEREMPUAN", "alamat": "JL. MERDEKA", "qrId": "STUDENT:0115153769-176", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "170", "kelas": "X. 5", "nama": "NALA NASWA ANAYA", "ttl": "SOPPENG, 1 OKTOBER 2010", "nisn": "19654/0105962861", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0105962861-955", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "171", "kelas": "X. 5", "nama": "NUR AQSAH HAPISAH", "ttl": "SOPPENG, 26 SEPTEMBER 2010", "nisn": "19655/0107365700", "jk": "PEREMPUAN", "alamat": "MACCOPE", "qrId": "STUDENT:0107365700-687", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "172", "kelas": "X. 5", "nama": "NURUL AISYAH FAJRIANI", "ttl": "TAKALALA, 5 JULI 2010", "nisn": "19656/0105598437", "jk": "PEREMPUAN", "alamat": "JL. KARYA", "qrId": "STUDENT:0105598437-806", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "173", "kelas": "X. 5", "nama": "NURUL ANISA", "ttl": "LAPINCE, 31 DESEMBER 2010", "nisn": "19657/0101319996", "jk": "PEREMPUAN", "alamat": "LAPINCE", "qrId": "STUDENT:0101319996-833", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "174", "kelas": "X. 5", "nama": "PUTRI ASYIFA ZELMA KIRANA", "ttl": "WATANSOPPENG, 7 MEI 2011", "nisn": "19658/0115213408", "jk": "PEREMPUAN", "alamat": "JL. PEMUDA", "qrId": "STUDENT:0115213408-183", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "175", "kelas": "X. 5", "nama": "RIFATUL KHAIRIYAH. Z", "ttl": "SOPPENG, 19 JUNI 2011", "nisn": "19659/0117797187", "jk": "PEREMPUAN", "alamat": "JL. BILA SELATAN", "qrId": "STUDENT:0117797187-635", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "176", "kelas": "X. 5", "nama": "SITTI NUR AISYAH", "ttl": "BELO, 20 OKTOBER 2010", "nisn": "19660/0103599163", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0103599163-658", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "177", "kelas": "X. 5", "nama": "SYIFA SALSABILA", "ttl": "MEDAN, 26 JANUARI 2011", "nisn": "19661/0113253901", "jk": "PEREMPUAN", "alamat": "BILA", "qrId": "STUDENT:0113253901-914", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "178", "kelas": "X. 5", "nama": "VERLIKA", "ttl": "TONRONG SEPEE, 21 FEBRUARI 2011", "nisn": "19662/0114352506", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0114352506-959", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "179", "kelas": "X. 5", "nama": "ZAMZAM SALSABILA. M", "ttl": "MAKASSAR, 21 NOVEMBER 2010", "nisn": "19663/0108566150", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0108566150-215", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "180", "kelas": "X. 6", "nama": "A. MUH. ABRAR ALFATTAH", "ttl": "WATANSOPPENG, 19 APRIL 2011", "nisn": "19664/0119882615", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0119882615-271", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "181", "kelas": "X. 6", "nama": "A. NUR AZIZAH", "ttl": "SOPPENG, 13 JUNI 2011", "nisn": "19665/0114062142", "jk": "PEREMPUAN", "alamat": "TONROSEPE'E", "qrId": "STUDENT:0114062142-347", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "182", "kelas": "X. 6", "nama": "A. SULFIKAR SYAM", "ttl": "TIMPALAJA, 21 NOVEMBER 2010", "nisn": "19666/0105575713", "jk": "LAKI-LAKI", "alamat": "TIMPALAJA", "qrId": "STUDENT:0105575713-798", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "183", "kelas": "X. 6", "nama": "ADELIA SAKINAH", "ttl": "KEBO, 16 APRIL 2011", "nisn": "19667/0112035031", "jk": "PEREMPUAN", "alamat": "BAKKE", "qrId": "STUDENT:0112035031-337", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "184", "kelas": "X. 6", "nama": "ADILA NAILAH AZHAR", "ttl": "MAKASSAR, 2 MEI 2011", "nisn": "19668/0112530071", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0112530071-274", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "185", "kelas": "X. 6", "nama": "ANDI MUH. AKRAM", "ttl": "SOPPENG, 20 JUNI 2011", "nisn": "19669/0117341049", "jk": "LAKI-LAKI", "alamat": "PERUMNAS KOLAM EMAS", "qrId": "STUDENT:0117341049-855", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "186", "kelas": "X. 6", "nama": "ANDI USFIA SANDA", "ttl": "LAMOGO, 6 DESEMBER 2010", "nisn": "19670/0112674866", "jk": "PEREMPUAN", "alamat": "LAMOGO", "qrId": "STUDENT:0112674866-987", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "187", "kelas": "X. 6", "nama": "ANUGRAH RAMADAN", "ttl": "SOPPENG, 11 AGUSTUS 2010", "nisn": "19671/0108086714", "jk": "LAKI-LAKI", "alamat": "JL. BALUBU", "qrId": "STUDENT:0108086714-665", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "188", "kelas": "X. 6", "nama": "ASHILAH ALDIYA TSABITAH", "ttl": "CABENGE, 12 SEPTEMBER 2010", "nisn": "19672/0105893679", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0105893679-530", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "189", "kelas": "X. 6", "nama": "AYU ANDIRA LESTARI", "ttl": "SOPPENG, 8 JUNI 2011", "nisn": "19673/0119138255", "jk": "PEREMPUAN", "alamat": "PAJALESANG DUSUN PAJALESANG", "qrId": "STUDENT:0119138255-958", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "190", "kelas": "X. 6", "nama": "AYUDIYA KARTIKA", "ttl": "SOPPENG, 3 FEBRUARI 2011", "nisn": "19674/0117870036", "jk": "PEREMPUAN", "alamat": "TUR. LAPPAE", "qrId": "STUDENT:0117870036-563", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "191", "kelas": "X. 6", "nama": "CHAYA AUFA", "ttl": "LAPPA AMPENG, 20 JULI 2011", "nisn": "19675/0115181543", "jk": "PEREMPUAN", "alamat": "TAJUNCU", "qrId": "STUDENT:0115181543-778", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "192", "kelas": "X. 6", "nama": "FADYAH NUR RADILAH", "ttl": "SOPPENG, 7 APRIL 2011", "nisn": "19676/0118809283", "jk": "PEREMPUAN", "alamat": "A.POTTO NO. 106", "qrId": "STUDENT:0118809283-975", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "193", "kelas": "X. 6", "nama": "FAKHRI ALKADRI", "ttl": "TAJUNCU, 29 MEI 2011", "nisn": "19677/0117622259", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0117622259-311", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "194", "kelas": "X. 6", "nama": "FEBY VIOLA", "ttl": "SOPPENG, 18 FEBRUARI 2011", "nisn": "19678/0114462325", "jk": "PEREMPUAN", "alamat": "ALLANGKARAKENGE", "qrId": "STUDENT:0114462325-274", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "195", "kelas": "X. 6", "nama": "FIKRI RAMDANI", "ttl": "SOPPENG, 3 SEPTEMBER 2010", "nisn": "19679/0105497748", "jk": "LAKI-LAKI", "alamat": "LABESSI", "qrId": "STUDENT:0105497748-233", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "196", "kelas": "X. 6", "nama": "KHAERUL ADZAN", "ttl": "PONDOUWAE, 12 OKTOBER 2010", "nisn": "19680/0103133933", "jk": "LAKI-LAKI", "alamat": "JL. ANGGREK", "qrId": "STUDENT:0103133933-786", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "197", "kelas": "X. 6", "nama": "KHANZA INAYAH SALSABILA", "ttl": "PALU, 9 NOVEMBER 2010", "nisn": "19681/0103032444", "jk": "PEREMPUAN", "alamat": "JL. A. MAKKARATENG", "qrId": "STUDENT:0103032444-627", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "198", "kelas": "X. 6", "nama": "MARMI", "ttl": "LOBO, 22 OKTOBER 2010", "nisn": "19682/0103081324", "jk": "PEREMPUAN", "alamat": "LOBO", "qrId": "STUDENT:0103081324-361", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "199", "kelas": "X. 6", "nama": "MAWAR CAHYANI", "ttl": "TONRONG SEPE'E, 29 JUNI 2011", "nisn": "19683/0116822698", "jk": "PEREMPUAN", "alamat": "TONRONGSEPE'E", "qrId": "STUDENT:0116822698-622", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "200", "kelas": "X. 6", "nama": "MUH. RAFHY ALKHALIFI", "ttl": "SOPPENG, 18 SEPTEMBER 2010", "nisn": "19684/0104692630", "jk": "LAKI-LAKI", "alamat": "JL. BILA SELATAN", "qrId": "STUDENT:0104692630-959", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "201", "kelas": "X. 6", "nama": "MUHAMMAD FAKIH PUTRA RIMBA", "ttl": "MAKASSAR, 18 JUNI 2010", "nisn": "19685/0108945354", "jk": "LAKI-LAKI", "alamat": "JL. BILA SELATAN", "qrId": "STUDENT:0108945354-116", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "202", "kelas": "X. 6", "nama": "MUHAMMAD FAUZAN NUR", "ttl": "SOPPENG, 18 APRIL 2011", "nisn": "19686/0116475918", "jk": "LAKI-LAKI", "alamat": "JL. BILA SELATAN NO.157", "qrId": "STUDENT:0116475918-923", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "203", "kelas": "X. 6", "nama": "MUHAMMAD KHUDAIFI", "ttl": "SOPPENG, 12 DESEMBER 2010", "nisn": "19687/0104709517", "jk": "LAKI-LAKI", "alamat": "TAJUNCU", "qrId": "STUDENT:0104709517-164", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "204", "kelas": "X. 6", "nama": "MUHAMMAD NUR AQSYAN", "ttl": "SOPPENG, 29 OKTOBER 2010", "nisn": "19688/0103188159", "jk": "LAKI-LAKI", "alamat": "LAPPAMALUANG", "qrId": "STUDENT:0103188159-225", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "205", "kelas": "X. 6", "nama": "MUTIA RAMADHANI RESKI", "ttl": "JOLLE, 2 SEPTEMBER 2010", "nisn": "19689/0101883003", "jk": "PEREMPUAN", "alamat": "JL. BAKTI", "qrId": "STUDENT:0101883003-515", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "206", "kelas": "X. 6", "nama": "NOVA PUSPITA SARI", "ttl": "SOPPENG, 11 APRIL 2011", "nisn": "19690/0111558540", "jk": "PEREMPUAN", "alamat": "KAMP. BARU", "qrId": "STUDENT:0111558540-413", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "207", "kelas": "X. 6", "nama": "NUR AISYAH", "ttl": "AWAKALUKU, 28 JANUARI 2011", "nisn": "19691/0112635209", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0112635209-125", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "208", "kelas": "X. 6", "nama": "NUR SA'ADAH", "ttl": "PANGKAJENE, 12 AGUSTUS 2010", "nisn": "19692/0107139173", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:19692-360", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "209", "kelas": "X. 6", "nama": "NURUL ASMI", "ttl": "SOPPENG, 20 JANUARI 2011", "nisn": "19693/0101617136", "jk": "PEREMPUAN", "alamat": "LAMOGO", "qrId": "STUDENT:0101617136-657", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "210", "kelas": "X. 6", "nama": "RENALDI PUTRA", "ttl": "SOPPENG, 28 OKTOBER 2010", "nisn": "19694/0103437257", "jk": "LAKI-LAKI", "alamat": "KEMAKMURAN", "qrId": "STUDENT:0103437257-318", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "211", "kelas": "X. 6", "nama": "RICKY PERDANA", "ttl": "SOPPENG, 26 MEI 2011", "nisn": "19695/0117265407", "jk": "LAKI-LAKI", "alamat": "BTN SEWO MAS INDAH", "qrId": "STUDENT:0117265407-975", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "212", "kelas": "X. 6", "nama": "SALSA BILA", "ttl": "SOPPENG, 15 FEBRUARI 2011", "nisn": "19696/3119085542", "jk": "PEREMPUAN", "alamat": "TINCO", "qrId": "STUDENT:3119085542-903", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "213", "kelas": "X. 6", "nama": "SYEKH AL- QEOVANI", "ttl": "PINRANG, 19 FEBRUARI 2011", "nisn": "19698/0112755863", "jk": "LAKI-LAKI", "alamat": "ASRAMA YONIF 721", "qrId": "STUDENT:0112755863-334", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "214", "kelas": "X. 6", "nama": "SYAHRINI", "ttl": "LOMPOE, 13 OKTOBER 2010", "nisn": "19697/0109500421", "jk": "PEREMPUAN", "alamat": "LOMPOE", "qrId": "STUDENT:0109500421-386", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "215", "kelas": "X. 7", "nama": "A. MUH. AKHTAR ISRA", "ttl": "SOPPENG, 29 JUNI 2011", "nisn": "19699/0116285372", "jk": "LAKI-LAKI", "alamat": "VILLA LAMAPPOLOWARE", "qrId": "STUDENT:0116285372-564", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "216", "kelas": "X. 7", "nama": "A.SALWA UMAYYAH", "ttl": "SERING, 25 NOVEMBER 2010", "nisn": "19700/0107249203", "jk": "PEREMPUAN", "alamat": "ALUPPANGE", "qrId": "STUDENT:0107249203-503", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "217", "kelas": "X. 7", "nama": "AHMAD BASYUNI RASYIDI", "ttl": "SOPPENG, 7 APRIL 2010", "nisn": "19701/0109788906", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0109788906-950", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "218", "kelas": "X. 7", "nama": "AHMAD FAHRUL", "ttl": "TOKEBBENG, 15 JULI 2010", "nisn": "19702/0107077061", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0107077061-384", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "219", "kelas": "X. 7", "nama": "ALISYA ZAMHARIRA", "ttl": "MANNAGAE, 4 AGUSTUS 2010", "nisn": "19703/0101047399", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0101047399-593", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "220", "kelas": "X. 7", "nama": "ALRINO RIDHO ANSHARI", "ttl": "SURABAYA, 27 MARET 2011", "nisn": "19704/0117556729", "jk": "LAKI-LAKI", "alamat": "KALERUNGE", "qrId": "STUDENT:0117556729-590", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "221", "kelas": "X. 7", "nama": "AMALIAH PUTRI IDRIS", "ttl": "SOPPENG, 23 JUNI 2010", "nisn": "19705/0109007744", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0109007744-975", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "222", "kelas": "X. 7", "nama": "ANDI FATYA AULIA", "ttl": "WATANSOPPENG, 8 NOVEMBER 2010", "nisn": "19706/0108803405", "jk": "PEREMPUAN", "alamat": "JLN POROS SOPPENG SIDRAP", "qrId": "STUDENT:0108803405-308", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "223", "kelas": "X. 7", "nama": "ANDI NUR WAHIDAH ACHAR", "ttl": "BALIKPAPAN, 29 DESEMBER 2010", "nisn": "19707/0105379323", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0105379323-106", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "224", "kelas": "X. 7", "nama": "ANDI RESKY SAM", "ttl": "SOPPENG, 13 APRIL 2011", "nisn": "19708/0118613918", "jk": "LAKI-LAKI", "alamat": "LIBUKANG", "qrId": "STUDENT:0118613918-965", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "225", "kelas": "X. 7", "nama": "ANDI SRI JUNINA", "ttl": "MALAYSIA, 23 JUNI 2010", "nisn": "19709/0104648392", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0104648392-947", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "226", "kelas": "X. 7", "nama": "ANDI ZALFA RIMSHA ARETHA", "ttl": "WATANSOPPENG, 14 FEBRUARI 2011", "nisn": "19710/0116501970", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0116501970-387", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "227", "kelas": "X. 7", "nama": "ASTI APRILIA", "ttl": "LABAE, 15 APRIL 2010", "nisn": "19711/0105727858", "jk": "PEREMPUAN", "alamat": "LABAE", "qrId": "STUDENT:0105727858-212", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "228", "kelas": "X. 7", "nama": "CAESAR", "ttl": "PALU, 17 MARET 2011", "nisn": "19712/0117401918", "jk": "LAKI-LAKI", "alamat": "JL. KEMAKMURAN BTN BUKIT MATRA", "qrId": "STUDENT:0117401918-696", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "229", "kelas": "X. 7", "nama": "DEVI PURNAMA", "ttl": "SOPPENG, 3 DESEMBER 2010", "nisn": "19713/0102069067", "jk": "PEREMPUAN", "alamat": "JL. SUNU", "qrId": "STUDENT:0102069067-541", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "230", "kelas": "X. 7", "nama": "DWI FEBRYANI", "ttl": "SOPPENG, 26 DESEMBER 2010", "nisn": "19714/0102287110", "jk": "PEREMPUAN", "alamat": "DABBARE", "qrId": "STUDENT:0102287110-388", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "231", "kelas": "X. 7", "nama": "FAIRUL TARUNA PUTRA ASTAWA", "ttl": "TAKKU, 24 JUNI 2011", "nisn": "19715/0117875158", "jk": "LAKI-LAKI", "alamat": "ASPOL JL. SAMUDRA", "qrId": "STUDENT:0117875158-338", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "232", "kelas": "X. 7", "nama": "FAREL SAPUTRA. M", "ttl": "LAGOCI, 12 OKTOBER 2010", "nisn": "19716/0109098717", "jk": "LAKI-LAKI", "alamat": "LAGOCI", "qrId": "STUDENT:0109098717-481", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "233", "kelas": "X. 7", "nama": "FATAHILLAH ISHAK", "ttl": "SOPPENG, 17 NOVEMBER 2010", "nisn": "19717/0101745135", "jk": "LAKI-LAKI", "alamat": "LAPPA'E", "qrId": "STUDENT:0101745135-213", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "234", "kelas": "X. 7", "nama": "FAWZAH GHAISANI FIRZANAH. S", "ttl": "SOPPENG, 26 NOVEMBER 2010", "nisn": "19718/0107867636", "jk": "PEREMPUAN", "alamat": "LAWARA", "qrId": "STUDENT:0107867636-460", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "235", "kelas": "X. 7", "nama": "HARDIANSYAH", "ttl": "MAKASSAR, 26 FEBRUARI 2011", "nisn": "19719/0118746839", "jk": "LAKI-LAKI", "alamat": "JL. PASAR NO.87", "qrId": "STUDENT:0118746839-756", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "236", "kelas": "X. 7", "nama": "HAURA KHADIJAH", "ttl": "SOPPENG, 1 APRIL 2011", "nisn": "19720/0112492206", "jk": "PEREMPUAN", "alamat": "JL. KEMAKMURAN", "qrId": "STUDENT:0112492206-486", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "237", "kelas": "X. 7", "nama": "KIANO MALIK KABILA", "ttl": "SOPPENG, 22 SEPTEMBER 2010", "nisn": "19721/0108876987", "jk": "LAKI-LAKI", "alamat": "JL. MALAKA RAYA KOMPLEKS LANGKEMME", "qrId": "STUDENT:0108876987-804", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "238", "kelas": "X. 7", "nama": "LARA AYU KINANTI", "ttl": "WATANSOPPENG, 20 JULI 2011", "nisn": "19722/0112068732", "jk": "PEREMPUAN", "alamat": "JL. MERDEKA", "qrId": "STUDENT:0112068732-780", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "239", "kelas": "X. 7", "nama": "MUH. DANA PRATAMA", "ttl": "SOPPENG, 6 JANUARI 2011", "nisn": "19723/0114248696", "jk": "LAKI-LAKI", "alamat": "BELO", "qrId": "STUDENT:0114248696-142", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "240", "kelas": "X. 7", "nama": "MUH. REZKY ALIFKHA", "ttl": "LAPAJUNG SOPPENG, 11 OKTOBER 2010", "nisn": "19724/0107326976", "jk": "LAKI-LAKI", "alamat": "JL. PESANTREN", "qrId": "STUDENT:0107326976-601", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "241", "kelas": "X. 7", "nama": "NAZHIFAH KHAIRIYAH", "ttl": "MAKASSAR, 2 JULI 2011", "nisn": "19725/0114664980", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0114664980-822", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "242", "kelas": "X. 7", "nama": "NURUL SAADAH'S", "ttl": "SOPPENG, 12 APRIL 2011", "nisn": "19726/0112676865", "jk": "PEREMPUAN", "alamat": "BTN MALAKA SARI", "qrId": "STUDENT:0112676865-166", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "243", "kelas": "X. 7", "nama": "RAGHIF YAZID UQAIL", "ttl": "SOPPENG, 11 JULI 2011", "nisn": "19727/0116298394", "jk": "LAKI-LAKI", "alamat": "JL. A. MUNRU", "qrId": "STUDENT:0116298394-581", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "244", "kelas": "X. 7", "nama": "RAYHAN ANUGRAH", "ttl": "TENGAPADANGE, 20 FEBRUARI 2011", "nisn": "19728/0112183376", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0112183376-887", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "245", "kelas": "X. 7", "nama": "RETNO ASIH REKYAN SUMADI ASTUTI", "ttl": "BALIKPAPAN, 25 MEI 2011", "nisn": "19729/0116334233", "jk": "PEREMPUAN", "alamat": "BELO", "qrId": "STUDENT:0116334233-486", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "246", "kelas": "X. 7", "nama": "ST. FATIMAH AZZAHRAH", "ttl": "SOPPENG, 27 OKTOBER 2010", "nisn": "19730/0107824917", "jk": "PEREMPUAN", "alamat": "JL. PEMUDA", "qrId": "STUDENT:0107824917-358", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "247", "kelas": "X. 7", "nama": "SYAHWA ZAFIRAH", "ttl": "SOPPENG, 28 MARET 2011", "nisn": "19731/0112979770", "jk": "PEREMPUAN", "alamat": "TAJUNCU", "qrId": "STUDENT:0112979770-981", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "248", "kelas": "X. 7", "nama": "UMRATUL HIDAYAH", "ttl": "KABARO, 31 JULI 2010", "nisn": "19732/0104874735", "jk": "PEREMPUAN", "alamat": "KABARO", "qrId": "STUDENT:0104874735-210", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "249", "kelas": "X. 7", "nama": "ZAHIRAH AZZAH.HR", "ttl": "TAKALALA, 4 DESEMBER 2010", "nisn": "19733/0106953603", "jk": "PEREMPUAN", "alamat": "TAKALALA", "qrId": "STUDENT:0106953603-584", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "250", "kelas": "X. 8", "nama": "A. ANNISA NADYA RAFIAH", "ttl": "MAKASSAR, 6 JUNI 2011", "nisn": "19734/0113637106", "jk": "PEREMPUAN", "alamat": "JL. PEMANDIAN OMPO", "qrId": "STUDENT:0113637106-212", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "251", "kelas": "X. 8", "nama": "A. SUCI RAMADHANI", "ttl": "BONE, 6 SEPTEMBER 2010", "nisn": "19735/0101584763", "jk": "PEREMPUAN", "alamat": "APPALARINGE", "qrId": "STUDENT:0101584763-250", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "252", "kelas": "X. 8", "nama": "AHMAD DAFFA DEFINO", "ttl": "CITTA, 14 SEPTEMBER 2010", "nisn": "19736/0105900688", "jk": "LAKI-LAKI", "alamat": "TALEBBA", "qrId": "STUDENT:0105900688-756", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "253", "kelas": "X. 8", "nama": "AHMAD HANIF FARHAN", "ttl": "MAMUJU UTARA, 24 MEI 2011", "nisn": "19737/3118787517", "jk": "LAKI-LAKI", "alamat": "KAPAHA", "qrId": "STUDENT:3118787517-352", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "254", "kelas": "X. 8", "nama": "AISYAH MAR'ATUSH SHALIHAH", "ttl": "MAKASSAR, 10 FEBRUARI 2011", "nisn": "19738/0111078219", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0111078219-848", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "255", "kelas": "X. 8", "nama": "ALYA ZAAKIRAH HERMAN", "ttl": "CENRANA, 15 NOVEMBER 2010", "nisn": "19739/0103630386", "jk": "PEREMPUAN", "alamat": "CENRANA", "qrId": "STUDENT:0103630386-890", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "256", "kelas": "X. 8", "nama": "ANDI AURA KHADIJAH", "ttl": "WATANSOPPENG, 11 SEPTEMBER 2010", "nisn": "19740/0107099190", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0107099190-752", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "257", "kelas": "X. 8", "nama": "ANDI DINI ANINDYA PUTRI", "ttl": "LAPAJUNG, 23 JUNI 2011", "nisn": "19741/0114622217", "jk": "PEREMPUAN", "alamat": "BTN. MALAKA SARI", "qrId": "STUDENT:0114622217-937", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "258", "kelas": "X. 8", "nama": "ANDI MUH. FAIZ JAASIR", "ttl": "WATANSOPPENG, 7 JANUARI 2011", "nisn": "19742/0114040992", "jk": "LAKI-LAKI", "alamat": "JL. KEMAKMURAN", "qrId": "STUDENT:0114040992-147", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "259", "kelas": "X. 8", "nama": "ANDRA PURNATARA PUTRA", "ttl": "SOPPENG, 9 MEI 2011", "nisn": "19743/0114989013", "jk": "LAKI-LAKI", "alamat": "JL. SAMUDRA", "qrId": "STUDENT:0114989013-664", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "260", "kelas": "X. 8", "nama": "AQILA KEYZA ILAHI", "ttl": "MAKASSAR, 9 FEBRUARI 2011", "nisn": "19744/0119461959", "jk": "PEREMPUAN", "alamat": "JL. PENGAYOMAN", "qrId": "STUDENT:0119461959-176", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "261", "kelas": "X. 8", "nama": "ARUNI ZHAHIRAH QINTHARA", "ttl": "MAKASSAR, 15 FEBRUARI 2011", "nisn": "19745/0117095217", "jk": "PEREMPUAN", "alamat": "BTP BLOK E NO.36", "qrId": "STUDENT:0117095217-427", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "262", "kelas": "X. 8", "nama": "AUNI MUNIFAH KUSMAN", "ttl": "LAGOCI, 17 APRIL 2011", "nisn": "19746/0115221057", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0115221057-427", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "263", "kelas": "X. 8", "nama": "AZHYFA DESYANI PUTRI", "ttl": "SOPPENG, 18 DESEMBER 2010", "nisn": "19747/0101092776", "jk": "PEREMPUAN", "alamat": "BTN BUKIT MATRA", "qrId": "STUDENT:0101092776-741", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "264", "kelas": "X. 8", "nama": "BINTANG TRI AHMADYANI", "ttl": "AKKAMPENG, 11 JUNI 2010", "nisn": "19748/0102287589", "jk": "LAKI-LAKI", "alamat": "AKKAMPENG", "qrId": "STUDENT:0102287589-413", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "265", "kelas": "X. 8", "nama": "DEWATA PALOMPAI MAPPATUNRU", "ttl": "WATANSOPPENG, 18 MEI 2011", "nisn": "19749/0116209455", "jk": "LAKI-LAKI", "alamat": "JL. KEMAKMURAN", "qrId": "STUDENT:0116209455-847", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "266", "kelas": "X. 8", "nama": "DZAKWAN FATWA", "ttl": "WATAN SOPPENG, 7 FEBRUARI 2011", "nisn": "19750/0117123345", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0117123345-523", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "267", "kelas": "X. 8", "nama": "FEBY AQILAH ERSYA", "ttl": "SOPPENG, 3 FEBRUARI 2011", "nisn": "19751/0117046485", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0117046485-801", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "268", "kelas": "X. 8", "nama": "HAFIDZ AYATULLAH RAMADHAN MAWI", "ttl": "POSO, 16 AGUSTUS 2010", "nisn": "19752/0109362672", "jk": "LAKI-LAKI", "alamat": "MALAKA", "qrId": "STUDENT:0109362672-941", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "269", "kelas": "X. 8", "nama": "IZZAH MUFIIDAH", "ttl": "SOPPENG, 4 DESEMBER 2010", "nisn": "19753/0103035007", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0103035007-404", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "270", "kelas": "X. 8", "nama": "MUH. ALIF SYAFRI", "ttl": "MAKASSAR, 7 JANUARI 2011", "nisn": "19754/0118326580", "jk": "LAKI-LAKI", "alamat": "BTN TARUNA PERMAI", "qrId": "STUDENT:0118326580-648", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "271", "kelas": "X. 8", "nama": "NURUL AISYIAH. R", "ttl": "WATANSOPPENG, 27 FEBRUARI 2011", "nisn": "19755/0118792515", "jk": "PEREMPUAN", "alamat": "H. MUH. TANG", "qrId": "STUDENT:0118792515-632", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "272", "kelas": "X. 8", "nama": "RADITHYA RAFA ANUGRAH", "ttl": "MAKASSAR, 10 NOVEMBER 2010", "nisn": "19756/0104803666", "jk": "LAKI-LAKI", "alamat": "GANRA", "qrId": "STUDENT:0104803666-484", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "273", "kelas": "X. 8", "nama": "RAHMATULLAH", "ttl": "TAJUNCU, 12 FEBRUARI 2011", "nisn": "19757/0115111551", "jk": "LAKI-LAKI", "alamat": "TAJUNCU", "qrId": "STUDENT:0115111551-475", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "274", "kelas": "X. 8", "nama": "RICHY ANDREA PUTRA", "ttl": "SOPPENG, 11 JANUARI 2011", "nisn": "19758/0119660477", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0119660477-378", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "275", "kelas": "X. 8", "nama": "RISQA AMELIA", "ttl": "SOPPENG, 4 FEBRUARI 2010", "nisn": "19759/0106811744", "jk": "PEREMPUAN", "alamat": "DABBARE", "qrId": "STUDENT:0106811744-223", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "276", "kelas": "X. 8", "nama": "RISQI AUNUR AL ALIYYU", "ttl": "CIKKE'E, 23 FEBRUARI 2011", "nisn": "19760/0111118824", "jk": "LAKI-LAKI", "alamat": "CIKKEE LASETANG", "qrId": "STUDENT:0111118824-239", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "277", "kelas": "X. 8", "nama": "RIZKY AZHARI", "ttl": "MAKASSAR, 22 DESEMBER 2010", "nisn": "19761/0105425664", "jk": "LAKI-LAKI", "alamat": "JL. SAMUDRA", "qrId": "STUDENT:0105425664-584", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "278", "kelas": "X. 8", "nama": "SYAFIRA AMANDA", "ttl": "SOPPENG, 15 JUNI 2011", "nisn": "19762/0111122693", "jk": "PEREMPUAN", "alamat": "JL. KAYANGAN", "qrId": "STUDENT:0111122693-350", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "279", "kelas": "X. 8", "nama": "WERE ADINAR", "ttl": "SOPPENG, 28 FEBRUARI 2011", "nisn": "19763/0114644574", "jk": "PEREMPUAN", "alamat": "JL. MANGKAWANI", "qrId": "STUDENT:0114644574-154", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "280", "kelas": "X. 8", "nama": "YUSH RIFAT BUJABRAH", "ttl": "SAMARINDA, 24 JANUARI 2011", "nisn": "/3113506136", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:3113506136-632", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "281", "kelas": "X. 8", "nama": "ZAHRA MUTIA SYAFIRAH", "ttl": "SOPPENG, 2 JULI 2011", "nisn": "19764/0114483062", "jk": "PEREMPUAN", "alamat": "JL. SUMPANG BILA", "qrId": "STUDENT:0114483062-124", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "282", "kelas": "X. 8", "nama": "ZAKIA NUR RAHMA", "ttl": "MAKASSAR, 8 OKTOBER 2010", "nisn": "19765/0106543264", "jk": "PEREMPUAN", "alamat": "SALOTUNGO", "qrId": "STUDENT:0106543264-305", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "283", "kelas": "X. 8", "nama": "ZALZA NUR INAYAH", "ttl": "LAPAJUNG, 17 OKTOBER 2010", "nisn": "19766/0102989722", "jk": "PEREMPUAN", "alamat": "JL. PETTA WANUA", "qrId": "STUDENT:0102989722-120", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "284", "kelas": "X. 8", "nama": "ZEVITA ZAINAL", "ttl": "SOLIE SOPPENG, 18 MARET 2011", "nisn": "19767/0112664738", "jk": "PEREMPUAN", "alamat": "SOLIE", "qrId": "STUDENT:0112664738-368", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "285", "kelas": "X. 9", "nama": "A. ZAHRA RAMADHANI FADLI", "ttl": "WATANSOPPENG, 30 AGUSTUS 2010", "nisn": "19768/0101725756", "jk": "PEREMPUAN", "alamat": "CENRANA", "qrId": "STUDENT:0101725756-352", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "286", "kelas": "X. 9", "nama": "ADILAH DWI APRILIA", "ttl": "SOPPENG, 2 APRIL 2011", "nisn": "19769/0117806856", "jk": "PEREMPUAN", "alamat": "PALERO", "qrId": "STUDENT:0117806856-917", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "287", "kelas": "X. 9", "nama": "AHMAD ANUGRAH", "ttl": "CIKKE'E, 29 MARET 2011", "nisn": "19770/0118679234", "jk": "LAKI-LAKI", "alamat": "CIKKEE", "qrId": "STUDENT:0118679234-918", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "288", "kelas": "X. 9", "nama": "AHMAD FAUZAN HIDAYAH", "ttl": "SOPPENG, 16 APRIL 2010", "nisn": "19771/0108090984", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0108090984-436", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "289", "kelas": "X. 9", "nama": "ANDI ADLYN NAZURAH", "ttl": "MAKASSAR, 22 JANUARI 2011", "nisn": "19772/0112370361", "jk": "LAKI-LAKI", "alamat": "JL. KEMAKMURAN", "qrId": "STUDENT:0112370361-471", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "290", "kelas": "X. 9", "nama": "ANDI ANNISA NAKAYADA", "ttl": "MAKASSAR, 9 MARET 2011", "nisn": "19773/0115144437", "jk": "PEREMPUAN", "alamat": "GRIYA NUR ALIMAN SENTRAL", "qrId": "STUDENT:0115144437-735", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "291", "kelas": "X. 9", "nama": "ANDI BATARI TENRI SAU", "ttl": "SOPPENG, 19 DESEMBER 2010", "nisn": "19774/0103763268", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0103763268-455", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "292", "kelas": "X. 9", "nama": "ANDI FITRAH RAMADHAN YUSUF", "ttl": "PAREPARE, 8 SEPTEMBER 2010", "nisn": "19775/0104132601", "jk": "LAKI-LAKI", "alamat": "JL.SUNGAI LAWO NO.101", "qrId": "STUDENT:0104132601-441", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "293", "kelas": "X. 9", "nama": "ANDI HAFISAH HASHEMI", "ttl": "SOPPENG, 9 APRIL 2011", "nisn": "19776/0115607702", "jk": "PEREMPUAN", "alamat": "BTN LALABATA PERMAI", "qrId": "STUDENT:0115607702-403", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "294", "kelas": "X. 9", "nama": "AQILA NASWA YASMIN", "ttl": "JOLLE, 31 DESEMBER 2010", "nisn": "19777/0106250725", "jk": "PEREMPUAN", "alamat": "JOLLE", "qrId": "STUDENT:0106250725-229", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "295", "kelas": "X. 9", "nama": "ASRAF ALIM ZUHDY", "ttl": "SOPPENG, 10 OKTOBER 2010", "nisn": "19778/0103050916", "jk": "LAKI-LAKI", "alamat": "JLN. KAYANGAN", "qrId": "STUDENT:0103050916-161", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "296", "kelas": "X. 9", "nama": "ASYFAH NAJWA KAMILA", "ttl": "SOPPENG, 5 NOVEMBER 2010", "nisn": "19779/0107855575", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0107855575-742", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "297", "kelas": "X. 9", "nama": "AULIA ZHAFIRAH", "ttl": "SOPPENG, 25 FEBRUARI 2011", "nisn": "19780/0119194815", "jk": "PEREMPUAN", "alamat": "JL. KAYANGAN", "qrId": "STUDENT:0119194815-204", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "298", "kelas": "X. 9", "nama": "AZZAHRA SYAWAL WIDHY", "ttl": "SOPPENG, 5 OKTOBER 2010", "nisn": "19781/0101360573", "jk": "PEREMPUAN", "alamat": "LOLLO'E", "qrId": "STUDENT:0101360573-229", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "299", "kelas": "X. 9", "nama": "DZUL JALALI IKRAM", "ttl": "LOLLOE, 22 OKTOBER 2010", "nisn": "19782/0102062717", "jk": "LAKI-LAKI", "alamat": "SALOTUNGO", "qrId": "STUDENT:0102062717-674", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "300", "kelas": "X. 9", "nama": "FAHMI FARADILAH UTARI", "ttl": "POTTINGENG, 15 NOVEMBER 2010", "nisn": "19783/0105907922", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0105907922-951", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "301", "kelas": "X. 9", "nama": "FAUZYAH", "ttl": "PAOWE, 19 JULI 2010", "nisn": "19784/0103708654", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0103708654-979", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "302", "kelas": "X. 9", "nama": "HAIRUL AKMAL", "ttl": "ENREKENG, 16 JANUARI 2011", "nisn": "19785/0115049649", "jk": "LAKI-LAKI", "alamat": "LABUSSENG", "qrId": "STUDENT:0115049649-792", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "303", "kelas": "X. 9", "nama": "KHALIFATUN NAIFA", "ttl": "SOPPENG, 8 JUNI 2011", "nisn": "19786/0116237265", "jk": "PEREMPUAN", "alamat": "LOMPULLE", "qrId": "STUDENT:0116237265-306", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "304", "kelas": "X. 9", "nama": "MAYYADAH APRILYA", "ttl": "LAPAJUNG SOPPENG, 18 APRIL 2011", "nisn": "19787/0112337235", "jk": "PEREMPUAN", "alamat": "JL. H. A. MADE ALI", "qrId": "STUDENT:0112337235-927", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "305", "kelas": "X. 9", "nama": "MIFTAHUL NAJWATI", "ttl": "SOPPENG, 8 NOVEMBER 2010", "nisn": "19788/0102928185", "jk": "PEREMPUAN", "alamat": "TODDANG SALOE", "qrId": "STUDENT:0102928185-372", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "306", "kelas": "X. 9", "nama": "MUH. FADLAN", "ttl": "SOPPENG, 10 APRIL 2011", "nisn": "19789/0113754367", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0113754367-814", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "307", "kelas": "X. 9", "nama": "MUH. RAIHAN", "ttl": "SOPPENG, 26 SEPTEMBER 2010", "nisn": "19790/0101054803", "jk": "LAKI-LAKI", "alamat": "MACCOPE", "qrId": "STUDENT:0101054803-122", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "308", "kelas": "X. 9", "nama": "MUHAMMAD FACHRI FAHREZI", "ttl": "SOPPENG, 29 JUNI 2011", "nisn": "19791/0114754745", "jk": "LAKI-LAKI", "alamat": "JL. BUCCELLO", "qrId": "STUDENT:0114754745-521", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "309", "kelas": "X. 9", "nama": "MUTMAINNAH", "ttl": "LAGOCI, 9 JUNI 2011", "nisn": "19792/0115156165", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0115156165-287", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "310", "kelas": "X. 9", "nama": "NADIRA", "ttl": "KURRAK, 22 MARET 2011", "nisn": "19793/0114321929", "jk": "PEREMPUAN", "alamat": "KAJUARA", "qrId": "STUDENT:0114321929-430", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "311", "kelas": "X. 9", "nama": "NUR AIDA RASMI", "ttl": "LEWORENG, 11 NOVEMBER 2010", "nisn": "19794/0109259770", "jk": "PEREMPUAN", "alamat": "LEWORENG", "qrId": "STUDENT:0109259770-903", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "312", "kelas": "X. 9", "nama": "NURUL KHISWAH", "ttl": "MACCINI, 5 AGUSTUS 2010", "nisn": "19795/0103338215", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0103338215-814", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "313", "kelas": "X. 9", "nama": "NURWINDA", "ttl": "SOPPENG, 16 NOVEMBER 2010", "nisn": "19796/0105924583", "jk": "PEREMPUAN", "alamat": "ULOE", "qrId": "STUDENT:0105924583-886", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "314", "kelas": "X. 9", "nama": "RAFI AHMAD", "ttl": "SOPPENG, 12 JANUARI 2011", "nisn": "19797/0113573875", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0113573875-687", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "315", "kelas": "X. 9", "nama": "RESKI PERMATASARI", "ttl": "SOPPENG, 2 OKTOBER 2010", "nisn": "19799/0103119099", "jk": "PEREMPUAN", "alamat": "JL. KAYANGAN", "qrId": "STUDENT:0103119099-400", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "316", "kelas": "X. 9", "nama": "RENDY RISALDI", "ttl": "BENTENGE, 7 OKTOBER 2010", "nisn": "19798/0103161663", "jk": "LAKI-LAKI", "alamat": "BENTENGE", "qrId": "STUDENT:0103161663-883", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "317", "kelas": "X. 9", "nama": "TRI FAJAR BINAFSI", "ttl": "TEPPOE, 20 OKTOBER 2009", "nisn": "19800/0093880025", "jk": "LAKI-LAKI", "alamat": "TEPPOE", "qrId": "STUDENT:0093880025-930", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "318", "kelas": "X. 9", "nama": "TYARA MEISYARAH", "ttl": "SOPPENG, 8 OKTOBER 2010", "nisn": "19801/0107621860", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0107621860-704", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "319", "kelas": "X. 9", "nama": "ZAHY ALFATIH BATARA LANGI", "ttl": "MAKASSAR, 4 JUNI 2011", "nisn": "19802/0118191067", "jk": "LAKI-LAKI", "alamat": "BTP BLOK G NO. 162", "qrId": "STUDENT:0118191067-202", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "320", "kelas": "X. 10", "nama": "A. ADELFIO FATIRRAHMAN HIZBI", "ttl": "CIKKE'E, 17 JULI 2010", "nisn": "19803/0104967894", "jk": "LAKI-LAKI", "alamat": "CIKKE'E", "qrId": "STUDENT:0104967894-186", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "321", "kelas": "X. 10", "nama": "A. AIDILSYAH ANUGRAH", "ttl": "SOPPENG, 13 OKTOBER 2010", "nisn": "19804/0109812385", "jk": "LAKI-LAKI", "alamat": "JL. PASAR SENTRAL", "qrId": "STUDENT:0109812385-569", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "322", "kelas": "X. 10", "nama": "A. SHABILA WE AL JAZIRA", "ttl": "SOPPENG, 7 NOVEMBER 2010", "nisn": "19805/0102949508", "jk": "PEREMPUAN", "alamat": "LOLLOE", "qrId": "STUDENT:0102949508-518", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "323", "kelas": "X. 10", "nama": "AHMAD FADIL", "ttl": "WATANSOPPENG, 8 OKTOBER 2010", "nisn": "19806/0104820835", "jk": "LAKI-LAKI", "alamat": "JL. KAYANGAN", "qrId": "STUDENT:0104820835-842", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "324", "kelas": "X. 10", "nama": "ANDI ADELYA SAFWANA", "ttl": "WATANSOPPENG, 11 MEI 2011", "nisn": "19807/0113451144", "jk": "PEREMPUAN", "alamat": "JL. KESATRIA", "qrId": "STUDENT:0113451144-531", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "325", "kelas": "X. 10", "nama": "ANDI ASHILA ZAHRAN TIARA", "ttl": "SOPPENG, 1 JANUARI 2011", "nisn": "19808/0117473198", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0117473198-253", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "326", "kelas": "X. 10", "nama": "ANNISA ZAHRA SHABIRAH", "ttl": "WATANSOPPENG, 27 OKTOBER 2010", "nisn": "19809/0105285982", "jk": "PEREMPUAN", "alamat": "JL. BUCCELLO", "qrId": "STUDENT:0105285982-717", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "327", "kelas": "X. 10", "nama": "AURA DWI KUSUMA AZZAHRAH", "ttl": "SOPPENG, 12 MEI 2011", "nisn": "19810/0119198671", "jk": "PEREMPUAN", "alamat": "JL. KAYANGAN", "qrId": "STUDENT:0119198671-407", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "328", "kelas": "X. 10", "nama": "AYU ANUGERAH IBRAHIM", "ttl": "MAKASSAR, 14 NOVEMBER 2010", "nisn": "19811/0107400239", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0107400239-318", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "329", "kelas": "X. 10", "nama": "AZIFAH DIWY MADELLA", "ttl": "SOPPENG, 26 JUNI 2011", "nisn": "19812/0117885654", "jk": "PEREMPUAN", "alamat": "TAKALALA", "qrId": "STUDENT:0117885654-106", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "330", "kelas": "X. 10", "nama": "ELIAHAZIMA", "ttl": "LAWO, 8 FEBRUARI 2011", "nisn": "19813/0111841778", "jk": "PEREMPUAN", "alamat": "LAWO", "qrId": "STUDENT:0111841778-289", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "331", "kelas": "X. 10", "nama": "FAJRUL KHAIR PAGE", "ttl": "SOPPENG, 7 JANUARI 2011", "nisn": "19814/0116596165", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0116596165-757", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "332", "kelas": "X. 10", "nama": "FATHUR AR RAHMAN ARIF", "ttl": "SOPPENG, 18 SEPTEMBER 2010", "nisn": "19815/0106661976", "jk": "LAKI-LAKI", "alamat": "JL. KEMAKMURAN", "qrId": "STUDENT:0106661976-931", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "333", "kelas": "X. 10", "nama": "GILANG RAMADHAN", "ttl": "SOPPENG, 19 AGUSTUS 2010", "nisn": "19816/0108449027", "jk": "LAKI-LAKI", "alamat": "JL. PESANTREN", "qrId": "STUDENT:0108449027-796", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "334", "kelas": "X. 10", "nama": "KEYSHA DWI AYUNDAH", "ttl": "MAKASSAR, 1 OKTOBER 2010", "nisn": "19818/0101088299", "jk": "PEREMPUAN", "alamat": "JLN KAYANGAN", "qrId": "STUDENT:0101088299-203", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "335", "kelas": "X. 10", "nama": "KHALIESAH FAKHIRAH. A", "ttl": "SOPPENG, 13 APRIL 2011", "nisn": "19817/0115593046", "jk": "PEREMPUAN", "alamat": "JL. MANGKAWANI", "qrId": "STUDENT:0115593046-452", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "336", "kelas": "X. 10", "nama": "M. ALFARIZQI RAMADHAN", "ttl": "SOPPENG, 21 AGUSTUS 2010", "nisn": "19819/0102492616", "jk": "LAKI-LAKI", "alamat": "VILLA LAMAPPOLOWARE", "qrId": "STUDENT:0102492616-752", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "337", "kelas": "X. 10", "nama": "MAGFIRRAMADANI", "ttl": "IWAE, 23 AGUSTUS 2010", "nisn": "19820/0104922817", "jk": "PEREMPUAN", "alamat": "IWAE", "qrId": "STUDENT:0104922817-952", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "338", "kelas": "X. 10", "nama": "MUH. FIQRI RAMADAN", "ttl": "JAKARTA, 31 AGUSTUS 2010", "nisn": "19821/0105480642", "jk": "LAKI-LAKI", "alamat": "JL.KESATRIA", "qrId": "STUDENT:0105480642-338", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "339", "kelas": "X. 10", "nama": "MUH. LAYTUL FADLY", "ttl": "LEWORENG, 14 JUNI 2010", "nisn": "19822/0101256118", "jk": "LAKI-LAKI", "alamat": "LEWORENG", "qrId": "STUDENT:0101256118-885", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "340", "kelas": "X. 10", "nama": "MUH. SYAFA MADANI NURHAN", "ttl": "BILA SOPPENG, 7 APRIL 2011", "nisn": "19823/0118110990", "jk": "LAKI-LAKI", "alamat": "JL.BILA UTARA", "qrId": "STUDENT:0118110990-260", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "341", "kelas": "X. 10", "nama": "MUHAMMAD HAZIM KAHAR", "ttl": "SOPPENG, 11 NOVEMBER 2010", "nisn": "19824/0106345793", "jk": "LAKI-LAKI", "alamat": "-", "qrId": "STUDENT:0106345793-846", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "342", "kelas": "X. 10", "nama": "MUHAMMAD IHSAN", "ttl": "CENNOE, 27 JUNI 2011", "nisn": "19825/0117891448", "jk": "LAKI-LAKI", "alamat": "CENNOE", "qrId": "STUDENT:0117891448-823", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "343", "kelas": "X. 10", "nama": "MUHAMMAD RHIZKY RAMADHANA", "ttl": "SOPPENG, 30 AGUSTUS 2010", "nisn": "19826/0107560157", "jk": "LAKI-LAKI", "alamat": "LOMPO", "qrId": "STUDENT:0107560157-625", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "344", "kelas": "X. 10", "nama": "NURHIDAYA", "ttl": "GANRA, 1 JANUARI 2011", "nisn": "19828/0115213075", "jk": "PEREMPUAN", "alamat": "GANRA", "qrId": "STUDENT:0115213075-704", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "345", "kelas": "X. 10", "nama": "NURUL HIKMAH", "ttl": "BAKAE, 20 AGUSTUS 2010", "nisn": "19829/0101640886", "jk": "PEREMPUAN", "alamat": "LAKITTA BAKAE", "qrId": "STUDENT:0101640886-183", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "346", "kelas": "X. 10", "nama": "NUR SALSABILA AMELIA", "ttl": "PEKKABATA, 16 MEI 2011", "nisn": "19827/0112773963", "jk": "PEREMPUAN", "alamat": "TURUNGENG LAPPAE", "qrId": "STUDENT:0112773963-813", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "347", "kelas": "X. 10", "nama": "RIZKY DWI MAULANA", "ttl": "BANYUWANGI, 1 MARET 2010", "nisn": "19830/0101699111", "jk": "LAKI-LAKI", "alamat": "SUMBERAGUNG 4/1, REJOAGUNG, SRONO", "qrId": "STUDENT:0101699111-963", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "348", "kelas": "X. 10", "nama": "SYAHRU RAHMAN SYAHMAR", "ttl": "SOPPENG, 28 OKTOBER 2010", "nisn": "19831/0103117340", "jk": "LAKI-LAKI", "alamat": "JL. BILA SELATAN", "qrId": "STUDENT:0103117340-743", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "349", "kelas": "X. 10", "nama": "SYALWAH SAFITRI SOFYAN", "ttl": "SOPPENG, 14 SEPTEMBER 2010", "nisn": "19832/0103240416", "jk": "PEREMPUAN", "alamat": "JL. JERAE", "qrId": "STUDENT:0103240416-683", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "350", "kelas": "X. 10", "nama": "WAHYULLAH.M", "ttl": "SOPPENG, 13 JULI 2010", "nisn": "19834/0107600168", "jk": "LAKI-LAKI", "alamat": "UKKE'E", "qrId": "STUDENT:0107600168-819", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "351", "kelas": "X. 10", "nama": "WERE ADITYA MAHYA", "ttl": "SOPPENG, 27 FEBRUARI 2011", "nisn": "19835/0111027967", "jk": "LAKI-LAKI", "alamat": "TAKALALA", "qrId": "STUDENT:0111027967-198", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "352", "kelas": "X. 10", "nama": "ZAZKIA KHANZA MUDRI", "ttl": "TAKALALA, 7 JUNI 2010", "nisn": "19836/3109152864", "jk": "PEREMPUAN", "alamat": "POLELOLO", "qrId": "STUDENT:3109152864-118", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "353", "kelas": "X. 10", "nama": "ZULKIFLI", "ttl": "SOPPENG, 13 OKTOBER 2010", "nisn": "19837/0106545642", "jk": "LAKI-LAKI", "alamat": "PAOWE", "qrId": "STUDENT:0106545642-296", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "354", "kelas": "X. 11", "nama": "A. FAIQAH AQILAH AN-NUR", "ttl": "SOPPENG, 6 AGUSTUS 2010", "nisn": "19838/0107068473", "jk": "PEREMPUAN", "alamat": "PISING", "qrId": "STUDENT:0107068473-463", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "355", "kelas": "X. 11", "nama": "A.RAFA MUH.RESKY", "ttl": "KESATRIA, 30 JULI 2011", "nisn": "19839/0111075690", "jk": "LAKI-LAKI", "alamat": "JL. KESATRIA", "qrId": "STUDENT:0111075690-275", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "356", "kelas": "X. 11", "nama": "ADILAH SYAIMA HERYANTO", "ttl": "SOPPENG, 24 JANUARI 2010", "nisn": "19840/0103662876", "jk": "PEREMPUAN", "alamat": "LAPAJUNG", "qrId": "STUDENT:0103662876-944", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "357", "kelas": "X. 11", "nama": "AHMAD MUGHNY MUBARAK", "ttl": "SIDRAP, 27 JUNI 2011", "nisn": "19842/0117296264", "jk": "LAKI-LAKI", "alamat": "LUPPANGNGE", "qrId": "STUDENT:0117296264-420", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "358", "kelas": "X. 11", "nama": "AINIYYAH AZZACHRAH AMIN", "ttl": "MAKASSAR, 6 APRIL 2010", "nisn": "19843/0102598872", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0102598872-245", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "359", "kelas": "X. 11", "nama": "AIRA MU'FI", "ttl": "TAJUNCU SOPPENG, 29 OKTOBER 2010", "nisn": "19844/0105522023", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0105522023-885", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "360", "kelas": "X. 11", "nama": "AISYAH REZKY FAHIRAH AHMAD", "ttl": "SOPPENG, 9 MARET 2011", "nisn": "19845/0116828980", "jk": "PEREMPUAN", "alamat": "JL. MERDEKA", "qrId": "STUDENT:0116828980-337", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "361", "kelas": "X. 11", "nama": "ALFAHRISI DAFFA RAIHAN", "ttl": "PANGKAJENE, 21 MARET 2011", "nisn": "19846/0115593884", "jk": "LAKI-LAKI", "alamat": "BTN ASAL MULA", "qrId": "STUDENT:0115593884-976", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "362", "kelas": "X. 11", "nama": "ALYA MAHARANI", "ttl": "MALAKA, 3 NOVEMBER 2010", "nisn": "19847/0104197446", "jk": "PEREMPUAN", "alamat": "JL. LAKACERE NO.72", "qrId": "STUDENT:0104197446-743", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "363", "kelas": "X. 11", "nama": "ANDI ASSAHRATUL HUSNA", "ttl": "MACCINI, 14 APRIL 2011", "nisn": "19849/0119427506", "jk": "PEREMPUAN", "alamat": "JL. LAWARA", "qrId": "STUDENT:0119427506-572", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "364", "kelas": "X. 11", "nama": "ANDI ICHDINA WIRIADIRATU", "ttl": "WATANSOPPENG, 5 OKTOBER 2010", "nisn": "19850/0106367061", "jk": "PEREMPUAN", "alamat": "JL. KESATRIA", "qrId": "STUDENT:0106367061-723", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "365", "kelas": "X. 11", "nama": "ANDI MUHAMMAD ALFARUQ", "ttl": "SOPPENG, 16 OKTOBER 2010", "nisn": "19851/0104358800", "jk": "LAKI-LAKI", "alamat": "SULTAN ALAUDDIN", "qrId": "STUDENT:0104358800-624", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "366", "kelas": "X. 11", "nama": "ANDINI DARMAWAN", "ttl": "BALIKPAPAN, 11 MARET 2010", "nisn": "19852/0105346186", "jk": "PEREMPUAN", "alamat": "JL. SEMOI SEPAKU", "qrId": "STUDENT:0105346186-919", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "367", "kelas": "X. 11", "nama": "ANISA SALSABILA", "ttl": "SOPPENG, 2 DESEMBER 2010", "nisn": "19853/0101179975", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0101179975-851", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "368", "kelas": "X. 11", "nama": "ADZRA NUR FAKHIRAH", "ttl": "SEWO, 29 SEPTEMBER 2010", "nisn": "19841/0108543295", "jk": "PEREMPUAN", "alamat": "JALAN HARUN SEWO", "qrId": "STUDENT:0108543295-427", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "369", "kelas": "X. 11", "nama": "ANDI AHMAD LUTHFI", "ttl": "SOPPENG, 19 APRIL 2011", "nisn": "19848/0114862549", "jk": "LAKI-LAKI", "alamat": "JLN. A. PAGGARU NO. 22 SENGKANG", "qrId": "STUDENT:0114862549-830", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "370", "kelas": "X. 11", "nama": "ICA AGUSTISIA", "ttl": "SOPPENG, 10 MEI 2010", "nisn": "19854/0101981322", "jk": "PEREMPUAN", "alamat": "TIMPALAJA", "qrId": "STUDENT:0101981322-635", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "371", "kelas": "X. 11", "nama": "JULIANA PUTRI", "ttl": "SOPPENG, 31 JULI 2010", "nisn": "19855/0101222325", "jk": "PEREMPUAN", "alamat": "LESU", "qrId": "STUDENT:0101222325-799", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "372", "kelas": "X. 11", "nama": "KHUSNUL KHATIMAH.F", "ttl": "SOPPENG, 15 DESEMBER 2010", "nisn": "19856/0102767556", "jk": "PEREMPUAN", "alamat": "A.POTTO", "qrId": "STUDENT:0102767556-972", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "373", "kelas": "X. 11", "nama": "MISNAWATY", "ttl": "SOPPENG, 27 JUNI 2011", "nisn": "19857/0115927149", "jk": "PEREMPUAN", "alamat": "DARE AJUE", "qrId": "STUDENT:0115927149-333", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "374", "kelas": "X. 11", "nama": "MUH DAFFA KHAIRAN", "ttl": "BELO, 14 MARET 2011", "nisn": "19858/0121695036", "jk": "LAKI-LAKI", "alamat": "BELO", "qrId": "STUDENT:0121695036-149", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "375", "kelas": "X. 11", "nama": "MUH. DIMAS ZHAFRAN SURYA", "ttl": "SOPPENG, 15 FEBRUARI 2011", "nisn": "19859/0118099194", "jk": "LAKI-LAKI", "alamat": "BTN PERUMNAS ANGGREK", "qrId": "STUDENT:0118099194-380", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "376", "kelas": "X. 11", "nama": "NAJWA", "ttl": "SOPPENG, 2 NOVEMBER 2010", "nisn": "19860/0102323025", "jk": "PEREMPUAN", "alamat": "CENRANA", "qrId": "STUDENT:0102323025-185", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "377", "kelas": "X. 11", "nama": "NUR SAFA WILDANA", "ttl": "AKKAMPENG, 11 NOVEMBER 2010", "nisn": "19861/0105800353", "jk": "PEREMPUAN", "alamat": "AKKAMPENG", "qrId": "STUDENT:0105800353-790", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "378", "kelas": "X. 11", "nama": "PUTRI ANUGRAH", "ttl": "JOLLE, 25 JANUARI 2011", "nisn": "19862/0118319845", "jk": "PEREMPUAN", "alamat": "JOLLE", "qrId": "STUDENT:0118319845-366", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "379", "kelas": "X. 11", "nama": "REFI RIDHUAN", "ttl": "LATTIE, 17 MARET 2011", "nisn": "19863/0113320036", "jk": "LAKI-LAKI", "alamat": "LATTIE", "qrId": "STUDENT:0113320036-668", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "380", "kelas": "X. 11", "nama": "SIDDIQ FAHREZA", "ttl": "TAJUNCU, 2 JULI 2011", "nisn": "19864/0112464110", "jk": "LAKI-LAKI", "alamat": "TAJUNCU", "qrId": "STUDENT:0112464110-882", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "381", "kelas": "X. 11", "nama": "SOFHYA", "ttl": "SALENG, 26 MARET 2011", "nisn": "19865/0116217911", "jk": "PEREMPUAN", "alamat": "SALENG", "qrId": "STUDENT:0116217911-497", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "382", "kelas": "X. 11", "nama": "SYAIKHAH AZ ZAHRA", "ttl": "MAKASSAR, 14 OKTOBER 2010", "nisn": "19866/0109585574", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0109585574-407", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "383", "kelas": "X. 11", "nama": "TENRI AINUN MARHAMNI SOFYAN", "ttl": "SOPPENG, 28 JUNI 2010", "nisn": "19867/0109118611", "jk": "PEREMPUAN", "alamat": "JL. KAYANGAN", "qrId": "STUDENT:0109118611-366", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "384", "kelas": "X. 11", "nama": "ULFYAH JUNITA ADELIA", "ttl": "LEWORENG, 4 JUNI 2011", "nisn": "19868/0113365486", "jk": "PEREMPUAN", "alamat": "KAMPONG GODANG", "qrId": "STUDENT:0113365486-143", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "385", "kelas": "X. 11", "nama": "YUGA ARJUNA PRATAMA", "ttl": "WATANSOPPENG, 6 DESEMBER 2010", "nisn": "19869/0104585213", "jk": "LAKI-LAKI", "alamat": "CIKKEE BTN RAFILLA", "qrId": "STUDENT:0104585213-136", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "386", "kelas": "X. 11", "nama": "ZAHIRA", "ttl": "TALUMAE, 17 SEPTEMBER 2010", "nisn": "19870/0104387752", "jk": "PEREMPUAN", "alamat": "-", "qrId": "STUDENT:0104387752-466", "status": "Pending", "fotoUrl": "", "updatedAt": "" }, { "no": "387", "kelas": "X. 11", "nama": "ZAHRA BADRIYAH", "ttl": "LABOKONG, 24 JANUARI 2011", "nisn": "19871/0112107784", "jk": "PEREMPUAN", "alamat": "ALLANGKIANG", "qrId": "STUDENT:0112107784-153", "status": "Pending", "fotoUrl": "", "updatedAt": "" }];
+
+    // State Aplikasi
+    let students = [];
+    let selectedClass = 'SEMUA';
+    let currentStudent = null;
+    let currentPhotoBase64 = '';
+    // (camera feature removed)
+
+    // Inisialisasi Aplikasi Saat Load
+    document.addEventListener('DOMContentLoaded', () => {
+      initStudentsData();
+      renderClassPills();
+      renderStudentsGrid();
+      setupEventListeners();
+      checkApiStatus();
+      drawInitialPlaceholderCanvas();
+
+      // Jika URL Google Apps Script sudah di-embed, otomatis lakukan background sync
+      if (gasWebAppUrl) {
+        autoSyncFromSheetSilently();
+      }
+    });
+
+    // Inisialisasi Data dari LocalStorage atau Data Awal
+    function initStudentsData() {
+      const saved = localStorage.getItem('SMAN1_STUDENTS_DATA');
+      if (saved) {
+        try {
+          students = JSON.parse(saved);
+        } catch (e) {
+          students = [...INITIAL_STUDENTS];
+        }
+      } else {
+        students = [...INITIAL_STUDENTS];
+        saveStudentsDataLocal();
+      }
+    }
+
+    function saveStudentsDataLocal() {
+      localStorage.setItem('SMAN1_STUDENTS_DATA', JSON.stringify(students));
+    }
+
+    // Render Tombol Pilihan Kelas (X. 1 s/d X. 11 & SEMUA)
+    function renderClassPills() {
+      const classSet = new Set();
+      students.forEach(s => {
+        if (s.kelas) classSet.add(s.kelas);
+      });
+
+      const classList = Array.from(classSet).sort((a, b) => {
+        // Sort kelas seperti X. 1, X. 2 ... X. 10
+        const numA = parseInt(a.replace(/[^0-9]/g, '')) || 0;
+        const numB = parseInt(b.replace(/[^0-9]/g, '')) || 0;
+        return numA - numB;
+      });
+
+      const container = document.getElementById('classPillsContainer');
+      container.innerHTML = '';
+
+      // Pill 'SEMUA KELAS'
+      const allPill = document.createElement('button');
+      allPill.className = `class-pill ${selectedClass === 'SEMUA' ? 'active' : ''}`;
+      allPill.innerHTML = `<span>Semua Kelas (${students.length})</span>`;
+      allPill.onclick = () => selectClassFilter('SEMUA');
+      container.appendChild(allPill);
+
+      // Pill masing-masing kelas
+      classList.forEach(cls => {
+        const count = students.filter(s => s.kelas === cls).length;
+        const pill = document.createElement('button');
+        pill.className = `class-pill ${selectedClass === cls ? 'active' : ''}`;
+        pill.innerHTML = `<span>${cls}</span> <span style="font-size: 0.75rem; opacity: 0.7;">(${count})</span>`;
+        pill.onclick = () => selectClassFilter(cls);
+        container.appendChild(pill);
+      });
+    }
+
+    function selectClassFilter(cls) {
+      selectedClass = cls;
+      document.querySelectorAll('.class-pill').forEach(p => p.classList.remove('active'));
+      renderClassPills();
+      renderStudentsGrid();
+    }
+
+    // Render Grid Siswa Berdasarkan Kelas & Filter Pencarian
+    function renderStudentsGrid() {
+      const searchKeyword = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+      const grid = document.getElementById('studentsGrid');
+      const noResults = document.getElementById('noResultsBox');
+
+      let filtered = students.filter(s => {
+        const matchClass = (selectedClass === 'SEMUA' || s.kelas === selectedClass);
+        const matchSearch = !searchKeyword ||
+          s.nama.toLowerCase().includes(searchKeyword) ||
+          (s.nisn && s.nisn.toLowerCase().includes(searchKeyword)) ||
+          (s.alamat && s.alamat.toLowerCase().includes(searchKeyword));
+        return matchClass && matchSearch;
+      });
+
+      // Update counters
+      const pendingCount = filtered.filter(s => s.status !== 'Done').length;
+      const doneCount = filtered.filter(s => s.status === 'Done').length;
+      document.getElementById('displayCountLabel').textContent = `Menampilkan ${filtered.length} Siswa`;
+      document.getElementById('badgePendingCount').textContent = `${pendingCount} Pending`;
+      document.getElementById('badgeDoneCount').textContent = `${doneCount} Done`;
+      document.getElementById('activeClassLabel').textContent = selectedClass === 'SEMUA' ? '' : `• Kelas ${selectedClass}`;
+
+      grid.innerHTML = '';
+
+      if (filtered.length === 0) {
+        noResults.style.display = 'block';
+        return;
+      }
+      noResults.style.display = 'none';
+
+      filtered.forEach(student => {
+        const isDone = (student.status === 'Done');
+        const hasMissingAddress = (!student.alamat || student.alamat.trim() === '-' || student.alamat.trim() === '');
+        const hasMissingTtl = (!student.ttl || student.ttl.trim() === '-' || student.ttl.trim() === '');
+        const isIncomplete = hasMissingAddress || hasMissingTtl;
+
+        const card = document.createElement('div');
+        card.className = `student-card ${isDone ? 'is-done' : 'is-pending'}`;
+
+        card.innerHTML = `
+          <div>
+            <div class="student-info-top">
+              <span class="neo-badge" style="background: #E2E8F0; font-size: 0.75rem;">${student.kelas}</span>
+              <span class="neo-badge ${isDone ? 'neo-badge-done' : 'neo-badge-pending'}">
+                ${isDone ? '✅ DONE' : '⏳ PENDING'}
+              </span>
+            </div>
+            
+            <div class="student-name" style="margin-top: 8px;">${student.nama}</div>
+            
+            <div class="student-meta">
+              <div><strong>NIS/NISN:</strong> ${student.nisn || '-'}</div>
+              <div><strong>TTL:</strong> ${student.ttl || '-'}</div>
+              <div><strong>Alamat:</strong> ${hasMissingAddress ? '<span style="color: #FF334B; font-weight: 800;">Belum Lengkap (-)</span>' : escapeHtml(student.alamat)}</div>
+            </div>
+
+            ${isIncomplete ? '<div class="data-warning-pill">⚠️ Perlu Lengkapi Data (-)</div>' : ''}
+          </div>
+
+          <div style="margin-top: 14px;">
+            <button class="neo-btn ${isDone ? 'neo-btn-green' : 'neo-btn-yellow'}" style="width: 100%; font-size: 0.88rem; padding: 10px 14px;" onclick="selectStudent('${student.nisn || student.qrId || student.nama}')">
+              ${isDone ? 'LIHAT DATA & BUKTI ➜' : 'PILIH NAMA & UPLOAD ➜'}
+            </button>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    // Navigasi Langkah (Stepper)
+    function navigateToStep(step) {
+      if ((step === 2 || step === 3 || step === 4) && !currentStudent) {
+        showToast('Silakan pilih nama siswa terlebih dahulu!', '⚠️');
+        return;
+      }
+
+      // Selalu perbarui data kartu saat menuju ke Step 4
+      if (step === 4) {
+        populateDigitalCard();
+      }
+
+      // Update Tab Views
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.getElementById(`viewStep${step}`).classList.add('active');
+
+      // Update Stepper Nav
+      document.querySelectorAll('.step-item').forEach((item, idx) => {
+        item.classList.remove('active');
+        if (idx + 1 < step) item.classList.add('completed');
+        else item.classList.remove('completed');
+        if (idx + 1 === step) item.classList.add('active');
+      });
+
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    // Pilih Siswa dari Daftar
+    function selectStudent(identifier) {
+      const s = students.find(item =>
+        (item.nisn && item.nisn === identifier) ||
+        (item.qrId && item.qrId === identifier) ||
+        item.nama === identifier
+      );
+
+      if (!s) return;
+      currentStudent = s;
+      currentPhotoBase64 = ''; // Reset foto baru
+
+      if (s.fotoUrl && s.fotoUrl.startsWith('data:image/')) {
+        currentPhotoBase64 = s.fotoUrl;
+      }
+
+      // Populate Form di Step 2
+      document.getElementById('editNama').value = s.nama;
+      document.getElementById('editKelas').value = s.kelas;
+      document.getElementById('editNisn').value = s.nisn;
+      document.getElementById('editJk').value = (s.jk && s.jk.toUpperCase().includes('PEREMPUAN')) ? 'PEREMPUAN' : 'LAKI-LAKI';
+      document.getElementById('editTtl').value = (s.ttl && s.ttl !== '-') ? s.ttl : '';
+      document.getElementById('editQrId').value = s.qrId || '-';
+      document.getElementById('editAlamat').value = (s.alamat && s.alamat !== '-') ? s.alamat : '';
+
+      // Tampilkan Badge & Alert jika data (-)
+      const isDone = (s.status === 'Done');
+      const isMissingAddress = (!s.alamat || s.alamat === '-');
+      const isMissingTtl = (!s.ttl || s.ttl === '-');
+
+      document.getElementById('incompleteNotice').style.display = (isMissingAddress || isMissingTtl) ? 'flex' : 'none';
+      document.getElementById('alreadyDoneNotice').style.display = isDone ? 'flex' : 'none';
+
+      const step2Badge = document.getElementById('step2StatusBadge');
+      step2Badge.innerHTML = `<span class="neo-badge ${isDone ? 'neo-badge-done' : 'neo-badge-pending'}">${isDone ? '✅ STATUS: DONE' : '⏳ STATUS: PENDING'}</span>`;
+
+      // Highlight input jika kosong
+      const alamatInput = document.getElementById('editAlamat');
+      if (isMissingAddress) {
+        alamatInput.classList.add('input-need-fix');
+        document.getElementById('alamatBadgeAlert').innerHTML = '<span class="neo-badge neo-badge-danger" style="font-size: 0.65rem;">KOSONG (-) WAJIB DIISI</span>';
+      } else {
+        alamatInput.classList.remove('input-need-fix');
+        document.getElementById('alamatBadgeAlert').innerHTML = '';
+      }
+
+      const ttlInput = document.getElementById('editTtl');
+      if (isMissingTtl) {
+        ttlInput.classList.add('input-need-fix');
+        document.getElementById('ttlBadgeAlert').innerHTML = '<span class="neo-badge neo-badge-danger" style="font-size: 0.65rem;">KOSONG (-) WAJIB DIISI</span>';
+      } else {
+        ttlInput.classList.remove('input-need-fix');
+        document.getElementById('ttlBadgeAlert').innerHTML = '';
+      }
+
+      // Atur tombol proceed
+      const proceedBtn = document.getElementById('btnProceedToPhoto');
+      if (isDone) {
+        proceedBtn.textContent = 'LIHAT FOTO & BUKTI TERVERIFIKASI ➜';
+        proceedBtn.className = 'neo-btn neo-btn-green';
+      } else {
+        proceedBtn.textContent = 'LANJUT KE UPLOAD FOTO ➜';
+        proceedBtn.className = 'neo-btn neo-btn-yellow';
+      }
+
+      // Update Tag Step 3
+      document.getElementById('step3StudentTag').textContent = `${s.nama} (${s.kelas})`;
+
+      // Setup State Step 3
+      setupStep3View();
+
+      // Pindah ke Step 2
+      navigateToStep(2);
+    }
+
+    // Step 2 Form Handler: Validasi & Simpan Perubahan Data Lokal
+    function goToPhotoStep() {
+      // Jika siswa sudah berstatus Done, langsung lanjut ke Step 3 tanpa validasi pengisian ulang
+      if (currentStudent && currentStudent.status === 'Done') {
+        setupStep3View();
+        navigateToStep(3);
+        return;
+      }
+
+      const inputAlamat = document.getElementById('editAlamat').value.trim();
+      const inputTtl = document.getElementById('editTtl').value.trim();
+
+      if (!inputAlamat || inputAlamat === '-') {
+        showToast('Mohon isi alamat lengkap Anda terlebih dahulu!', '⚠️');
+        document.getElementById('editAlamat').focus();
+        return;
+      }
+      if (!inputTtl || inputTtl === '-') {
+        showToast('Mohon lengkapi Tempat, Tanggal Lahir Anda!', '⚠️');
+        document.getElementById('editTtl').focus();
+        return;
+      }
+
+      // Update memory data
+      currentStudent.alamat = inputAlamat;
+      currentStudent.ttl = inputTtl;
+      currentStudent.jk = document.getElementById('editJk').value;
+
+      setupStep3View();
+      navigateToStep(3);
+    }
+
+    // Setup Tampilan Step 3 (Apakah Locked / Active)
+    function setupStep3View() {
+      const isDone = (currentStudent.status === 'Done');
+      const lockedContainer = document.getElementById('lockedPhotoContainer');
+      const activeContainer = document.getElementById('activeUploadContainer');
+
+      if (isDone) {
+        // SISWA SUDAH DONE -> KUNCI FORM!
+        lockedContainer.style.display = 'block';
+        activeContainer.style.display = 'none';
+
+        // Tampilkan foto yang sudah diupload jika ada
+        if (currentStudent.fotoUrl) {
+          loadExistingPhotoToCanvas(currentStudent.fotoUrl);
+        }
+        populateDigitalCard();
+      } else {
+        // SISWA MASIH PENDING -> BISA UPLOAD
+        lockedContainer.style.display = 'none';
+        activeContainer.style.display = 'block';
+      }
+    }
+
+    // Canvas & Image Processing (Kompresi & Deteksi Warna Latar Merah)
+    function handleSelectedFile(file) {
+      if (!file || !file.type.startsWith('image/')) {
+        showToast('Pilih file foto/gambar yang valid!', '❌');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        processImageIntoCanvas(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function processImageIntoCanvas(dataUrl) {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.getElementById('previewCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Dimensi 3:4 standar (600x800)
+        canvas.width = 600;
+        canvas.height = 800;
+
+        // Gambar foto dengan fit cover
+        const hRatio = canvas.width / img.width;
+        const vRatio = canvas.height / img.height;
+        const ratio = Math.max(hRatio, vRatio);
+        const centerShiftX = (canvas.width - img.width * ratio) / 2;
+        const centerShiftY = (canvas.height - img.height * ratio) / 2;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, img.width, img.height, centerShiftX, centerShiftY, img.width * ratio, img.height * ratio);
+
+        // Ekspor base64 JPEG
+        currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.85);
+
+        // Analisis Deteksi Warna Latar Belakang (Sampel di pojok atas kiri dan kanan)
+        analyzeRedBackground(ctx, canvas.width, canvas.height);
+
+        document.getElementById('btnResetPhoto').style.display = 'inline-flex';
+        showToast('Foto berhasil dimuat!', '✅');
+      };
+      img.src = dataUrl;
+    }
+
+    // Deteksi tone warna latar belakang untuk memberi panduan siswa
+    function analyzeRedBackground(ctx, width, height) {
+      const banner = document.getElementById('redDetectAlert');
+
+      try {
+        // Ambil piksel dari pojok kiri atas (x: 20-50, y: 20-50) & kanan atas (x: width-50-width-20)
+        const p1 = ctx.getImageData(30, 30, 20, 20).data;
+        const p2 = ctx.getImageData(width - 50, 30, 20, 20).data;
+
+        let totalR = 0, totalG = 0, totalB = 0, count = 0;
+        for (let i = 0; i < p1.length; i += 4) {
+          totalR += p1[i] + p2[i];
+          totalG += p1[i + 1] + p2[i + 1];
+          totalB += p1[i + 2] + p2[i + 2];
+          count += 2;
+        }
+
+        const avgR = totalR / count;
+        const avgG = totalG / count;
+        const avgB = totalB / count;
+
+        // Indikator Merah: R dominan jauh di atas G dan B
+        const isRed = (avgR > 110 && avgR > (avgG * 1.4) && avgR > (avgB * 1.4));
+
+        if (isRed) {
+          banner.className = 'red-check-banner red-check-ok';
+          banner.innerHTML = '✅ <strong>Latar Merah Terdeteksi!</strong> Warna latar belakang foto memenuhi kriteria formal kartu pelajar.';
+        } else {
+          banner.className = 'red-check-banner red-check-warn';
+          banner.innerHTML = '⚠️ <strong>Perhatian:</strong> Warna latar belakang kurang merah (terdeteksi RGB ' + Math.round(avgR) + ',' + Math.round(avgG) + ',' + Math.round(avgB) + '). Pastikan foto berlatar merah polos!';
+        }
+      } catch (err) {
+        banner.className = 'red-check-banner red-check-ok';
+        banner.innerHTML = '📸 Foto berhasil disiapkan dalam rasio pas foto 3:4.';
+      }
+    }
+
+    function drawInitialPlaceholderCanvas() {
+      const canvas = document.getElementById('previewCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = 600;
+      canvas.height = 800;
+      ctx.fillStyle = '#B91C1C'; // Merah pas foto
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.font = 'bold 24px Space Grotesk, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('PAS FOTO 3X4', canvas.width / 2, canvas.height / 2 - 20);
+      ctx.font = '16px Plus Jakarta Sans, sans-serif';
+      ctx.fillText('LATAR BELAKANG MERAH', canvas.width / 2, canvas.height / 2 + 15);
+    }
+
+    // Helper Parser Google Drive URL -> thumbnail/embed URL langsung
+    function getDriveImageUrl(url) {
+      if (!url) return '';
+      const trimmed = String(url).trim();
+      if (trimmed.startsWith('data:image/')) return trimmed;
+      if (trimmed.includes('drive.google.com/thumbnail')) return trimmed;
+
+      let fileId = null;
+      // Format /file/d/{FILE_ID}
+      const matchFile = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if (matchFile && matchFile[1]) {
+        fileId = matchFile[1];
+      } else {
+        // Format ?id={FILE_ID} atau &id={FILE_ID}
+        const matchId = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+        if (matchId && matchId[1]) {
+          fileId = matchId[1];
+        }
+      }
+
+      if (fileId) {
+        return `https://drive.google.com/thumbnail?id=${fileId}&sz=w600`;
+      }
+      return trimmed;
+    }
+
+    function loadExistingPhotoToCanvas(url) {
+      if (!url) return;
+      const img = new Image();
+      // Jangan set img.crossOrigin = 'anonymous' untuk URL Google Drive karena Google Drive memblok CORS canvas
+      img.onload = () => {
+        const canvas = document.getElementById('previewCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 600;
+        canvas.height = 800;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      };
+      img.onerror = () => {
+        console.warn('Gagal memuat gambar lama ke canvas:', url);
+      };
+      img.src = getDriveImageUrl(url);
+    }
+
+    // Submit Akhir: Kirim ke Google Apps Script atau Simpan Demo Lokal
+    document.getElementById('btnSubmitAll').addEventListener('click', async () => {
+      if (!currentStudent) return;
+
+      if (currentStudent.status === 'Done') {
+        showToast('Siswa ini sudah berstatus Done! Tidak dapat upload ulang.', '⛔');
+        return;
+      }
+
+      if (!currentPhotoBase64) {
+        showToast('Wajib mengupload atau mengambil pas foto berlatar merah terlebih dahulu!', '⚠️');
+        return;
+      }
+
+      showLoading('MENGUPLOAD FOTO & MENYIMPAN KE SPREADSHEET...');
+
+      const payload = {
+        action: 'submitStudentPhoto',
+        nama: currentStudent.nama,
+        kelas: currentStudent.kelas,
+        nisn: currentStudent.nisn,
+        ttl: currentStudent.ttl,
+        jk: currentStudent.jk,
+        alamat: currentStudent.alamat,
+        qrId: currentStudent.qrId,
+        photoBase64: currentPhotoBase64
+      };
+
+      try {
+        if (gasWebAppUrl) {
+          // Kirim ke Google Apps Script Web App
+          const response = await fetch(gasWebAppUrl, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
+          const resJson = await response.json();
+
+          if (resJson.status === 'locked') {
+            hideLoading();
+            showToast(resJson.message, '⛔');
+            currentStudent.status = 'Done';
+            renderStudentsGrid();
+            setupStep3View();
+            return;
+          }
+
+          if (resJson.status === 'error') {
+            throw new Error(resJson.message);
+          }
+
+          // Sukses dari Google Apps Script
+          if (resJson.student && resJson.student.fotoUrl) {
+            currentStudent.fotoUrl = resJson.student.fotoUrl;
+          }
+        } else {
+          // Mode Demo / Local Storage
+          await new Promise(r => setTimeout(r, 900)); // Simulasi network delay
+          currentStudent.fotoUrl = currentPhotoBase64;
+        }
+
+        // Tandai status siswa menjadi DONE
+        currentStudent.status = 'Done';
+        currentStudent.timestamp = new Date().toLocaleString('id-ID');
+
+        // Simpan ke local storage
+        saveStudentsDataLocal();
+        renderClassPills();
+        renderStudentsGrid();
+
+        hideLoading();
+        showToast('Data dan foto berhasil disimpan!', '🎉');
+
+        // Tampilkan Step 4 (Kartu Digital)
+        populateDigitalCard();
+        navigateToStep(4);
+
+      } catch (err) {
+        hideLoading();
+        console.error(err);
+        showToast('Gagal mengirim ke Google Apps Script: ' + err.message + '. Data tersimpan di browser (Mode Demo).', '⚠️');
+
+        // Tetap tandai lokal agar pengguna tidak kehilangan data
+        currentStudent.status = 'Done';
+        currentStudent.fotoUrl = currentPhotoBase64;
+        currentStudent.timestamp = new Date().toLocaleString('id-ID');
+        saveStudentsDataLocal();
+        renderStudentsGrid();
+        populateDigitalCard();
+        navigateToStep(4);
+      }
+    });
+
+    // Buat Pratinjau Kartu Pelajar Digital (Step 4)
+    function populateDigitalCard() {
+      if (!currentStudent) return;
+
+      document.getElementById('cardValNama').textContent = currentStudent.nama || '-';
+      document.getElementById('cardValKelas').textContent = currentStudent.kelas || '-';
+      document.getElementById('cardValNisn').textContent = currentStudent.nisn || '-';
+      document.getElementById('cardValTtl').textContent = currentStudent.ttl || '-';
+      document.getElementById('cardValJk').textContent = currentStudent.jk || '-';
+      document.getElementById('cardValAlamat').textContent = currentStudent.alamat || '-';
+      document.getElementById('cardValQrId').textContent = currentStudent.qrId || `SMAN1-${(currentStudent.nisn || 'STUDENT').replace(/[^0-9]/g, '')}`;
+      document.getElementById('cardValDate').textContent = currentStudent.timestamp || new Date().toLocaleDateString('id-ID');
+
+      // Gambar Pas Foto di Kartu
+      // Prioritas: base64 in-memory (baru upload) > Drive URL (siswa sudah Done)
+      const photoImg = document.getElementById('cardPhotoImg');
+      
+      photoImg.onerror = () => {
+        console.warn('Foto tidak dapat dimuat dari tautan langsung.');
+        photoImg.onerror = null;
+        photoImg.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='186' viewBox='0 0 140 186'><rect width='100%25' height='100%25' fill='%23B91C1C'/><circle cx='70' cy='75' r='30' fill='rgba(255,255,255,0.3)'/><path d='M35 150 C35 115, 105 115, 105 150 Z' fill='rgba(255,255,255,0.3)'/><text x='50%25' y='170' fill='%23ffffff' font-family='sans-serif' font-weight='bold' font-size='10' text-anchor='middle'>TERVERIFIKASI</text></svg>";
+      };
+
+      if (currentPhotoBase64) {
+        // Foto baru diupload - gunakan base64 langsung
+        photoImg.src = currentPhotoBase64;
+      } else if (currentStudent.fotoUrl) {
+        // Siswa sudah Done sebelumnya - konversi Drive URL ke direct thumbnail link
+        photoImg.src = getDriveImageUrl(currentStudent.fotoUrl);
+      } else {
+        photoImg.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='186' viewBox='0 0 140 186'><rect width='100%25' height='100%25' fill='%23B91C1C'/><circle cx='70' cy='75' r='30' fill='rgba(255,255,255,0.3)'/><path d='M35 150 C35 115, 105 115, 105 150 Z' fill='rgba(255,255,255,0.3)'/><text x='50%25' y='170' fill='%23ffffff' font-family='sans-serif' font-weight='bold' font-size='10' text-anchor='middle'>PAS FOTO 3X4</text></svg>";
+      }
+
+      // QR Code Generator (menggunakan QR API publik atau SVG)
+      const qrImg = document.getElementById('cardQrImg');
+      qrImg.onerror = () => {
+        qrImg.onerror = null;
+        qrImg.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'><rect width='100%25' height='100%25' fill='%23ffffff'/><rect x='4' y='4' width='14' height='14' fill='%23000'/><rect x='6' y='6' width='10' height='10' fill='%23fff'/><rect x='8' y='8' width='6' height='6' fill='%23000'/><rect x='26' y='4' width='14' height='14' fill='%23000'/><rect x='28' y='6' width='10' height='10' fill='%23fff'/><rect x='30' y='8' width='6' height='6' fill='%23000'/><rect x='4' y='26' width='14' height='14' fill='%23000'/><rect x='6' y='28' width='10' height='10' fill='%23fff'/><rect x='8' y='30' width='6' height='6' fill='%23000'/><rect x='22' y='22' width='18' height='18' fill='%23000'/></svg>";
+      };
+      const qrData = encodeURIComponent(`SMAN1_SOPPENG|${currentStudent.nama}|${currentStudent.nisn}|${currentStudent.kelas}|STATUS:DONE`);
+      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qrData}`;
+    }
+
+    // (camera feature removed)
+
+    // Pengaturan Google Apps Script Web App
+    document.getElementById('btnOpenConfig').addEventListener('click', () => {
+      document.getElementById('gasUrlInput').value = gasWebAppUrl;
+      document.getElementById('configModal').classList.add('open');
+    });
+
+    function closeConfigModal() {
+      document.getElementById('configModal').classList.remove('open');
+    }
+
+    document.getElementById('btnSaveConfig').addEventListener('click', () => {
+      const url = document.getElementById('gasUrlInput').value.trim();
+      gasWebAppUrl = url;
+      localStorage.setItem('SMAN1_GAS_URL', url);
+      checkApiStatus();
+      closeConfigModal();
+      showToast('URL Google Apps Script berhasil disimpan!', '✅');
+    });
+
+    async function checkApiStatus() {
+      const statusEl = document.getElementById('apiConnectionStatus');
+      if (!gasWebAppUrl) {
+        statusEl.innerHTML = '🟡 <strong>Mode Demo Aktif</strong> (Offline / LocalStorage Browser)';
+        return;
+      }
+
+      statusEl.innerHTML = '🔄 Menguji koneksi ke Apps Script...';
+      try {
+        const pingUrl = gasWebAppUrl + (gasWebAppUrl.includes('?') ? '&' : '?') + 'action=ping';
+        const res = await fetch(pingUrl);
+        const data = await res.json();
+        if (data.status === 'ok') {
+          statusEl.innerHTML = '🟢 <strong>Tersambung ke Google Apps Script SMAN 1 Soppeng!</strong>';
+        } else {
+          statusEl.innerHTML = '🟡 Tersambung, namun respons berbeda.';
+        }
+      } catch (err) {
+        statusEl.innerHTML = '🔴 <strong>Gagal Terhubung:</strong> Periksa URL Web App Anda dan pastikan setelan akses "Anyone".';
+      }
+    }
+
+    document.getElementById('btnTestConnection').addEventListener('click', checkApiStatus);
+
+    document.getElementById('btnSyncFromSheet').addEventListener('click', async () => {
+      if (!gasWebAppUrl) {
+        showToast('Masukkan URL Google Apps Script terlebih dahulu!', '⚠️');
+        return;
+      }
+      showLoading('MENGAMBIL DATA DARI GOOGLE SPREADSHEET...');
+      try {
+        const fetchUrl = gasWebAppUrl + (gasWebAppUrl.includes('?') ? '&' : '?') + 'action=getStudents';
+        const res = await fetch(fetchUrl);
+        const data = await res.json();
+        if (data.status === 'success' && Array.isArray(data.data) && data.data.length > 0) {
+          students = data.data;
+          saveStudentsDataLocal();
+          renderClassPills();
+          renderStudentsGrid();
+          hideLoading();
+          showToast(`Berhasil sinkron ${students.length} data siswa dari Sheet!`, '🎉');
+        } else {
+          throw new Error(data.message || 'Format data tidak sesuai');
+        }
+      } catch (err) {
+        hideLoading();
+        showToast('Gagal sinkron data: ' + err.message, '❌');
+      }
+    });
+
+    // Sinkronisasi otomatis di latar belakang saat aplikasi dibuka siswa
+    async function autoSyncFromSheetSilently() {
+      if (!gasWebAppUrl) return;
+      try {
+        const fetchUrl = gasWebAppUrl + (gasWebAppUrl.includes('?') ? '&' : '?') + 'action=getStudents';
+        const res = await fetch(fetchUrl);
+        const data = await res.json();
+        if (data.status === 'success' && Array.isArray(data.data) && data.data.length > 0) {
+          students = data.data;
+          saveStudentsDataLocal();
+          renderClassPills();
+          renderStudentsGrid();
+          console.log('Sinkronisasi otomatis Google Sheet berhasil: ' + students.length + ' siswa.');
+        }
+      } catch (err) {
+        console.warn('Sinkronisasi otomatis background dilewati (menggunakan data tersimpan):', err);
+      }
+    }
+
+    document.getElementById('btnResetLocalStorage').addEventListener('click', () => {
+      if (confirm('Apakah Anda yakin ingin mereset seluruh data ke kondisi awal CSV (387 siswa)?')) {
+        localStorage.removeItem('SMAN1_STUDENTS_DATA');
+        initStudentsData();
+        renderClassPills();
+        renderStudentsGrid();
+        showToast('Data demo berhasil direset ke awal!', '🔄');
+      }
+    });
+
+    function resetToHome() {
+      currentStudent = null;
+      currentPhotoBase64 = '';
+      drawInitialPlaceholderCanvas();
+      navigateToStep(1);
+    }
+
+    // Drag and Drop & Event Listeners
+    function setupEventListeners() {
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('fileInput');
+
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          handleSelectedFile(e.target.files[0]);
+        }
+      });
+
+      ['dragenter', 'dragover'].forEach(name => {
+        dropZone.addEventListener(name, (e) => {
+          e.preventDefault();
+          dropZone.classList.add('dragover');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(name => {
+        dropZone.addEventListener(name, (e) => {
+          e.preventDefault();
+          dropZone.classList.remove('dragover');
+        });
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          handleSelectedFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      // Search Box Events
+      const searchInput = document.getElementById('searchInput');
+      const searchClearBtn = document.getElementById('searchClearBtn');
+
+      searchInput.addEventListener('input', () => {
+        searchClearBtn.style.display = searchInput.value ? 'flex' : 'none';
+        renderStudentsGrid();
+      });
+
+      searchClearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchClearBtn.style.display = 'none';
+        renderStudentsGrid();
+        searchInput.focus();
+      });
+
+      // Toggle Face Guide
+      document.getElementById('toggleGuideCheck').addEventListener('change', (e) => {
+        document.getElementById('faceGuideOverlay').style.display = e.target.checked ? 'flex' : 'none';
+      });
+
+      // Reset Photo
+      document.getElementById('btnResetPhoto').addEventListener('click', () => {
+        currentPhotoBase64 = '';
+        drawInitialPlaceholderCanvas();
+        document.getElementById('btnResetPhoto').style.display = 'none';
+        document.getElementById('redDetectAlert').className = 'red-check-banner red-check-warn';
+        document.getElementById('redDetectAlert').innerHTML = '⚠️ Belum ada foto yang dipilih. Silakan upload pas foto latar merah Anda.';
+      });
+    }
+
+    // UI Helpers
+    function showToast(msg, icon = '🔔') {
+      const toast = document.getElementById('toastBox');
+      document.getElementById('toastMsg').textContent = msg;
+      document.getElementById('toastIcon').textContent = icon;
+      toast.style.display = 'flex';
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
+        toast.style.display = 'none';
+      }, 4000);
+    }
+
+    function showLoading(text) {
+      document.getElementById('loadingText').textContent = text;
+      document.getElementById('loadingOverlay').classList.add('open');
+    }
+
+    function hideLoading() {
+      document.getElementById('loadingOverlay').classList.remove('open');
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+
+</html>
