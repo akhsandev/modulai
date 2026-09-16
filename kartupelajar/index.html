@@ -1188,10 +1188,6 @@
           <div class="neo-badge neo-badge-done" style="font-size: 0.85rem; padding: 6px 14px;">
             🟢 SERVER AKTIF / SIAP DIGUNAKAN
           </div>
-          <button class="neo-btn neo-btn-white" id="btnOpenConfig" title="Konfigurasi URL Google Apps Script"
-            style="padding: 8px 14px; font-size: 0.8rem;">
-            ⚙️ ADMIN
-          </button>
         </div>
       </div>
     </header>
@@ -2105,8 +2101,8 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, img.width, img.height, centerShiftX, centerShiftY, img.width * ratio, img.height * ratio);
 
-        // Ekspor base64 JPEG
-        currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.85);
+        // Ekspor base64 JPEG dengan kompresi optimal (~70-90KB) agar upload cepat & anti-timeout
+        currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.80);
 
         // Analisis Deteksi Warna Latar Belakang (Sampel di pojok atas kiri dan kanan)
         analyzeRedBackground(ctx, canvas.width, canvas.height);
@@ -2213,7 +2209,36 @@
       img.src = getDriveImageUrl(url);
     }
 
-    // Submit Akhir: Kirim ke Google Apps Script atau Simpan Demo Lokal
+    // Helper: Verifikasi status database ke Google Apps Script (mencegah stuck loading)
+    async function verifyStudentSubmittedInSheet(nisn, nama, maxAttempts = 3) {
+      if (!gasWebAppUrl) return null;
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+          const checkUrl = gasWebAppUrl + (gasWebAppUrl.includes('?') ? '&' : '?') 
+            + 'action=checkStatus&nisn=' + encodeURIComponent(nisn || '') 
+            + '&nama=' + encodeURIComponent(nama || '') 
+            + '&_t=' + Date.now();
+          
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 6000);
+          const res = await fetch(checkUrl, { signal: controller.signal });
+          clearTimeout(timeoutId);
+          const data = await res.json();
+          
+          if (data.status === 'success' && data.found && data.student && data.student.status === 'Done') {
+            return data.student;
+          }
+        } catch (err) {
+          console.warn(`Verifikasi status database #${attempt} belum selesai:`, err);
+        }
+        if (attempt < maxAttempts) {
+          await new Promise(r => setTimeout(r, 1500));
+        }
+      }
+      return null;
+    }
+
+    // Submit Akhir: Kirim ke Google Apps Script dengan Proteksi Timeout & Auto-Verifikasi
     document.getElementById('btnSubmitAll').addEventListener('click', async () => {
       if (!currentStudent) return;
 
@@ -2227,7 +2252,19 @@
         return;
       }
 
-      showLoading('MENGUPLOAD FOTO & MENYIMPAN KE SPREADSHEET...');
+      const submitBtn = document.getElementById('btnSubmitAll');
+      submitBtn.disabled = true;
+
+      showLoading('MENGUNGGAH FOTO KE SERVER...');
+
+      // Update progres status secara berkala agar siswa tahu proses terus berjalan
+      const progressTimer1 = setTimeout(() => {
+        showLoading('MENYIMPAN KE GOOGLE DRIVE & SPREADSHEET...');
+      }, 3500);
+
+      const progressTimer2 = setTimeout(() => {
+        showLoading('MEMVERIFIKASI PENYIMPANAN DATA...');
+      }, 7500);
 
       const payload = {
         action: 'submitStudentPhoto',
@@ -2242,40 +2279,80 @@
       };
 
       try {
+        let submissionSucceeded = false;
+        let finalFotoUrl = currentPhotoBase64;
+        let recordTimestamp = new Date().toLocaleString('id-ID');
+
         if (gasWebAppUrl) {
-          // Kirim ke Google Apps Script Web App
-          const response = await fetch(gasWebAppUrl, {
-            method: 'POST',
-            body: JSON.stringify(payload)
-          });
-          const resJson = await response.json();
+          // Batasi waktu request maksimal 14 detik untuk mencegah loading menggantung selamanya
+          const controller = new AbortController();
+          const postTimeoutId = setTimeout(() => controller.abort(), 14000);
 
-          if (resJson.status === 'locked') {
-            hideLoading();
-            showToast(resJson.message, '⛔');
-            currentStudent.status = 'Done';
-            renderStudentsGrid();
-            setupStep3View();
-            return;
-          }
+          try {
+            const response = await fetch(gasWebAppUrl, {
+              method: 'POST',
+              body: JSON.stringify(payload),
+              signal: controller.signal
+            });
+            clearTimeout(postTimeoutId);
 
-          if (resJson.status === 'error') {
-            throw new Error(resJson.message);
-          }
+            const resJson = await response.json();
 
-          // Sukses dari Google Apps Script
-          if (resJson.student && resJson.student.fotoUrl) {
-            currentStudent.fotoUrl = resJson.student.fotoUrl;
+            if (resJson.status === 'locked') {
+              clearTimeout(progressTimer1);
+              clearTimeout(progressTimer2);
+              hideLoading();
+              submitBtn.disabled = false;
+              showToast(resJson.message, '⛔');
+              currentStudent.status = 'Done';
+              if (resJson.fotoUrl) currentStudent.fotoUrl = resJson.fotoUrl;
+              renderStudentsGrid();
+              setupStep3View();
+              return;
+            }
+
+            if (resJson.status === 'error') {
+              throw new Error(resJson.message);
+            }
+
+            if (resJson.student && resJson.student.fotoUrl) {
+              finalFotoUrl = resJson.student.fotoUrl;
+            }
+            if (resJson.student && resJson.student.timestamp) {
+              recordTimestamp = resJson.student.timestamp;
+            }
+            submissionSucceeded = true;
+
+          } catch (postErr) {
+            clearTimeout(postTimeoutId);
+            console.warn('POST response terhambat / timeout, menjalankan auto-verifikasi ke database:', postErr);
+            showLoading('MEMASTIKAN STATUS PENYIMPANAN DATA DI SPREADSHEET...');
+
+            // AUTO-VERIFIKASI: Cek langsung ke Spreadsheet apakah data sebenarnya sudah masuk
+            const verifiedStudent = await verifyStudentSubmittedInSheet(currentStudent.nisn, currentStudent.nama, 2);
+            if (verifiedStudent) {
+              console.log('Verifikasi berhasil! Data siswa terbukti sudah tersimpan di Spreadsheet:', verifiedStudent);
+              if (verifiedStudent.fotoUrl) finalFotoUrl = verifiedStudent.fotoUrl;
+              if (verifiedStudent.timestamp) recordTimestamp = verifiedStudent.timestamp;
+              submissionSucceeded = true;
+            } else {
+              // Jika benar-benar belum tersimpan di server
+              throw postErr;
+            }
           }
         } else {
           // Mode Demo / Local Storage
-          await new Promise(r => setTimeout(r, 900)); // Simulasi network delay
-          currentStudent.fotoUrl = currentPhotoBase64;
+          await new Promise(r => setTimeout(r, 600));
+          submissionSucceeded = true;
         }
+
+        clearTimeout(progressTimer1);
+        clearTimeout(progressTimer2);
 
         // Tandai status siswa menjadi DONE
         currentStudent.status = 'Done';
-        currentStudent.timestamp = new Date().toLocaleString('id-ID');
+        currentStudent.fotoUrl = finalFotoUrl;
+        currentStudent.timestamp = recordTimestamp;
 
         // Simpan ke local storage
         saveStudentsDataLocal();
@@ -2283,6 +2360,7 @@
         renderStudentsGrid();
 
         hideLoading();
+        submitBtn.disabled = false;
         showToast('Data dan foto berhasil disimpan!', '🎉');
 
         // Tampilkan Step 4 (Kartu Digital)
@@ -2290,18 +2368,12 @@
         navigateToStep(4);
 
       } catch (err) {
+        clearTimeout(progressTimer1);
+        clearTimeout(progressTimer2);
+        submitBtn.disabled = false;
         hideLoading();
         console.error(err);
-        showToast('Gagal mengirim ke Google Apps Script: ' + err.message + '. Data tersimpan di browser (Mode Demo).', '⚠️');
-
-        // Tetap tandai lokal agar pengguna tidak kehilangan data
-        currentStudent.status = 'Done';
-        currentStudent.fotoUrl = currentPhotoBase64;
-        currentStudent.timestamp = new Date().toLocaleString('id-ID');
-        saveStudentsDataLocal();
-        renderStudentsGrid();
-        populateDigitalCard();
-        navigateToStep(4);
+        showToast('Koneksi terhambat: ' + (err.message || 'Server sibuk') + '. Silakan klik tombol simpan sekali lagi.', '⚠️');
       }
     });
 
@@ -2350,74 +2422,90 @@
 
     // (camera feature removed)
 
-    // Pengaturan Google Apps Script Web App
-    document.getElementById('btnOpenConfig').addEventListener('click', () => {
-      document.getElementById('gasUrlInput').value = gasWebAppUrl;
-      document.getElementById('configModal').classList.add('open');
-    });
-
-    function closeConfigModal() {
-      document.getElementById('configModal').classList.remove('open');
+    // Pengaturan Google Apps Script Web App (Admin)
+    const btnOpenConfig = document.getElementById('btnOpenConfig');
+    if (btnOpenConfig) {
+      btnOpenConfig.addEventListener('click', () => {
+        const gasInput = document.getElementById('gasUrlInput');
+        if (gasInput) gasInput.value = gasWebAppUrl;
+        const modal = document.getElementById('configModal');
+        if (modal) modal.classList.add('open');
+      });
     }
 
-    document.getElementById('btnSaveConfig').addEventListener('click', () => {
-      const url = document.getElementById('gasUrlInput').value.trim();
-      gasWebAppUrl = url;
-      localStorage.setItem('SMAN1_GAS_URL', url);
-      checkApiStatus();
-      closeConfigModal();
-      showToast('URL Google Apps Script berhasil disimpan!', '✅');
-    });
+    function closeConfigModal() {
+      const modal = document.getElementById('configModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    const btnSaveConfig = document.getElementById('btnSaveConfig');
+    if (btnSaveConfig) {
+      btnSaveConfig.addEventListener('click', () => {
+        const gasInput = document.getElementById('gasUrlInput');
+        const url = gasInput ? gasInput.value.trim() : '';
+        gasWebAppUrl = url;
+        localStorage.setItem('SMAN1_GAS_URL', url);
+        checkApiStatus();
+        closeConfigModal();
+        showToast('URL Google Apps Script berhasil disimpan!', '✅');
+      });
+    }
 
     async function checkApiStatus() {
       const statusEl = document.getElementById('apiConnectionStatus');
       if (!gasWebAppUrl) {
-        statusEl.innerHTML = '🟡 <strong>Mode Demo Aktif</strong> (Offline / LocalStorage Browser)';
+        if (statusEl) statusEl.innerHTML = '🟡 <strong>Mode Demo Aktif</strong> (Offline / LocalStorage Browser)';
         return;
       }
 
-      statusEl.innerHTML = '🔄 Menguji koneksi ke Apps Script...';
+      if (statusEl) statusEl.innerHTML = '🔄 Menguji koneksi ke Apps Script...';
       try {
         const pingUrl = gasWebAppUrl + (gasWebAppUrl.includes('?') ? '&' : '?') + 'action=ping';
         const res = await fetch(pingUrl);
         const data = await res.json();
-        if (data.status === 'ok') {
-          statusEl.innerHTML = '🟢 <strong>Tersambung ke Google Apps Script SMAN 1 Soppeng!</strong>';
-        } else {
-          statusEl.innerHTML = '🟡 Tersambung, namun respons berbeda.';
+        if (statusEl) {
+          if (data.status === 'ok') {
+            statusEl.innerHTML = '🟢 <strong>Tersambung ke Google Apps Script SMAN 1 Soppeng!</strong>';
+          } else {
+            statusEl.innerHTML = '🟡 Tersambung, namun respons berbeda.';
+          }
         }
       } catch (err) {
-        statusEl.innerHTML = '🔴 <strong>Gagal Terhubung:</strong> Periksa URL Web App Anda dan pastikan setelan akses "Anyone".';
+        if (statusEl) statusEl.innerHTML = '🔴 <strong>Gagal Terhubung:</strong> Periksa URL Web App Anda dan pastikan setelan akses "Anyone".';
       }
     }
 
-    document.getElementById('btnTestConnection').addEventListener('click', checkApiStatus);
+    const btnTestConnection = document.getElementById('btnTestConnection');
+    if (btnTestConnection) btnTestConnection.addEventListener('click', checkApiStatus);
 
-    document.getElementById('btnSyncFromSheet').addEventListener('click', async () => {
-      if (!gasWebAppUrl) {
-        showToast('Masukkan URL Google Apps Script terlebih dahulu!', '⚠️');
-        return;
-      }
-      showLoading('MENGAMBIL DATA DARI GOOGLE SPREADSHEET...');
-      try {
-        const fetchUrl = gasWebAppUrl + (gasWebAppUrl.includes('?') ? '&' : '?') + 'action=getStudents';
-        const res = await fetch(fetchUrl);
-        const data = await res.json();
-        if (data.status === 'success' && Array.isArray(data.data) && data.data.length > 0) {
-          students = data.data;
-          saveStudentsDataLocal();
-          renderClassPills();
-          renderStudentsGrid();
-          hideLoading();
-          showToast(`Berhasil sinkron ${students.length} data siswa dari Sheet!`, '🎉');
-        } else {
-          throw new Error(data.message || 'Format data tidak sesuai');
+    const btnSyncFromSheet = document.getElementById('btnSyncFromSheet');
+    if (btnSyncFromSheet) {
+      btnSyncFromSheet.addEventListener('click', async () => {
+        if (!gasWebAppUrl) {
+          showToast('Masukkan URL Google Apps Script terlebih dahulu!', '⚠️');
+          return;
         }
-      } catch (err) {
-        hideLoading();
-        showToast('Gagal sinkron data: ' + err.message, '❌');
-      }
-    });
+        showLoading('MENGAMBIL DATA DARI GOOGLE SPREADSHEET...');
+        try {
+          const fetchUrl = gasWebAppUrl + (gasWebAppUrl.includes('?') ? '&' : '?') + 'action=getStudents';
+          const res = await fetch(fetchUrl);
+          const data = await res.json();
+          if (data.status === 'success' && Array.isArray(data.data) && data.data.length > 0) {
+            students = data.data;
+            saveStudentsDataLocal();
+            renderClassPills();
+            renderStudentsGrid();
+            hideLoading();
+            showToast(`Berhasil sinkron ${students.length} data siswa dari Sheet!`, '🎉');
+          } else {
+            throw new Error(data.message || 'Format data tidak sesuai');
+          }
+        } catch (err) {
+          hideLoading();
+          showToast('Gagal sinkron data: ' + err.message, '❌');
+        }
+      });
+    }
 
     // Sinkronisasi otomatis di latar belakang saat aplikasi dibuka siswa
     async function autoSyncFromSheetSilently() {

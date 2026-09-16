@@ -193,19 +193,46 @@ function setupConditionalFormatting(sheet) {
 }
 
 /**
- * Mencari atau membuat folder Google Drive
+ * Mencari atau membuat folder Google Drive (dengan Cache ScriptProperties agar cepat)
  */
 function getOrCreateFolder(folderName, parentFolder) {
   const parent = parentFolder || DriveApp;
-  const folders = parent.getFoldersByName(folderName);
-  if (folders.hasNext()) {
-    return folders.next();
+  const isRoot = !parentFolder;
+  const cacheKey = 'DIR_' + (isRoot ? 'ROOT_' : parentFolder.getId() + '_') + folderName.replace(/[^a-zA-Z0-9]/g, '_');
+  const props = PropertiesService.getScriptProperties();
+  const cachedId = props.getProperty(cacheKey);
+
+  if (cachedId) {
+    try {
+      const folder = DriveApp.getFolderById(cachedId);
+      if (folder && !folder.isTrashed()) {
+        return folder;
+      }
+    } catch (e) {
+      // ID cache tidak valid, lanjutkan pencarian biasa
+    }
   }
-  return parent.createFolder(folderName);
+
+  const folders = parent.getFoldersByName(folderName);
+  let folder;
+  if (folders.hasNext()) {
+    folder = folders.next();
+  } else {
+    folder = parent.createFolder(folderName);
+    try {
+      folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    } catch (err) {}
+  }
+
+  try {
+    props.setProperty(cacheKey, folder.getId());
+  } catch (e) {}
+
+  return folder;
 }
 
 /**
- * Handler GET Request (Mengambil Data Siswa / Cek Koneksi)
+ * Handler GET Request (Mengambil Data Siswa / Cek Koneksi / Cek Status Siswa)
  */
 function doGet(e) {
   try {
@@ -213,6 +240,44 @@ function doGet(e) {
     
     if (action === 'ping') {
       return createJsonResponse({ status: 'ok', message: 'SMAN 1 Soppeng Apps Script Online', timestamp: new Date() });
+    }
+
+    // Endpoint cepat untuk cek status satu siswa (menghindari stuck loading)
+    if (action === 'checkStatus') {
+      const targetNisn = String((e && e.parameter && e.parameter.nisn) || '').trim();
+      const targetNama = String((e && e.parameter && e.parameter.nama) || '').trim().toLowerCase();
+
+      const ss = getSpreadsheet();
+      let sheet = ss.getSheetByName(CONFIG.SHEET_NAME) || ss.getSheets()[0];
+      const data = sheet.getDataRange().getValues();
+
+      for (let i = 1; i < data.length; i++) {
+        const row = data[i];
+        const rowNama = String(row[2] || '').trim().toLowerCase();
+        const rowNisn = String(row[4] || '').trim();
+
+        const matchNisn = targetNisn && (rowNisn === targetNisn || rowNisn.indexOf(targetNisn) !== -1 || targetNisn.indexOf(rowNisn) !== -1);
+        const matchNama = targetNama && (rowNama === targetNama);
+
+        if (matchNisn || matchNama) {
+          return createJsonResponse({
+            status: 'success',
+            found: true,
+            student: {
+              nama: row[2],
+              kelas: row[1],
+              nisn: row[4],
+              ttl: row[3],
+              jk: row[5],
+              alamat: row[6],
+              fotoUrl: row[8] || '',
+              status: row[9] || 'Pending',
+              timestamp: row[10] || ''
+            }
+          });
+        }
+      }
+      return createJsonResponse({ status: 'success', found: false });
     }
 
     const ss = getSpreadsheet();
@@ -365,26 +430,27 @@ function doPost(e) {
       finalPhotoUrl = `https://drive.google.com/thumbnail?id=${file.getId()}&sz=w600`;
     }
 
-    // Update Spreadsheet
+    // Update Spreadsheet secara batch (jauh lebih cepat dan menghindari request timeout)
     const nowStr = Utilities.formatDate(new Date(), 'Asia/Makassar', 'dd/MM/yyyy HH:mm:ss');
 
-    // Update kolom yang diperbaiki oleh siswa jika diisi
     if (payload.alamat && payload.alamat !== '-') {
-      sheet.getRange(targetRowIndex, CONFIG.COLUMNS.ALAMAT).setValue(payload.alamat);
+      currentRowData[CONFIG.COLUMNS.ALAMAT - 1] = payload.alamat;
     }
     if (payload.ttl && payload.ttl !== '-') {
-      sheet.getRange(targetRowIndex, CONFIG.COLUMNS.TTL).setValue(payload.ttl);
+      currentRowData[CONFIG.COLUMNS.TTL - 1] = payload.ttl;
     }
     if (payload.jk) {
-      sheet.getRange(targetRowIndex, CONFIG.COLUMNS.JK).setValue(payload.jk);
+      currentRowData[CONFIG.COLUMNS.JK - 1] = payload.jk;
     }
-
-    // Update Foto, Status 'Done', dan Timestamp
     if (finalPhotoUrl) {
-      sheet.getRange(targetRowIndex, CONFIG.COLUMNS.FOTO_URL).setValue(finalPhotoUrl);
+      currentRowData[CONFIG.COLUMNS.FOTO_URL - 1] = finalPhotoUrl;
     }
-    sheet.getRange(targetRowIndex, CONFIG.COLUMNS.STATUS).setValue('Done');
-    sheet.getRange(targetRowIndex, CONFIG.COLUMNS.TIMESTAMP).setValue(nowStr);
+    currentRowData[CONFIG.COLUMNS.STATUS - 1] = 'Done';
+    currentRowData[CONFIG.COLUMNS.TIMESTAMP - 1] = nowStr;
+
+    // Tulis sekaligus 1 baris (1 operasi I/O, ~50ms vs ~3 detik)
+    sheet.getRange(targetRowIndex, 1, 1, currentRowData.length).setValues([currentRowData]);
+    SpreadsheetApp.flush();
 
     return createJsonResponse({
       status: 'success',
