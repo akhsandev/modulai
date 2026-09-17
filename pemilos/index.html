@@ -37,10 +37,11 @@
   <header class="app-header">
     <div class="header-container">
       <div class="brand-group">
-        <div class="brand-emblem">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-          </svg>
+        <!-- Logo Resmi di Bagian Atas: Disdik Sulsel & CDC -->
+        <div class="header-logos-wrap">
+          <img src="logo-disdik-sulsel.png" alt="Dinas Pendidikan Sulawesi Selatan" class="header-brand-logo logo-disdik" />
+          <div class="header-logo-divider"></div>
+          <img src="logo-cdc.png" alt="Collaborative Digital Class" class="header-brand-logo logo-cdc" />
         </div>
         <div class="brand-text">
           <span class="badge-pill">PEMILOS SULSEL 2026 &bull; e-VOTING</span>
@@ -84,6 +85,23 @@
 
     <!-- STEP 1: FORM IDENTITAS PASLON -->
     <section class="wizard-section active" id="sectionStep1">
+      
+      <!-- Mascot Hero Welcome Card -->
+      <div class="mascot-hero-card">
+        <div class="mascot-badge-tag">MASKOT RESMI PILKETOS SULSEL 2026</div>
+        <div class="mascot-inner-layout">
+          <div class="mascot-img-wrap">
+            <img src="maskot-pilketos.png" alt="Maskot Pilketos Sulsel 2026" class="mascot-img" />
+          </div>
+          <div class="mascot-text-wrap">
+            <h2 class="mascot-title">Selamat Datang, Calon Pemimpin Pelajar Sulsel!</h2>
+            <p class="mascot-desc">
+              Mari bersama wujudkan pemilihan ketua & wakil ketua OSIS yang damai, santun, jujur, adil, dan bermartabat melalui metode <strong>e-Voting</strong>. Silakan lengkapi data pasangan calon di bawah ini.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div class="card glass-card">
         <div class="card-header">
           <div class="header-badge">Langkah 1 dari 3</div>
@@ -353,17 +371,13 @@
         <div class="certificate-border">
           <div class="cert-header">
             <div class="cert-logo-row">
-              <div class="cert-crest">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="8" r="7"></circle>
-                  <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                </svg>
-              </div>
+              <img src="logo-disdik-sulsel.png" alt="Dinas Pendidikan Sulsel" class="cert-official-logo" />
               <div class="cert-titles">
-                <span class="cert-tagline">KOMISI PEMILIHAN KETUA OSIS SERENTAK SULAWESI SELATAN</span>
+                <span class="cert-tagline">DINAS PENDIDIKAN PROVINSI SULAWESI SELATAN</span>
                 <h2 class="cert-main-title">BUKTI PENGESAHAN IKRAR DEKLARASI DAMAI</h2>
-                <span class="cert-year">TAHUN 2026 &bull; METODE e-VOTING</span>
+                <span class="cert-year">PILKETOS SERENTAK SULAWESI SELATAN TAHUN 2026 &bull; METODE e-VOTING</span>
               </div>
+              <img src="logo-cdc.png" alt="Collaborative Digital Class" class="cert-official-logo cert-cdc" />
             </div>
           </div>
 
@@ -470,10 +484,8 @@
 
       <div class="popup-emblem-wrap">
         <div class="popup-emblem-halo"></div>
-        <div class="popup-emblem-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-          </svg>
+        <div class="popup-emblem-icon popup-mascot-icon">
+          <img src="maskot-pilketos.png" alt="Maskot Pilketos" class="popup-mascot-img" />
         </div>
       </div>
 
