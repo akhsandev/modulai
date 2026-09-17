@@ -29,52 +29,6 @@ const CONFIG = {
  */
 function doGet(e) {
   try {
-    // 1. Aksi Cek Ketersediaan Nomor Paslon
-    if (e && e.parameter && e.parameter.action === "checkPaslon") {
-      const kabKota = (e.parameter.kabKota || "").trim().toLowerCase();
-      const sekolah = (e.parameter.sekolah || "").trim().toLowerCase();
-      const nomorUrut = (e.parameter.nomorUrut || "").trim();
-
-      if (!kabKota || !sekolah || !nomorUrut) {
-        return responseJSON({
-          status: "available",
-          message: "Parameter belum lengkap."
-        });
-      }
-
-      const driveFolder = getOrCreateFolder(CONFIG.FOLDER_NAME);
-      const sheet = getOrCreateSpreadsheet(CONFIG.SPREADSHEET_NAME, CONFIG.SHEET_TAB_NAME, driveFolder);
-      const lastRow = sheet.getLastRow();
-
-      if (lastRow > 1) {
-        // Kolom 1-15: [ID, Waktu, KabKota, Sekolah, NoPaslon, Ketua, NisnKetua, Wakil, NisnWakil, ...]
-        const dataValues = sheet.getRange(2, 1, lastRow - 1, 9).getValues();
-        for (let i = 0; i < dataValues.length; i++) {
-          const rowKab = String(dataValues[i][2] || "").trim().toLowerCase();
-          const rowSekolah = String(dataValues[i][3] || "").trim().toLowerCase();
-          const rowNo = String(dataValues[i][4] || "").trim();
-
-          if (rowKab === kabKota && rowSekolah === sekolah && rowNo === nomorUrut) {
-            return responseJSON({
-              status: "taken",
-              message: "Nomor Paslon " + nomorUrut + " untuk sekolah ini sudah diambil!",
-              paslon: {
-                nomorUrut: rowNo,
-                ketuaName: dataValues[i][5],
-                wakilName: dataValues[i][7],
-                witaTimestamp: dataValues[i][1]
-              }
-            });
-          }
-        }
-      }
-
-      return responseJSON({
-        status: "available",
-        message: "Nomor Paslon " + nomorUrut + " tersedia."
-      });
-    }
-
     // Default Health Check
     return responseJSON({
       status: "success",
@@ -121,24 +75,24 @@ function doPost(e) {
     // 2. Dapatkan atau Buat Google Spreadsheet & Tab Sheet
     const sheet = getOrCreateSpreadsheet(CONFIG.SPREADSHEET_NAME, CONFIG.SHEET_TAB_NAME, driveFolder);
 
-    // 3. Verifikasi Anti-Duplikasi (Pencegahan Nomor Paslon Ganda di Sekolah yang Sama)
+    // 3. Cek duplikasi berdasarkan sekolah + ketua + wakil (tanpa nomor urut)
     const reqKab = String(data.kabKota || "").trim().toLowerCase();
     const reqSekolah = String(data.sekolah || "").trim().toLowerCase();
-    const reqNo = String(data.nomorUrut || "").trim();
+    const reqKetua = String(data.ketuaName || "").trim().toLowerCase();
     const lastRow = sheet.getLastRow();
 
-    if (lastRow > 1 && reqNo) {
-      const existingData = sheet.getRange(2, 3, lastRow - 1, 3).getValues();
+    if (lastRow > 1 && reqKetua) {
+      const existingData = sheet.getRange(2, 3, lastRow - 1, 4).getValues();
       for (let i = 0; i < existingData.length; i++) {
         const rowKab = String(existingData[i][0] || "").trim().toLowerCase();
         const rowSekolah = String(existingData[i][1] || "").trim().toLowerCase();
-        const rowNo = String(existingData[i][2] || "").trim();
+        const rowKetua = String(existingData[i][3] || "").trim().toLowerCase();
 
-        if (rowKab === reqKab && rowSekolah === reqSekolah && rowNo === reqNo) {
+        if (rowKab === reqKab && rowSekolah === reqSekolah && rowKetua === reqKetua) {
           return responseJSON({
             status: "error",
             code: "DUPLICATE_PASLON",
-            message: "Data Paslon " + data.nomorUrut + " untuk " + data.sekolah + " sudah pernah didaftarkan dan ditandatangani sebelumnya!"
+            message: "Data " + data.ketuaName + " dari " + data.sekolah + " sudah pernah didaftarkan dan ditandatangani!"
           });
         }
       }
@@ -184,7 +138,6 @@ function doPost(e) {
       witaDate,                              // Waktu TTD (WITA)
       data.kabKota,                          // Kabupaten / Kota di Sulsel
       data.sekolah,                          // Nama Sekolah
-      data.nomorUrut || "-",                 // Nomor Urut Paslon
       data.ketuaName,                        // Nama Calon Ketua OSIS
       data.ketuaNisn || "-",                 // NISN Ketua
       data.wakilName,                        // Nama Calon Wakil Ketua OSIS
@@ -199,7 +152,7 @@ function doPost(e) {
 
     // Beri styling auto wrap dan alignment
     const updatedLastRow = sheet.getLastRow();
-    sheet.getRange(updatedLastRow, 1, 1, 15).setVerticalAlignment("middle");
+    sheet.getRange(updatedLastRow, 1, 1, 14).setVerticalAlignment("middle");
 
     return responseJSON({
       status: "success",
@@ -287,7 +240,6 @@ function getOrCreateSpreadsheet(spreadsheetName, tabName, folder) {
       "Waktu TTD (WITA)",
       "Kabupaten / Kota",
       "Nama Sekolah",
-      "No. Paslon",
       "Calon Ketua OSIS",
       "NISN Ketua",
       "Calon Wakil Ketua OSIS",
@@ -315,8 +267,8 @@ function getOrCreateSpreadsheet(spreadsheetName, tabName, folder) {
       activeSheet.setColumnWidth(i, 160);
     }
     activeSheet.setColumnWidth(4, 220);
+    activeSheet.setColumnWidth(11, 220);
     activeSheet.setColumnWidth(12, 220);
-    activeSheet.setColumnWidth(13, 220);
   }
 
   props.setProperty("SPREADSHEET_ID", spreadsheet.getId());

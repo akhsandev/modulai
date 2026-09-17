@@ -12,9 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     padKetua: null,
     padWakil: null,
     submissionResult: null,
-    isSubmitting: false,
-    isPaslonNumberLocked: false,
-    checkDebounceTimer: null
+    isSubmitting: false
   };
 
   // DOM Elements - Stepper & Sections
@@ -36,16 +34,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const paslonForm = document.getElementById("paslonForm");
   const inputKabKota = document.getElementById("inputKabKota");
   const inputSekolah = document.getElementById("inputSekolah");
-  const inputNomorUrut = document.getElementById("inputNomorUrut");
   const inputKetuaName = document.getElementById("inputKetuaName");
   const inputKetuaNisn = document.getElementById("inputKetuaNisn");
   const inputWakilName = document.getElementById("inputWakilName");
   const inputWakilNisn = document.getElementById("inputWakilNisn");
+  const inputKontak = document.getElementById("inputKontak");
   const inputEmail = document.getElementById("inputEmail");
   const btnSubmitIdentitas = document.getElementById("btnSubmitIdentitas");
-  const paslonLockStatus = document.getElementById("paslonLockStatus");
-  const lockStatusIcon = document.getElementById("lockStatusIcon");
-  const lockStatusText = document.getElementById("lockStatusText");
 
   // DOM Elements - Popup Modal Komitmen
   const commitmentModalBackdrop = document.getElementById("commitmentModalBackdrop");
@@ -83,7 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // DOM Elements - Step 4 Certificate
   const certSekolah = document.getElementById("certSekolah");
   const certKabKota = document.getElementById("certKabKota");
-  const certNomorPaslon = document.getElementById("certNomorPaslon");
   const certRegId = document.getElementById("certRegId");
   const certImgKetua = document.getElementById("certImgKetua");
   const certImgWakil = document.getElementById("certImgWakil");
@@ -125,123 +119,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================================
-  // SISTEM ANTI-DUPLIKASI & LIVE LOCK STATUS PASLON
+  // REAL-TIME PASLON CHECK (dihapus - nomor urut tidak digunakan)
   // =========================================================================
-  function cacheRegisteredPaslon(paslon) {
-    if (!paslon || !paslon.sekolah || !paslon.nomorUrut) return;
-    const registry = JSON.parse(localStorage.getItem("pemilos_registered_paslons") || "[]");
-    const exists = registry.some(item =>
-      String(item.kabKota || "").toLowerCase() === String(paslon.kabKota || "").toLowerCase() &&
-      String(item.sekolah || "").toLowerCase() === String(paslon.sekolah || "").toLowerCase() &&
-      String(item.nomorUrut) === String(paslon.nomorUrut)
-    );
-    if (!exists) {
-      registry.push({
-        kabKota: paslon.kabKota,
-        sekolah: paslon.sekolah,
-        nomorUrut: paslon.nomorUrut,
-        ketuaName: paslon.ketuaName,
-        wakilName: paslon.wakilName,
-        date: new Date().toISOString()
-      });
-      localStorage.setItem("pemilos_registered_paslons", JSON.stringify(registry));
-    }
-  }
-
-  function setPaslonStatusTaken(no, sekolah, ketuaName) {
-    paslonLockStatus.style.display = "flex";
-    paslonLockStatus.className = "paslon-lock-status status-taken";
-    lockStatusIcon.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`;
-    lockStatusText.innerHTML = `Data Paslon <strong>${no}</strong> untuk ${sekolah || 'sekolah ini'} sudah diambil & ditandatangani (${ketuaName ? 'Ketua: ' + ketuaName : 'Terkunci'}).`;
-    state.isPaslonNumberLocked = true;
-    btnSubmitIdentitas.disabled = true;
-  }
-
-  function setPaslonStatusAvailable(no, sekolah) {
-    paslonLockStatus.style.display = "flex";
-    paslonLockStatus.className = "paslon-lock-status status-available";
-    lockStatusIcon.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
-    lockStatusText.innerHTML = `Nomor Paslon <strong>${no}</strong> Tersedia untuk ${sekolah || 'sekolah ini'}.`;
-    state.isPaslonNumberLocked = false;
-    btnSubmitIdentitas.disabled = false;
-  }
-
-  function checkPaslonAvailability() {
-    const kabKota = inputKabKota.value.trim();
-    const sekolah = inputSekolah.value.trim();
-    const nomorUrut = inputNomorUrut.value.trim();
-
-    if (!nomorUrut) {
-      paslonLockStatus.style.display = "none";
-      state.isPaslonNumberLocked = false;
-      btnSubmitIdentitas.disabled = false;
-      return;
-    }
-
-    if (!kabKota || !sekolah) {
-      paslonLockStatus.style.display = "flex";
-      paslonLockStatus.className = "paslon-lock-status status-checking";
-      lockStatusIcon.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
-      lockStatusText.textContent = "Lengkapi Kabupaten dan Nama Sekolah untuk validasi ketersediaan nomor paslon.";
-      state.isPaslonNumberLocked = false;
-      btnSubmitIdentitas.disabled = false;
-      return;
-    }
-
-    // 1. Cek Offline Local Registry Cache
-    const registry = JSON.parse(localStorage.getItem("pemilos_registered_paslons") || "[]");
-    const matchLocal = registry.find(item =>
-      String(item.kabKota || "").toLowerCase() === kabKota.toLowerCase() &&
-      String(item.sekolah || "").toLowerCase() === sekolah.toLowerCase() &&
-      String(item.nomorUrut) === String(nomorUrut)
-    );
-
-    if (matchLocal) {
-      setPaslonStatusTaken(nomorUrut, sekolah, matchLocal.ketuaName);
-      return;
-    }
-
-    // 2. Cek Live ke Google Apps Script jika terhubung
-    const endpoint = getGasEndpoint();
-    if (endpoint && endpoint.startsWith("http")) {
-      paslonLockStatus.style.display = "flex";
-      paslonLockStatus.className = "paslon-lock-status status-checking";
-      lockStatusIcon.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>`;
-      lockStatusText.textContent = `Mengecek ketersediaan Paslon #${nomorUrut} di server...`;
-
-      const checkUrl = `${endpoint}?action=checkPaslon&kabKota=${encodeURIComponent(kabKota)}&sekolah=${encodeURIComponent(sekolah)}&nomorUrut=${encodeURIComponent(nomorUrut)}`;
-      fetch(checkUrl)
-        .then(res => res.json())
-        .then(res => {
-          if (res.status === "taken") {
-            const ketua = res.paslon?.ketuaName || "";
-            setPaslonStatusTaken(nomorUrut, sekolah, ketua);
-            cacheRegisteredPaslon({ kabKota, sekolah, nomorUrut, ketuaName: ketua });
-          } else {
-            setPaslonStatusAvailable(nomorUrut, sekolah);
-          }
-        })
-        .catch(err => {
-          setPaslonStatusAvailable(nomorUrut, sekolah);
-        });
-    } else {
-      setPaslonStatusAvailable(nomorUrut, sekolah);
-    }
-  }
-
-  function triggerDebouncedPaslonCheck() {
-    clearTimeout(state.checkDebounceTimer);
-    state.checkDebounceTimer = setTimeout(() => {
-      checkPaslonAvailability();
-    }, 280);
-  }
-
-  // Event listener untuk real-time check nomor urut
-  inputNomorUrut.addEventListener("input", triggerDebouncedPaslonCheck);
-  inputNomorUrut.addEventListener("change", triggerDebouncedPaslonCheck);
-  inputSekolah.addEventListener("input", triggerDebouncedPaslonCheck);
-  inputSekolah.addEventListener("change", triggerDebouncedPaslonCheck);
-  inputKabKota.addEventListener("change", triggerDebouncedPaslonCheck);
 
   // 1. Inisialisasi Dropdown 24 Kab/Kota di Sulsel
   function initKabKotaDropdown() {
@@ -380,15 +259,9 @@ document.addEventListener("DOMContentLoaded", () => {
   paslonForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    if (state.isPaslonNumberLocked) {
-      showToast("Data Paslon ini sudah diambil! Silakan gunakan nomor urut yang tersedia.", "error");
-      return;
-    }
-
     const data = {
       kabKota: inputKabKota.value.trim(),
       sekolah: inputSekolah.value.trim(),
-      nomorUrut: inputNomorUrut.value.trim(),
       ketuaName: inputKetuaName.value.trim(),
       ketuaNisn: inputKetuaNisn.value.trim(),
       wakilName: inputWakilName.value.trim(),
@@ -414,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Update data header pada naskah deklarasi
     const paslon = state.paslonData;
-    docPaslonInfo.textContent = `Paslon No. ${paslon.nomorUrut} • ${paslon.sekolah} (${paslon.kabKota})`;
+    docPaslonInfo.textContent = `${paslon.sekolah} (${paslon.kabKota})`;
 
     // Reset persetujuan
     checkAgreeDeclaration.checked = false;
@@ -439,10 +312,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const paslon = state.paslonData;
     // Set nama otomatis pada masing-masing kotak TTD
     displayKetuaName.textContent = paslon.ketuaName;
-    displayKetuaSchool.textContent = `${paslon.sekolah} • Paslon #${paslon.nomorUrut}`;
+    displayKetuaSchool.textContent = paslon.sekolah;
 
     displayWakilName.textContent = paslon.wakilName;
-    displayWakilSchool.textContent = `${paslon.sekolah} • Paslon #${paslon.nomorUrut}`;
+    displayWakilSchool.textContent = paslon.sekolah;
 
     // Masuk Step 3
     setWizardStep(3);
@@ -493,7 +366,6 @@ document.addEventListener("DOMContentLoaded", () => {
       declarationId: declarationId,
       kabKota: state.paslonData.kabKota,
       sekolah: state.paslonData.sekolah,
-      nomorUrut: state.paslonData.nomorUrut,
       ketuaName: state.paslonData.ketuaName,
       ketuaNisn: state.paslonData.ketuaNisn,
       wakilName: state.paslonData.wakilName,
@@ -530,17 +402,9 @@ document.addEventListener("DOMContentLoaded", () => {
             showToast("Sukses tersimpan di Google Drive dan Google Sheets!", "success");
             // Daftarkan ke local cache pencegahan duplikasi
             cacheRegisteredPaslon(state.paslonData);
-          } else if (result.code === "DUPLICATE_PASLON") {
-            loadingOverlay.classList.remove("show");
-            state.isSubmitting = false;
-            showToast(result.message || "Nomor Paslon ini sudah pernah didaftarkan!", "error");
-            setPaslonStatusTaken(state.paslonData.nomorUrut, state.paslonData.sekolah, "");
-            setWizardStep(1);
-            return;
           } else {
             console.warn("GAS Server response:", result);
             showToast(result.message || "Data diproses dengan catatan.", "info");
-            cacheRegisteredPaslon(state.paslonData);
           }
         } else {
           throw new Error("HTTP Status " + response.status);
@@ -576,7 +440,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderCertificate(data, driveFolderUrl, isSynced) {
     certSekolah.textContent = data.sekolah;
     certKabKota.textContent = data.kabKota;
-    certNomorPaslon.textContent = `Paslon Nomor Urut ${data.nomorUrut}`;
     certRegId.textContent = data.declarationId;
 
     certNameKetua.textContent = data.ketuaName;
@@ -615,8 +478,6 @@ document.addEventListener("DOMContentLoaded", () => {
   btnRestartForm.addEventListener("click", () => {
     if (confirm("Apakah Anda ingin memulai pengisian deklarasi untuk pasangan calon baru?")) {
       paslonForm.reset();
-      paslonLockStatus.style.display = "none";
-      state.isPaslonNumberLocked = false;
       btnSubmitIdentitas.disabled = false;
       if (state.padKetua) state.padKetua.clear();
       if (state.padWakil) state.padWakil.clear();
