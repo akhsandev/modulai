@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Penandatanganan Deklarasi Pemilos Serentak Sulsel 2026</title>
+  <meta name="description"
+    content="Aplikasi Penandatanganan Digital Ikrar Deklarasi Damai Calon Ketua & Wakil Ketua OSIS se-Sulawesi Selatan dengan e-Voting.">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Ambient Background Glows -->
+  <div class="ambient-glow glow-top-left"></div>
+  <div class="ambient-glow glow-bottom-right"></div>
+  <div class="ambient-glow glow-center"></div>
+
+  <!-- Header / Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-group">
+        <div class="brand-emblem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="badge-pill">PEMILOS SULSEL 2026 &bull; e-VOTING</span>
+          <h1 class="brand-title">Penandatanganan Deklarasi Damai</h1>
+        </div>
+      </div>
+      <div class="header-status">
+        <span class="live-status-pill">
+          <span class="status-pulse-dot"></span>
+          <span>SISTEM AKTIF</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Step Wizard Progress Bar -->
+  <div class="wizard-stepper">
+    <div class="stepper-item active" id="stepIndicator1">
+      <div class="step-circle">1</div>
+      <span class="step-label">Identitas Paslon</span>
+    </div>
+    <div class="stepper-line"></div>
+    <div class="stepper-item" id="stepIndicator2">
+      <div class="step-circle">2</div>
+      <span class="step-label">Naskah Ikrar</span>
+    </div>
+    <div class="stepper-line"></div>
+    <div class="stepper-item" id="stepIndicator3">
+      <div class="step-circle">3</div>
+      <span class="step-label">Tanda Tangan</span>
+    </div>
+    <div class="stepper-line"></div>
+    <div class="stepper-item" id="stepIndicator4">
+      <div class="step-circle">4</div>
+      <span class="step-label">Selesai & Arsip</span>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- STEP 1: FORM IDENTITAS PASLON -->
+    <section class="wizard-section active" id="sectionStep1">
+      <div class="card glass-card">
+        <div class="card-header">
+          <div class="header-badge">Langkah 1 dari 3</div>
+          <h2 class="card-title">Registrasi Calon Ketua & Wakil Ketua OSIS</h2>
+          <p class="card-subtitle">Lengkapi identitas resmi pasangan calon peserta Pemilos Serentak se-Provinsi Sulawesi
+            Selatan Tahun 2026.</p>
+        </div>
+
+        <form id="paslonForm" class="form-grid">
+          <div class="form-group full-width">
+            <label for="inputKabKota">Kabupaten / Kota di Sulawesi Selatan <span class="req">*</span></label>
+            <select id="inputKabKota" required>
+              <option value="">-- Pilih Kabupaten / Kota --</option>
+            </select>
+          </div>
+
+          <div class="form-group half-width">
+            <label for="inputSekolah">Nama Satuan Pendidikan (Sekolah) <span class="req">*</span></label>
+            <input type="text" id="inputSekolah" placeholder="Contoh: SMAN 1 Makassar / SMKN 2 Gowa" required>
+          </div>
+
+          <div class="form-group half-width">
+            <label for="inputNomorUrut">Nomor Urut Paslon <span class="req">*</span></label>
+            <input type="number" id="inputNomorUrut" min="1" max="99" placeholder="Contoh: 1" required>
+            <div id="paslonLockStatus" class="paslon-lock-status" style="display: none;">
+              <span class="lock-status-icon" id="lockStatusIcon"></span>
+              <span class="lock-status-text" id="lockStatusText"></span>
+            </div>
+          </div>
+
+          <!-- Section Calon Ketua -->
+          <div class="form-subheading full-width">
+            <div class="subheading-icon ketua-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <span>Calon Ketua OSIS</span>
+          </div>
+
+          <div class="form-group half-width">
+            <label for="inputKetuaName">Nama Lengkap Calon Ketua <span class="req">*</span></label>
+            <input type="text" id="inputKetuaName" placeholder="Masukkan nama lengkap ketua" required>
+          </div>
+
+          <div class="form-group half-width">
+            <label for="inputKetuaNisn">NISN Calon Ketua (Opsional)</label>
+            <input type="text" id="inputKetuaNisn" placeholder="Nomor Induk Siswa Nasional">
+          </div>
+
+          <!-- Section Calon Wakil Ketua -->
+          <div class="form-subheading full-width">
+            <div class="subheading-icon wakil-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <span>Calon Wakil Ketua OSIS</span>
+          </div>
+
+          <div class="form-group half-width">
+            <label for="inputWakilName">Nama Lengkap Calon Wakil Ketua <span class="req">*</span></label>
+            <input type="text" id="inputWakilName" placeholder="Masukkan nama lengkap wakil" required>
+          </div>
+
+          <div class="form-group half-width">
+            <label for="inputWakilNisn">NISN Calon Wakil Ketua (Opsional)</label>
+            <input type="text" id="inputWakilNisn" placeholder="Nomor Induk Siswa Nasional">
+          </div>
+
+          <!-- Kontak Koordinator -->
+          <div class="form-group half-width">
+            <label for="inputKontak">Nomor WhatsApp / HP Aktif <span class="req">*</span></label>
+            <input type="tel" id="inputKontak" placeholder="08xxxxxxxxxx" required>
+          </div>
+
+          <div class="form-group half-width">
+            <label for="inputEmail">Alamat Email Aktif</label>
+            <input type="email" id="inputEmail" placeholder="osis@sekolah.sch.id">
+          </div>
+
+          <div class="form-actions full-width">
+            <button type="submit" class="btn btn-primary btn-lg pulse-glow" id="btnSubmitIdentitas">
+              <span>Konfirmasi & Lanjutkan</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- STEP 2: NASKAH IKRAR DEKLARASI -->
+    <section class="wizard-section" id="sectionStep2">
+      <div class="card glass-card declaration-card">
+        <div class="card-header text-center">
+          <div class="official-stamp-badge">
+            <span class="stamp-star">&#9733;</span> DOKUMEN RESMI IKRAR PEMILOS 2026 <span
+              class="stamp-star">&#9733;</span>
+          </div>
+          <h2 class="card-title text-gradient" id="docJudul">DEKLARASI KAMPANYE DAMAI PILKETOS SULAWESI SELATAN TAHUN
+            2026</h2>
+          <p class="card-subtitle" id="docPaslonInfo">Memuat komitmen integritas bagi Calon Ketua dan Calon Wakil Ketua
+            OSIS.</p>
+        </div>
+
+        <div class="declaration-scroll-body" id="declarationBody">
+          <div class="naskah-pembuka" id="docPembuka"></div>
+
+          <div class="naskah-poin-list" id="docPoinList"></div>
+
+          <div class="naskah-penutup" id="docPenutup"></div>
+        </div>
+
+        <div class="agreement-box">
+          <label class="custom-checkbox">
+            <input type="checkbox" id="checkAgreeDeclaration">
+            <span class="checkmark"></span>
+            <span class="checkbox-text">
+              Kami, Calon Ketua dan Calon Wakil Ketua OSIS yang bertandatangan, menyatakan telah membaca dengan seksama,
+              memahami, dan siap menjunjung tinggi seluruh ikrar deklarasi di atas dengan penuh kehormatan.
+            </span>
+          </label>
+        </div>
+
+        <div class="card-footer-buttons">
+          <button type="button" class="btn btn-outline" id="btnBackToStep1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Kembali ke Identitas</span>
+          </button>
+
+          <button type="button" class="btn btn-primary btn-lg" id="btnProceedToSignature" disabled>
+            <span>Lanjut ke Penandatanganan Digital</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3: DUAL SIGNATURE CANVAS -->
+    <section class="wizard-section" id="sectionStep3">
+      <div class="card glass-card">
+        <div class="card-header">
+          <div class="header-badge">Langkah Penandatanganan</div>
+          <h2 class="card-title">Penandatanganan Digital Pasangan Calon</h2>
+          <p class="card-subtitle">Silakan bubuhkan tanda tangan langsung pada masing-masing kotak di bawah ini
+            menggunakan jari, stylus, atau kursor.</p>
+        </div>
+
+        <!-- Duo Canvas Container -->
+        <div class="signature-duo-grid">
+
+          <!-- KOTAK TTD 1: CALON KETUA OSIS -->
+          <div class="signature-column" id="colKetua">
+            <div class="sig-header">
+              <div class="sig-role-badge badge-ketua">CALON KETUA OSIS</div>
+              <h3 class="sig-person-name" id="displayKetuaName">Nama Calon Ketua</h3>
+              <span class="sig-school" id="displayKetuaSchool">Sekolah</span>
+            </div>
+
+            <div class="canvas-wrapper" id="wrapperCanvasKetua">
+              <canvas id="canvasKetua" class="sig-canvas"></canvas>
+              <div class="canvas-watermark">Goreskan Tanda Tangan Calon Ketua</div>
+              <div class="trail-badge">Efek Trail Aktif</div>
+            </div>
+
+            <div class="sig-controls">
+              <div class="sig-status" id="statusKetua">
+                <span class="status-dot dot-pending"></span>
+                <span class="status-text">Menunggu TTD</span>
+              </div>
+              <div class="sig-btn-group">
+                <button type="button" class="btn-sm btn-ghost" id="btnUndoKetua" title="Undo Goresan Terakhir">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 7v6h6"></path>
+                    <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path>
+                  </svg>
+                  <span>Undo</span>
+                </button>
+                <button type="button" class="btn-sm btn-ghost" id="btnClearKetua" title="Hapus & Ulangi">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                  <span>Bersihkan</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- KOTAK TTD 2: CALON WAKIL KETUA OSIS -->
+          <div class="signature-column" id="colWakil">
+            <div class="sig-header">
+              <div class="sig-role-badge badge-wakil">CALON WAKIL KETUA OSIS</div>
+              <h3 class="sig-person-name" id="displayWakilName">Nama Calon Wakil Ketua</h3>
+              <span class="sig-school" id="displayWakilSchool">Sekolah</span>
+            </div>
+
+            <div class="canvas-wrapper" id="wrapperCanvasWakil">
+              <canvas id="canvasWakil" class="sig-canvas"></canvas>
+              <div class="canvas-watermark">Goreskan Tanda Tangan Calon Wakil</div>
+              <div class="trail-badge">Efek Trail Aktif</div>
+            </div>
+
+            <div class="sig-controls">
+              <div class="sig-status" id="statusWakil">
+                <span class="status-dot dot-pending"></span>
+                <span class="status-text">Menunggu TTD</span>
+              </div>
+              <div class="sig-btn-group">
+                <button type="button" class="btn-sm btn-ghost" id="btnUndoWakil" title="Undo Goresan Terakhir">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 7v6h6"></path>
+                    <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path>
+                  </svg>
+                  <span>Undo</span>
+                </button>
+                <button type="button" class="btn-sm btn-ghost" id="btnClearWakil" title="Hapus & Ulangi">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                  <span>Bersihkan</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card-footer-buttons mt-4">
+          <button type="button" class="btn btn-outline" id="btnBackToStep2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Kembali Baca Naskah</span>
+          </button>
+
+          <button type="button" class="btn btn-primary btn-lg pulse-glow" id="btnFinalSubmit" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+              <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            <span>Kirim & Simpan ke Google Drive</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 4: RESULT / CERTIFICATE VIEW -->
+    <section class="wizard-section" id="sectionStep4">
+      <div class="card glass-card certificate-card" id="printableCertificate">
+        <div class="certificate-border">
+          <div class="cert-header">
+            <div class="cert-logo-row">
+              <div class="cert-crest">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="8" r="7"></circle>
+                  <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                </svg>
+              </div>
+              <div class="cert-titles">
+                <span class="cert-tagline">KOMISI PEMILIHAN KETUA OSIS SERENTAK SULAWESI SELATAN</span>
+                <h2 class="cert-main-title">BUKTI PENGESAHAN IKRAR DEKLARASI DAMAI</h2>
+                <span class="cert-year">TAHUN 2026 &bull; METODE e-VOTING</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cert-body">
+            <p class="cert-lead">
+              Telah tercatat dan terverifikasi secara resmi bahwa Pasangan Calon Ketua dan Wakil Ketua OSIS:
+            </p>
+
+            <div class="cert-meta-box">
+              <div class="cert-meta-item">
+                <span class="meta-lbl">Satuan Pendidikan:</span>
+                <strong class="meta-val" id="certSekolah">-</strong>
+              </div>
+              <div class="cert-meta-item">
+                <span class="meta-lbl">Kabupaten / Kota:</span>
+                <strong class="meta-val" id="certKabKota">-</strong>
+              </div>
+              <div class="cert-meta-item">
+                <span class="meta-lbl">Nomor Paslon:</span>
+                <strong class="meta-val" id="certNomorPaslon">-</strong>
+              </div>
+              <div class="cert-meta-item">
+                <span class="meta-lbl">Nomor Registrasi:</span>
+                <strong class="meta-val text-amber" id="certRegId">-</strong>
+              </div>
+            </div>
+
+            <div class="cert-statement">
+              Telah menandatangani Naskah Ikrar Deklarasi Kampanye Damai Pilketos Serentak se-Provinsi Sulawesi Selatan
+              Tahun 2026 dan berkomitmen menjunjung tinggi nilai sportivitas, persaudaraan, dan integritas demokrasi
+              pelajar.
+            </div>
+
+            <!-- Duo Signatures Display -->
+            <div class="cert-signatures-row">
+              <div class="cert-sig-box">
+                <span class="cert-sig-role">Calon Ketua OSIS</span>
+                <div class="cert-sig-img-wrap">
+                  <img id="certImgKetua" alt="Tanda Tangan Calon Ketua">
+                </div>
+                <strong class="cert-sig-name" id="certNameKetua">Nama Ketua</strong>
+                <span class="cert-sig-sub">Tertanda Digital</span>
+              </div>
+
+              <div class="cert-stamp-middle">
+                <div class="seal-circle">
+                  <span>RESMI</span>
+                  <small>PILKETOS SULSEL</small>
+                  <strong>2026</strong>
+                </div>
+              </div>
+
+              <div class="cert-sig-box">
+                <span class="cert-sig-role">Calon Wakil Ketua OSIS</span>
+                <div class="cert-sig-img-wrap">
+                  <img id="certImgWakil" alt="Tanda Tangan Calon Wakil Ketua">
+                </div>
+                <strong class="cert-sig-name" id="certNameWakil">Nama Wakil</strong>
+                <span class="cert-sig-sub">Tertanda Digital</span>
+              </div>
+            </div>
+
+            <div class="cert-footer-info">
+              <span>Waktu Penandatanganan: <strong id="certTimestamp">-</strong> WITA</span>
+              <span id="certGasSyncStatus" class="sync-badge">Tersimpan di Cloud</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer-buttons no-print mt-4">
+          <button type="button" class="btn btn-outline" id="btnPrintCert">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            <span>Cetak / Simpan PDF</span>
+          </button>
+
+          <a href="#" target="_blank" class="btn btn-secondary" id="btnOpenDriveFolder" style="display: none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Buka Arsip Google Drive</span>
+          </a>
+
+          <button type="button" class="btn btn-primary" id="btnRestartForm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 4v6h6"></path>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+            </svg>
+            <span>Input Paslon Baru</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- POPUP / TOAST GRADIENT KOMITMEN PEMILOS (ANIMATIC & SLEEK GRADIENT) -->
+  <div class="modal-backdrop" id="commitmentModalBackdrop">
+    <div class="commitment-popup-card">
+      <div class="popup-ambient-glow"></div>
+
+      <div class="popup-emblem-wrap">
+        <div class="popup-emblem-halo"></div>
+        <div class="popup-emblem-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="popup-header-tag">
+        <span class="pulse-sparkle">&#10024;</span>
+        <span>KOMITMEN DEMOKRASI PELAJAR SULSEL 2026</span>
+        <span class="pulse-sparkle">&#10024;</span>
+      </div>
+
+      <h2 class="popup-title">
+        Siap Sukseskan <span class="gradient-text">Pemilos Serentak</span> se-Sulawesi Selatan!
+      </h2>
+
+      <div class="popup-body-content">
+        <div class="quote-container">
+          <p class="commitment-statement">
+            "Kami memiliki keyakinan penuh dan komitmen teguh untuk ikut serta menyukseskan <strong>Pemilos (Pemilihan
+              Ketua OSIS Serentak se-Sulawesi Selatan)</strong> dengan metode <strong>e-Voting</strong> berlandaskan
+            kejujuran, sportivitas, dan persaudaraan sesama pelajar."
+          </p>
+        </div>
+
+        <div class="popup-paslon-preview" id="popupPaslonPreview">
+          <div class="preview-item">
+            <span class="preview-label">Calon Ketua OSIS</span>
+            <strong class="preview-name" id="popupKetuaName">-</strong>
+          </div>
+          <div class="preview-divider">&bull;</div>
+          <div class="preview-item">
+            <span class="preview-label">Calon Wakil Ketua OSIS</span>
+            <strong class="preview-name" id="popupWakilName">-</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="popup-actions">
+        <button type="button" class="btn btn-popup-proceed pulse-btn" id="btnPopupProceed">
+          <span>Lanjut Baca Naskah Deklarasi</span>
+          <div class="btn-arrow-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       KONFIGURASI URL BACKEND GOOGLE APPS SCRIPT (TER-EMBED LANGSUNG)
+       Tempelkan URL Web App Google Apps Script Anda langsung di variabel ini,
+       atau berikan parameter di link: ?gas=URL_APPS_SCRIPT_ANDA
+       ========================================================================= -->
+  <script>
+    window.GAS_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbx1wpv_yFCT9awNNu0xESJs0CgGKH3xhI0T3VBonu6Mc2ph-h5M-ekVlJgkDTQb-vw/exec"; // <-- TEMPELKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
+  </script>
+
+  <!-- LOADING OVERLAY SUBMIT -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-box">
+      <div class="spinner-orbit">
+        <div class="orbit-circle"></div>
+      </div>
+      <h3 class="loading-title">Menyimpan Deklarasi...</h3>
+      <p class="loading-subtitle" id="loadingSubtitle">Mengenkripsi tanda tangan digital & menghubungkan Google Drive...
+      </p>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script src="signature-pad.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
