@@ -102,13 +102,14 @@ function doPost(e) {
     const timestampStr = Utilities.formatDate(new Date(), "Asia/Makassar", "yyyyMMdd_HHmmss");
     const sanitizedSchool = sanitizeFilename(data.sekolah);
     const sanitizedKabKota = sanitizeFilename(data.kabKota);
+    const sanitizedKetua = sanitizeFilename(data.ketuaName);
 
     let ttdKetuaUrl = "-";
     let ttdKetuaFileId = "";
     if (data.ttdKetuaBase64) {
       const fileKetua = saveBase64ToDrive(
         data.ttdKetuaBase64,
-        `TTD_KETUA_${sanitizedKabKota}_${sanitizedSchool}_Paslon${reqNo}_${timestampStr}.png`,
+        `TTD_KETUA_${sanitizedKabKota}_${sanitizedSchool}_${sanitizedKetua}_${timestampStr}.png`,
         driveFolder,
         "image/png"
       );
@@ -121,7 +122,7 @@ function doPost(e) {
     if (data.ttdWakilBase64) {
       const fileWakil = saveBase64ToDrive(
         data.ttdWakilBase64,
-        `TTD_WAKIL_${sanitizedKabKota}_${sanitizedSchool}_Paslon${reqNo}_${timestampStr}.png`,
+        `TTD_WAKIL_${sanitizedKabKota}_${sanitizedSchool}_${sanitizedKetua}_${timestampStr}.png`,
         driveFolder,
         "image/png"
       );

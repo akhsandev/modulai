@@ -400,8 +400,6 @@ document.addEventListener("DOMContentLoaded", () => {
             isCloudSynced = true;
             driveFolderUrl = result.data?.driveFolderUrl || null;
             showToast("Sukses tersimpan di Google Drive dan Google Sheets!", "success");
-            // Daftarkan ke local cache pencegahan duplikasi
-            cacheRegisteredPaslon(state.paslonData);
           } else {
             console.warn("GAS Server response:", result);
             showToast(result.message || "Data diproses dengan catatan.", "info");
