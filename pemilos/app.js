@@ -414,7 +414,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (err) {
       console.error("Gagal sinkronisasi online:", err);
-      showToast("Koneksi cloud gagal. Data tetap diamankan di perangkat ini.", "error");
+      if (!isCloudSynced) {
+        showToast("Koneksi cloud gagal. Data tetap diamankan di perangkat ini.", "error");
+      }
     } finally {
       // Simpan arsip di LocalStorage sebagai cadangan
       const localArchive = JSON.parse(localStorage.getItem("pemilos_archive") || "[]");
