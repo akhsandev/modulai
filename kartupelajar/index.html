@@ -283,6 +283,129 @@
       gap: 10px;
     }
 
+    /* Header Progress Bar Detail */
+    .header-main-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .header-progress-container {
+      width: 100%;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 2.5px dashed #000000;
+    }
+
+    .progress-header-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .progress-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: -0.2px;
+    }
+
+    .progress-percent-badge {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: 1.15rem;
+      background: var(--yellow);
+      border: 2px solid #000;
+      box-shadow: 2px 2px 0px #000;
+      padding: 2px 12px;
+      border-radius: 6px;
+    }
+
+    .neo-progress-track {
+      width: 100%;
+      height: 22px;
+      background: #E5E7EB;
+      border: 2.5px solid #000000;
+      border-radius: 8px;
+      box-shadow: 2.5px 2.5px 0px #000000;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .neo-progress-fill {
+      height: 100%;
+      background: #00E599;
+      border-right: 2.5px solid #000000;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .progress-stripes {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0.08) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.08) 50%,
+        rgba(0, 0, 0, 0.08) 75%,
+        transparent 75%,
+        transparent
+      );
+      background-size: 24px 24px;
+    }
+
+    .progress-metrics-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .metric-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #F8FAFC;
+      border: 1.5px solid #000000;
+      box-shadow: 1.5px 1.5px 0px #000000;
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+    }
+
+    .metric-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      border: 1px solid #000;
+    }
+
+    .dot-green { background: #00E599; }
+    .dot-yellow { background: #FFE600; }
+    .dot-blue { background: #00F0FF; }
+
+    .metric-label {
+      color: #555;
+      font-weight: 700;
+    }
+
+    .metric-val {
+      color: #000;
+      font-weight: 900;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
     /* Stepper Bar */
     .stepper-nav {
       margin: 24px 0 32px;
@@ -1169,24 +1292,66 @@
     <!-- HEADER BRANDING -->
     <header>
       <div class="header-card neo-box">
-        <div class="brand-section">
-          <div class="school-logo-frame">
-            <img src="https://arafx.vercel.app/logo.png" alt="Logo SMAN 1 Soppeng"
-              onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' fill=\'%23FFE600\'/><text x=\'50\' y=\'55\' font-family=\'Arial\' font-size=\'18\' font-weight=\'bold\' text-anchor=\'middle\'>SMAN 1</text></svg>';">
-          </div>
-          <div class="brand-text">
-            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
-              <span class="neo-badge neo-badge-pending">OFFICIAL PORTAL</span>
-              <span class="neo-badge" style="background: #00F0FF;">TAHUN 2026/2027</span>
+        <div class="header-main-row">
+          <div class="brand-section">
+            <div class="school-logo-frame">
+              <img src="https://arafx.vercel.app/logo.png" alt="Logo SMAN 1 Soppeng"
+                onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' fill=\'%23FFE600\'/><text x=\'50\' y=\'55\' font-family=\'Arial\' font-size=\'18\' font-weight=\'bold\' text-anchor=\'middle\'>SMAN 1</text></svg>';">
             </div>
-            <h1>SMAN 1 SOPPENG</h1>
-            <p>Sistem Verifikasi Data Dapodik & Unggah Pas Foto Kartu Pelajar</p>
+            <div class="brand-text">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                <span class="neo-badge neo-badge-pending">OFFICIAL PORTAL</span>
+                <span class="neo-badge" style="background: #00F0FF;">TAHUN 2026/2027</span>
+              </div>
+              <h1>SMAN 1 SOPPENG</h1>
+              <p>Sistem Verifikasi Data Dapodik & Unggah Pas Foto Kartu Pelajar</p>
+            </div>
+          </div>
+
+          <div class="header-actions">
+            <div class="neo-badge neo-badge-done" style="font-size: 0.85rem; padding: 6px 14px;">
+              🟢 SERVER AKTIF / SIAP DIGUNAKAN
+            </div>
           </div>
         </div>
 
-        <div class="header-actions">
-          <div class="neo-badge neo-badge-done" style="font-size: 0.85rem; padding: 6px 14px;">
-            🟢 SERVER AKTIF / SIAP DIGUNAKAN
+        <!-- DETAIL PROGRESS BAR PENGUMPULAN KARTU PELAJAR -->
+        <div class="header-progress-container">
+          <div class="progress-header-info">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span class="progress-title">📊 PROGRES PENGUMPULAN KARTU PELAJAR (KELAS X)</span>
+              <span class="neo-badge neo-badge-danger" style="font-size: 0.72rem; padding: 2px 8px;">
+                ⏰ DEADLINE: 25 SEPT 2026
+              </span>
+              <span id="headerProgressClassDetail" class="neo-badge" style="background: #00F0FF; font-size: 0.72rem; padding: 2px 8px; display: none;"></span>
+            </div>
+            <div class="progress-percent-badge" id="headerProgressPercent">0.0%</div>
+          </div>
+
+          <!-- Progress Track -->
+          <div class="neo-progress-track">
+            <div class="neo-progress-fill" id="headerProgressBarFill" style="width: 0%;">
+              <div class="progress-stripes"></div>
+            </div>
+          </div>
+
+          <!-- Detail Metrics Summary -->
+          <div class="progress-metrics-row">
+            <div class="metric-pill">
+              <span class="metric-dot dot-green"></span>
+              <span class="metric-label">SUDAH UPLOAD:</span>
+              <strong id="headerProgressDone" class="metric-val">0 Siswa</strong>
+            </div>
+            <div class="metric-pill">
+              <span class="metric-dot dot-yellow"></span>
+              <span class="metric-label">BELUM UPLOAD:</span>
+              <strong id="headerProgressPending" class="metric-val">387 Siswa</strong>
+            </div>
+            <div class="metric-pill">
+              <span class="metric-dot dot-blue"></span>
+              <span class="metric-label">TOTAL SISWA:</span>
+              <strong id="headerProgressTotal" class="metric-val">387 Siswa</strong>
+            </div>
           </div>
         </div>
       </div>
@@ -1768,6 +1933,7 @@
       initStudentsData();
       renderClassPills();
       renderStudentsGrid();
+      updateHeaderProgressBar();
       setupEventListeners();
       checkApiStatus();
       drawInitialPlaceholderCanvas();
@@ -1795,6 +1961,44 @@
 
     function saveStudentsDataLocal() {
       localStorage.setItem('SMAN1_STUDENTS_DATA', JSON.stringify(students));
+    }
+
+    // Update Bar Progres Detail di Header
+    function updateHeaderProgressBar() {
+      if (!students || students.length === 0) return;
+
+      const total = students.length;
+      const doneCount = students.filter(s => s.status === 'Done').length;
+      const pendingCount = total - doneCount;
+      const percent = total > 0 ? (doneCount / total) * 100 : 0;
+      const percentFormatted = percent.toFixed(1);
+
+      const fillEl = document.getElementById('headerProgressBarFill');
+      const percentEl = document.getElementById('headerProgressPercent');
+      const doneEl = document.getElementById('headerProgressDone');
+      const pendingEl = document.getElementById('headerProgressPending');
+      const totalEl = document.getElementById('headerProgressTotal');
+      const classDetailEl = document.getElementById('headerProgressClassDetail');
+
+      if (fillEl) fillEl.style.width = `${percent}%`;
+      if (percentEl) percentEl.textContent = `${percentFormatted}%`;
+      if (doneEl) doneEl.textContent = `${doneCount} Siswa`;
+      if (pendingEl) pendingEl.textContent = `${pendingCount} Siswa`;
+      if (totalEl) totalEl.textContent = `${total} Siswa`;
+
+      // Jika ada kelas yang dipilih, tampilkan juga detail progres per kelas
+      if (classDetailEl) {
+        if (selectedClass && selectedClass !== 'SEMUA') {
+          const classStudents = students.filter(s => s.kelas === selectedClass);
+          const cTotal = classStudents.length;
+          const cDone = classStudents.filter(s => s.status === 'Done').length;
+          const cPercent = cTotal > 0 ? ((cDone / cTotal) * 100).toFixed(1) : '0';
+          classDetailEl.textContent = `📍 ${selectedClass}: ${cDone}/${cTotal} (${cPercent}%)`;
+          classDetailEl.style.display = 'inline-block';
+        } else {
+          classDetailEl.style.display = 'none';
+        }
+      }
     }
 
     // Render Tombol Pilihan Kelas (X. 1 s/d X. 11 & SEMUA)
@@ -1837,6 +2041,7 @@
       document.querySelectorAll('.class-pill').forEach(p => p.classList.remove('active'));
       renderClassPills();
       renderStudentsGrid();
+      updateHeaderProgressBar();
     }
 
     // Render Grid Siswa Berdasarkan Kelas & Filter Pencarian
@@ -1861,6 +2066,8 @@
       document.getElementById('badgePendingCount').textContent = `${pendingCount} Pending`;
       document.getElementById('badgeDoneCount').textContent = `${doneCount} Done`;
       document.getElementById('activeClassLabel').textContent = selectedClass === 'SEMUA' ? '' : `• Kelas ${selectedClass}`;
+
+      updateHeaderProgressBar();
 
       grid.innerHTML = '';
 
