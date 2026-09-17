@@ -414,7 +414,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Update data header pada naskah deklarasi
     const paslon = state.paslonData;
-    docPaslonInfo.textContent = `Paslon No. ${paslon.nomorUrut} &bull; ${paslon.sekolah} (${paslon.kabKota})`;
+    docPaslonInfo.textContent = `Paslon No. ${paslon.nomorUrut} • ${paslon.sekolah} (${paslon.kabKota})`;
 
     // Reset persetujuan
     checkAgreeDeclaration.checked = false;
@@ -439,10 +439,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const paslon = state.paslonData;
     // Set nama otomatis pada masing-masing kotak TTD
     displayKetuaName.textContent = paslon.ketuaName;
-    displayKetuaSchool.textContent = `${paslon.sekolah} &bull; Paslon #${paslon.nomorUrut}`;
+    displayKetuaSchool.textContent = `${paslon.sekolah} • Paslon #${paslon.nomorUrut}`;
 
     displayWakilName.textContent = paslon.wakilName;
-    displayWakilSchool.textContent = `${paslon.sekolah} &bull; Paslon #${paslon.nomorUrut}`;
+    displayWakilSchool.textContent = `${paslon.sekolah} • Paslon #${paslon.nomorUrut}`;
 
     // Masuk Step 3
     setWizardStep(3);

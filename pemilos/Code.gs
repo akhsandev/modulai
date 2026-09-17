@@ -228,21 +228,45 @@ function doPost(e) {
  * Mendapatkan Folder Drive yang ada atau otomatis membuatnya jika belum ada
  */
 function getOrCreateFolder(folderName) {
-  const folders = DriveApp.getFoldersByName(folderName);
-  if (folders.hasNext()) {
-    return folders.next();
-  } else {
-    const newFolder = DriveApp.createFolder(folderName);
-    // Berikan izin agar file di dalamnya bisa dibuka (baca)
-    newFolder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-    return newFolder;
+  const props = PropertiesService.getScriptProperties();
+  const cachedFolderId = props.getProperty("DRIVE_FOLDER_ID");
+  if (cachedFolderId) {
+    try {
+      return DriveApp.getFolderById(cachedFolderId);
+    } catch (e) {
+      props.deleteProperty("DRIVE_FOLDER_ID");
+    }
   }
+
+  const folders = DriveApp.getFoldersByName(folderName);
+  let folder;
+  if (folders.hasNext()) {
+    folder = folders.next();
+  } else {
+    folder = DriveApp.createFolder(folderName);
+    folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  }
+  props.setProperty("DRIVE_FOLDER_ID", folder.getId());
+  return folder;
 }
 
 /**
  * Mendapatkan Google Spreadsheet yang ada atau membuatnya otomatis di dalam folder
  */
 function getOrCreateSpreadsheet(spreadsheetName, tabName, folder) {
+  const props = PropertiesService.getScriptProperties();
+  const cachedSheetId = props.getProperty("SPREADSHEET_ID");
+  if (cachedSheetId) {
+    try {
+      const ss = SpreadsheetApp.openById(cachedSheetId);
+      let targetSheet = ss.getSheetByName(tabName);
+      if (!targetSheet) targetSheet = ss.insertSheet(tabName);
+      return targetSheet;
+    } catch (e) {
+      props.deleteProperty("SPREADSHEET_ID");
+    }
+  }
+
   const files = folder.getFilesByName(spreadsheetName);
   let spreadsheet;
 
@@ -250,13 +274,11 @@ function getOrCreateSpreadsheet(spreadsheetName, tabName, folder) {
     const file = files.next();
     spreadsheet = SpreadsheetApp.openById(file.getId());
   } else {
-    // Buat spreadsheet baru
     spreadsheet = SpreadsheetApp.create(spreadsheetName);
     const ssFile = DriveApp.getFileById(spreadsheet.getId());
     folder.addFile(ssFile);
-    DriveApp.getRootFolder().removeFile(ssFile); // Pindahkan dari root ke folder khusus
+    DriveApp.getRootFolder().removeFile(ssFile);
 
-    // Atur header tabel otomatis dengan desain rapi
     const activeSheet = spreadsheet.getActiveSheet();
     activeSheet.setName(tabName);
 
@@ -280,9 +302,8 @@ function getOrCreateSpreadsheet(spreadsheetName, tabName, folder) {
 
     activeSheet.appendRow(headers);
 
-    // Format Header
     const headerRange = activeSheet.getRange(1, 1, 1, headers.length);
-    headerRange.setBackground("#0F172A"); // Dark Navy / Slate
+    headerRange.setBackground("#0F172A");
     headerRange.setFontColor("#F8FAFC");
     headerRange.setFontWeight("bold");
     headerRange.setHorizontalAlignment("center");
@@ -290,18 +311,15 @@ function getOrCreateSpreadsheet(spreadsheetName, tabName, folder) {
     activeSheet.setRowHeight(1, 35);
     activeSheet.setFrozenRows(1);
 
-    // Auto resize column width
     for (let i = 1; i <= headers.length; i++) {
       activeSheet.setColumnWidth(i, 160);
     }
-    activeSheet.setColumnWidth(4, 220); // Nama sekolah lebih lebar
+    activeSheet.setColumnWidth(4, 220);
     activeSheet.setColumnWidth(12, 220);
     activeSheet.setColumnWidth(13, 220);
-
-    return activeSheet;
   }
 
-  // Jika spreadsheet sudah ada, cari tab sheet-nya
+  props.setProperty("SPREADSHEET_ID", spreadsheet.getId());
   let targetSheet = spreadsheet.getSheetByName(tabName);
   if (!targetSheet) {
     targetSheet = spreadsheet.insertSheet(tabName);
