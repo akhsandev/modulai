@@ -1,0 +1,11 @@
+{
+  "trailingSlash": true,
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/pemilos",
+      "destination": "/pemilos/",
+      "permanent": true
+    }
+  ]
+}
