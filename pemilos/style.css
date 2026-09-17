@@ -512,6 +512,24 @@ select {
   line-height: 1.35;
 }
 
+/* Helper text di bawah field input */
+.field-hint {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-muted);
+  line-height: 1.5;
+  font-weight: 500;
+  padding: 5px 10px;
+  background: var(--bg-card-alt);
+  border-left: 3px solid var(--accent-amber);
+  border-radius: 0 4px 4px 0;
+  margin-top: 2px;
+}
+
+.field-hint strong {
+  color: var(--ink-secondary);
+}
+
 .form-subheading {
   display: flex;
   align-items: center;
