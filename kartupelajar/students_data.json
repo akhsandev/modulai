@@ -5123,13 +5123,13 @@
   },
   {
     "no": "395",
-    "kelas": "XI. 6",
+    "kelas": "XI. 9",
     "nama": "MUHAMMAD ALIF",
-    "ttl": "ABBINENGE SOPPENG, 27 SEPTEMBER 2009",
-    "nisn": "19219/0095270711",
+    "ttl": "LAGOCI, 13 FEBRUARI 2010",
+    "nisn": "19119/0108342510",
     "jk": "LAKI-LAKI",
-    "alamat": "ABBINENGE",
-    "qrId": "STUDENT:0095270711-362",
+    "alamat": "LAGOCI",
+    "qrId": "STUDENT:0108342510-991",
     "status": "Pending",
     "fotoUrl": "",
     "updatedAt": ""
@@ -5390,6 +5390,19 @@
     "jk": "LAKI-LAKI",
     "alamat": "JL.UJUNG",
     "qrId": "STUDENT:0108677579-409",
+    "status": "Pending",
+    "fotoUrl": "",
+    "updatedAt": ""
+  },
+  {
+    "no": "416",
+    "kelas": "XI. 6",
+    "nama": "NUR AULYA",
+    "ttl": "SOPPENG, 20 AGUSTUS 2009",
+    "nisn": "19297/0098856539",
+    "jk": "PEREMPUAN",
+    "alamat": "SOLIE DESA PISING",
+    "qrId": "STUDENT:0098856539-237",
     "status": "Pending",
     "fotoUrl": "",
     "updatedAt": ""
