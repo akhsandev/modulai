@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#181A22">
+  <title>Kinetika: Kota Sirkuit Logika - 3D WebVR Edukasi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="./assets/index-CpMuJsgn.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CncRsV0m.css">
+</head>
+<body>
+  <!-- 3D Canvas Rendering Target -->
+  <div id="canvas-container"></div>
+
+  <!-- Reticle Gaze 2D (untuk Mobile Touch / Gaze Screen Dwell) -->
+  <div id="gaze-reticle" class="gaze-reticle hidden">
+    <div class="reticle-dot"></div>
+    <svg class="reticle-ring" viewBox="0 0 40 40">
+      <circle class="ring-bg" cx="20" cy="20" r="16"></circle>
+      <circle class="ring-fill" id="gaze-ring-fill" cx="20" cy="20" r="16"></circle>
+    </svg>
+  </div>
+
+  <!-- Satu-satunya baris status di HP (Pill Bar Ultra Tipis, Zero-Overlap) -->
+  <header id="hud-pill" class="hud-pill hidden">
+    <div class="pill-badge" id="hud-mission-badge">Misi 1: Gerbang AND</div>
+    <div class="pill-divider"></div>
+    <div class="pill-voice" id="hud-voice-status" title="Status Kontrol Suara">
+      <span class="mic-dot" id="mic-indicator"></span>
+      <span id="voice-text">🎤 Perintah: "uji" / "sakelar a"</span>
+    </div>
+    <button id="btn-recenter" class="pill-btn" title="Posisikan Ulang Arah Hadap">🎯 Reset Arah</button>
+  </header>
+
+  <!-- Layar Awal (Landing Screen) Bersih & Terarah -->
+  <main id="start-screen" class="start-screen">
+    <div class="start-card">
+      <div class="brand-tag">⚡ MODUL INFORMATIKA SMP — GERBANG LOGIKA 3D</div>
+      <h1 class="game-title">Kinetika: Kota Sirkuit Logika</h1>
+      <p class="game-subtitle">
+        Pelajari cara kerja gerbang logika <strong>AND, OR, & NOT</strong> dengan menyalakan kembali generator energi Kota Sirkuit Kinetik melalui meja kerja 3D interaktif.
+      </p>
+
+      <div class="mission-preview">
+        <div class="mission-pill active">
+          <span class="num">1</span>
+          <span>Sirkuit Jembatan (AND)</span>
+        </div>
+        <div class="mission-pill">
+          <span class="num">2</span>
+          <span>Kincir Aliran (OR)</span>
+        </div>
+        <div class="mission-pill">
+          <span class="num">3</span>
+          <span>Menara Inversi (NOT)</span>
+        </div>
+      </div>
+
+      <div class="feature-badges">
+        <span class="badge">🥽 Mode VR Satu Pintu</span>
+        <span class="badge">👁️ Gaze Dwell (Tatap 1.2s)</span>
+        <span class="badge">🎙️ Suara Bahasa Indonesia</span>
+        <span class="badge">📱 Anti-Overlap di Layar HP</span>
+      </div>
+
+      <!-- Tombol Aksi Utama -->
+      <div class="action-buttons">
+        <button id="btn-start-vr" class="btn-primary">
+          <span class="btn-icon">🥽</span>
+          <span class="btn-text-group">
+            <strong>Mulai Mode VR Sekarang</strong>
+            <small>Layar Penuh, Sensor Gyroscope & Tatapan Gaze</small>
+          </span>
+        </button>
+
+        <button id="btn-start-desktop" class="btn-secondary">
+          <span class="btn-icon">🖥️</span>
+          <span>Mode Jelajah PC / Mouse</span>
+        </button>
+      </div>
+
+      <div class="start-footer">
+        <span>Didukung WebXR, Three.js, & Web Speech API. Bekerja di Cardboard, VR Box, dan Browser HP modern.</span>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
