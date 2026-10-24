@@ -1,104 +1,391 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <title>AstroVR: Space Odyssey 3D (WebXR & Voice Controller)</title>
-    <script type="module" crossorigin src="./assets/index-CxC35LRE.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-D-zUdp_A.css">
-  </head>
-  <body>
-    <div id="app"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Lembah Surya: Bengkel Energi Terbarukan — Edukasi Fisika 3D & WebVR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="./assets/index-BkBRpDkC.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DAujKFoV.css">
+</head>
+<body>
+  <!-- Kanvas 3D Utama -->
+  <div id="canvas-container" aria-label="Dunia 3D Lembah Surya"></div>
 
-    <!-- UI Overlay for 2D Mode (Desktop & Smartphone) -->
-    <div id="ui-overlay">
-      <!-- Top Bar -->
-      <div class="top-bar">
-        <div class="brand-badge">
-          <h1>AstroVR: Space Odyssey</h1>
-          <p>Petualangan VR Luar Angkasa 3D</p>
-        </div>
+  <!-- Indikator Reticle / Gaze (Aktif saat mode Gaze / Kamera) -->
+  <div id="gaze-reticle" class="hidden" aria-hidden="true">
+    <div class="reticle-dot"></div>
+    <svg class="reticle-ring" viewBox="0 0 44 44">
+      <circle class="reticle-bg" cx="22" cy="22" r="18"></circle>
+      <circle id="reticle-progress" class="reticle-fg" cx="22" cy="22" r="18"></circle>
+    </svg>
+    <span id="reticle-label" class="reticle-label"></span>
+  </div>
 
-        <div class="stats-panel">
-          <div class="stat-item">
-            <span class="stat-label">Skor</span>
-            <span class="stat-val gold" id="stat-score">0</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Kristal</span>
-            <span class="stat-val cyan" id="stat-crystals">0</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Kecepatan</span>
-            <span class="stat-val" id="stat-speed">0 km/s</span>
-          </div>
-        </div>
-
-        <div class="top-actions">
-          <button id="mic-toggle-btn" class="cyber-btn" title="Nyalakan/Matikan Pengenal Suara">
-            🎤 Aktifkan Mic Suara
-          </button>
-          <button id="sound-toggle-btn" class="cyber-btn" title="Toggle Audio Suara">
-            🔊 Audio Nyala
-          </button>
+  <!-- LAYAR AWAL (START SCREEN) -->
+  <section id="start-screen" class="screen-overlay active" role="dialog" aria-labelledby="game-title">
+    <div class="start-card">
+      <div class="start-hero">
+        <img id="hero-banner-img" src="./assets/hero-banner.png" alt="Ilustrasi Lembah Surya" onerror="this.style.display='none'" />
+        <div class="hero-badge-row">
+          <span class="pill-badge">Fisika SMA (Kelas 10–12)</span>
+          <span class="pill-badge pill-secondary">3D Interaktif + WebXR + Suara ID</span>
         </div>
       </div>
 
-      <!-- Live Voice Command Status Display -->
-      <div class="voice-banner">
-        <span id="voice-status"><span class="status-dot red"></span> Suara: Klik Mulai</span>
-        <span id="voice-transcript">Katakan "maju" atau "tembak"</span>
-      </div>
+      <div class="start-body">
+        <h1 id="game-title">Lembah Surya: Bengkel Energi Terbarukan</h1>
+        <p class="start-subtitle">
+          Pulihkan aliran air, lentera rumah kaca, dan turbin angin lembah bersama <strong>Bobi</strong> si Otomata Bengkel melalui eksperimen listrik & konversi energi nyata.
+        </p>
 
-      <!-- Bottom Bar with Touch Buttons for Mobile -->
-      <div class="bottom-bar">
-        <div class="touch-controls">
-          <button class="touch-btn" data-action="forward">▲<br>MAJU</button>
-          <button class="touch-btn" data-action="backward">▼<br>MUNDUR</button>
-          <button class="touch-btn" data-action="stop">⏹<br>STOP</button>
-          <button class="touch-btn fire" data-action="fire">⚡<br>TEMBAK</button>
-          <button class="touch-btn" data-action="turbo">🚀<br>TURBO</button>
+        <div class="learning-goals">
+          <h2>Tujuan Pembelajaran</h2>
+          <div class="goals-grid">
+            <div class="goal-item">
+              <span class="goal-num">01</span>
+              <div>
+                <strong>Hukum Ohm & Daya DC</strong>
+                <p>Menghitung dan menguji hubungan tegangan (V), arus (I), hambatan (R), dan daya (P = V × I) pada pompa irigasi surya.</p>
+              </div>
+            </div>
+            <div class="goal-item">
+              <span class="goal-num">02</span>
+              <div>
+                <strong>Rangkaian Seri & Paralel</strong>
+                <p>Merakit kombinasi resistor pengganti (R<sub>s</sub> & R<sub>p</sub>) untuk membagi arus secara aman ke rumah kaca botanika.</p>
+              </div>
+            </div>
+            <div class="goal-item">
+              <span class="goal-num">03</span>
+              <div>
+                <strong>Konversi Energi & Efisiensi Turbin</strong>
+                <p>Mengoptimalkan sudut bilah (θ) dan rasio transmisi (G) untuk mencapai efisiensi daya mekanik ke listrik tertinggi.</p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <div class="start-options-row">
+          <div class="option-group">
+            <label for="initial-control-mode">Mode Kontrol Utama</label>
+            <select id="initial-control-mode">
+              <option value="hybrid">Otomatis Lengkap (Mouse/Sentuh + Keyboard + Gaze)</option>
+              <option value="gaze">Fokus Gaze / Arah Pandang (Cardboard / Tanpa Sentuh)</option>
+              <option value="voice">Fokus Kontrol Suara Bahasa Indonesia + Sentuh</option>
+            </select>
+          </div>
+          <div class="option-group">
+            <label>Preferensi Cepat</label>
+            <div class="toggle-pills">
+              <button type="button" id="btn-start-audio" class="chip-toggle active" aria-pressed="true">🔊 Suara Aktif</button>
+              <button type="button" id="btn-start-voice" class="chip-toggle" aria-pressed="false">🎙️ Mikrofon ID: Mati</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="start-actions">
+          <button type="button" id="btn-play-now" class="btn-primary btn-large">
+            Mulai Eksplorasi & Eksperimen
+          </button>
+          <button type="button" id="btn-open-tutorial" class="btn-secondary">
+            Panduan Kontrol
+          </button>
+        </div>
+
+        <p id="saved-progress-note" class="privacy-note">
+          🔒 Privasi Terjaga: Seluruh progres belajar disimpan secara lokal di perangkat Anda (<code>localStorage</code>) tanpa mengirim data pribadi ke server.
+        </p>
       </div>
     </div>
+  </section>
 
-    <!-- Initial Welcome & Controller Instructions Modal -->
-    <div id="instructions-card" class="modal-overlay">
-      <div class="card">
-        <div class="card-header">
-          <h2>🚀 ASTRO-VR SPACE ODYSSEY</h2>
-          <p>Game Petualangan Luar Angkasa 3D Virtual Reality</p>
+  <!-- MODAL TUTORIAL -->
+  <section id="tutorial-modal" class="screen-overlay hidden" role="dialog" aria-labelledby="tutorial-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="tutorial-title">Panduan Bermain & Eksperimen</h2>
+        <button type="button" id="btn-close-tutorial" class="btn-icon" aria-label="Tutup panduan">✕</button>
+      </div>
+      <div class="tutorial-grid">
+        <div class="tut-box">
+          <h3>💻 PC (Keyboard & Mouse)</h3>
+          <ul>
+            <li><strong>WASD / Panah</strong>: Berjalan mengelilingi lembah</li>
+            <li><strong>Drag Kiri Mouse</strong>: Menoleh / memutar pandangan</li>
+            <li><strong>Klik Objek 3D / Tombol Stasiun</strong>: Memilih stasiun atau mengubah komponen</li>
+            <li><strong>Tombol [U] / [Enter]</strong>: Menguji simulasi rangkaian</li>
+            <li><strong>Tombol [H]</strong>: Meminta petunjuk dari Bobi</li>
+          </ul>
         </div>
-
-        <div class="guide-grid">
-          <div class="guide-box">
-            <h3>🎙️ Voice Controller (Perintah Suara)</h3>
-            <ul>
-              <li><strong>"maju" / "jalan"</strong>: Pesawat meluncur maju</li>
-              <li><strong>"mundur" / "balik"</strong>: Pesawat mundur</li>
-              <li><strong>"berhenti" / "stop"</strong>: Rem darurat berhenti</li>
-              <li><strong>"kiri" / "kanan"</strong>: Manuver belok kiri / kanan</li>
-              <li><strong>"tembak" / "fire"</strong>: Tembak laser penghancur asteroid</li>
-              <li><strong>"turbo" / "cepat"</strong>: Pendorong kecepatan warp</li>
-            </ul>
-          </div>
-
-          <div class="guide-box">
-            <h3>🥽 Saran Opsi Kontrol Lainnya</h3>
-            <ul>
-              <li><strong>Gaze / Arah Kepala (VR)</strong>: Arahkan pandangan mata/kepala untuk mengemudi kapal di VR.</li>
-              <li><strong>VR Controller (Quest)</strong>: Tombol trigger untuk tembak, thumbstick untuk setir.</li>
-              <li><strong>Keyboard & Mouse (PC)</strong>: W/S (Gas), A/D (Belok), Spasi (Tembak), Geser Mouse (Arahkan).</li>
-              <li><strong>Layar Sentuh (HP)</strong>: Tombol on-screen di bagian bawah layar.</li>
-            </ul>
+        <div class="tut-box">
+          <h3>📱 HP / Tablet (Layar Sentuh)</h3>
+          <ul>
+            <li><strong>Geser Layar</strong>: Menoleh ke sekeliling bengkel</li>
+            <li><strong>Tombol Stasiun 1–3</strong>: Berpindah nyaman antar-area eksperimen</li>
+            <li><strong>Panel Eksperimen Bawah</strong>: Mengatur variabel, memasang resistor, dan menguji hasil</li>
+          </ul>
+        </div>
+        <div class="tut-box">
+          <h3>🥽 Mode VR & Gaze (Arah Pandang)</h3>
+          <ul>
+            <li><strong>Tombol VR (Bawah)</strong>: Masuk ke WebXR jika headset/browser mendukung</li>
+            <li><strong>Gaze Reticle</strong>: Arahkan titik tengah ke lencana stasiun atau tombol 3D selama 1.4 detik untuk memilih</li>
+            <li><strong>VR Controller Trigger</strong>: Arahkan sinar laser ke objek interaktif lalu tekan pelatuk</li>
+          </ul>
+        </div>
+        <div class="tut-box">
+          <h3>🎙️ Perintah Suara (Bahasa Indonesia)</h3>
+          <p>Aktifkan mikrofon lalu ucapkan dengan jelas:</p>
+          <div class="voice-tags">
+            <span>"stasiun satu"</span>
+            <span>"stasiun dua"</span>
+            <span>"stasiun tiga"</span>
+            <span>"naik"</span>
+            <span>"turun"</span>
+            <span>"pasang"</span>
+            <span>"uji"</span>
+            <span>"petunjuk"</span>
+            <span>"ulangi"</span>
           </div>
         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-skip-tutorial" class="btn-primary">Mengerti, Masuk ke Lembah Surya</button>
+      </div>
+    </div>
+  </section>
 
-        <button id="start-btn" class="primary-btn">
-          Mulai Petualangan & Izinkan Mikrofon
+  <!-- HUD GAMEPLAY UTAMA -->
+  <header id="hud-top" class="hud-bar hidden">
+    <div class="hud-left">
+      <div class="brand-chip">
+        <span class="sun-dot"></span>
+        <div>
+          <strong>Lembah Surya</strong>
+          <small id="hud-station-title">Pelataran Bengkel</small>
+        </div>
+      </div>
+
+      <div class="progress-steps" aria-label="Progres Pemulihan Lembah">
+        <button type="button" class="step-pill active" data-station="1" title="Stasiun 1: Pompa Surya">
+          <span class="step-check" id="check-st-1">1</span>
+          <span class="step-name">Pompa Surya</span>
+        </button>
+        <button type="button" class="step-pill" data-station="2" title="Stasiun 2: Rumah Kaca">
+          <span class="step-check" id="check-st-2">2</span>
+          <span class="step-name">Rumah Kaca</span>
+        </button>
+        <button type="button" class="step-pill" data-station="3" title="Stasiun 3: Kincir Angin">
+          <span class="step-check" id="check-st-3">3</span>
+          <span class="step-name">Kincir Angin</span>
+        </button>
+        <button type="button" class="step-pill" data-station="0" title="Tinjau Seluruh Lembah">
+          <span class="step-name">🏞️ Ikhtisar</span>
         </button>
       </div>
     </div>
 
-  </body>
+    <div class="hud-right">
+      <!-- Status Voice Control -->
+      <div id="voice-hud-widget" class="voice-widget">
+        <button type="button" id="btn-toggle-voice" class="btn-voice" title="Aktifkan/Matikan Perintah Suara (id-ID)">
+          <span id="voice-mic-icon">🎙️</span>
+          <span id="voice-status-text">Suara: Mati</span>
+        </button>
+        <span id="voice-last-cmd" class="voice-heard" aria-live="polite">Siap menerima perintah</span>
+      </div>
+
+      <div class="score-badge" title="Skor Pemahaman Sains">
+        <span>⚡ Energi Pulih:</span>
+        <strong id="hud-score-val">0%</strong>
+      </div>
+
+      <button type="button" id="btn-hud-hint" class="btn-hud-action" title="Minta Petunjuk Bobi (H)">
+        💡 Petunjuk
+      </button>
+      <button type="button" id="btn-hud-tutorial" class="btn-hud-icon" title="Panduan Kontrol">
+        ❓
+      </button>
+      <button type="button" id="btn-hud-settings" class="btn-hud-icon" title="Pengaturan">
+        ⚙️
+      </button>
+    </div>
+  </header>
+
+  <!-- DIALOG BOBI (NPC PENDAMPING) & FEEDBACK -->
+  <aside id="bobi-panel" class="bobi-card hidden" aria-live="polite">
+    <div class="bobi-avatar-wrap">
+      <img src="./assets/bobi-avatar.png" alt="Bobi si Otomata Bengkel" class="bobi-avatar-img" onerror="this.style.display='none'" />
+      <span class="bobi-name-tag">Bobi</span>
+    </div>
+    <div class="bobi-content">
+      <div class="bobi-header-line">
+        <strong id="bobi-speaker-title">Bobi — Pemandu Bengkel</strong>
+        <span id="bobi-mood-badge" class="mood-badge">Siap Membantu</span>
+      </div>
+      <p id="bobi-dialogue-text">
+        Selamat datang di Lembah Surya! Pilih Stasiun 1 (Pompa Surya) untuk mulai mengalirkan air ke kebun desa.
+      </p>
+    </div>
+  </aside>
+
+  <!-- PANEL EKSPERIMEN INTERAKTIF (BAWAH) -->
+  <section id="workbench-panel" class="workbench-dock hidden" aria-label="Meja Kerja Eksperimen Fisika">
+    <div class="workbench-header">
+      <div>
+        <span id="wb-badge" class="wb-stage-tag">Stasiun 1 • Hukum Ohm & Daya Listrik</span>
+        <h2 id="wb-title">Kalibrasi Pompa Irigasi Tenaga Surya</h2>
+      </div>
+      <div class="wb-target-box">
+        <span>Target Operasional:</span>
+        <strong id="wb-target-text">Arus I = 3.0 A &amp; Daya P = 36 W (Maks Sekering 4.0 A)</strong>
+      </div>
+    </div>
+
+    <!-- Kontainer Kontrol Dinamis per Stasiun -->
+    <div id="wb-controls-container" class="wb-controls-grid"></div>
+
+    <!-- Meteran & Aksi Uji -->
+    <div class="wb-footer">
+      <div id="wb-live-readout" class="wb-readout">
+        <!-- Diisi secara dinamis oleh ui.js -->
+      </div>
+      <div class="wb-action-buttons">
+        <button type="button" id="btn-wb-reset" class="btn-secondary btn-sm">↺ Atur Ulang</button>
+        <button type="button" id="btn-wb-test" class="btn-primary">⚡ Uji Rangkaian &amp; Aktifkan (Enter)</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- KONTROL SENTUH D-PAD RINGKAS (Untuk HP / Berjalan Bebas) -->
+  <div id="mobile-move-pad" class="mobile-pad hidden" aria-label="Navigasi Gerak">
+    <button type="button" data-move="forward" aria-label="Maju">▲</button>
+    <div class="pad-mid-row">
+      <button type="button" data-move="left" aria-label="Kiri">◀</button>
+      <button type="button" data-move="back" aria-label="Mundur">▼</button>
+      <button type="button" data-move="right" aria-label="Kanan">▶</button>
+    </div>
+  </div>
+
+  <!-- STATUS DUKUNGAN VR / WEBXR -->
+  <div id="vr-mount-container" class="vr-mount">
+    <div id="vr-fallback-msg" class="vr-fallback-pill hidden">
+      🥽 Mode 3D Layar Penuh Aktif (WebXR Headset tidak terdeteksi di browser ini)
+    </div>
+  </div>
+
+  <!-- MODAL PENGATURAN -->
+  <section id="settings-modal" class="screen-overlay hidden" role="dialog" aria-labelledby="settings-title">
+    <div class="modal-card modal-narrow">
+      <div class="modal-header">
+        <h2 id="settings-title">Pengaturan &amp; Kenyamanan</h2>
+        <button type="button" id="btn-close-settings" class="btn-icon" aria-label="Tutup pengaturan">✕</button>
+      </div>
+      <div class="settings-list">
+        <div class="setting-row">
+          <div>
+            <strong>Efek Suara &amp; Musik Ambient</strong>
+            <p>Web Audio API sintetis untuk suara air, klik sakelar, dan lonceng angin.</p>
+          </div>
+          <input type="checkbox" id="chk-setting-audio" checked />
+        </div>
+        <div class="setting-row">
+          <div>
+            <strong>Reticle Arah Pandang (Gaze Dwell)</strong>
+            <p>Tampilkan titik bidik tengah untuk memilih objek dengan menatap selama 1.4 detik.</p>
+          </div>
+          <input type="checkbox" id="chk-setting-gaze" />
+        </div>
+        <div class="setting-row">
+          <div>
+            <strong>Sensitivitas Putar Kamera: <span id="lbl-sensitivity">1.0x</span></strong>
+            <p>Kecepatan menoleh saat menggeser mouse atau layar sentuh.</p>
+          </div>
+          <input type="range" id="rng-sensitivity" min="0.4" max="2.0" step="0.1" value="1.0" />
+        </div>
+        <div class="setting-row">
+          <div>
+            <strong>Mode Performa Tinggi (HP Ringan)</strong>
+            <p>Kurangi resolusi bayangan dan jumlah partikel serbuk cahaya.</p>
+          </div>
+          <input type="checkbox" id="chk-setting-lowspec" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-reset-all-progress" class="btn-danger-outline">Hapus Progres Tersimpan</button>
+        <button type="button" id="btn-save-settings" class="btn-primary">Simpan &amp; Kembali</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAYAR SELESAI / RINGKASAN HASIL BELAJAR -->
+  <section id="summary-screen" class="screen-overlay hidden" role="dialog" aria-labelledby="summary-title">
+    <div class="start-card summary-card">
+      <div class="summary-header-banner">
+        <span class="pill-badge">🎉 Seluruh Lembah Surya Telah Pulih!</span>
+        <h1 id="summary-title">Laporan Eksperimen Fisika Terapan</h1>
+        <p>Kamu dan Bobi berhasil mengembalikan air irigasi, pencahayaan rumah kaca, dan pembangkit angin utama Lembah Surya.</p>
+      </div>
+
+      <div class="summary-body">
+        <div class="summary-stats-row">
+          <div class="stat-card">
+            <span>Energi Lembah Pulih</span>
+            <strong id="sum-energy">100%</strong>
+          </div>
+          <div class="stat-card">
+            <span>Total Eksperimen Diuji</span>
+            <strong id="sum-attempts">3 Kali</strong>
+          </div>
+          <div class="stat-card">
+            <span>Bantuan Petunjuk</span>
+            <strong id="sum-hints">0 Kali</strong>
+          </div>
+        </div>
+
+        <h2>Ringkasan Konsep yang Telah Dikuasai</h2>
+        <div class="mastery-list">
+          <div class="mastery-item">
+            <span class="mastery-icon">💧</span>
+            <div>
+              <strong>1. Hukum Ohm &amp; Daya Listrik DC (Pompa Surya)</strong>
+              <p>Dengan mengatur tegangan sumber <code>V = 12 V</code> dan hambatan beban <code>R = 4 Ω</code>, arus yang mengalir adalah <code>I = V / R = 3.0 A</code> (di bawah batas sekering 4 A) dan menghasilkan daya <code>P = V × I = 36 W</code>.</p>
+            </div>
+          </div>
+          <div class="mastery-item">
+            <span class="mastery-icon">🌿</span>
+            <div>
+              <strong>2. Hambatan Pengganti Seri-Paralel (Rumah Kaca Botanika)</strong>
+              <p>Dua cabang paralel bernilai <code>6 Ω</code> dan <code>6 Ω</code> menghasilkan hambatan paralel <code>R<sub>p</sub> = 3 Ω</code>. Ditambah resistor pembatas seri <code>R<sub>s</sub> = 3 Ω</code>, hambatan total menjadi <code>R<sub>tot</sub> = 6 Ω</code> sehingga pada sumber <code>24 V</code> mengalir arus stabil <code>4.0 A</code>.</p>
+            </div>
+          </div>
+          <div class="mastery-item">
+            <span class="mastery-icon">🌬️</span>
+            <div>
+              <strong>3. Konversi Energi Mekanik-Listrik &amp; Efisiensi Turbin</strong>
+              <p>Sudut serang bilah <code>θ = 15°</code> dan rasio roda gigi <code>1 : 3</code> menyelaraskan torsi aerodinamis angin dengan generator induksi, menghasilkan daya keluaran bersih <code>1200 W (1.2 kW)</code> pada efisiensi puncak.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-recommendation" id="sum-feedback-note">
+          Saran Eksplorasi Lanjutan: Cobalah menantang dirimu menyelesaikan ketiga stasiun tanpa membuka petunjuk atau gunakan perintah suara Bahasa Indonesia untuk mengendalikan eksperimen!
+        </div>
+
+        <div class="start-actions">
+          <button type="button" id="btn-explore-freely" class="btn-secondary">
+            🏞️ Jelajahi Lembah yang Sudah Hidup
+          </button>
+          <button type="button" id="btn-play-again" class="btn-primary">
+            🔄 Main Lagi dari Awal
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
 </html>
