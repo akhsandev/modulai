@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>AstroVR: Space Odyssey 3D (WebXR & Voice Controller)</title>
+    <script type="module" crossorigin src="/assets/index-CxC35LRE.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-D-zUdp_A.css">
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <!-- UI Overlay for 2D Mode (Desktop & Smartphone) -->
+    <div id="ui-overlay">
+      <!-- Top Bar -->
+      <div class="top-bar">
+        <div class="brand-badge">
+          <h1>AstroVR: Space Odyssey</h1>
+          <p>Petualangan VR Luar Angkasa 3D</p>
+        </div>
+
+        <div class="stats-panel">
+          <div class="stat-item">
+            <span class="stat-label">Skor</span>
+            <span class="stat-val gold" id="stat-score">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Kristal</span>
+            <span class="stat-val cyan" id="stat-crystals">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Kecepatan</span>
+            <span class="stat-val" id="stat-speed">0 km/s</span>
+          </div>
+        </div>
+
+        <div class="top-actions">
+          <button id="mic-toggle-btn" class="cyber-btn" title="Nyalakan/Matikan Pengenal Suara">
+            🎤 Aktifkan Mic Suara
+          </button>
+          <button id="sound-toggle-btn" class="cyber-btn" title="Toggle Audio Suara">
+            🔊 Audio Nyala
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Voice Command Status Display -->
+      <div class="voice-banner">
+        <span id="voice-status"><span class="status-dot red"></span> Suara: Klik Mulai</span>
+        <span id="voice-transcript">Katakan "maju" atau "tembak"</span>
+      </div>
+
+      <!-- Bottom Bar with Touch Buttons for Mobile -->
+      <div class="bottom-bar">
+        <div class="touch-controls">
+          <button class="touch-btn" data-action="forward">▲<br>MAJU</button>
+          <button class="touch-btn" data-action="backward">▼<br>MUNDUR</button>
+          <button class="touch-btn" data-action="stop">⏹<br>STOP</button>
+          <button class="touch-btn fire" data-action="fire">⚡<br>TEMBAK</button>
+          <button class="touch-btn" data-action="turbo">🚀<br>TURBO</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Initial Welcome & Controller Instructions Modal -->
+    <div id="instructions-card" class="modal-overlay">
+      <div class="card">
+        <div class="card-header">
+          <h2>🚀 ASTRO-VR SPACE ODYSSEY</h2>
+          <p>Game Petualangan Luar Angkasa 3D Virtual Reality</p>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-box">
+            <h3>🎙️ Voice Controller (Perintah Suara)</h3>
+            <ul>
+              <li><strong>"maju" / "jalan"</strong>: Pesawat meluncur maju</li>
+              <li><strong>"mundur" / "balik"</strong>: Pesawat mundur</li>
+              <li><strong>"berhenti" / "stop"</strong>: Rem darurat berhenti</li>
+              <li><strong>"kiri" / "kanan"</strong>: Manuver belok kiri / kanan</li>
+              <li><strong>"tembak" / "fire"</strong>: Tembak laser penghancur asteroid</li>
+              <li><strong>"turbo" / "cepat"</strong>: Pendorong kecepatan warp</li>
+            </ul>
+          </div>
+
+          <div class="guide-box">
+            <h3>🥽 Saran Opsi Kontrol Lainnya</h3>
+            <ul>
+              <li><strong>Gaze / Arah Kepala (VR)</strong>: Arahkan pandangan mata/kepala untuk mengemudi kapal di VR.</li>
+              <li><strong>VR Controller (Quest)</strong>: Tombol trigger untuk tembak, thumbstick untuk setir.</li>
+              <li><strong>Keyboard & Mouse (PC)</strong>: W/S (Gas), A/D (Belok), Spasi (Tembak), Geser Mouse (Arahkan).</li>
+              <li><strong>Layar Sentuh (HP)</strong>: Tombol on-screen di bagian bawah layar.</li>
+            </ul>
+          </div>
+        </div>
+
+        <button id="start-btn" class="primary-btn">
+          Mulai Petualangan & Izinkan Mikrofon
+        </button>
+      </div>
+    </div>
+
+  </body>
+</html>
