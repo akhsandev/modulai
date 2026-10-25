@@ -3,365 +3,73 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Voltara: Ekspedisi Fisika 3D WebVR</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-dark: #0f1715;
-      --card-bg: rgba(26, 38, 35, 0.88);
-      --amber-accent: #f59e0b;
-      --amber-glow: rgba(245, 158, 11, 0.35);
-      --teal-accent: #14b8a6;
-      --copper: #b45309;
-      --text-main: #f8fafc;
-      --text-muted: #cbd5e1;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background-color: var(--bg-dark);
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      color: var(--text-main);
-    }
-
-    #webgl-canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      display: block;
-    }
-
-    /* Start Screen Overlay (Hanya muncul sebelum game dimulai) */
-    #start-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 50;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background: radial-gradient(circle at center, rgba(30, 48, 43, 0.94) 0%, rgba(15, 23, 21, 0.98) 100%);
-      backdrop-filter: blur(8px);
-      transition: opacity 0.5s ease, visibility 0.5s ease;
-    }
-
-    #start-overlay.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .start-card {
-      max-width: 480px;
-      width: 100%;
-      background: var(--card-bg);
-      border: 1.5px solid rgba(245, 158, 11, 0.3);
-      border-radius: 24px;
-      padding: 28px 24px;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px var(--amber-glow);
-    }
-
-    .badge-tag {
-      display: inline-block;
-      padding: 6px 14px;
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid var(--amber-accent);
-      border-radius: 30px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: var(--amber-accent);
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    h1.game-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 32px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: #fff;
-      line-height: 1.15;
-      margin-bottom: 6px;
-    }
-
-    h1.game-title span {
-      color: var(--amber-accent);
-    }
-
-    p.game-subtitle {
-      font-size: 13.5px;
-      color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 18px;
-    }
-
-    .mission-list {
-      background: rgba(15, 23, 21, 0.6);
-      border-radius: 14px;
-      padding: 12px 14px;
-      text-align: left;
-      margin-bottom: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .mission-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 12.5px;
-      color: #e2e8f0;
-      padding: 6px 0;
-    }
-
-    .mission-item:not(:last-child) {
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-    }
-
-    .mission-icon {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: rgba(20, 184, 166, 0.2);
-      color: var(--teal-accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 12px;
-      flex-shrink: 0;
-    }
-
-    /* Pintu Utama VR Button */
-    .btn-start-vr {
-      width: 100%;
-      padding: 16px 20px;
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-      color: #0f1715;
-      font-family: 'Outfit', sans-serif;
-      font-size: 18px;
-      font-weight: 800;
-      border: none;
-      border-radius: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 10px 24px rgba(245, 158, 11, 0.4);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-      margin-bottom: 12px;
-    }
-
-    .btn-start-vr:active {
-      transform: scale(0.97);
-    }
-
-    .btn-start-normal {
-      width: 100%;
-      padding: 12px 16px;
-      background: rgba(255, 255, 255, 0.08);
-      color: #e2e8f0;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background 0.15s ease;
-    }
-
-    .btn-start-normal:active {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    .toggle-group {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      margin-top: 14px;
-      font-size: 12px;
-      color: #94a3b8;
-    }
-
-    .toggle-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-    }
-
-    .toggle-item input {
-      accent-color: var(--amber-accent);
-      cursor: pointer;
-    }
-
-    /* Gameplay Minimal Pill HUD (Hanya 1 bar tipis di puncak, zero overlap) */
-    #minimal-hud {
-      position: absolute;
-      top: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 6px 16px;
-      background: rgba(15, 23, 21, 0.75);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      border-radius: 30px;
-      pointer-events: none;
-      font-size: 12px;
-      font-weight: 600;
-      color: #f1f5f9;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      white-space: nowrap;
-      transition: opacity 0.3s ease;
-    }
-
-    #minimal-hud.hidden {
-      opacity: 0;
-    }
-
-    .hud-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #22c55e;
-      box-shadow: 0 0 8px #22c55e;
-      display: inline-block;
-    }
-
-    .hud-station-label {
-      color: var(--amber-accent);
-      font-weight: 700;
-    }
-
-    /* Voice indicator badge */
-    #voice-toast {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 20;
-      background: rgba(20, 184, 166, 0.9);
-      color: #0f1715;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 11.5px;
-      font-weight: 700;
-      pointer-events: none;
-      display: none;
-      animation: fadeInOut 2.5s forwards;
-    }
-
-    @keyframes fadeInOut {
-      0% { opacity: 0; transform: translate(-50%, 8px); }
-      15% { opacity: 1; transform: translate(-50%, 0); }
-      85% { opacity: 1; transform: translate(-50%, 0); }
-      100% { opacity: 0; transform: translate(-50%, -8px); }
-    }
-
-    /* Override VRButton dari three/addons agar tidak menabrak bar HP */
-    #VRButton {
-      position: absolute !important;
-      bottom: 12px !important;
-      right: 12px !important;
-      left: auto !important;
-      transform: none !important;
-      padding: 6px 12px !important;
-      font-size: 11px !important;
-      font-family: inherit !important;
-      background: rgba(15, 23, 21, 0.8) !important;
-      border: 1px solid rgba(245, 158, 11, 0.4) !important;
-      color: var(--amber-accent) !important;
-      border-radius: 20px !important;
-      opacity: 0.8 !important;
-      z-index: 25 !important;
-    }
-  </style>
-  <script type="module" crossorigin src="./assets/index-B-vjiAVz.js"></script>
+  <meta name="theme-color" content="#264653" />
+  <title>Taman Newton: Eksplorasi 3D WebVR Hukum Gerak</title>
+  <script type="module" crossorigin src="./assets/index-SD9fe7Qu.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DLAC71mX.css">
 </head>
 <body>
-  <!-- 3D Canvas -->
-  <canvas id="webgl-canvas"></canvas>
+  <!-- 3D WebGL Canvas Container -->
+  <div id="canvas-container"></div>
 
-  <!-- Minimal 1-Line Top Pill HUD (Zero Overlap) -->
-  <div id="minimal-hud" class="hidden">
-    <span class="hud-dot"></span>
-    <span id="hud-station-text"><span class="hud-station-label">Zona 1:</span> Pos Hukum Ohm</span>
-    <span style="opacity: 0.4;">|</span>
-    <span id="hud-objective-text">Capai I = 0.50 A</span>
-  </div>
+  <!-- Satu-satunya Bar Tipis HTML saat Gameplay (Zero-Overlap di HP) -->
+  <header id="gameplay-bar" class="hidden">
+    <div class="bar-pill">
+      <span id="station-indicator">📍 Plaza Taman Newton</span>
+      <div class="bar-actions">
+        <button id="nav-btn-st1" class="btn-nav" title="Pindah ke Stasiun 1 (Hukum I)">St.1</button>
+        <button id="nav-btn-st2" class="btn-nav" title="Pindah ke Stasiun 2 (Hukum II)">St.2</button>
+        <button id="nav-btn-st3" class="btn-nav" title="Pindah ke Stasiun 3 (Hukum III)">St.3</button>
+        <button id="nav-btn-plaza" class="btn-nav" title="Kembali ke Plaza Tengah">Plaza</button>
+        <button id="sound-btn" class="btn-icon" title="Toggle Suara">🔊</button>
+      </div>
+    </div>
+  </header>
 
-  <!-- Voice Feedback Toast -->
-  <div id="voice-toast">Perintah Suara Terdeteksi</div>
+  <!-- Layar Awal: Satu Pintu Masuk ke Mode VR (Clean Mobile-First) -->
+  <div id="intro-screen">
+    <div class="intro-card">
+      <div class="badge-tag">FISIKA SMP / SMA • WEBVR TIGA DIMENSI</div>
+      <h1 class="game-title">Taman Newton</h1>
+      <p class="game-tagline">Petualangan Interaktif Eksplorasi Tiga Hukum Gerak Sir Isaac Newton</p>
 
-  <!-- Start Screen Overlay -->
-  <div id="start-overlay">
-    <div class="start-card">
-      <span class="badge-tag">Fisika SMA/SMK • 3D WebVR</span>
-      <h1 class="game-title">VOLTARA: <span>EKSPEDISI</span></h1>
-      <p class="game-subtitle">Eksplorasi laboratorium terbuka, berdialog dengan Prof. Arka, dan pecahkan misteri rangkaian listrik menggunakan meja eksperimen 3D spasial.</p>
-
-      <div class="mission-list">
+      <div class="mission-grid">
         <div class="mission-item">
-          <div class="mission-icon">1</div>
-          <div><strong>Hukum Ohm:</strong> Kalibrasi generator $V$ & resistor $R$ untuk arus $0.5\text{ A}$.</div>
+          <div class="m-icon">❄️</div>
+          <div class="m-text">
+            <strong>Stasiun 1: Hukum I</strong>
+            <span>Uji Inersia & Gesekan Nol</span>
+          </div>
         </div>
         <div class="mission-item">
-          <div class="mission-icon">2</div>
-          <div><strong>Seri vs Paralel:</strong> Rekonfigurasi saklar jumper agar lampu menyala penuh $12\text{V}$.</div>
+          <div class="m-icon">⚡</div>
+          <div class="m-text">
+            <strong>Stasiun 2: Hukum II</strong>
+            <span>Simulasi F = m · a</span>
+          </div>
         </div>
         <div class="mission-item">
-          <div class="mission-icon">3</div>
-          <div><strong>Sentral Proteksi:</strong> Alirkan daya pemancar tanpa memicu sekering trip (I &lt; 2.0 A).</div>
+          <div class="m-icon">🚀</div>
+          <div class="m-text">
+            <strong>Stasiun 3: Hukum III</strong>
+            <span>Roket Aksi & Reaksi</span>
+          </div>
         </div>
       </div>
 
-      <!-- Single-Door VR Launch Button -->
-      <button id="btn-start-vr" class="btn-start-vr">
-        <span>🥽</span> Mulai Mode VR Sekarang
+      <div class="gaze-guide-box">
+        <span class="guide-icon">👀</span>
+        <span><strong>Cara Berinteraksi:</strong> Arahkan lingkaran tengah (Reticle) ke tombol 3D selama 1.1 detik (Gaze Dwell) atau sentuh tombol langsung di layar HP. Seluruh dialog & popup tampil sebagai objek 3D di dalam VR!</span>
+      </div>
+
+      <!-- SATU PINTU UTAMA KE MODE VR / 3D -->
+      <button id="start-vr-btn" class="btn-start-vr">
+        <span class="btn-icon-vr">🥽</span>
+        <span class="btn-text-vr">Mulai Mode VR / 3D Sekarang</span>
       </button>
 
-      <!-- Fallback Non-VR Button -->
-      <button id="btn-start-desktop" class="btn-start-normal">
-        🖥️ Jelajah Mode Standar (PC / Layar Biasa)
-      </button>
-
-      <div class="toggle-group">
-        <label class="toggle-item">
-          <input type="checkbox" id="toggle-voice" checked />
-          <span>Suara Perintah (id-ID)</span>
-        </label>
-        <span>•</span>
-        <label class="toggle-item">
-          <input type="checkbox" id="toggle-sfx" checked />
-          <span>Efek Audio WebAudio</span>
-        </label>
+      <div class="device-note">
+        Mendukung HP (Layar Penuh / Cardboard / Gyroscope), PC Mouse & Keyboard, serta Headset WebXR.
       </div>
     </div>
   </div>
