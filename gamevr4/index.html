@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#070b14" />
+  <title>Pythagoras 3D Virtual Lab - WebVR</title>
+  <script type="module" crossorigin src="./assets/index-l0TkLUun.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DMeZ6rSa.css">
+</head>
+<body>
+  <!-- Container Kanvas 3D WebGL / WebXR -->
+  <div id="canvas-container"></div>
+
+  <!-- Pill Bar Minimalis Pojok Kiri Atas (Satu-satunya UI HTML saat gameplay) -->
+  <div id="top-pill-bar" class="pill-bar">
+    <button id="pill-audio-toggle" class="pill-btn" title="Toggle Audio Narasi & Suara">
+      <span class="pill-icon">🔊</span> <span id="pill-audio-text">Audio: ON</span>
+    </button>
+    <button id="pill-reset-view" class="pill-btn" title="Reset Posisi Pandangan">
+      <span class="pill-icon">↺</span> <span>Reset</span>
+    </button>
+  </div>
+
+  <!-- Layar Awal: Card Ringkas Edukasi (Hanya muncul sebelum masuk game) -->
+  <div id="welcome-overlay" class="welcome-overlay">
+    <div class="welcome-card">
+      <div class="card-badge">LABORATORIUM SPASIAL 3D</div>
+      <h1 class="card-title">📐 Pythagoras 3D Virtual Lab</h1>
+      <p class="card-subtitle">Pembuktian Visual Teorema Pythagoras & Jarak Spasial dalam Realitas Virtual</p>
+      
+      <div class="mission-box">
+        <div class="mission-header">🎯 3 Poin Eksplorasi Utama:</div>
+        <ul class="mission-list">
+          <li><strong>Pembuktian Luas Spasial:</strong> Amati dekonstruksi balok unit $a^2$ dan $b^2$ yang bertransformasi menyusun lempeng $c^2$.</li>
+          <li><strong>Eksperimen Interaktif & 3D:</strong> Ubah variabel sisi, uji tripel Pythagoras, dan pelajari diagonal ruang balok 3D.</li>
+          <li><strong>Tantangan Pemecahan Masalah:</strong> Pecahkan misi geometri dengan panduan suara robot asisten interaktif.</li>
+        </ul>
+      </div>
+
+      <div class="control-tip">
+        <strong>🎮 Kontrol Tanpa Remote:</strong> Arahkan titik bidik ke tombol 3D lalu <em>ketuk layar HP di mana saja</em> atau <em>tatap tombol 1 detik</em>.
+      </div>
+
+      <div class="btn-group">
+        <button id="btn-enter-vr" class="primary-btn pulse">
+          <span class="btn-icon">🥽</span> MASUK PRESENTASI VR
+        </button>
+        <button id="btn-enter-screen" class="secondary-btn">
+          <span class="btn-icon">🖥️</span> JALANKAN MODE 3D LAYAR
+        </button>
+      </div>
+
+      <div id="vr-support-status" class="status-note">
+        Mendeteksi dukungan WebXR VR...
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
