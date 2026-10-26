@@ -228,6 +228,39 @@
       box-shadow: 0 2px 0 var(--border-dark);
     }
 
+    .pulse {
+      animation: pulseBtn 2s infinite ease-in-out;
+    }
+    @keyframes pulseBtn {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .btn-secondary-card {
+      width: 100%;
+      padding: 12px 18px;
+      background: #FFFFFF;
+      color: var(--text-dark);
+      border: 3px solid var(--border-dark);
+      border-radius: 16px;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 0 var(--border-dark);
+      transition: all 0.1s ease;
+    }
+    .btn-secondary-card:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 var(--border-dark);
+    }
+
+    .status-note {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #6C5D53;
+      margin-top: 2px;
+    }
+
     .btn-secondary {
       background: transparent;
       border: none;
@@ -316,7 +349,7 @@
       display: none !important;
     }
   </style>
-  <script type="module" crossorigin src="./assets/index-D4yXNE-L.js"></script>
+  <script type="module" crossorigin src="./assets/index-CUkCDRD6.js"></script>
 </head>
 <body>
   <!-- Kontainer Kanvas WebGL / WebXR -->
@@ -357,8 +390,12 @@
       </div>
 
       <div class="start-actions">
-        <button id="btn-start-game" class="btn-primary">Mulai Petualangan 🚀</button>
-        <button id="btn-start-nonvr" class="btn-secondary">Mainkan di Layar (Non-VR 🖥️ / 📱)</button>
+        <button id="btn-enter-vr" class="btn-primary pulse">🥽 MASUK MODE WEBXR VR</button>
+        <button id="btn-enter-screen" class="btn-secondary-card">🖥️ JALANKAN MODE 3D LAYAR</button>
+        <button id="btn-start-game" style="display:none" aria-hidden="true"></button>
+        <button id="btn-start-nonvr" style="display:none" aria-hidden="true"></button>
+
+        <div id="vr-support-status" class="status-note">Mendeteksi dukungan WebXR VR...</div>
 
         <label class="audio-opt">
           <input type="checkbox" id="audio-toggle" checked>
