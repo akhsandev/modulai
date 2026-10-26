@@ -1,78 +1,274 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#264653" />
-  <title>Taman Newton: Eksplorasi 3D WebVR Hukum Gerak</title>
-  <script type="module" crossorigin src="./assets/index-DES1_8tI.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-DLAC71mX.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Presentasi VR Fisika 3D: Momentum & Tumbukan</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #0F172A;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #F8FAFC;
+    }
+
+    #canvas-container {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    /* 1 Bar Tipis Atas (Zero-Overlap) saat Gameplay */
+    #top-pill-bar {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      pointer-events: auto;
+      transition: opacity 0.3s ease;
+    }
+
+    #top-pill-bar.hidden {
+      display: none;
+    }
+
+    .pill-badge {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #38BDF8;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .pill-badge::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: #10B981;
+      display: inline-block;
+      box-shadow: 0 0 8px #10B981;
+    }
+
+    .pill-btn {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #F8FAFC;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.2s;
+    }
+
+    .pill-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Splash Screen Awal (Satu Pintu VR) */
+    #splash-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #1E293B 0%, #0F172A 100%);
+      padding: 20px;
+    }
+
+    #splash-screen.hidden {
+      display: none;
+    }
+
+    .splash-card {
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      max-width: 480px;
+      width: 100%;
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+    }
+
+    .subject-tag {
+      display: inline-block;
+      background: rgba(245, 158, 11, 0.2);
+      color: #F59E0B;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+    }
+
+    .splash-title {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.25;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+
+    .splash-subtitle {
+      font-size: 14px;
+      color: #94A3B8;
+      margin-bottom: 20px;
+    }
+
+    .mission-list {
+      text-align: left;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .mission-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: #E2E8F0;
+      margin-bottom: 8px;
+    }
+
+    .mission-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .mission-icon {
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .start-btn {
+      width: 100%;
+      padding: 15px 20px;
+      background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+      border: none;
+      border-radius: 14px;
+      color: #FFFFFF;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .start-btn:active {
+      transform: scale(0.97);
+    }
+
+    .tip-text {
+      margin-top: 14px;
+      font-size: 11px;
+      color: #94A3B8;
+      line-height: 1.4;
+    }
+
+    /* Override VRButton Three.js resmi agar rapi */
+    #VRButtonCustom {
+      position: fixed !important;
+      bottom: auto !important;
+      top: 14px !important;
+      right: 14px !important;
+      left: auto !important;
+      background: rgba(14, 165, 233, 0.85) !important;
+      color: #FFFFFF !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      border-radius: 9999px !important;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      padding: 6px 14px !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+      z-index: 20 !important;
+      opacity: 0.9 !important;
+    }
+  </style>
+  <script type="module" crossorigin src="./assets/index-CncggRcc.js"></script>
 </head>
 <body>
-  <!-- 3D WebGL Canvas Container -->
-  <div id="canvas-container"></div>
 
-  <!-- Satu-satunya Bar Tipis HTML saat Gameplay (Zero-Overlap di HP) -->
-  <header id="gameplay-bar" class="hidden">
-    <div class="bar-pill">
-      <span id="station-indicator">📍 Plaza Taman Newton</span>
-      <div class="bar-actions">
-        <button id="nav-btn-st1" class="btn-nav" title="Pindah ke Stasiun 1 (Hukum I)">St.1</button>
-        <button id="nav-btn-st2" class="btn-nav" title="Pindah ke Stasiun 2 (Hukum II)">St.2</button>
-        <button id="nav-btn-st3" class="btn-nav" title="Pindah ke Stasiun 3 (Hukum III)">St.3</button>
-        <button id="nav-btn-plaza" class="btn-nav" title="Kembali ke Plaza Tengah">Plaza</button>
-        <button id="sound-btn" class="btn-icon" title="Toggle Suara">🔊</button>
-      </div>
-    </div>
-  </header>
+  <!-- Layar Awal: Satu Pintu Masuk VR -->
+  <div id="splash-screen">
+    <div class="splash-card">
+      <div class="subject-tag">FISIKA SMP / MTs • KELAS 8-9</div>
+      <h1 class="splash-title">Tumbukan & Momentum</h1>
+      <p class="splash-subtitle">Laboratorium Kinetika 3D Interaktif bersama Robot ROBI</p>
 
-  <!-- Layar Awal: Satu Pintu Masuk ke Mode VR (Clean Mobile-First) -->
-  <div id="intro-screen">
-    <div class="intro-card">
-      <div class="badge-tag">FISIKA SMP / SMA • WEBVR TIGA DIMENSI</div>
-      <h1 class="game-title">Taman Newton</h1>
-      <p class="game-tagline">Petualangan Interaktif Eksplorasi Tiga Hukum Gerak Sir Isaac Newton</p>
-
-      <div class="mission-grid">
+      <div class="mission-list">
         <div class="mission-item">
-          <div class="m-icon">❄️</div>
-          <div class="m-text">
-            <strong>Stasiun 1: Hukum I</strong>
-            <span>Uji Inersia & Gesekan Nol</span>
-          </div>
+          <span class="mission-icon">🎯</span>
+          <span><b>Konsep Dasar:</b> Memahami rumus momentum <i>p = m × v</i>.</span>
         </div>
         <div class="mission-item">
-          <div class="m-icon">⚡</div>
-          <div class="m-text">
-            <strong>Stasiun 2: Hukum II</strong>
-            <span>Simulasi F = m · a</span>
-          </div>
+          <span class="mission-icon">⚡</span>
+          <span><b>Eksperimen Bebas:</b> Uji tumbukan lenting sempurna, sebagian, & tak lenting.</span>
         </div>
         <div class="mission-item">
-          <div class="m-icon">🚀</div>
-          <div class="m-text">
-            <strong>Stasiun 3: Hukum III</strong>
-            <span>Roket Aksi & Reaksi</span>
-          </div>
+          <span class="mission-icon">🏆</span>
+          <span><b>Tantangan Misi:</b> Capai kecepatan tumbukan bola target 3.0 m/s.</span>
         </div>
       </div>
 
-      <div class="gaze-guide-box">
-        <span class="guide-icon">👀</span>
-        <span><strong>Cara Berinteraksi:</strong> Arahkan lingkaran tengah (Reticle) ke tombol 3D untuk memilih (Gaze Dwell). <strong>Ketuk perangkat / layar HP</strong> untuk melangkah maju ke depan!</span>
-      </div>
-
-      <!-- SATU PINTU UTAMA KE MODE VR / 3D -->
-      <button id="start-vr-btn" class="btn-start-vr">
-        <span class="btn-icon-vr">🥽</span>
-        <span class="btn-text-vr">Mulai Mode VR / 3D Sekarang</span>
+      <button id="start-btn" class="start-btn">
+        <span>🥽 Masuk Presentasi VR</span>
       </button>
 
-      <div class="device-note">
-        Mendukung HP (Layar Penuh / Cardboard / Gyroscope), PC Mouse & Keyboard, serta Headset WebXR.
-      </div>
+      <p class="tip-text">
+        💡 <b>Kontrol Pasti & Bebas Controller:</b> Arahkan titik bidik ke tombol 3D, lalu <b>ketuk layar di mana saja</b> (atau tombol headset/Cardboard) untuk klik instan! Atau cukup <b>tatap 1 detik</b> untuk klik otomatis.
+      </p>
     </div>
   </div>
 
+  <!-- Satu Bar Tipis Atas (Zero-Overlap) saat Gameplay -->
+  <div id="top-pill-bar" class="hidden">
+    <span class="pill-badge">MODE VR LAB</span>
+    <button id="voice-toggle-btn" class="pill-btn">🔊 Suara ROBI: ON</button>
+    <button id="reset-cam-btn" class="pill-btn">↺ Reset Posisi</button>
+  </div>
+
+  <!-- Container Kanvas 3D WebGL -->
+  <div id="canvas-container"></div>
+
+  <!-- Entry Script -->
 </body>
 </html>
