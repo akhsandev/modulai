@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#FFF4DE">
+  <title>Taman Eksperimen Newton — Game Edukasi 3D & WebVR</title>
+  <style>
+    :root {
+      --bg-cream: #FFF4DE;
+      --text-dark: #3B2F2F;
+      --border-dark: #5A4638;
+      --yellow-honey: #FFC93C;
+      --yellow-hover: #FFD166;
+      --coral-warm: #FF7A59;
+      --teal-soft: #3FB8AF;
+      --green-leaf: #7BC47F;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background-color: var(--bg-cream);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text-dark);
+      touch-action: none;
+      overscroll-behavior: none;
+    }
+
+    #canvas-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      z-index: 1;
+    }
+
+    canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+      touch-action: none;
+    }
+
+    /* Layar Loading */
+    #loading-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      background: var(--bg-cream);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      transition: opacity 0.4s ease;
+    }
+
+    .loading-card {
+      background: #FFFFFF;
+      border: 3px solid var(--border-dark);
+      border-radius: 20px;
+      padding: 32px 24px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 10px 0 var(--border-dark);
+    }
+
+    .loading-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--text-dark);
+    }
+
+    .loading-sub {
+      font-size: 0.95rem;
+      color: #6C5D53;
+      margin-bottom: 24px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 16px;
+      background: #EEDCC8;
+      border: 2px solid var(--border-dark);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    #loading-progress-bar {
+      width: 0%;
+      height: 100%;
+      background: var(--yellow-honey);
+      transition: width 0.2s ease;
+    }
+
+    #loading-status {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    /* Layar Awal */
+    #start-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      background: rgba(59, 47, 47, 0.45);
+      backdrop-filter: blur(4px);
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .start-card {
+      background: var(--bg-cream);
+      border: 4px solid var(--border-dark);
+      border-radius: 24px;
+      max-width: 540px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 12px 0 var(--border-dark);
+      text-align: center;
+    }
+
+    .start-cover {
+      width: 100%;
+      height: auto;
+      max-height: 200px;
+      object-fit: cover;
+      border: 3px solid var(--border-dark);
+      border-radius: 16px;
+      margin-bottom: 16px;
+      background: #EEDCC8;
+    }
+
+    .start-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    .start-desc {
+      font-size: 0.95rem;
+      color: #55453B;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .missions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .mission-item {
+      background: #FFFFFF;
+      border: 2px solid var(--border-dark);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mission-badge {
+      background: var(--yellow-honey);
+      color: var(--text-dark);
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      border: 1.5px solid var(--border-dark);
+    }
+
+    .start-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px 20px;
+      background: var(--yellow-honey);
+      color: var(--text-dark);
+      border: 3px solid var(--border-dark);
+      border-radius: 16px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 0 var(--border-dark);
+      transition: all 0.1s ease;
+    }
+
+    .btn-primary:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 var(--border-dark);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #6C5D53;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .audio-opt {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 4px;
+      color: #55453B;
+      cursor: pointer;
+    }
+
+    /* Bar Input PC */
+    #pc-input-bar {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      display: flex;
+      gap: 8px;
+      background: var(--bg-cream);
+      border: 3px solid var(--border-dark);
+      border-radius: 16px;
+      padding: 8px 12px;
+      box-shadow: 0 6px 0 var(--border-dark);
+      max-width: 620px;
+      width: 90%;
+    }
+
+    #pc-input-text {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      border: 2px solid var(--border-dark);
+      border-radius: 10px;
+      outline: none;
+      background: #FFFFFF;
+      color: var(--text-dark);
+    }
+
+    #pc-input-submit, #pc-voice-btn {
+      padding: 8px 14px;
+      background: var(--yellow-honey);
+      border: 2px solid var(--border-dark);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      cursor: pointer;
+    }
+
+    #pc-voice-btn {
+      background: var(--teal-soft);
+      color: #FFFFFF;
+    }
+
+    /* Error Overlay */
+    #error-overlay {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #FFD2D2;
+      border: 3px solid #D32F2F;
+      color: #D32F2F;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      z-index: 200;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+  <script type="module" crossorigin src="./assets/index-D4yXNE-L.js"></script>
+</head>
+<body>
+  <!-- Kontainer Kanvas WebGL / WebXR -->
+  <div id="canvas-container"></div>
+
+  <!-- Layar Loading Progresif -->
+  <div id="loading-screen">
+    <div class="loading-card">
+      <div class="loading-title">Menyiapkan Taman Newton...</div>
+      <div class="loading-sub">Memuat tekstur diorama & instrumen sains</div>
+      <div class="progress-track">
+        <div id="loading-progress-bar"></div>
+      </div>
+      <div id="loading-status">Memuat: 0%</div>
+    </div>
+  </div>
+
+  <!-- Layar Awal HTML (Di luar Gameplay) -->
+  <div id="start-screen" class="hidden">
+    <div class="start-card">
+      <img src="assets/cover.png" alt="Taman Eksperimen Newton" class="start-cover">
+      <h1 class="start-title">Taman Eksperimen Newton</h1>
+      <p class="start-desc">Jelajahi tiga hukum agung yang menggerakkan semesta bersama Prof. Isaac dan para mekanik sains.</p>
+
+      <div class="missions-list">
+        <div class="mission-item">
+          <span class="mission-badge">Hukum I</span>
+          <span>Lab Inersia: Kelembaman & Gerak Lurus Beraturan</span>
+        </div>
+        <div class="mission-item">
+          <span class="mission-badge">Hukum II</span>
+          <span>Lintasan Gaya: Hubungan F = m · a & Percepatan</span>
+        </div>
+        <div class="mission-item">
+          <span class="mission-badge">Hukum III</span>
+          <span>Pangkalan Roket: Pasangan Vektor Aksi-Reaksi</span>
+        </div>
+      </div>
+
+      <div class="start-actions">
+        <button id="btn-start-game" class="btn-primary">Mulai Petualangan 🚀</button>
+        <button id="btn-start-nonvr" class="btn-secondary">Mainkan di Layar (Non-VR 🖥️ / 📱)</button>
+
+        <label class="audio-opt">
+          <input type="checkbox" id="audio-toggle" checked>
+          <span>Aktifkan Efek Suara (Web Audio)</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bar Input Pertanyaan PC (Hanya Muncul di Desktop saat Dialog) -->
+  <div id="pc-input-bar" class="hidden">
+    <input type="text" id="pc-input-text" placeholder="Ketik pertanyaanmu seputar Hukum Newton... (Tekan Enter)">
+    <button id="pc-voice-btn" class="hidden" title="Bicara dengan suara">Suara 🎙️</button>
+    <button id="pc-input-submit">Tanya ➔</button>
+  </div>
+
+  <!-- Pesan Error -->
+  <div id="error-overlay" class="hidden"></div>
+
+  <!-- Modul Aplikasi Utama -->
+</body>
+</html>
