@@ -147,11 +147,11 @@
             </div>
             
             <!-- Dynamic Connection Status Badge -->
-            <div id="connection-status-badge" class="bg-[#FFF59D] border-2 border-black px-3 py-1.5 rounded-lg text-xs font-black text-black neo-shadow-sm flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-black animate-pulse"></span>
-                <span id="connection-status-text">Memeriksa Koneksi xKiro AI...</span>
-            </div>
-        </header>
+        <div id="connection-status-badge" class="bg-[#FFF59D] border-2 border-black px-3 py-1.5 rounded-lg text-xs font-black text-black neo-shadow-sm flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-black animate-pulse"></span>
+            <span id="connection-status-text">Memeriksa Koneksi xKiro AI...</span>
+        </div>
+    </header>
 
         <!-- ================= TAB 1: CHAT TUTOR ================= -->
         <section id="tab-chat" class="tab-content flex-1 flex flex-col md:flex-row min-h-0 bg-[#FFFDF5]">
@@ -381,12 +381,17 @@
                     <div>
                         <label class="block text-xs font-black uppercase text-slate-700 mb-1">Primary API Endpoint URL:</label>
                         <input type="text" id="cfg-primary-url" class="w-full border-2 border-black p-2.5 rounded-lg font-mono text-xs bg-slate-50 outline-none neo-shadow-sm" required />
-                        <p class="text-[11px] font-semibold text-slate-500 mt-1">Default: <code class="bg-yellow-200 px-1 border border-black rounded">https://api.xkiro.com/v1/chat/completions</code></p>
+                        <p class="text-[11px] font-semibold text-slate-500 mt-1">Default Direct: <code class="bg-yellow-200 px-1 border border-black rounded">https://api.xkiro.com/v1/chat/completions</code></p>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-black uppercase text-slate-700 mb-1">Secondary / Fallback Endpoint URL:</label>
-                        <input type="text" id="cfg-secondary-url" class="w-full border-2 border-black p-2.5 rounded-lg font-mono text-xs bg-slate-50 outline-none neo-shadow-sm" />
+                        <label class="block text-xs font-black uppercase text-slate-700 mb-1">CORS Proxy Mode / Custom Server Proxy:</label>
+                        <select id="cfg-proxy-mode" class="w-full border-2 border-black p-2.5 rounded-lg font-bold text-xs bg-white outline-none neo-shadow-sm">
+                            <option value="auto">Auto Proxy (Bypass CORS via Proxy Gateway)</option>
+                            <option value="direct">Direct Client Request (Memerlukan dukungan CORS Server)</option>
+                            <option value="custom">Custom Proxy URL</option>
+                        </select>
+                        <input type="text" id="cfg-custom-proxy" placeholder="https://your-vercel-proxy.vercel.app/api/chat" class="w-full border-2 border-black p-2.5 rounded-lg font-mono text-xs bg-slate-50 outline-none neo-shadow-sm mt-2 hidden" />
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -403,8 +408,8 @@
                     <div class="bg-[#FFF59D] border-2 border-black p-3.5 rounded-xl text-xs font-bold space-y-2">
                         <div class="font-black text-black uppercase">Mode Penanganan Error (Fallbacks):</div>
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" id="cfg-[#enable-cors-fallback]" checked class="w-4 h-4 accent-black" />
-                            <span>Gunakan Socratic Local Engine jika API diblokir CORS / Offline (Mencegah App Hang)</span>
+                            <input type="checkbox" id="cfg-enable-fallback" checked class="w-4 h-4 accent-black" />
+                            <span>Aktifkan Socratic Local Engine jika API tidak memberikan respon</span>
                         </label>
                     </div>
 
@@ -455,6 +460,8 @@
             secondaryUrl: "https://xkiro.com/dashboard/v1/chat/completions",
             apiKey: "sk-xt-a66786d1d3cfac66c72645b1f77a8719abf64f54fc3a109d",
             modelName: "mistralai/mistral-small-2603",
+            proxyMode: "auto",
+            customProxy: "",
             enableLocalFallback: true
         };
 
@@ -465,11 +472,9 @@
             const logEntry = { timestamp, type, title, payload };
             debugLogs.unshift(logEntry);
 
-            // Update badge count
             const badge = document.getElementById('debug-log-badge');
             if (badge) badge.innerText = debugLogs.length;
 
-            // Render to console DOM
             const consoleEl = document.getElementById('debug-console');
             if (!consoleEl) return;
 
@@ -511,17 +516,29 @@
         // --- SETTINGS UI HANDLERS ---
         function loadSettingsForm() {
             document.getElementById('cfg-primary-url').value = currentConfig.primaryUrl;
-            document.getElementById('cfg-secondary-url').value = currentConfig.secondaryUrl;
             document.getElementById('cfg-model-name').value = currentConfig.modelName;
             document.getElementById('cfg-api-key').value = currentConfig.apiKey;
+            document.getElementById('cfg-proxy-mode').value = currentConfig.proxyMode || 'auto';
+            document.getElementById('cfg-custom-proxy').value = currentConfig.customProxy || '';
+            document.getElementById('cfg-enable-fallback').checked = currentConfig.enableLocalFallback !== false;
+
+            const proxySelect = document.getElementById('cfg-proxy-mode');
+            const customInput = document.getElementById('cfg-custom-proxy');
+            proxySelect.onchange = () => {
+                if (proxySelect.value === 'custom') customInput.classList.remove('hidden');
+                else customInput.classList.add('hidden');
+            };
+            if (proxySelect.value === 'custom') customInput.classList.remove('hidden');
         }
 
         function saveApiSettings(e) {
             e.preventDefault();
             currentConfig.primaryUrl = document.getElementById('cfg-primary-url').value.trim();
-            currentConfig.secondaryUrl = document.getElementById('cfg-secondary-url').value.trim();
             currentConfig.modelName = document.getElementById('cfg-model-name').value.trim();
             currentConfig.apiKey = document.getElementById('cfg-api-key').value.trim();
+            currentConfig.proxyMode = document.getElementById('cfg-proxy-mode').value;
+            currentConfig.customProxy = document.getElementById('cfg-custom-proxy').value.trim();
+            currentConfig.enableLocalFallback = document.getElementById('cfg-enable-fallback').checked;
 
             localStorage.setItem('smansa_api_cfg', JSON.stringify(currentConfig));
             logDebug('INFO', 'Pengaturan API Diperbarui', currentConfig);
@@ -536,6 +553,8 @@
                 secondaryUrl: "https://xkiro.com/dashboard/v1/chat/completions",
                 apiKey: "sk-xt-a66786d1d3cfac66c72645b1f77a8719abf64f54fc3a109d",
                 modelName: "mistralai/mistral-small-2603",
+                proxyMode: "auto",
+                customProxy: "",
                 enableLocalFallback: true
             };
             loadSettingsForm();
@@ -569,38 +588,81 @@ ATURAN UTAMA (WAJIB METODE SOCRATIC):
                 badge.className = "bg-[#FFD93D] border-2 border-black px-3 py-1.5 rounded-lg text-xs font-black text-black neo-shadow-sm flex items-center gap-2";
                 text.innerText = customMessage || "💡 Socratic Engine (Local Fallback Active)";
                 if (dot) dot.className = "w-2.5 h-2.5 rounded-full bg-yellow-400 border border-black animate-pulse";
+            } else if (status === 'checking') {
+                badge.className = "bg-[#FFF59D] border-2 border-black px-3 py-1.5 rounded-lg text-xs font-black text-black neo-shadow-sm flex items-center gap-2";
+                text.innerText = customMessage || "Memeriksa Koneksi xKiro AI...";
             }
         }
 
-        // Test API Connection on startup using public endpoint
+        // Test API Connection
         async function checkXkiroConnectivity() {
-            updateConnectionBadge('checking', 'Memeriksa Koneksi xKiro API...');
-            logDebug('INFO', 'Checking API Connectivity...', { endpoint: currentConfig.primaryUrl });
+            updateConnectionBadge('checking');
+            logDebug('INFO', 'Checking API Connectivity...', { mode: currentConfig.proxyMode, endpoint: currentConfig.primaryUrl });
 
-            try {
-                const res = await fetch(currentConfig.primaryUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${currentConfig.apiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: currentConfig.modelName,
-                        messages: [{ role: 'user', content: 'ping' }],
-                        max_tokens: 5
-                    })
-                });
+            const payload = {
+                model: currentConfig.modelName,
+                messages: [{ role: 'user', content: 'ping' }],
+                max_tokens: 5
+            };
 
-                logDebug('INFO', `Test Ping Response Code: ${res.status}`, { status: res.status, statusText: res.statusText });
-
-                if (res.ok || res.status === 400) { // status 400/200 means server reached and CORS allowed
-                    updateConnectionBadge('connected');
-                    return;
-                }
-            } catch (e) {
-                logDebug('WARN', 'Fetch API Error / CORS Restriction detected:', { error: e.message, hint: 'CORS policy on client browser likely blocked request' });
+            const response = await sendHttpRequest(payload);
+            if (response) {
+                updateConnectionBadge('connected');
+            } else {
+                updateConnectionBadge('fallback');
             }
-            updateConnectionBadge('fallback');
+        }
+
+        // Helper function to build targets & bypass CORS
+        function getTargetUrls(baseUrl) {
+            const mode = currentConfig.proxyMode || 'auto';
+            if (mode === 'custom' && currentConfig.customProxy) {
+                return [currentConfig.customProxy];
+            }
+            if (mode === 'direct') {
+                return [baseUrl];
+            }
+            // Auto Mode: Try CORS Proxies first then direct
+            return [
+                `https://corsproxy.io/?${encodeURIComponent(baseUrl)}`,
+                `https://api.allorigins.win/raw?url=${encodeURIComponent(baseUrl)}`,
+                baseUrl
+            ];
+        }
+
+        async function sendHttpRequest(payload) {
+            const urls = getTargetUrls(currentConfig.primaryUrl);
+
+            for (let url of urls) {
+                logDebug('INFO', `Attempting HTTP POST Request`, { targetUrl: url });
+
+                try {
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${currentConfig.apiKey}`,
+                            'x-api-key': currentConfig.apiKey
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    logDebug('INFO', `Response Status: ${res.status}`, { url, status: res.status, ok: res.ok });
+
+                    if (res.ok) {
+                        const data = await res.json();
+                        logDebug('INFO', 'HTTP Response Received Successfully:', data);
+                        const content = data.choices?.[0]?.message?.content;
+                        if (content) return content;
+                    } else {
+                        const errText = await res.text();
+                        logDebug('WARN', `Endpoint Returned HTTP ${res.status}`, { url, error: errText.slice(0, 200) });
+                    }
+                } catch (e) {
+                    logDebug('WARN', `CORS/Network Fetch Error on ${url}`, { error: e.message, type: e.name });
+                }
+            }
+            return null;
         }
 
         // --- REALTIME CLOCK & DATE ---
@@ -754,46 +816,6 @@ ATURAN UTAMA (WAJIB METODE SOCRATIC):
             handleChatSubmit(new Event('submit'));
         }
 
-        // --- REQUEST EXECUTION WITH DEBUG LOGGING ---
-        async function fetchFromXkiro(payload) {
-            const endpoints = [currentConfig.primaryUrl, currentConfig.secondaryUrl].filter(Boolean);
-            
-            for (let url of endpoints) {
-                logDebug('INFO', `Sending HTTP POST Request to ${url}`, {
-                    url,
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentConfig.apiKey.slice(0, 10)}...` },
-                    payload
-                });
-
-                try {
-                    let res = await fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${currentConfig.apiKey}`,
-                            'x-api-key': currentConfig.apiKey
-                        },
-                        body: JSON.stringify(payload)
-                    });
-
-                    logDebug('INFO', `HTTP Response Status from ${url}: ${res.status}`, { status: res.status, ok: res.ok });
-
-                    if (res.ok) {
-                        const data = await res.json();
-                        logDebug('INFO', 'HTTP Response Body Success:', data);
-                        const answer = data.choices?.[0]?.message?.content;
-                        if (answer) return answer;
-                    } else {
-                        const errText = await res.text();
-                        logDebug('ERROR', `API returned Error HTTP ${res.status}`, errText);
-                    }
-                } catch (e) {
-                    logDebug('ERROR', `Fetch Exception for ${url}`, { message: e.message, type: e.name });
-                }
-            }
-            return null;
-        }
-
         // --- CHAT SUBMIT HANDLER ---
         async function handleChatSubmit(e) {
             if (e) e.preventDefault();
@@ -826,16 +848,16 @@ ATURAN UTAMA (WAJIB METODE SOCRATIC):
                 max_tokens: 800
             };
 
-            let replyText = await fetchFromXkiro(payload);
+            let replyText = await sendHttpRequest(payload);
             let responseSource = 'xkiro';
 
             if (replyText) {
-                updateConnectionBadge('connected', `⚡ Terhubung: xKiro API (${currentConfig.modelName})`);
+                updateConnectionBadge('connected');
             } else {
                 logDebug('WARN', 'Falling back to Socratic Local Engine response generator', { query });
                 replyText = getLocalSocraticResponse(query);
                 responseSource = 'fallback';
-                updateConnectionBadge('fallback', '💡 Socratic Engine (Local Fallback Active)');
+                updateConnectionBadge('fallback');
             }
 
             activeSession.messages.push({ 
