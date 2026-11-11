@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMANSA SOPPENG CERDAS - AI Socratic Tutor</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFFDF5;
+        }
+        .font-mono {
+            font-family: 'JetBrains+Mono', monospace;
+        }
+        /* Custom Neo-Brutalism Shadows */
+        .neo-shadow {
+            box-shadow: 4px 4px 0px #000000;
+        }
+        .neo-shadow-sm {
+            box-shadow: 2px 2px 0px #000000;
+        }
+        .neo-shadow-lg {
+            box-shadow: 6px 6px 0px #000000;
+        }
+        .neo-shadow-xl {
+            box-shadow: 8px 8px 0px #000000;
+        }
+        /* Scrollbar custom */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFFDF5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #000000;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="text-slate-900 antialiased min-h-screen flex flex-col md:flex-row border-black">
+
+    <!-- ================= SIDEBAR NEO-BRUTALISM ================= -->
+    <aside class="w-full md:w-80 bg-[#FFE600] border-b-4 md:border-b-0 md:border-r-4 border-black p-5 flex flex-col justify-between shrink-0 neo-shadow">
+        <div>
+            <!-- Header Logo & Identity -->
+            <div className="bg-white border-3 border-black p-3.5 rounded-xl neo-shadow-sm mb-5 flex items-center gap-3">
+                <div class="w-11 h-11 bg-[#FF6B6B] border-2 border-black rounded-lg flex items-center justify-center font-black text-2xl text-white neo-shadow-sm">
+                    S
+                </div>
+                <div>
+                    <h1 class="font-black text-lg leading-tight tracking-tight">SMANSA SOPPENG</h1>
+                    <p class="text-[11px] font-black text-slate-700 uppercase tracking-wider">Cerdas • Socratic AI</p>
+                </div>
+            </div>
+
+            <!-- Jam & Realtime Clock Widget -->
+            <div class="bg-white border-2 border-black p-3 rounded-lg neo-shadow-sm mb-5 text-center">
+                <div id="realtime-clock" class="font-mono text-xl font-black text-black">00:00:00 WITA</div>
+                <div id="realtime-date" class="text-xs font-bold text-slate-600">Senin, 1 Januari 2026</div>
+            </div>
+
+            <!-- Interactive Mascot "Si Smarty" -->
+            <div class="bg-[#4D96FF] text-white border-2 border-black p-4 rounded-xl neo-shadow mb-5 relative overflow-hidden">
+                <div class="flex items-center gap-3">
+                    <!-- SVG Mascot -->
+                    <div id="mascot-svg-container" class="w-14 h-14 shrink-0">
+                        <svg viewBox="0 0 100 100" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M50 20V8" stroke="black" stroke-width="4" stroke-linecap="round"/>
+                            <circle cx="50" cy="6" r="4" fill="#FF6B6B" stroke="black" stroke-width="2"/>
+                            <rect x="20" y="20" width="60" height="55" rx="12" fill="#FFE600" stroke="black" stroke-width="4"/>
+                            <rect x="12" y="38" width="8" height="18" rx="3" fill="#FFD93D" stroke="black" stroke-width="3"/>
+                            <rect x="80" y="38" width="8" height="18" rx="3" fill="#FFD93D" stroke="black" stroke-width="3"/>
+                            <rect x="28" y="28" width="44" height="28" rx="8" fill="#1E293B" stroke="black" stroke-width="3"/>
+                            <circle cx="38" cy="42" r="5" fill="#4ADE80"/>
+                            <circle cx="62" cy="42" r="5" fill="#4ADE80"/>
+                            <circle cx="40" cy="40" r="1.5" fill="white"/>
+                            <circle cx="64" cy="40" r="1.5" fill="white"/>
+                            <path d="M44 63H56" stroke="black" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M45 75L50 78L55 75L50 82Z" fill="#FF6B6B" stroke="black" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span id="mascot-indicator-dot" class="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-black animate-pulse"></span>
+                            <span class="text-xs font-black uppercase text-yellow-300">Si Smarty</span>
+                        </div>
+                        <p id="mascot-status" class="text-xs font-semibold leading-tight text-white mt-1">
+                            Siap membimbing kamu paham konsep!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="space-y-2">
+                <button onclick="switchTab('chat')" id="nav-chat" class="nav-btn w-full text-left px-4 py-3 rounded-lg border-2 border-black font-bold flex items-center justify-between bg-white text-black neo-shadow transition-all">
+                    <span>💬 Tanya Bot SMANSA</span>
+                    <span class="bg-[#FF6B6B] text-white text-[10px] px-2 py-0.5 border border-black rounded-full font-black">AI</span>
+                </button>
+                <button onclick="switchTab('tasks')" id="nav-tasks" class="nav-btn w-full text-left px-4 py-3 rounded-lg border-2 border-black font-bold flex items-center justify-between bg-[#FFF59D] hover:bg-white neo-shadow-sm transition-all">
+                    <span>📋 Target & Tugas</span>
+                    <span id="task-badge-count" class="bg-[#FF6B6B] text-white text-[10px] px-2 py-0.5 border border-black rounded-full font-black">0</span>
+                </button>
+                <button onclick="switchTab('flashcards')" id="nav-flashcards" class="nav-btn w-full text-left px-4 py-3 rounded-lg border-2 border-black font-bold flex items-center justify-between bg-[#FFF59D] hover:bg-white neo-shadow-sm transition-all">
+                    <span>🧠 Flashcard Quiz</span>
+                </button>
+                <button onclick="switchTab('pomodoro')" id="nav-pomodoro" class="nav-btn w-full text-left px-4 py-3 rounded-lg border-2 border-black font-bold flex items-center justify-between bg-[#FFF59D] hover:bg-white neo-shadow-sm transition-all">
+                    <span>⏱️ Pomodoro Timer</span>
+                </button>
+                <button onclick="switchTab('guide')" id="nav-guide" class="nav-btn w-full text-left px-4 py-3 rounded-lg border-2 border-black font-bold flex items-center justify-between bg-[#FFF59D] hover:bg-white neo-shadow-sm transition-all">
+                    <span>💡 Metode Socratic</span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="mt-6 pt-4 border-t-2 border-black text-xs font-bold text-slate-800 text-center">
+            <p>SMA Negeri 1 Soppeng © 2026</p>
+            <p class="text-[10px] text-slate-600 font-semibold">Tutor AI Berbasis Socratic Method</p>
+        </div>
+    </aside>
+
+    <!-- ================= MAIN CONTENT CONTAINER ================= -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        
+        <!-- Header Top Banner -->
+        <header class="bg-white border-b-4 border-black p-4 px-6 flex flex-wrap items-center justify-between gap-4 neo-shadow">
+            <div>
+                <span class="text-xs font-black bg-[#FFD93D] text-black border border-black px-2.5 py-0.5 rounded neo-shadow-sm uppercase">
+                    SMAN 1 SOPPENG
+                </span>
+                <h2 id="page-title" class="text-xl md:text-2xl font-black mt-1">
+                    💬 Socratic Chat Tutor AI
+                </h2>
+            </div>
+            
+            <!-- Dynamic Connection Status Badge -->
+            <div id="connection-status-badge" class="bg-[#FFF59D] border-2 border-black px-3 py-1.5 rounded-lg text-xs font-black text-black neo-shadow-sm flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-black animate-pulse"></span>
+                <span id="connection-status-text">Memeriksa Koneksi xKiro AI...</span>
+            </div>
+        </header>
+
+        <!-- ================= TAB 1: CHAT TUTOR ================= -->
+        <section id="tab-chat" class="tab-content flex-1 flex flex-col md:flex-row min-h-0 bg-[#FFFDF5]">
+            <!-- Sessions List -->
+            <div class="w-full md:w-64 bg-[#F7F7F7] border-b-4 md:border-b-0 md:border-r-4 border-black p-4 flex flex-col shrink-0">
+                <button onclick="createNewSession()" class="w-full bg-[#6BCB77] hover:bg-[#52B762] text-black font-black border-2 border-black p-3 rounded-lg neo-shadow-sm active:translate-y-0.5 active:shadow-none mb-4 flex items-center justify-center gap-2">
+                    <span>+ Diskusi Baru</span>
+                </button>
+                <div class="text-[11px] font-black uppercase text-slate-500 mb-2 px-1">Riwayat Sesi</div>
+                <div id="session-list" class="flex-1 overflow-y-auto space-y-2 max-h-48 md:max-h-none">
+                    <!-- Dynamic Sessions Inject -->
+                </div>
+            </div>
+
+            <!-- Chat Main Area -->
+            <div class="flex-1 flex flex-col justify-between p-4 md:p-6 min-h-[500px]">
+                <!-- Chat Messages View -->
+                <div id="chat-messages" class="flex-1 overflow-y-auto space-y-4 mb-4 pr-1">
+                    <!-- Messages Injected Here -->
+                </div>
+
+                <!-- Presets Prompts -->
+                <div class="mb-3">
+                    <p class="text-[11px] font-black text-slate-500 uppercase mb-2">💡 Pertanyaan Pemicu Cepat:</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="sendPresetPrompt('Bisa bantu saya pahami konsep Hukum Newton tanpa kasih jawaban instan?')" class="bg-white hover:bg-[#FFE600] border-2 border-black px-3 py-1.5 rounded-lg text-xs font-bold neo-shadow-sm active:translate-x-0.5 transition-all">
+                            ⚡ Fisika: Hukum Newton
+                        </button>
+                        <button onclick="sendPresetPrompt('Tolong bantu urai langkah berpikir untuk soal Persamaan Kuadrat.')" class="bg-white hover:bg-[#FFE600] border-2 border-black px-3 py-1.5 rounded-lg text-xs font-bold neo-shadow-sm active:translate-x-0.5 transition-all">
+                            📐 Mat: Persamaan Kuadrat
+                        </button>
+                        <button onclick="sendPresetPrompt('Bagaimana menyusun struktur ide esai Bahasa Indonesia yang baik?')" class="bg-white hover:bg-[#FFE600] border-2 border-black px-3 py-1.5 rounded-lg text-xs font-bold neo-shadow-sm active:translate-x-0.5 transition-all">
+                            📝 Esai Bahasa Indonesia
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Input Form -->
+                <form id="chat-form" onsubmit="handleChatSubmit(event)" class="flex gap-2 bg-white p-2 border-4 border-black rounded-xl neo-shadow">
+                    <input type="text" id="chat-input" placeholder="Tanyakan soal/topik pelajaran yang belum kamu paham..." class="flex-1 px-3 py-2 outline-none font-semibold text-sm bg-transparent" required />
+                    <button type="submit" id="send-btn" class="bg-[#FF6B6B] hover:bg-[#FF4D4D] text-white font-black border-2 border-black px-5 py-2 rounded-lg neo-shadow-sm active:translate-y-0.5 active:shadow-none flex items-center gap-2">
+                        <span>Kirim</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: TARGET & TUGAS ================= -->
+        <section id="tab-tasks" class="tab-content hidden p-4 md:p-8 max-w-5xl mx-auto w-full space-y-6">
+            <!-- Add Task Form -->
+            <div class="bg-white border-4 border-black p-6 rounded-2xl neo-shadow-lg">
+                <h3 class="text-lg font-black mb-4 flex items-center gap-2">
+                    ➕ Tambah Target Belajar / PR
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                    <input type="text" id="task-title-input" placeholder="Judul Tugas / Topik Belajar..." class="md:col-span-2 border-2 border-black p-2.5 rounded-lg font-semibold text-sm outline-none neo-shadow-sm" />
+                    <select id="task-subject-input" class="border-2 border-black p-2.5 rounded-lg font-bold text-sm bg-white outline-none neo-shadow-sm">
+                        <option value="Matematika">Matematika</option>
+                        <option value="Fisika">Fisika</option>
+                        <option value="Biologi">Biologi</option>
+                        <option value="Kimia">Kimia</option>
+                        <option value="Informatika">Informatika</option>
+                        <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                        <option value="Bahasa Inggris">Bahasa Inggris</option>
+                    </select>
+                    <button onclick="addNewTask()" class="bg-[#6BCB77] hover:bg-[#52B762] text-black font-black border-2 border-black p-2.5 rounded-lg neo-shadow-sm active:translate-y-0.5">
+                        + Tambah Target
+                    </button>
+                </div>
+            </div>
+
+            <!-- Task Board Columns -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Belum Column -->
+                <div class="bg-white border-4 border-black rounded-2xl p-4 neo-shadow flex flex-col">
+                    <div class="bg-[#FF8B8B] border-2 border-black p-2.5 rounded-xl font-black text-center mb-4 neo-shadow-sm flex items-center justify-between px-4">
+                        <span>BELUM</span>
+                        <span id="count-belum" class="bg-white text-black px-2 py-0.5 border border-black rounded-full text-xs">0</span>
+                    </div>
+                    <div id="col-belum" class="space-y-3 flex-1"></div>
+                </div>
+
+                <!-- Proses Column -->
+                <div class="bg-white border-4 border-black rounded-2xl p-4 neo-shadow flex flex-col">
+                    <div class="bg-[#FFD93D] border-2 border-black p-2.5 rounded-xl font-black text-center mb-4 neo-shadow-sm flex items-center justify-between px-4">
+                        <span>PROSES</span>
+                        <span id="count-proses" class="bg-white text-black px-2 py-0.5 border border-black rounded-full text-xs">0</span>
+                    </div>
+                    <div id="col-proses" class="space-y-3 flex-1"></div>
+                </div>
+
+                <!-- Selesai Column -->
+                <div class="bg-white border-4 border-black rounded-2xl p-4 neo-shadow flex flex-col">
+                    <div class="bg-[#6BCB77] border-2 border-black p-2.5 rounded-xl font-black text-center mb-4 neo-shadow-sm flex items-center justify-between px-4">
+                        <span>SELESAI</span>
+                        <span id="count-selesai" class="bg-white text-black px-2 py-0.5 border border-black rounded-full text-xs">0</span>
+                    </div>
+                    <div id="col-selesai" class="space-y-3 flex-1"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: FLASHCARDS ================= -->
+        <section id="tab-flashcards" class="tab-content hidden p-4 md:p-8 max-w-3xl mx-auto w-full space-y-6">
+            <!-- Subject Deck Selection -->
+            <div id="deck-selector" class="flex flex-wrap justify-center gap-2">
+                <!-- Subject buttons rendered dynamically -->
+            </div>
+
+            <!-- Flashcard Display Box -->
+            <div class="space-y-4">
+                <div id="flashcard-box" onclick="flipFlashcard()" class="w-full min-h-[280px] bg-white border-4 border-black rounded-3xl p-8 neo-shadow-xl cursor-pointer flex flex-col justify-between transition-transform duration-200 hover:-translate-y-1 relative">
+                    <div class="flex items-center justify-between">
+                        <span id="card-subject-tag" class="text-xs font-black uppercase bg-[#4D96FF] text-white border border-black px-3 py-1 rounded-full neo-shadow-sm">
+                            Matematika
+                        </span>
+                        <span class="text-xs font-bold text-slate-500">Klik untuk balik 🔄</span>
+                    </div>
+
+                    <div class="my-8 text-center">
+                        <h3 id="card-side-label" class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">PERTANYAAN UJIAN</h3>
+                        <p id="card-text" class="text-xl md:text-2xl font-black leading-snug">Loading card...</p>
+                    </div>
+
+                    <div id="card-hint" class="text-center text-xs font-bold text-slate-400">
+                        🤔 Pikirkan jawabannya sebelum membalik kartu.
+                    </div>
+                </div>
+
+                <!-- Card Nav Controls -->
+                <div class="flex items-center justify-between gap-4">
+                    <button onclick="prevFlashcard()" class="flex-1 bg-white hover:bg-slate-100 border-2 border-black py-3 rounded-xl font-black neo-shadow-sm">
+                        ← Sebelumnya
+                    </button>
+                    <button onclick="nextFlashcard()" class="flex-1 bg-[#FFD93D] hover:bg-[#FFE066] border-2 border-black py-3 rounded-xl font-black neo-shadow-sm">
+                        Selanjutnya →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: POMODORO TIMER ================= -->
+        <section id="tab-pomodoro" class="tab-content hidden p-4 md:p-8 max-w-xl mx-auto w-full text-center space-y-6">
+            <div class="bg-white border-4 border-black rounded-3xl p-8 neo-shadow-xl space-y-6">
+                <!-- Mode Toggles -->
+                <div class="flex justify-center gap-3">
+                    <button id="pomo-mode-work" onclick="setPomodoroMode('work')" class="px-4 py-2 border-2 border-black rounded-lg font-black text-sm neo-shadow-sm bg-[#FF6B6B] text-white">
+                        🔥 Sesi Fokus (25m)
+                    </button>
+                    <button id="pomo-mode-break" onclick="setPomodoroMode('break')" class="px-4 py-2 border-2 border-black rounded-lg font-black text-sm neo-shadow-sm bg-white text-black">
+                        ☕ Istirahat (5m)
+                    </button>
+                </div>
+
+                <!-- Time Clock Display -->
+                <div class="my-6">
+                    <div id="pomo-timer-display" class="text-6xl md:text-8xl font-black tracking-tight font-mono">
+                        25:00
+                    </div>
+                    <p id="pomo-mode-desc" class="text-sm font-bold text-slate-500 mt-2">
+                        Matikan Notifikasi HP & Fokus Belajar!
+                    </p>
+                </div>
+
+                <!-- Action Controls -->
+                <div class="flex justify-center gap-4">
+                    <button id="pomo-start-btn" onclick="togglePomodoroTimer()" class="px-8 py-3 rounded-xl border-2 border-black font-black text-lg neo-shadow bg-[#6BCB77] text-black active:translate-y-0.5">
+                        MULAI FOKUS
+                    </button>
+                    <button onclick="resetPomodoroTimer()" class="px-4 py-3 bg-white hover:bg-slate-100 rounded-xl border-2 border-black font-black text-lg neo-shadow">
+                        RESET
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="bg-[#FFE600] border-3 border-black p-4 rounded-xl neo-shadow flex items-center justify-around font-black text-sm">
+                <div>
+                    <p class="text-slate-700 text-xs uppercase">Sesi Fokus Selesai</p>
+                    <p id="pomo-completed-count" class="text-2xl">0 Sesi 🎯</p>
+                </div>
+                <div class="h-8 w-0.5 bg-black"></div>
+                <div>
+                    <p class="text-slate-700 text-xs uppercase">Target Harian</p>
+                    <p class="text-2xl">4 Sesi (2 Jam)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 5: SOCRATIC GUIDE ================= -->
+        <section id="tab-guide" class="tab-content hidden p-4 md:p-8 max-w-3xl mx-auto w-full space-y-6">
+            <div class="bg-white border-4 border-black p-6 rounded-2xl neo-shadow-lg space-y-4">
+                <h3 class="text-xl font-black flex items-center gap-2">
+                    💡 Apa itu Metode Belajar Socratic (Sokratik)?
+                </h3>
+                <p class="font-medium leading-relaxed text-slate-700">
+                    Metode Socratic adalah metode belajar interaktif. Daripada memberi jawaban instan yang membuat cepat lupa, <strong>Si Smarty (AI SMANSA)</strong> akan membimbing kamu dengan pertanyaan-pertanyaan pemicu berpikir agar kamu paham konsepnya secara mandiri!
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+                    <div class="bg-[#FFF59D] border-2 border-black p-4 rounded-xl neo-shadow-sm">
+                        <h4 class="font-black text-red-600 mb-1">❌ Cara Belajar Pasif</h4>
+                        <p class="text-xs font-semibold text-slate-700">Meminta jawaban instan → Menyalin tanpa paham → Lupa total saat ujian berlangsung.</p>
+                    </div>
+                    <div class="bg-[#B9F6CA] border-2 border-black p-4 rounded-xl neo-shadow-sm">
+                        <h4 class="font-black text-green-800 mb-1">✅ Cara Belajar Sokratik</h4>
+                        <p class="text-xs font-semibold text-slate-700">AI memberi hint & petunjuk → Siswa berpikir kritis step-by-step → Paham mendalam.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= JAVASCRIPT APPLICATION LOGIC ================= -->
+    <script>
+        // --- API & SYSTEM CONSTANTS (DOCUMENTATION COMPLIANT) ---
+        // Official Base Endpoint according to https://docs.xkiro.com/
+        const XKIRO_OFFICIAL_ENDPOINT = "https://api.xkiro.com/v1/chat/completions";
+        const XKIRO_DASHBOARD_ENDPOINT = "https://xkiro.com/dashboard/v1/chat/completions";
+        const API_KEY = "sk-xt-a66786d1d3cfac66c72645b1f77a8719abf64f54fc3a109d";
+        const MODEL_NAME = "mistralai/mistral-small-2603";
+
+        let apiConnectionState = "checking"; // 'connected', 'fallback', 'checking'
+
+        const SYSTEM_PROMPT = `Anda adalah "Si Smarty", maskot dan tutor belajar cerdas untuk siswa SMAN 1 Soppeng (SMANSA SOPPENG).
+ATURAN UTAMA (WAJIB METODE SOCRATIC):
+1. JANGAN PERNAH memberikan jawaban langsung atau menyelesaikan tugas/soal hitungan secara instan!
+2. Bimbing siswa langkah demi langkah dengan mengajukan pertanyaan pemicu berpikir, analogi sederhana, dan petunjuk konseptual.
+3. Gunakan Bahasa Indonesia yang ramah, komunikatif, suportif, dan edukatif ala siswa SMA.
+4. Apabila siswa menjawab benar, berikan pujian yang membangun!`;
+
+        // Update Header Status UI
+        function updateConnectionBadge(status, customMessage) {
+            const badge = document.getElementById('connection-status-badge');
+            const text = document.getElementById('connection-status-text');
+            const dot = document.getElementById('mascot-indicator-dot');
+
+            apiConnectionState = status;
+
+            if (status === 'connected') {
+                badge.className = "bg-[#6BCB77] border-2 border-black px-3 py-1.5 rounded-lg text-xs font-black text-black neo-shadow-sm flex items-center gap-2";
+                text.innerText = customMessage || "⚡ Terhubung: xKiro AI (Mistral Small 4)";
+                if (dot) dot.className = "w-2.5 h-2.5 rounded-full bg-green-400 border border-black animate-pulse";
+            } else if (status === 'fallback') {
+                badge.className = "bg-[#FFD93D] border-2 border-black px-3 py-1.5 rounded-lg text-xs font-black text-black neo-shadow-sm flex items-center gap-2";
+                text.innerText = customMessage || "💡 Socratic Engine (Local Fallback)";
+                if (dot) dot.className = "w-2.5 h-2.5 rounded-full bg-yellow-400 border border-black animate-pulse";
+            }
+        }
+
+        // Test API Connection on startup using public endpoint
+        async function checkXkiroConnectivity() {
+            updateConnectionBadge('checking', 'Menghubungkan ke xKiro API...');
+            try {
+                // Ping models catalog or quick test
+                const res = await fetch("https://api.xkiro.com/v1/models", { method: 'GET' });
+                if (res.ok) {
+                    updateConnectionBadge('connected');
+                    return;
+                }
+            } catch (e) {
+                console.warn("Direct CORS/Network test to api.xkiro.com failed. Fallback system ready.", e);
+            }
+            updateConnectionBadge('fallback');
+        }
+
+        // --- REALTIME CLOCK & DATE ---
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID', { hour12: false }) + ' WITA';
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateStr = now.toLocaleDateString('id-ID', dateOptions);
+
+            document.getElementById('realtime-clock').innerText = timeStr;
+            document.getElementById('realtime-date').innerText = dateStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // --- NAVIGATION TABS ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-black', 'neo-shadow');
+                btn.classList.add('bg-[#FFF59D]', 'neo-shadow-sm');
+            });
+            const activeBtn = document.getElementById('nav-' + tabId);
+            activeBtn.classList.remove('bg-[#FFF59D]', 'neo-shadow-sm');
+            activeBtn.classList.add('bg-white', 'text-black', 'neo-shadow');
+
+            const titles = {
+                chat: '💬 Socratic Chat Tutor AI',
+                tasks: '📋 Target & Task Manager',
+                flashcards: '🧠 Flashcard & Quick Quiz',
+                pomodoro: '⏱️ Pomodoro Focus Timer',
+                guide: '💡 Panduan Belajar Socratic'
+            };
+            document.getElementById('page-title').innerText = titles[tabId];
+        }
+
+        // --- CHAT SYSTEM STATE ---
+        let sessions = JSON.parse(localStorage.getItem('smansa_html_sessions')) || [
+            {
+                id: 'session-1',
+                title: 'Diskusi Socratic Pertama',
+                messages: [
+                    { 
+                        role: 'assistant', 
+                        text: 'Halo Sahabat SMANSA! 👋 Saya **Si Smarty**, tutor AI Socratic kamu. Ada topik pelajaran atau soal yang ingin kita bedah bersama hari ini? Ingat, kita akan bahas pahamnya step-by-step ya!',
+                        source: 'system'
+                    }
+                ]
+            }
+        ];
+        let activeSessionId = sessions[0]?.id || 'session-1';
+
+        function saveSessions() {
+            localStorage.setItem('smansa_html_sessions', JSON.stringify(sessions));
+        }
+
+        function renderSessions() {
+            const container = document.getElementById('session-list');
+            container.innerHTML = '';
+            sessions.forEach(s => {
+                const isActive = s.id === activeSessionId;
+                const div = document.createElement('div');
+                div.className = `p-2.5 rounded-lg border-2 border-black font-bold text-sm cursor-pointer flex items-center justify-between transition-all ${
+                    isActive ? 'bg-[#FFD93D] neo-shadow-sm' : 'bg-white hover:bg-slate-100 neo-shadow-sm'
+                }`;
+                div.onclick = () => { activeSessionId = s.id; renderSessions(); renderMessages(); };
+
+                div.innerHTML = `
+                    <span class="truncate pr-2">${s.title}</span>
+                    ${sessions.length > 1 ? `<button onclick="deleteSession('${s.id}', event)" class="text-slate-400 hover:text-red-600 font-black px-1">✕</button>` : ''}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function createNewSession() {
+            const newId = 'session-' + Date.now();
+            const newSession = {
+                id: newId,
+                title: `Diskusi ${sessions.length + 1}`,
+                messages: [
+                    { role: 'assistant', text: 'Halo! Sesi baru telah siap. Topik pelajaran apa yang mau kita diskusikan bersama?', source: 'system' }
+                ]
+            };
+            sessions.unshift(newSession);
+            activeSessionId = newId;
+            saveSessions();
+            renderSessions();
+            renderMessages();
+        }
+
+        function deleteSession(id, e) {
+            e.stopPropagation();
+            if (sessions.length <= 1) return;
+            sessions = sessions.filter(s => s.id !== id);
+            activeSessionId = sessions[0].id;
+            saveSessions();
+            renderSessions();
+            renderMessages();
+        }
+
+        function renderMessages() {
+            const container = document.getElementById('chat-messages');
+            container.innerHTML = '';
+            const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0];
+
+            activeSession.messages.forEach(msg => {
+                const isUser = msg.role === 'user';
+                const wrapper = document.createElement('div');
+                wrapper.className = `flex gap-3 max-w-3xl ${isUser ? 'ml-auto flex-row-reverse' : ''}`;
+
+                let badgeHtml = '';
+                if (!isUser) {
+                    if (msg.source === 'xkiro') {
+                        badgeHtml = `<div class="text-[10px] font-black uppercase text-emerald-700 bg-emerald-100 border border-emerald-400 px-2 py-0.5 rounded inline-flex items-center gap-1 mb-1.5">⚡ Respon Live: xKiro AI (Mistral)</div>`;
+                    } else if (msg.source === 'fallback') {
+                        badgeHtml = `<div class="text-[10px] font-black uppercase text-amber-800 bg-amber-100 border border-amber-400 px-2 py-0.5 rounded inline-flex items-center gap-1 mb-1.5">💡 Respon: Socratic Local Engine</div>`;
+                    } else {
+                        badgeHtml = `<div class="text-[11px] font-black uppercase text-blue-600 mb-1">✨ Si Smarty (Socratic Tutor)</div>`;
+                    }
+                }
+
+                wrapper.innerHTML = `
+                    <div class="w-9 h-9 rounded-lg border-2 border-black flex items-center justify-center shrink-0 font-black text-sm neo-shadow-sm ${
+                        isUser ? 'bg-[#FF6B6B] text-white' : 'bg-[#4D96FF] text-white'
+                    }">
+                        ${isUser ? '👤' : '🤖'}
+                    </div>
+                    <div class="p-4 rounded-xl border-2 border-black neo-shadow leading-relaxed font-medium text-sm md:text-base ${
+                        isUser ? 'bg-[#FFD93D] text-slate-900' : 'bg-white text-slate-900'
+                    }">
+                        ${badgeHtml}
+                        <div class="whitespace-pre-wrap">${msg.text}</div>
+                    </div>
+                `;
+                container.appendChild(wrapper);
+            });
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendPresetPrompt(text) {
+            document.getElementById('chat-input').value = text;
+            handleChatSubmit(new Event('submit'));
+        }
+
+        // --- REQUEST EXECUTION FOLLOWING DOCS.XKIRO.COM ---
+        async function fetchFromXkiro(payload) {
+            const endpoints = [XKIRO_OFFICIAL_ENDPOINT, XKIRO_DASHBOARD_ENDPOINT];
+            
+            for (let url of endpoints) {
+                try {
+                    // Try with standard Authorization: Bearer header
+                    let res = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${API_KEY}`,
+                            'x-api-key': API_KEY // Docs state both Authorization: Bearer or x-api-key are valid
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (res.ok) {
+                        const data = await res.json();
+                        const answer = data.choices?.[0]?.message?.content;
+                        if (answer) return answer;
+                    }
+                } catch (e) {
+                    console.warn(`Request to ${url} failed (likely CORS restriction on browser):`, e);
+                }
+            }
+            return null;
+        }
+
+        // --- CHAT SUBMIT HANDLER ---
+        async function handleChatSubmit(e) {
+            if (e) e.preventDefault();
+            const inputEl = document.getElementById('chat-input');
+            const query = inputEl.value.trim();
+            if (!query) return;
+
+            inputEl.value = '';
+            const activeSession = sessions.find(s => s.id === activeSessionId);
+            activeSession.messages.push({ role: 'user', text: query });
+
+            if (activeSession.messages.length <= 3) {
+                activeSession.title = query.slice(0, 22) + '...';
+            }
+
+            renderMessages();
+            saveSessions();
+
+            const sendBtn = document.getElementById('send-btn');
+            sendBtn.disabled = true;
+            sendBtn.innerText = 'Menjawab...';
+
+            const payload = {
+                model: MODEL_NAME,
+                messages: [
+                    { role: 'system', content: SYSTEM_PROMPT },
+                    ...activeSession.messages.map(m => ({ role: m.role, content: m.text }))
+                ],
+                temperature: 0.7,
+                max_tokens: 800
+            };
+
+            let replyText = await fetchFromXkiro(payload);
+            let responseSource = 'xkiro';
+
+            if (replyText) {
+                updateConnectionBadge('connected', '⚡ Terhubung: xKiro AI (Mistral Small 4)');
+            } else {
+                // If direct browser fetch is blocked by CORS/API policy, use local Socratic Engine
+                replyText = getLocalSocraticResponse(query);
+                responseSource = 'fallback';
+                updateConnectionBadge('fallback', '💡 Socratic Engine (Local Mode Active)');
+            }
+
+            activeSession.messages.push({ 
+                role: 'assistant', 
+                text: replyText,
+                source: responseSource 
+            });
+
+            saveSessions();
+            renderMessages();
+
+            sendBtn.disabled = false;
+            sendBtn.innerText = 'Kirim';
+        }
+
+        // --- LOCAL SOCRATIC ENGINE FALLBACK ---
+        function getLocalSocraticResponse(query) {
+            const q = query.toLowerCase();
+            if (q.includes('fisika') || q.includes('gaya') || q.includes('newton') || q.includes('rumus')) {
+                return `Pertanyaan Fisika yang sangat menarik! ⚡\n\nSebelum langsung menghitung rumusnya, mari kita bayangkan kejadian ini:\nKetika kamu naik motor lalu direm mendadak, mengapa tubuhmu terdorong ke depan?\n\n1. Mengapa tubuh cenderung mempertahankan posisinya?\n2. Konsep Hukum Newton ke berapa yang menjelaskan sifat inersia ini? Coba tebak dulu!`;
+            } else if (q.includes('matematika') || q.includes('hitung') || q.includes('persamaan') || q.includes('akar')) {
+                return `Mari kita bedah soal Matematika ini step-by-step! 📐\n\nUntuk menyelesaikannya tanpa kebingungan:\n1. Apa saja variabel & angka yang sudah diketahui dari soal?\n2. Persamaan apa yang bisa menghubungkan angka-angka tersebut?\n\nCoba tuliskan dulu apa yang kamu ketahui dari soal ini!`;
+            } else if (q.includes('esai') || q.includes('tulis') || q.includes('bahasa')) {
+                return `Topik yang sangat bagus untuk esai! 📝\n\nAgar tulisanmu terstruktur dan logis:\n1. Apa gagasannya atau tesis utama yang ingin kamu sampaikan ke pembaca?\n2. Contoh nyata apa di sekitar Soppeng yang bisa mendukung gagasan tersebut?\n\nTuliskan 1 kalimat ide utamamu dulu!`;
+            } else if (q.includes('siapa') || q.includes('model') || q.includes('kamu')) {
+                return `Saya adalah **Si Smarty**, tutor AI berbasis **Metode Socratic** khusus untuk siswa SMAN 1 Soppeng! 🤖\n\nTugas saya bukan sekadar memberi jawaban instan, tetapi mendampingi kamu berpikir logis dan memahami konsep pelajaran secara mendalam! Apa yang ingin kita bahas hari ini?`;
+            } else {
+                return `Terima kasih sudah bertanya ke Si Smarty! 💡\n\nKarena kita belajar dengan **Metode Socratic**, mari kita bahas pelan-pelan:\n1. Menurut pemahamanmu sejauh ini, apa konsep dasar topik ini?\n2. Bagian mana yang menurutmu paling membingungkan?\n\nCoba ceritakan dulu yang kamu ketahui!`;
+            }
+        }
+
+        // --- TASKS MANAGER LOGIC ---
+        let tasks = JSON.parse(localStorage.getItem('smansa_html_tasks')) || [
+            { id: 1, title: 'Latihan Soal Fisika Hukum Newton', subject: 'Fisika', status: 'Proses' },
+            { id: 2, title: 'Ringkas Bab Fotosintesis', subject: 'Biologi', status: 'Belum' },
+            { id: 3, title: 'Draf Esai Bahasa Indonesia', subject: 'Bahasa Indonesia', status: 'Selesai' }
+        ];
+
+        function saveTasks() {
+            localStorage.setItem('smansa_html_tasks', JSON.stringify(tasks));
+            renderTasks();
+        }
+
+        function addNewTask() {
+            const titleInput = document.getElementById('task-title-input');
+            const subjectInput = document.getElementById('task-subject-input');
+            const title = titleInput.value.trim();
+            if (!title) return;
+
+            tasks.push({
+                id: Date.now(),
+                title: title,
+                subject: subjectInput.value,
+                status: 'Belum'
+            });
+
+            titleInput.value = '';
+            saveTasks();
+        }
+
+        function toggleTask(id) {
+            tasks = tasks.map(t => {
+                if (t.id === id) {
+                    const nextStatus = t.status === 'Belum' ? 'Proses' : t.status === 'Proses' ? 'Selesai' : 'Belum';
+                    return { ...t, status: nextStatus };
+                }
+                return t;
+            });
+            saveTasks();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveTasks();
+        }
+
+        function renderTasks() {
+            const colBelum = document.getElementById('col-belum');
+            const colProses = document.getElementById('col-proses');
+            const colSelesai = document.getElementById('col-selesai');
+
+            colBelum.innerHTML = ''; colProses.innerHTML = ''; colSelesai.innerHTML = '';
+
+            const belumList = tasks.filter(t => t.status === 'Belum');
+            const prosesList = tasks.filter(t => t.status === 'Proses');
+            const selesaiList = tasks.filter(t => t.status === 'Selesai');
+
+            document.getElementById('count-belum').innerText = belumList.length;
+            document.getElementById('count-proses').innerText = prosesList.length;
+            document.getElementById('count-selesai').innerText = selesaiList.length;
+            document.getElementById('task-badge-count').innerText = belumList.length + prosesList.length;
+
+            const renderCard = (t) => `
+                <div class="bg-[#FFFDF5] border-2 border-black p-3.5 rounded-xl neo-shadow-sm space-y-2">
+                    <div class="flex items-start justify-between gap-2">
+                        <h4 class="font-bold text-sm leading-tight">${t.title}</h4>
+                        <button onclick="deleteTask(${t.id})" class="text-slate-400 hover:text-red-600 font-black">✕</button>
+                    </div>
+                    <div class="flex items-center justify-between text-xs font-bold pt-2 border-t border-slate-200">
+                        <span class="bg-[#4D96FF] text-white px-2 py-0.5 border border-black rounded">${t.subject}</span>
+                        <button onclick="toggleTask(${t.id})" class="text-blue-700 underline font-black">Ubah Status →</button>
+                    </div>
+                </div>
+            `;
+
+            belumList.forEach(t => colBelum.innerHTML += renderCard(t));
+            prosesList.forEach(t => colProses.innerHTML += renderCard(t));
+            selesaiList.forEach(t => colSelesai.innerHTML += renderCard(t));
+        }
+
+        // --- FLASHCARDS LOGIC ---
+        const FLASHCARD_DECKS = [
+            {
+                subject: "Matematika",
+                cards: [
+                    { q: "Apa arti geometris dari Turunan Pertama f'(x)?", a: "Kemiringan (gradien) garis singgung grafik fungsi f(x) pada titik x tersebut." },
+                    { q: "Apa syarat dua garis saling tegak lurus?", a: "Hasil kali kedua gradiennya sama dengan -1 (m1 × m2 = -1)." }
+                ]
+            },
+            {
+                subject: "Fisika",
+                cards: [
+                    { q: "Mengapa penumpang bus terdorong ke depan saat direm?", a: "Hukum I Newton (Inersia): Benda cenderung mempertahankan keadaan bergeraknya." },
+                    { q: "Apa perbedaan Usaha nol dan Usaha positif?", a: "Usaha positif jika gaya searah perpindahan. Usaha nol jika gaya tegak lurus perpindahan." }
+                ]
+            }
+        ];
+
+        let currentDeckIdx = 0;
+        let currentCardIdx = 0;
+        let isCardFlipped = false;
+
+        function renderFlashcardDecks() {
+            const container = document.getElementById('deck-selector');
+            container.innerHTML = '';
+            FLASHCARD_DECKS.forEach((deck, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `px-4 py-2 border-2 border-black rounded-lg font-black text-sm neo-shadow-sm ${
+                    currentDeckIdx === idx ? 'bg-[#FFD93D]' : 'bg-white hover:bg-slate-100'
+                }`;
+                btn.innerText = deck.subject;
+                btn.onclick = () => { currentDeckIdx = idx; currentCardIdx = 0; isCardFlipped = false; renderFlashcardDecks(); updateCardDisplay(); };
+                container.appendChild(btn);
+            });
+        }
+
+        function updateCardDisplay() {
+            const deck = FLASHCARD_DECKS[currentDeckIdx];
+            const card = deck.cards[currentCardIdx];
+
+            document.getElementById('card-subject-tag').innerText = `${deck.subject} • Kartu ${currentCardIdx + 1} dari ${deck.cards.length}`;
+            document.getElementById('card-side-label').innerText = isCardFlipped ? "JAWABAN / KONSEP" : "PERTANYAAN UJIAN";
+            document.getElementById('card-text').innerText = isCardFlipped ? card.a : card.q;
+            document.getElementById('card-hint').innerText = isCardFlipped ? "💡 Cobalah jelaskan kembali dengan katamu sendiri!" : "🤔 Pikirkan jawabannya sebelum membalik kartu.";
+        }
+
+        function flipFlashcard() {
+            isCardFlipped = !isCardFlipped;
+            updateCardDisplay();
+        }
+
+        function prevFlashcard() {
+            if (currentCardIdx > 0) {
+                currentCardIdx--;
+                isCardFlipped = false;
+                updateCardDisplay();
+            }
+        }
+
+        function nextFlashcard() {
+            if (currentCardIdx < FLASHCARD_DECKS[currentDeckIdx].cards.length - 1) {
+                currentCardIdx++;
+                isCardFlipped = false;
+                updateCardDisplay();
+            }
+        }
+
+        // --- POMODORO TIMER LOGIC ---
+        let timerMode = 'work';
+        let timeLeft = 25 * 60;
+        let isTimerRunning = false;
+        let pomoInterval = null;
+        let completedSessions = 0;
+
+        function setPomodoroMode(mode) {
+            timerMode = mode;
+            isTimerRunning = false;
+            clearInterval(pomoInterval);
+            timeLeft = mode === 'work' ? 25 * 60 : 5 * 60;
+            updateTimerDisplay();
+
+            const workBtn = document.getElementById('pomo-mode-work');
+            const breakBtn = document.getElementById('pomo-mode-break');
+            if (mode === 'work') {
+                workBtn.className = "px-4 py-2 border-2 border-black rounded-lg font-black text-sm neo-shadow-sm bg-[#FF6B6B] text-white";
+                breakBtn.className = "px-4 py-2 border-2 border-black rounded-lg font-black text-sm neo-shadow-sm bg-white text-black";
+                document.getElementById('pomo-mode-desc').innerText = 'Matikan Notifikasi HP & Fokus Belajar!';
+            } else {
+                breakBtn.className = "px-4 py-2 border-2 border-black rounded-lg font-black text-sm neo-shadow-sm bg-[#6BCB77] text-black";
+                workBtn.className = "px-4 py-2 border-2 border-black rounded-lg font-black text-sm neo-shadow-sm bg-white text-black";
+                document.getElementById('pomo-mode-desc').innerText = 'Regangkan Badan & Minum Air Putih!';
+            }
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+            const s = (timeLeft % 60).toString().padStart(2, '0');
+            document.getElementById('pomo-timer-display').innerText = `${m}:${s}`;
+        }
+
+        function togglePomodoroTimer() {
+            const startBtn = document.getElementById('pomo-start-btn');
+            if (isTimerRunning) {
+                isTimerRunning = false;
+                clearInterval(pomoInterval);
+                startBtn.innerText = 'MULAI FOKUS';
+                startBtn.className = "px-8 py-3 rounded-xl border-2 border-black font-black text-lg neo-shadow bg-[#6BCB77] text-black active:translate-y-0.5";
+            } else {
+                isTimerRunning = true;
+                startBtn.innerText = 'PAUSE';
+                startBtn.className = "px-8 py-3 rounded-xl border-2 border-black font-black text-lg neo-shadow bg-[#FF6B6B] text-white active:translate-y-0.5";
+                
+                pomoInterval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(pomoInterval);
+                        isTimerRunning = false;
+                        if (timerMode === 'work') {
+                            completedSessions++;
+                            document.getElementById('pomo-completed-count').innerText = `${completedSessions} Sesi 🎯`;
+                            setPomodoroMode('break');
+                        } else {
+                            setPomodoroMode('work');
+                        }
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetPomodoroTimer() {
+            clearInterval(pomoInterval);
+            isTimerRunning = false;
+            setPomodoroMode(timerMode);
+            document.getElementById('pomo-start-btn').innerText = 'MULAI FOKUS';
+        }
+
+        // --- APP INITIALIZATION ---
+        window.onload = function() {
+            checkXkiroConnectivity();
+            renderSessions();
+            renderMessages();
+            renderTasks();
+            renderFlashcardDecks();
+            updateCardDisplay();
+            updateTimerDisplay();
+        };
+    </script>
+</body>
+</html>
