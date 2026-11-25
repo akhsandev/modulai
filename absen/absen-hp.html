@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Absensi Darurat HP - Cabdis Wil IV</title>
+    <meta name="theme-color" content="#0f172a">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <style>
+        body { font-family: 'Manrope', sans-serif; font-size: 0.875rem; }
+        h1 { font-size: 1.75rem; }
+        h2 { font-size: 1.125rem; }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-3 sm:p-4">
+    <main class="bg-white p-5 sm:p-6 rounded-2xl shadow-lg w-full max-w-md border border-slate-200">
+
+        <!-- HEADER -->
+        <header class="flex flex-col items-center text-center mb-5">
+            <img src="logo-sulsel.png" alt="Logo Pemprov Sulsel" class="w-14 h-auto mb-2.5 drop-shadow">
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight uppercase leading-tight">
+                Absensi Alternatif HP
+            </h1>
+            <p class="text-xs font-bold text-slate-500 tracking-widest uppercase mt-0.5">
+                Cabdis Wilayah IV
+            </p>
+        </header>
+
+        <!-- BANNER MODE DARURAT -->
+        <div class="mb-4 pl-3 py-1.5 border-l-4 border-indigo-600 bg-indigo-50/70 text-xs text-indigo-950 leading-relaxed">
+            <div class="font-bold">📱 Mode Darurat PC Sekolah Bermasalah</div>
+            <p class="text-[11px] text-indigo-800 mt-0.5">
+                Tanpa kunci perangkat PC dan tanpa GPS. Tetap wajib <strong>verifikasi wajah AI</strong> dan merekam foto bukti untuk audit admin.
+            </p>
+        </div>
+
+        <!-- STATUS MODUL AI GLOBAL -->
+        <p id="ai-global-status" class="mb-4 py-1.5 border-y border-slate-200 text-center text-[11px] text-slate-600 font-semibold">
+            🤖 Menyiapkan modul AI pengenalan wajah...
+        </p>
+
+        <!-- LANGKAH 1: INPUT NIP -->
+        <div id="step-nip" class="space-y-3">
+            <label for="nip-input" class="block text-sm font-bold text-slate-700">Masukkan NIP Anda:</label>
+            <input
+                type="text"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="off"
+                id="nip-input"
+                placeholder="Contoh: 198001012005011001"
+                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono tracking-wider"
+            >
+            <button onclick="cekPegawaiHP()" id="btn-cari" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold py-3 px-4 rounded-xl transition text-sm shadow-sm">
+                🔍 Cari Data Pegawai
+            </button>
+        </div>
+
+        <!-- LANGKAH 2: KAMERA & PRESENSI -->
+        <div id="step-absen" class="hidden space-y-3.5">
+            <!-- INFO PEGAWAI & STATUS HARI INI -->
+            <div class="pl-3 py-2 border-l-4 border-blue-600 bg-blue-50/60 text-xs text-slate-700 space-y-1">
+                <div id="info-pegawai"></div>
+                <div id="status-hari-ini" class="pt-1.5 mt-1.5 border-t border-blue-200/80 text-[11px] font-semibold"></div>
+            </div>
+
+            <!-- STATUS VERIFIKASI AI -->
+            <p id="ai-status" class="py-2 px-3 bg-slate-100 text-center text-xs text-slate-700 font-semibold rounded-lg">
+                🤖 Posisikan wajah Anda dengan jelas di depan kamera HP.
+            </p>
+
+            <!-- PREVIEW KAMERA -->
+            <div class="relative w-full bg-black rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center">
+                <video id="webcam" autoplay playsinline muted class="w-full h-full object-cover"></video>
+                <canvas id="canvas" class="hidden"></canvas>
+                <img id="photo-preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" class="hidden w-full h-full object-cover" alt="Hasil Foto">
+            </div>
+
+            <!-- TOMBOL AMBIL / ULANG FOTO -->
+            <button onclick="mulaiVerifikasiWajah()" id="btn-foto" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition text-sm shadow-sm">
+                📸 Verifikasi Wajah & Ambil Foto
+            </button>
+
+            <button onclick="ulangFoto()" id="btn-ulang" class="hidden w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-4 rounded-xl transition text-sm">
+                🔄 Foto Ulang
+            </button>
+
+            <!-- TOMBOL KIRIM PRESENSI -->
+            <div id="btn-kirim-container" class="hidden grid grid-cols-2 gap-2.5">
+                <button onclick="kirimPresensiHP('DATANG')" id="btn-datang" class="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:text-slate-500 text-white font-bold py-3 px-2 rounded-xl transition text-xs sm:text-sm">
+                    📥 Absen DATANG
+                </button>
+                <button onclick="kirimPresensiHP('PULANG')" id="btn-pulang" class="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-slate-300 disabled:text-slate-500 text-white font-bold py-3 px-2 rounded-xl transition text-xs sm:text-sm">
+                    📤 Absen PULANG
+                </button>
+            </div>
+
+            <button onclick="kembaliKeAwal()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-2.5 px-4 rounded-xl transition text-xs">
+                ⬅️ Batal / Ganti NIP Guru Lain
+            </button>
+        </div>
+    </main>
+
+    <!-- MODAL PESAN KUSTOM -->
+    <div id="modal-pesan" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white p-5 rounded-2xl shadow-xl w-full max-w-sm text-center space-y-3">
+            <h2 id="modal-judul" class="text-lg font-bold text-slate-800">Informasi</h2>
+            <p id="modal-isi" class="text-xs text-slate-700 whitespace-pre-line leading-relaxed text-left py-2 border-y border-slate-200 font-medium"></p>
+            <button onclick="tutupModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 rounded-xl transition">
+                OK
+            </button>
+        </div>
+    </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
+        }
+
+        const SUPABASE_URL = 'https://rulvwumuhlzzehwkibup.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1bHZ3dW11aGx6emVod2tpYnVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2ODYzNzMsImV4cCI6MjEwNjI2MjM3M30.-zFMHuGQRiPsBEsgOINZI4r6tEeUTFgnMcX4CN85t8Y';
+        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const MODEL_URL = './models';
+
+        let isAiLoaded = false;
+        let videoStream = null;
+        let livenessAktif = false;
+        let tahapMenoleh = false;
+        let livenessTimer = null;
+
+        let nipAktif = '';
+        let namaPegawai = '';
+        let sekolahPegawai = '';
+        let fotoAcuanPegawai = '';
+        let isCadarPegawai = false;
+        let fotoBase64 = null;
+        let fotoBuktiBlob = null;
+
+        let statusHariIni = { datang: null, pulang: null, izin: null };
+
+        function tampilkanPesan(pesan, tipe = 'info') {
+            const modal = document.getElementById('modal-pesan');
+            const judul = document.getElementById('modal-judul');
+            const isi = document.getElementById('modal-isi');
+            isi.innerText = String(pesan);
+            if (tipe === 'error') {
+                judul.innerText = '⛔ PERHATIAN / DITOLAK';
+                judul.className = 'text-lg font-bold text-red-600';
+            } else {
+                judul.innerText = '✅ BERHASIL';
+                judul.className = 'text-lg font-bold text-emerald-600';
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function tutupModal() {
+            document.getElementById('modal-pesan').classList.add('hidden');
+        }
+
+        function tanggalHariIniWita() {
+            const parts = new Intl.DateTimeFormat('en-CA', {
+                timeZone: 'Asia/Makassar',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).formatToParts(new Date());
+            const map = Object.fromEntries(parts.map(p => [p.type, p.value]));
+            return `${map.year}-${map.month}-${map.day}`;
+        }
+
+        function escHtml(s) {
+            return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        function bersihkanNip(raw) {
+            return String(raw || '').replace(/\D/g, '');
+        }
+
+        async function muatModelAI() {
+            const globalStatus = document.getElementById('ai-global-status');
+            try {
+                await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
+                await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+                await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+                isAiLoaded = true;
+                globalStatus.className = 'mb-4 p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center text-[11px] text-emerald-800 font-semibold';
+                globalStatus.innerText = '🤖 Modul AI Wajah siap digunakan.';
+            } catch (err) {
+                console.error('Gagal muat model AI:', err);
+                globalStatus.className = 'mb-4 p-2 bg-red-50 border border-red-200 rounded-lg text-center text-[11px] text-red-700 font-semibold';
+                globalStatus.innerText = '⚠️ Gagal memuat modul AI. Muat ulang halaman saat internet stabil.';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            muatModelAI();
+            document.getElementById('nip-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') cekPegawaiHP();
+            });
+        });
+
+        async function cekStatusHariIni(nip) {
+            const tgl = tanggalHariIniWita();
+            statusHariIni = { datang: null, pulang: null, izin: null };
+            const { data, error } = await db
+                .from('absensi')
+                .select('status, jam')
+                .eq('nip', nip)
+                .eq('tanggal', tgl);
+
+            if (!error && Array.isArray(data)) {
+                for (const row of data) {
+                    const st = String(row.status || '').trim().toUpperCase();
+                    if (st === 'DATANG') statusHariIni.datang = row.jam || '-';
+                    else if (st === 'PULANG') statusHariIni.pulang = row.jam || '-';
+                    else if (st) statusHariIni.izin = st;
+                }
+            }
+            perbaruiBannerStatusHarian();
+        }
+
+        function perbaruiBannerStatusHarian() {
+            const el = document.getElementById('status-hari-ini');
+            const btnDatang = document.getElementById('btn-datang');
+            const btnPulang = document.getElementById('btn-pulang');
+
+            if (statusHariIni.izin) {
+                el.innerHTML = `<span class="text-amber-700">📌 Hari ini sudah tercatat <strong>${statusHariIni.izin}</strong> (tidak perlu absen lagi).</span>`;
+                btnDatang.disabled = true;
+                btnPulang.disabled = true;
+                return;
+            }
+
+            const teksDatang = statusHariIni.datang
+                ? `<span class="text-emerald-700">Datang: ${statusHariIni.datang} ✅</span>`
+                : `<span class="text-slate-500">Datang: Belum</span>`;
+            const teksPulang = statusHariIni.pulang
+                ? `<span class="text-emerald-700">Pulang: ${statusHariIni.pulang} ✅</span>`
+                : `<span class="text-slate-500">Pulang: Belum</span>`;
+            el.innerHTML = `📅 Hari ini (${tanggalHariIniWita()}): ${teksDatang} &nbsp;|&nbsp; ${teksPulang}`;
+
+            btnDatang.disabled = Boolean(statusHariIni.datang);
+            btnPulang.disabled = Boolean(statusHariIni.pulang);
+        }
+
+        async function cekPegawaiHP() {
+            const rawInput = document.getElementById('nip-input').value.trim();
+            const nip = bersihkanNip(rawInput);
+            if (!nip) {
+                tampilkanPesan('Silakan masukkan NIP terlebih dahulu.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btn-cari');
+            btn.disabled = true;
+            btn.innerText = 'Mencari data...';
+
+            try {
+                // Ambil langsung dari server agar selalu segar (tidak pernah terjebak cache foto KOSONG)
+                let { data, error } = await db
+                    .from('pegawai')
+                    .select('nip, name, school_name, photo_base64, is_cadar')
+                    .eq('nip', nip)
+                    .maybeSingle();
+
+                if (!data && !error) {
+                    const fallback = await db
+                        .from('pegawai')
+                        .select('nip, name, school_name, photo_base64, is_cadar')
+                        .ilike('nip', `%${nip}%`)
+                        .limit(5);
+                    if (fallback.data) {
+                        data = fallback.data.find(r => bersihkanNip(r.nip) === nip) || null;
+                    }
+                }
+
+                if (error || !data) {
+                    tampilkanPesan('Data pegawai dengan NIP tersebut tidak ditemukan di database.', 'error');
+                    return;
+                }
+
+                const fotoUrl = String(data.photo_base64 || '').trim();
+                if (!fotoUrl || fotoUrl === 'KOSONG' || fotoUrl === 'NULL') {
+                    tampilkanPesan('Foto acuan belum diupload oleh Admin Sekolah. Hubungi Admin Sekolah / Cabdis terlebih dahulu.', 'error');
+                    return;
+                }
+
+                nipAktif = bersihkanNip(data.nip);
+                namaPegawai = String(data.name || '').trim();
+                sekolahPegawai = String(data.school_name || '').trim();
+                fotoAcuanPegawai = fotoUrl;
+                isCadarPegawai = data.is_cadar === true;
+
+                await cekStatusHariIni(nipAktif);
+
+                document.getElementById('info-pegawai').innerHTML = `
+                    <div>👤 <strong>Nama:</strong> ${escHtml(namaPegawai)}</div>
+                    <div>🪪 <strong>NIP:</strong> <span class="font-mono">${escHtml(nipAktif)}</span></div>
+                    <div>🏫 <strong>Sekolah:</strong> ${escHtml(sekolahPegawai)}</div>
+                `;
+
+                document.getElementById('step-nip').classList.add('hidden');
+                document.getElementById('step-absen').classList.remove('hidden');
+
+                if (statusHariIni.izin || (statusHariIni.datang && statusHariIni.pulang)) {
+                    document.getElementById('btn-foto').classList.add('hidden');
+                    const aiStatus = document.getElementById('ai-status');
+                    aiStatus.className = 'p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-center text-xs text-emerald-800 font-bold';
+                    aiStatus.innerText = statusHariIni.izin
+                        ? `✅ Anda sudah tercatat ${statusHariIni.izin} hari ini.`
+                        : '✅ Absen DATANG dan PULANG Anda hari ini sudah lengkap.';
+                } else {
+                    document.getElementById('btn-foto').classList.remove('hidden');
+                    await aktifkanKamera();
+                }
+            } catch (err) {
+                tampilkanPesan('Gagal menghubungi server database: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = '🔍 Cari Data Pegawai';
+            }
+        }
+
+        function hentikanKamera() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(t => t.stop());
+                videoStream = null;
+            }
+            const video = document.getElementById('webcam');
+            if (video) video.srcObject = null;
+        }
+
+        async function aktifkanKamera() {
+            hentikanKamera();
+            try {
+                videoStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'user' },
+                    audio: false
+                });
+                const video = document.getElementById('webcam');
+                video.srcObject = videoStream;
+            } catch (err) {
+                tampilkanPesan('Gagal membuka kamera HP. Pastikan izin kamera pada browser sudah diaktifkan.', 'error');
+            }
+        }
+
+        function hitungJarakTitik(p1, p2) {
+            return Math.hypot(p1.x - p2.x, p1.y - p2.y);
+        }
+
+        function mulaiVerifikasiWajah() {
+            const aiStatus = document.getElementById('ai-status');
+            if (!isAiLoaded) {
+                aiStatus.className = 'p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-center text-xs text-amber-800 font-semibold';
+                aiStatus.innerText = '⏳ Modul AI masih dimuat, tunggu beberapa detik lalu coba lagi.';
+                return;
+            }
+
+            if (!videoStream) {
+                tampilkanPesan('Kamera belum aktif. Pastikan izin kamera diizinkan.', 'error');
+                return;
+            }
+
+            document.getElementById('btn-foto').classList.add('hidden');
+            document.getElementById('btn-ulang').classList.remove('hidden');
+            document.getElementById('btn-kirim-container').classList.add('hidden');
+
+            if (isCadarPegawai) {
+                tangkapDanVerifikasi();
+                return;
+            }
+
+            const tantangan = Math.random() < 0.5 ? 'TOLEH KE KIRI' : 'TOLEH KE KANAN';
+            livenessAktif = true;
+            tahapMenoleh = false;
+
+            aiStatus.className = 'p-3 bg-blue-100 border-2 border-blue-500 text-blue-900 rounded-xl text-center text-xs sm:text-sm font-bold animate-pulse';
+            aiStatus.innerHTML = `🛡️ BUKTIKAN WAJAH ASLI:<br>Silakan <strong>${tantangan}</strong> lalu hadap lurus lagi.`;
+
+            loopLiveness();
+        }
+
+        async function loopLiveness() {
+            if (!livenessAktif) return;
+            const video = document.getElementById('webcam');
+            const aiStatus = document.getElementById('ai-status');
+
+            try {
+                const det = await faceapi.detectSingleFace(video).withFaceLandmarks();
+                if (det && livenessAktif) {
+                    const pts = det.landmarks.positions;
+                    const hidung = pts[30];
+                    const pipiKiri = pts[2];
+                    const pipiKanan = pts[14];
+                    const dKiri = hitungJarakTitik(hidung, pipiKiri);
+                    const dKanan = hitungJarakTitik(hidung, pipiKanan);
+                    const total = dKiri + dKanan || 1;
+
+                    // Pakai rasio agar tidak bergantung jarak/resolusi kamera HP
+                    if (!tahapMenoleh && (dKiri < dKanan * 0.45 || dKanan < dKiri * 0.45)) {
+                        tahapMenoleh = true;
+                        aiStatus.innerHTML = 'Bagus! Sekarang kembali <strong>HADAP LURUS KE KAMERA</strong>...';
+                    } else if (tahapMenoleh && (Math.abs(dKiri - dKanan) / total) < 0.20) {
+                        livenessAktif = false;
+                        aiStatus.className = 'p-2.5 bg-emerald-100 border border-emerald-400 text-emerald-900 rounded-xl text-center text-xs font-bold';
+                        aiStatus.innerText = '✅ Gerakan terverifikasi! Memotret & mencocokkan wajah...';
+                        livenessTimer = setTimeout(() => {
+                            livenessTimer = null;
+                            tangkapDanVerifikasi();
+                        }, 450);
+                        return;
+                    }
+                }
+            } catch (e) {}
+
+            if (livenessAktif) {
+                requestAnimationFrame(loopLiveness);
+            }
+        }
+
+        function buatBlobBukti(videoEl) {
+            return new Promise((resolve) => {
+                try {
+                    const maxDim = 240;
+                    let w = videoEl.videoWidth || 240;
+                    let h = videoEl.videoHeight || 180;
+                    if (w > h && w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+                    else if (h >= w && h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
+                    const c = document.createElement('canvas');
+                    c.width = w;
+                    c.height = h;
+                    c.getContext('2d').drawImage(videoEl, 0, 0, w, h);
+                    c.toBlob((blob) => resolve(blob), 'image/jpeg', 0.45);
+                } catch (e) {
+                    resolve(null);
+                }
+            });
+        }
+
+        async function tangkapDanVerifikasi() {
+            const video = document.getElementById('webcam');
+            const canvas = document.getElementById('canvas');
+            const preview = document.getElementById('photo-preview');
+            const aiStatus = document.getElementById('ai-status');
+
+            fotoBuktiBlob = await buatBlobBukti(video);
+
+            const maxDim = 400;
+            let w = video.videoWidth || 320;
+            let h = video.videoHeight || 240;
+            if (w > h && w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else if (h >= w && h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
+
+            canvas.width = w;
+            canvas.height = h;
+            canvas.getContext('2d').drawImage(video, 0, 0, w, h);
+            fotoBase64 = canvas.toDataURL('image/jpeg', 0.65);
+
+            preview.src = fotoBase64;
+            video.classList.add('hidden');
+            preview.classList.remove('hidden');
+
+            if (isCadarPegawai) {
+                aiStatus.className = 'p-2.5 bg-amber-50 border border-amber-300 text-amber-900 rounded-xl text-center text-xs font-bold';
+                aiStatus.innerText = '🧕 Mode Audit Cadar aktif. Silakan pilih Absen DATANG atau PULANG:';
+                document.getElementById('btn-kirim-container').classList.remove('hidden');
+                perbaruiBannerStatusHarian();
+                return;
+            }
+
+            aiStatus.className = 'p-2.5 bg-blue-50 border border-blue-200 text-blue-800 rounded-xl text-center text-xs font-semibold animate-pulse';
+            aiStatus.innerText = '🔍 Mencocokkan wajah dengan foto acuan server...';
+
+            try {
+                const imgKamera = await faceapi.fetchImage(fotoBase64);
+                const detKamera = await faceapi.detectSingleFace(imgKamera).withFaceLandmarks().withFaceDescriptor();
+                if (!detKamera) {
+                    aiStatus.className = 'p-2.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-center text-xs font-bold';
+                    aiStatus.innerText = '❌ Wajah tidak terlihat jelas. Klik Foto Ulang.';
+                    tampilkanPesan('Wajah tidak terdeteksi di hasil foto. Pastikan pencahayaan cukup lalu coba Foto Ulang.', 'error');
+                    return;
+                }
+
+                // Fail-closed: jika foto acuan gagal dimuat atau wajah acuan tak terbaca, TOLAK (jangan loloskan)
+                let detAcuan = null;
+                try {
+                    const imgAcuan = await faceapi.fetchImage(fotoAcuanPegawai);
+                    detAcuan = await faceapi.detectSingleFace(imgAcuan).withFaceLandmarks().withFaceDescriptor();
+                } catch (errAcuan) {
+                    console.error('Gagal memuat foto acuan:', errAcuan);
+                    aiStatus.className = 'p-2.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-center text-xs font-bold';
+                    aiStatus.innerText = '❌ Gagal memuat foto acuan dari server. Coba lagi saat koneksi stabil.';
+                    tampilkanPesan('Gagal memuat foto acuan dari server untuk verifikasi wajah. Periksa koneksi internet Anda lalu klik Foto Ulang.', 'error');
+                    return;
+                }
+
+                if (!detAcuan) {
+                    aiStatus.className = 'p-2.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-center text-xs font-bold';
+                    aiStatus.innerText = '❌ Foto acuan tidak terbaca AI. Hubungi Admin Sekolah.';
+                    tampilkanPesan('Foto acuan di server tidak dapat dibaca oleh AI. Hubungi Admin Sekolah / Cabdis untuk mengganti foto acuan.', 'error');
+                    return;
+                }
+
+                const jarak = faceapi.euclideanDistance(detKamera.descriptor, detAcuan.descriptor);
+                if (jarak > 0.48) {
+                    aiStatus.className = 'p-2.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-center text-xs font-bold';
+                    aiStatus.innerText = '❌ Wajah TIDAK COCOK dengan foto acuan pegawai!';
+                    tampilkanPesan('Wajah Anda tidak cocok dengan foto profil pegawai terdaftar. Silakan Foto Ulang di tempat terang.', 'error');
+                    return;
+                }
+
+                aiStatus.className = 'p-2.5 bg-emerald-50 border border-emerald-300 text-emerald-900 rounded-xl text-center text-xs font-bold';
+                aiStatus.innerText = '✅ Wajah Terverifikasi! Pilih jenis presensi di bawah ini:';
+                document.getElementById('btn-kirim-container').classList.remove('hidden');
+                perbaruiBannerStatusHarian();
+            } catch (err) {
+                console.error('Error AI:', err);
+                aiStatus.className = 'p-2.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-center text-xs font-bold';
+                aiStatus.innerText = '❌ Terjadi kesalahan verifikasi wajah.';
+                tampilkanPesan('Gagal memverifikasi wajah: ' + err.message, 'error');
+            }
+        }
+
+        function ulangFoto() {
+            livenessAktif = false;
+            tahapMenoleh = false;
+            if (livenessTimer) {
+                clearTimeout(livenessTimer);
+                livenessTimer = null;
+            }
+            fotoBase64 = null;
+            fotoBuktiBlob = null;
+
+            document.getElementById('photo-preview').classList.add('hidden');
+            document.getElementById('webcam').classList.remove('hidden');
+            document.getElementById('btn-foto').classList.remove('hidden');
+            document.getElementById('btn-ulang').classList.add('hidden');
+            document.getElementById('btn-kirim-container').classList.add('hidden');
+
+            const aiStatus = document.getElementById('ai-status');
+            aiStatus.className = 'p-2.5 bg-slate-100 border border-slate-200 rounded-xl text-center text-xs text-slate-700 font-semibold';
+            aiStatus.innerText = '🤖 Posisikan wajah Anda dengan jelas di depan kamera HP.';
+        }
+
+        function kembaliKeAwal() {
+            ulangFoto();
+            hentikanKamera();
+            nipAktif = '';
+            namaPegawai = '';
+            sekolahPegawai = '';
+            fotoAcuanPegawai = '';
+            isCadarPegawai = false;
+            statusHariIni = { datang: null, pulang: null, izin: null };
+
+            document.getElementById('btn-datang').disabled = false;
+            document.getElementById('btn-pulang').disabled = false;
+            document.getElementById('step-absen').classList.add('hidden');
+            document.getElementById('step-nip').classList.remove('hidden');
+            document.getElementById('nip-input').value = '';
+        }
+
+        async function kirimPresensiHP(jenisStatus) {
+            const btnDatang = document.getElementById('btn-datang');
+            const btnPulang = document.getElementById('btn-pulang');
+            btnDatang.disabled = true;
+            btnPulang.disabled = true;
+
+            try {
+                // Cek ulang anti-duplikat langsung ke server sebelum insert
+                const tglWita = tanggalHariIniWita();
+                const { data: cekDup } = await db
+                    .from('absensi')
+                    .select('status, jam')
+                    .eq('nip', nipAktif)
+                    .eq('tanggal', tglWita);
+
+                if (Array.isArray(cekDup)) {
+                    const izinAda = cekDup.find(r => !['DATANG', 'PULANG'].includes(String(r.status || '').toUpperCase()));
+                    if (izinAda) {
+                        tampilkanPesan(`Presensi ditolak: Anda sudah tercatat ${izinAda.status} pada ${tglWita}.`, 'error');
+                        await cekStatusHariIni(nipAktif);
+                        return;
+                    }
+                    const dupSama = cekDup.find(r => String(r.status || '').toUpperCase() === jenisStatus);
+                    if (dupSama) {
+                        tampilkanPesan(`Anda sudah melakukan absen ${jenisStatus} hari ini pada jam ${dupSama.jam || '-'} WITA.`, 'error');
+                        await cekStatusHariIni(nipAktif);
+                        return;
+                    }
+                }
+
+                // Upload foto bukti ringan (±8 KB) untuk audit mode Darurat HP
+                let urlFotoBukti = null;
+                if (fotoBuktiBlob) {
+                    try {
+                        const pathBukti = `bukti_absen/${tglWita}/${nipAktif}_${jenisStatus}_hp.jpg`;
+                        const { error: upErr } = await db.storage
+                            .from('foto_pegawai')
+                            .upload(pathBukti, fotoBuktiBlob, { contentType: 'image/jpeg', upsert: true });
+                        if (!upErr) {
+                            const { data: pubData } = db.storage.from('foto_pegawai').getPublicUrl(pathBukti);
+                            if (pubData && pubData.publicUrl) {
+                                urlFotoBukti = `${pubData.publicUrl}?t=${Date.now()}`;
+                            }
+                        }
+                    } catch (eUp) {
+                        console.warn('Upload foto bukti HP gagal:', eUp);
+                    }
+                }
+
+                const { data, error } = await db.from('absensi')
+                    .insert([{
+                        nip: nipAktif,
+                        nama: namaPegawai,
+                        sekolah: sekolahPegawai,
+                        status: jenisStatus,
+                        jarak_m: 'Darurat HP (Tanpa PC/GPS)',
+                        foto_bukti: urlFotoBukti
+                    }])
+                    .select('tanggal, jam')
+                    .single();
+
+                if (error) {
+                    tampilkanPesan('Gagal mengirim presensi: ' + error.message, 'error');
+                    perbaruiBannerStatusHarian();
+                    return;
+                }
+
+                tampilkanPesan(
+                    `Presensi ${jenisStatus} (Mode Darurat HP) berhasil disimpan!\n\nNama: ${namaPegawai}\nSekolah: ${sekolahPegawai}\nTanggal: ${data.tanggal}\nJam: ${data.jam} WITA`,
+                    'success'
+                );
+                kembaliKeAwal();
+            } catch (err) {
+                tampilkanPesan('Terjadi kesalahan jaringan saat mengirim presensi: ' + err.message, 'error');
+                perbaruiBannerStatusHarian();
+            }
+        }
+    </script>
+</body>
+</html>
