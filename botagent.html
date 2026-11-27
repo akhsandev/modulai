@@ -1,14 +1,12 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sokrates Edu — Asisten Reflektif Guru</title>
-    <!-- Font Inter untuk keterbacaan modern yang bersih -->
+    <title>Sokrates Edu — Chatbot Agen AI Sokratis untuk Guru</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -34,7 +32,6 @@
                         warm: {
                             50: '#fdfcf9',
                             100: '#f8f5ee',
-                            200: '#efe9db',
                         }
                     }
                 }
@@ -42,14 +39,12 @@
         };
     </script>
     <style>
-        /* Penyesuaian halus untuk scrollbar & animasi mengetik */
         html, body {
             font-family: 'Inter', sans-serif;
             height: 100%;
             overflow-x: hidden;
         }
 
-        /* Scrollbar minimalis */
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -65,7 +60,6 @@
             background-color: rgba(148, 163, 184, 0.6);
         }
 
-        /* Animasi titik loading */
         @keyframes bounceDot {
             0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
             40% { transform: scale(1); opacity: 1; }
@@ -76,9 +70,8 @@
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
 
-        /* Styling konten markdown di dalam gelembung pesan */
         .msg-content p {
-            margin-bottom: 0.55rem;
+            margin-bottom: 0.6rem;
             line-height: 1.65;
         }
         .msg-content p:last-child {
@@ -95,7 +88,7 @@
             margin-bottom: 0.6rem;
         }
         .msg-content li {
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.3rem;
             line-height: 1.6;
         }
         .msg-content blockquote {
@@ -115,12 +108,11 @@
     <!-- ===================================================================== -->
     <!-- HEADER APLIKASI                                                       -->
     <!-- ===================================================================== -->
-    <header class="shrink-0 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-4 py-3 z-20">
+    <header class="shrink-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-4 py-3 z-20">
         <div class="max-w-5xl mx-auto flex items-center justify-between gap-3">
             <!-- Identitas Agen -->
             <div class="flex items-center gap-3 min-w-0">
                 <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-500 to-amber-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20 shrink-0">
-                    <!-- Ikon Lentera / Buku Refleksi -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
@@ -133,13 +125,12 @@
                             Metode Sokratis
                         </span>
                     </div>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 truncate">Rekan refleksi bertahap untuk solusi kelas</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 truncate">Agen refleksi bertahap untuk pendidik</p>
                 </div>
             </div>
 
-            <!-- Kontrol Aksi Header -->
+            <!-- Kontrol Header -->
             <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                <!-- Pemilih Jenjang Kelas -->
                 <div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl px-2.5 py-1.5 border border-slate-200/70 dark:border-slate-700">
                     <label for="jenjangSelect" class="text-xs text-slate-500 dark:text-slate-400 mr-1.5 font-medium">Jenjang:</label>
                     <select id="jenjangSelect" class="bg-transparent text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none cursor-pointer">
@@ -152,33 +143,29 @@
                     </select>
                 </div>
 
-                <!-- Tombol Salin Catatan Refleksi -->
-                <button id="copyTranscriptBtn" title="Salin catatan diskusi" class="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Salin diskusi">
+                <button id="copyTranscriptBtn" type="button" title="Salin catatan diskusi" class="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Salin diskusi">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
                 </button>
 
-                <!-- Tombol Pengaturan API -->
-                <button id="openSettingsBtn" title="Pengaturan API xKiro" class="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Pengaturan API">
+                <button id="openSettingsBtn" type="button" title="Pengaturan API xKiro" class="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Pengaturan API">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                 </button>
 
-                <!-- Toggle Tema Gelap / Terang -->
-                <button id="themeToggleBtn" title="Ganti Tema" class="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Ganti tema">
-                    <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <button id="themeToggleBtn" type="button" title="Ganti Tema" class="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Ganti tema">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
-                    <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                     </svg>
                 </button>
 
-                <!-- Tombol Sesi Baru -->
-                <button id="newSessionBtn" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-sm transition-all active:scale-95">
+                <button id="newSessionBtn" type="button" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-sm transition-all active:scale-95">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                     </svg>
@@ -189,7 +176,7 @@
     </header>
 
     <!-- ===================================================================== -->
-    <!-- BAR PROGRES TAHAPAN SOKRATIS (VISUAL SCAFFOLDING)                     -->
+    <!-- BAR PROGRES 5 TAHAP SOKRATIS                                          -->
     <!-- ===================================================================== -->
     <div class="shrink-0 bg-white/60 dark:bg-slate-900/50 border-b border-slate-200/70 dark:border-slate-800/80 px-4 py-2">
         <div class="max-w-5xl mx-auto flex items-center justify-between gap-2 overflow-x-auto custom-scrollbar">
@@ -220,7 +207,6 @@
                     <span>Rencana Aksi</span>
                 </div>
             </div>
-            <!-- Indikator Model Aktif -->
             <div class="hidden lg:flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 shrink-0">
                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                 <span id="activeModelBadge" class="font-mono">qwen/qwen3.8-omni-flash:free</span>
@@ -229,12 +215,12 @@
     </div>
 
     <!-- ===================================================================== -->
-    <!-- AREA UTAMA CHAT                                                       -->
+    <!-- AREA UTAMA PERCAKAPAN                                                 -->
     <!-- ===================================================================== -->
     <main id="chatContainer" class="flex-1 overflow-y-auto custom-scrollbar px-4 py-6">
         <div class="max-w-3xl mx-auto flex flex-col gap-5" id="messagesWrapper">
 
-            <!-- Tampilan Pembuka (Welcome State) -->
+            <!-- Tampilan Pembuka -->
             <div id="welcomeState" class="py-4 sm:py-8 space-y-6">
                 <div class="text-center space-y-3 max-w-xl mx-auto">
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-950/60 border border-brand-200/70 dark:border-brand-800/60 text-brand-700 dark:text-brand-300 text-xs font-medium">
@@ -244,11 +230,11 @@
                         Mari temukan solusi kelas Anda <span class="text-brand-600 dark:text-brand-400">selangkah demi selangkah</span>
                     </h2>
                     <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                        Saya tidak akan langsung memberi jawaban instan. Sebagai rekan dialog Sokratis, saya akan mengajukan pertanyaan pemantik bertahap agar Anda dapat membedah masalah dan merancang solusi yang paling cocok untuk murid Anda.
+                        Saya tidak akan langsung memberi jawaban instan. Sebagai rekan dialog Sokratis, saya akan memandu Anda dengan pertanyaan bertahap agar solusi yang ditemukan benar-benar pas dengan karakter murid Anda.
                     </p>
                 </div>
 
-                <!-- Pilihan Jenjang khusus tampilan Mobile -->
+                <!-- Jenjang Mobile -->
                 <div class="flex md:hidden justify-center">
                     <div class="inline-flex items-center bg-white dark:bg-slate-900 rounded-xl px-3 py-2 border border-slate-200 dark:border-slate-700 shadow-sm">
                         <label for="jenjangSelectMobile" class="text-xs text-slate-500 dark:text-slate-400 mr-2 font-medium">Jenjang Kelas:</label>
@@ -263,10 +249,10 @@
                     </div>
                 </div>
 
-                <!-- Kartu Skenario Permasalahan Pendidikan -->
+                <!-- 4 Studi Kasus Guru -->
                 <div class="space-y-2.5">
                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 text-center">
-                        Atau mulai dari studi kasus yang sering dialami guru:
+                        Pilih studi kasus untuk mulai berdialog:
                     </p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <button type="button" class="starter-card text-left p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 hover:shadow-md transition-all group"
@@ -275,7 +261,7 @@
                                 <span class="text-xl shrink-0">🤫</span>
                                 <div>
                                     <h3 class="font-semibold text-sm text-slate-800 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Siswa Pasif Saat Diskusi</h3>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">Kelas hening setiap kali guru bertanya dan siswa enggan berpendapat.</p>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Kelas hening setiap kali guru bertanya dan siswa enggan berpendapat.</p>
                                 </div>
                             </div>
                         </button>
@@ -286,7 +272,7 @@
                                 <span class="text-xl shrink-0">⚖️</span>
                                 <div>
                                     <h3 class="font-semibold text-sm text-slate-800 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Kesenjangan Pemahaman</h3>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">Sebagian murid cepat bosan, sementara yang lain tertinggal di materi dasar.</p>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Sebagian murid cepat bosan, sementara yang lain tertinggal di materi dasar.</p>
                                 </div>
                             </div>
                         </button>
@@ -296,8 +282,8 @@
                             <div class="flex items-start gap-3">
                                 <span class="text-xl shrink-0">📱</span>
                                 <div>
-                                    <h3 class="font-semibold text-sm text-slate-800 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Distraksi Ponsel & Fokus</h3>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">Murid sering teralihkan gadget tanpa ingin menciptakan ketegangan di kelas.</p>
+                                    <h3 class="font-semibold text-sm text-slate-800 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Distraksi Ponsel &amp; Fokus</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Murid sering teralihkan gadget tanpa ingin menciptakan ketegangan di kelas.</p>
                                 </div>
                             </div>
                         </button>
@@ -307,39 +293,36 @@
                             <div class="flex items-start gap-3">
                                 <span class="text-xl shrink-0">🧩</span>
                                 <div>
-                                    <h3 class="font-semibold text-sm text-slate-800 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Motivasi & Perilaku Siswa</h3>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">Siswa berpotensi tinggi namun enggan mengerjakan tugas dan mengganggu teman.</p>
+                                    <h3 class="font-semibold text-sm text-slate-800 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Motivasi &amp; Perilaku Siswa</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Siswa berpotensi tinggi namun enggan mengerjakan tugas dan mengganggu teman.</p>
                                 </div>
                             </div>
                         </button>
                     </div>
                 </div>
             </div>
-
-            <!-- Pesan percakapan akan dirender secara dinamis di sini -->
         </div>
     </main>
 
     <!-- ===================================================================== -->
-    <!-- AREA INPUT & BANTUAN CEPAT SOKRATIS                                   -->
+    <!-- AREA INPUT & AKSI CEPAT SOKRATIS                                      -->
     <!-- ===================================================================== -->
     <footer class="shrink-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-slate-200/80 dark:border-slate-800 px-4 pt-2.5 pb-4">
         <div class="max-w-3xl mx-auto space-y-2.5">
-
-            <!-- Tombol Aksi Refleksi Cepat (muncul ketika percakapan sudah berjalan) -->
+            <!-- Tombol Bantuan Refleksi Cepat -->
             <div id="quickActionsBar" class="hidden flex items-center gap-2 overflow-x-auto custom-scrollbar pb-0.5">
                 <button type="button" id="hintBtn" class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-amber-50 hover:bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:hover:bg-amber-900/50 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/50 transition-colors">
-                    💡 Saya agak buntu, beri petunjuk kecil
-                </button>
-                <button type="button" id="synthesizeBtn" class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-50 hover:bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/50 transition-colors">
-                    📝 Bantu rangkum rencana aksi saya
+                    💡 Beri saya petunjuk kecil
                 </button>
                 <button type="button" id="perspectiveBtn" class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-brand-50 hover:bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:hover:bg-brand-900/50 dark:text-brand-300 border border-brand-200/80 dark:border-brand-800/50 transition-colors">
-                    🔍 Ajak saya melihat dari sudut pandang siswa
+                    🔍 Lihat dari sudut pandang siswa
+                </button>
+                <button type="button" id="synthesizeBtn" class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-50 hover:bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/50 transition-colors">
+                    📝 Rangkum rencana aksi saya
                 </button>
             </div>
 
-            <!-- Form Input Pesan -->
+            <!-- Form Input -->
             <form id="chatForm" class="relative flex items-end gap-2 bg-slate-100/90 dark:bg-slate-800/90 rounded-2xl p-2 border border-slate-200/90 dark:border-slate-700 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/20 transition-all">
                 <textarea
                     id="userInput"
@@ -348,20 +331,18 @@
                     class="w-full bg-transparent text-sm sm:text-[15px] text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 px-2.5 py-2 resize-none focus:outline-none max-h-36 custom-scrollbar"
                 ></textarea>
 
-                <!-- Tombol Stop (saat AI sedang merespons) -->
                 <button
                     type="button"
                     id="stopBtn"
                     class="hidden shrink-0 p-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white shadow-sm transition-all active:scale-95"
-                    title="Hentikan respons"
-                    aria-label="Hentikan respons"
+                    title="Hentikan permintaan"
+                    aria-label="Hentikan permintaan"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <rect x="6" y="6" width="12" height="12" rx="2" />
                     </svg>
                 </button>
 
-                <!-- Tombol Kirim -->
                 <button
                     type="submit"
                     id="sendBtn"
@@ -376,7 +357,7 @@
             </form>
 
             <p class="text-[11px] text-center text-slate-400 dark:text-slate-500">
-                Sokrates Edu memandu refleksi bertahap via xKiro API. Tekan <kbd class="px-1 py-0.5 rounded bg-slate-200/70 dark:bg-slate-800 font-mono text-[10px]">Enter</kbd> untuk kirim, <kbd class="px-1 py-0.5 rounded bg-slate-200/70 dark:bg-slate-800 font-mono text-[10px]">Shift+Enter</kbd> untuk baris baru.
+                Sokrates Edu terhubung ke xKiro OpenAI-Compatible API. Tekan <kbd class="px-1 py-0.5 rounded bg-slate-200/70 dark:bg-slate-800 font-mono text-[10px]">Enter</kbd> untuk kirim, <kbd class="px-1 py-0.5 rounded bg-slate-200/70 dark:bg-slate-800 font-mono text-[10px]">Shift+Enter</kbd> baris baru.
             </p>
         </div>
     </footer>
@@ -385,13 +366,13 @@
     <!-- MODAL PENGATURAN API XKIRO                                            -->
     <!-- ===================================================================== -->
     <div id="settingsModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-        <div class="w-full max-w-lg max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-fadeIn">
+        <div class="w-full max-w-lg max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
             <div class="shrink-0 flex items-center justify-between px-6 py-4 border-b border-slate-200/80 dark:border-slate-800">
                 <div>
-                    <h3 class="font-bold text-base text-slate-900 dark:text-white">Pengaturan Agen & API xKiro</h3>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Kompatibel dengan format OpenAI Chat Completions</p>
+                    <h3 class="font-bold text-base text-slate-900 dark:text-white">Pengaturan Agen &amp; API xKiro</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">OpenAI-Compatible Endpoint (docs.xkiro.com)</p>
                 </div>
-                <button id="closeSettingsBtn" class="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <button type="button" id="closeSettingsBtn" class="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -401,86 +382,84 @@
             <div class="p-6 space-y-4 overflow-y-auto custom-scrollbar">
                 <!-- Base URL -->
                 <div>
-                    <label for="apiBaseUrlInput" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Base URL (xKiro OpenAI Compatible)</label>
+                    <label for="apiBaseUrlInput" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Base URL</label>
                     <input id="apiBaseUrlInput" type="url" class="w-full px-3.5 py-2.5 rounded-xl text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-brand-500 font-mono" placeholder="https://api.xkiro.com/v1" />
                 </div>
 
-                <!-- Model ID + Preset Model Gratis -->
+                <!-- Model ID -->
                 <div>
-                    <div class="flex items-center justify-between mb-1.5">
-                        <label for="modelInput" class="block text-xs font-semibold text-slate-700 dark:text-slate-300">Model ID</label>
-                        <button type="button" id="fetchModelsBtn" class="text-[11px] font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-                            ↻ Muat Daftar Model Live
-                        </button>
-                    </div>
+                    <label for="modelInput" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Model ID</label>
                     <input id="modelInput" type="text" class="w-full px-3.5 py-2.5 rounded-xl text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-brand-500 font-mono" placeholder="qwen/qwen3.8-omni-flash:free" />
-                    <!-- Pilihan Cepat Model Gratis Qwen xKiro -->
-                    <div id="modelPresetChips" class="flex flex-wrap gap-1.5 mt-2">
-                        <button type="button" data-model="qwen/qwen3.8-omni-flash:free" class="model-chip px-2 py-1 rounded-lg text-[11px] font-mono bg-slate-100 hover:bg-brand-100 dark:bg-slate-800 dark:hover:bg-brand-900/40 text-slate-600 dark:text-slate-300 transition-colors">qwen3.8-omni-flash:free</button>
-                        <button type="button" data-model="qwen/qwen3.8-max:free" class="model-chip px-2 py-1 rounded-lg text-[11px] font-mono bg-slate-100 hover:bg-brand-100 dark:bg-slate-800 dark:hover:bg-brand-900/40 text-slate-600 dark:text-slate-300 transition-colors">qwen3.8-max:free</button>
-                        <button type="button" data-model="qwen/qwen3.7-flash:free" class="model-chip px-2 py-1 rounded-lg text-[11px] font-mono bg-slate-100 hover:bg-brand-100 dark:bg-slate-800 dark:hover:bg-brand-900/40 text-slate-600 dark:text-slate-300 transition-colors">qwen3.7-flash:free</button>
-                        <button type="button" data-model="qwen/qwen3.5-omni-flash:free" class="model-chip px-2 py-1 rounded-lg text-[11px] font-mono bg-slate-100 hover:bg-brand-100 dark:bg-slate-800 dark:hover:bg-brand-900/40 text-slate-600 dark:text-slate-300 transition-colors">qwen3.5-omni-flash:free</button>
+                    <div class="flex flex-wrap gap-1.5 mt-2">
+                        <button type="button" data-model="qwen/qwen3.8-omni-flash:free" class="model-chip px-2 py-1 rounded-lg text-[11px] font-mono bg-slate-100 hover:bg-brand-100 dark:bg-slate-800 dark:hover:bg-brand-900/40 text-slate-600 dark:text-slate-300 transition-colors">qwen/qwen3.8-omni-flash:free</button>
+                        <button type="button" data-model="qwen/qwen3.8-max:free" class="model-chip px-2 py-1 rounded-lg text-[11px] font-mono bg-slate-100 hover:bg-brand-100 dark:bg-slate-800 dark:hover:bg-brand-900/40 text-slate-600 dark:text-slate-300 transition-colors">qwen/qwen3.8-max:free</button>
+                        <button type="button" data-model="qwen/qwen3.7-flash:free" class="model-chip px-2 py-1 rounded-lg text-[11px] font-mono bg-slate-100 hover:bg-brand-100 dark:bg-slate-800 dark:hover:bg-brand-900/40 text-slate-600 dark:text-slate-300 transition-colors">qwen/qwen3.7-flash:free</button>
                     </div>
                 </div>
 
-                <!-- Mode Proxy Vercel Same-Origin (Solusi Anti-CORS 100%) -->
+                <!-- API Key -->
+                <div>
+                    <label for="apiKeyInput" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">xKiro API Key</label>
+                    <div class="relative flex items-center">
+                        <input id="apiKeyInput" type="password" class="w-full pl-3.5 pr-11 py-2.5 rounded-xl text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-brand-500 font-mono" placeholder="sk-xt-..." />
+                        <button type="button" id="toggleApiKeyVisBtn" class="absolute right-2.5 p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200" title="Tampilkan / Sembunyikan API Key">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Intensitas Sokratis -->
+                <div>
+                    <label for="socraticStyleSelect" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Intensitas Metode Sokratis</label>
+                    <select id="socraticStyleSelect" class="w-full px-3.5 py-2.5 rounded-xl text-xs font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-brand-500">
+                        <option value="strict">Sangat Sokratis (Murni Bertanya Bertahap)</option>
+                        <option value="balanced">Seimbang (Bertanya + Petunjuk Halus)</option>
+                        <option value="gentle">Lembut (Cocok untuk Guru Pemula)</option>
+                    </select>
+                </div>
+
+                <!-- Proxy Vercel Same-Origin -->
                 <div class="rounded-2xl bg-brand-50/80 dark:bg-brand-950/40 px-3.5 py-3 border border-brand-200/80 dark:border-brand-800/50 space-y-2.5">
                     <div class="flex items-center justify-between gap-3">
                         <div>
                             <label for="vercelProxyToggle" class="block text-xs font-semibold text-brand-900 dark:text-brand-200 cursor-pointer">🚀 Gunakan Proxy Vercel (<code class="font-mono">/api/chat</code>)</label>
-                            <p class="text-[11px] text-brand-700/90 dark:text-brand-300/80">Wajib aktif saat deploy di Vercel agar bebas CORS (request lewat server Vercel).</p>
+                            <p class="text-[11px] text-brand-700/90 dark:text-brand-300/80">Aktifkan saat deploy di Vercel agar request berjalan server-to-server (100% bebas CORS).</p>
                         </div>
                         <input id="vercelProxyToggle" type="checkbox" class="w-4 h-4 accent-brand-600 rounded cursor-pointer shrink-0">
                     </div>
                     <button type="button" id="openVercelGuideBtn" class="w-full py-1.5 px-3 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white transition-colors">
-                        📋 Lihat & Salin Kode <code>api/chat.mjs</code> untuk Repo Vercel
+                        📋 Lihat &amp; Salin Kode <code>api/chat.mjs</code> untuk Vercel
                     </button>
                 </div>
 
-                <!-- CORS Proxy Opsional (jika browser/preview memblokir akses lintas domain) -->
+                <!-- CORS Proxy Opsional -->
                 <div>
-                    <label for="corsProxyInput" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">CORS Proxy URL <span class="font-normal text-slate-400">(Opsional, jika browser diblokir CORS)</span></label>
-                    <input id="corsProxyInput" type="url" class="w-full px-3.5 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-brand-500 font-mono" placeholder="Kosongkan untuk koneksi langsung, atau mis. https://corsproxy.io/?" />
-                    <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
-                        Biarkan kosong secara default. Jika muncul error <code>Failed to fetch</code> karena kebijakan CORS browser, masukkan URL proxy backend Anda sendiri.
-                    </p>
+                    <label for="corsProxyInput" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Custom Proxy URL <span class="font-normal text-slate-400">(Opsional)</span></label>
+                    <input id="corsProxyInput" type="url" class="w-full px-3.5 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-brand-500 font-mono" placeholder="Kosongkan untuk koneksi langsung" />
                 </div>
 
-                <!-- Gaya Sokratis & Streaming -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                    <div>
-                        <label for="socraticStyleSelect" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Intensitas Sokratis</label>
-                        <select id="socraticStyleSelect" class="w-full px-3 py-2 rounded-xl text-xs font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-brand-500">
-                            <option value="strict">Sangat Sokratis (Murni Bertanya)</option>
-                            <option value="balanced" selected>Seimbang (Bertanya + Petunjuk Halus)</option>
-                            <option value="gentle">Lembut (Cocok untuk Guru Pemula)</option>
-                        </select>
-                    </div>
-                    <div class="flex items-center justify-between sm:justify-start gap-2.5 bg-slate-50 dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 self-end h-[38px]">
-                        <input id="streamingToggle" type="checkbox" class="w-4 h-4 accent-brand-600 rounded cursor-pointer">
-                        <label for="streamingToggle" class="text-xs font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Streaming Respons (SSE)</label>
-                    </div>
-                </div>
-
-                <!-- Mode Simulasi Offline (Cadangan jika lingkungan preview memblokir jaringan keluar) -->
+                <!-- Mode Simulasi Offline -->
                 <div class="flex items-center justify-between gap-3 bg-amber-50/70 dark:bg-amber-950/30 px-3.5 py-2.5 rounded-xl border border-amber-200/70 dark:border-amber-800/40">
                     <div>
                         <label for="demoModeToggle" class="block text-xs font-semibold text-amber-900 dark:text-amber-300 cursor-pointer">Mode Simulasi Sokratis Lokal (Offline)</label>
-                        <p class="text-[11px] text-amber-700/90 dark:text-amber-400/80">Gunakan sementara jika browser/preview memblokir akses ke api.xkiro.com.</p>
+                        <p class="text-[11px] text-amber-700/90 dark:text-amber-400/80">Cadangan untuk menguji alur Sokratis bila preview browser memblokir CORS.</p>
                     </div>
                     <input id="demoModeToggle" type="checkbox" class="w-4 h-4 accent-amber-600 rounded cursor-pointer shrink-0">
                 </div>
 
-                <!-- Panel Tes Koneksi API -->
+                <!-- Tes Koneksi -->
                 <div class="rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 p-3.5 space-y-2">
                     <div class="flex items-center justify-between gap-2">
-                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">Diagnostik Koneksi xKiro</span>
+                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">Tes Koneksi xKiro API</span>
                         <button type="button" id="testConnectionBtn" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-700 dark:bg-slate-100 dark:hover:bg-slate-300 text-white dark:text-slate-900 transition-colors">
-                            🧪 Tes Koneksi
+                            🧪 Tes Sekarang
                         </button>
                     </div>
                     <div id="connectionStatusOutput" class="text-[11px] font-mono text-slate-500 dark:text-slate-400 whitespace-pre-wrap leading-relaxed">
-                        Klik "Tes Koneksi" untuk memeriksa jangkauan server, API key, dan ketersediaan model.
+                        Klik "Tes Sekarang" untuk menguji koneksi ke endpoint xKiro dengan konfigurasi di atas.
                     </div>
                 </div>
             </div>
@@ -502,14 +481,14 @@
     </div>
 
     <!-- ===================================================================== -->
-    <!-- MODAL PANDUAN ANTI-CORS VERCEL (api/chat.mjs)                         -->
+    <!-- MODAL PANDUAN PROXY VERCEL (api/chat.mjs)                             -->
     <!-- ===================================================================== -->
     <div id="vercelGuideModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
         <div class="w-full max-w-2xl max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
             <div class="shrink-0 flex items-center justify-between px-6 py-4 border-b border-slate-200/80 dark:border-slate-800">
                 <div>
                     <h3 class="font-bold text-base text-slate-900 dark:text-white">🚀 Solusi Anti-CORS di Vercel (1 File)</h3>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">HTTPS tidak menghapus CORS—browser butuh proxy server di domain Vercel yang sama.</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Teruskan request ke xKiro lewat server Vercel agar 100% bebas CORS.</p>
                 </div>
                 <button type="button" id="closeVercelGuideBtn" class="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -519,15 +498,10 @@
             </div>
 
             <div class="p-6 space-y-4 overflow-y-auto custom-scrollbar text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-                <div class="rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/40 p-3.5 text-xs leading-relaxed text-amber-900 dark:text-amber-200">
-                    <strong>Mengapa tetap kena CORS meski sudah HTTPS di Vercel?</strong><br>
-                    Karena domain web Anda (<code class="font-mono">*.vercel.app</code>) berbeda asal dengan <code class="font-mono">api.xkiro.com</code>, dan server xKiro tidak membuka akses CORS langsung dari browser. Solusinya: panggil <code class="font-mono">/api/chat</code> di domain Vercel Anda sendiri agar server Vercel yang meneruskan request ke xKiro (<em>server-to-server</em>, 0% CORS).
-                </div>
-
                 <ol class="list-decimal pl-5 space-y-1.5 text-xs leading-relaxed">
-                    <li>Di root repository Git/Vercel Anda (sejajar dengan <code class="font-mono">index.html</code>), buat folder <code class="font-mono">api</code> lalu buat file baru bernama <strong class="font-mono text-slate-900 dark:text-white">api/chat.mjs</strong>.</li>
-                    <li>Tempelkan kode di bawah ini ke dalam <code class="font-mono">api/chat.mjs</code> (tidak perlu <code class="font-mono">npm install</code> apa pun).</li>
-                    <li>Commit &amp; push ke GitHub/Vercel. Setelah deploy selesai, aktifkan toggle <strong>Gunakan Proxy Vercel (<code class="font-mono">/api/chat</code>)</strong> di Pengaturan (atau klik tombol aktifkan di bawah).</li>
+                    <li>Di repository Vercel Anda (sejajar dengan <code class="font-mono">index.html</code>), buat file <strong class="font-mono text-slate-900 dark:text-white">api/chat.mjs</strong>.</li>
+                    <li>Tempelkan kode di bawah ini ke dalam <code class="font-mono">api/chat.mjs</code> (tidak perlu <code class="font-mono">npm install</code>).</li>
+                    <li>Commit &amp; push ke Vercel, lalu klik tombol <strong>Aktifkan Mode Proxy Vercel</strong> di bawah.</li>
                 </ol>
 
                 <div class="space-y-2">
@@ -539,10 +513,6 @@
                     </div>
                     <pre class="p-3.5 rounded-2xl bg-slate-900 text-slate-100 text-[11px] leading-relaxed overflow-x-auto custom-scrollbar font-mono"><code id="vercelCodePreview"></code></pre>
                 </div>
-
-                <p class="text-[11px] text-slate-500 dark:text-slate-400">
-                    💡 <strong>Tips Keamanan Opsional:</strong> Di Dashboard Vercel → <em>Settings → Environment Variables</em>, Anda bisa menambahkan <code class="font-mono">XKIRO_API_KEY</code> agar API Key tersimpan aman di server dan tidak perlu ditaruh di kode browser.
-                </p>
             </div>
 
             <div class="shrink-0 flex items-center justify-end gap-2 px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200/80 dark:border-slate-800">
@@ -557,21 +527,36 @@
     </div>
 
     <!-- ===================================================================== -->
-    <!-- TOAST NOTIFIKASI (PENGGANTI alert())                                  -->
+    <!-- MODAL KONFIRMASI SESI BARU                                            -->
+    <!-- ===================================================================== -->
+    <div id="confirmResetModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+        <div class="w-full max-w-sm bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-4">
+            <div class="space-y-1.5">
+                <h3 class="font-bold text-base text-slate-900 dark:text-white">Mulai Sesi Refleksi Baru?</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                    Riwayat percakapan saat ini akan dibersihkan agar Anda bisa memulai dialog Sokratis untuk topik kelas yang baru.
+                </p>
+            </div>
+            <div class="flex items-center justify-end gap-2">
+                <button type="button" id="cancelResetBtn" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    Batal
+                </button>
+                <button type="button" id="confirmResetBtn" class="px-4 py-2 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white shadow-sm transition-colors">
+                    Ya, Mulai Baru
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TOAST NOTIFIKASI                                                      -->
     <!-- ===================================================================== -->
     <div id="toastContainer" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none flex flex-col gap-2 w-max max-w-[90vw]"></div>
 
     <!-- ===================================================================== -->
-    <!-- LOGIKA JAVASCRIPT AGEN SOKRATIS & INTEGRASI XKIRO API                 -->
+    <!-- LOGIKA AGEN AI SOKRATIS & INTEGRASI XKIRO API                         -->
     <!-- ===================================================================== -->
     <script>
-        /**
-         * ====================================================================
-         * KONFIGURASI DEFAULT XKIRO API (OPENAI COMPATIBLE)
-         * ====================================================================
-         * Streaming default dimatikan (false) agar lebih stabil di browser &
-         * kompatibel dengan berbagai model reasoning tanpa terpotong SSE.
-         */
         const DEFAULT_CONFIG = {
             baseUrl: 'https://api.xkiro.com/v1',
             model: 'qwen/qwen3.8-omni-flash:free',
@@ -579,90 +564,54 @@
             corsProxy: '',
             useVercelProxy: false,
             socraticStyle: 'balanced',
-            streaming: false,
             demoMode: false,
             jenjang: 'Umum'
         };
 
-        const STORAGE_KEY = 'sokrates_edu_config_v3';
+        const STORAGE_KEY = 'sokrates_edu_config_v4';
 
-        /**
-         * Kode Vercel Serverless Function siap-salin (api/chat.mjs)
-         * Memakai format ESM (.mjs) yang didukung langsung oleh Vercel tanpa package.json
-         */
-        const VERCEL_API_CHAT_CODE = `// Simpan di: api/chat.mjs (di root repository Vercel Anda)
-// Tanpa npm install — langsung jalan di Vercel Node.js Runtime!
-
+        const VERCEL_API_CHAT_CODE = `// Simpan file ini di: api/chat.mjs (di root repository Vercel Anda)
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: { message: 'Method not allowed' } });
 
   try {
-    // Prioritaskan Environment Variable XKIRO_API_KEY di Vercel, atau pakai header Authorization
-    const envKey = process.env.XKIRO_API_KEY;
-    const authHeader = envKey
-      ? \`Bearer \${envKey}\`
+    const authHeader = process.env.XKIRO_API_KEY
+      ? \`Bearer \${process.env.XKIRO_API_KEY}\`
       : (req.headers.authorization || '');
 
-    // Endpoint GET /api/chat -> daftar model live xKiro
-    if (req.method === 'GET') {
-      const upstream = await fetch('https://api.xkiro.com/v1/models', {
-        method: 'GET',
-        headers: authHeader ? { Authorization: authHeader } : {}
-      });
-      const text = await upstream.text();
-      res.status(upstream.status);
-      res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/json');
-      return res.send(text);
-    }
+    const payload = typeof req.body === 'string' ? req.body : JSON.stringify(req.body || {});
 
-    // Endpoint POST /api/chat -> teruskan ke xKiro Chat Completions (server-to-server, 0% CORS)
-    if (req.method === 'POST') {
-      const payload = typeof req.body === 'string'
-        ? req.body
-        : JSON.stringify(req.body || {});
-
-      const upstream = await fetch('https://api.xkiro.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': authHeader
-        },
-        body: payload
-      });
-
-      const text = await upstream.text();
-      res.status(upstream.status);
-      res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/json');
-      return res.send(text);
-    }
-
-    return res.status(405).json({ error: { message: 'Method not allowed' } });
-  } catch (err) {
-    return res.status(500).json({
-      error: { message: 'Vercel Proxy Error: ' + (err?.message || 'Unknown error') }
+    const upstream = await fetch('https://api.xkiro.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authHeader
+      },
+      body: payload
     });
+
+    const text = await upstream.text();
+    res.status(upstream.status);
+    res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/json');
+    return res.send(text);
+  } catch (err) {
+    return res.status(500).json({ error: { message: err?.message || 'Proxy error' } });
   }
 }`;
 
-        /**
-         * State Aplikasi
-         */
+        // State Aplikasi
         let config = loadConfig();
-        let conversationHistory = []; // Array of { role: 'user' | 'assistant', content: string }
+        let conversationHistory = [];
         let isGenerating = false;
         let currentAbortController = null;
         let userTurnsCount = 0;
-        let lastFailedUserMessage = '';
 
-        /**
-         * Referensi Elemen DOM
-         */
+        // Referensi Elemen DOM
         const chatContainer = document.getElementById('chatContainer');
         const messagesWrapper = document.getElementById('messagesWrapper');
         const welcomeState = document.getElementById('welcomeState');
@@ -675,7 +624,7 @@ export default async function handler(req, res) {
         const jenjangSelect = document.getElementById('jenjangSelect');
         const jenjangSelectMobile = document.getElementById('jenjangSelectMobile');
 
-        // Modal Pengaturan
+        // Referensi Modal Pengaturan
         const settingsModal = document.getElementById('settingsModal');
         const apiBaseUrlInput = document.getElementById('apiBaseUrlInput');
         const modelInput = document.getElementById('modelInput');
@@ -683,52 +632,46 @@ export default async function handler(req, res) {
         const corsProxyInput = document.getElementById('corsProxyInput');
         const vercelProxyToggle = document.getElementById('vercelProxyToggle');
         const socraticStyleSelect = document.getElementById('socraticStyleSelect');
-        const streamingToggle = document.getElementById('streamingToggle');
         const demoModeToggle = document.getElementById('demoModeToggle');
         const connectionStatusOutput = document.getElementById('connectionStatusOutput');
 
-        // Modal Panduan Vercel & Konfirmasi Reset
+        // Referensi Modal Panduan Vercel & Konfirmasi Reset
         const vercelGuideModal = document.getElementById('vercelGuideModal');
         const vercelCodePreview = document.getElementById('vercelCodePreview');
         const confirmResetModal = document.getElementById('confirmResetModal');
 
         /**
          * ====================================================================
-         * PEMBANGUN SYSTEM PROMPT SOKRATIS (OTAK PEDAGOGIS AGEN)
+         * SYSTEM PROMPT METODE SOKRATIS UNTUK GURU
          * ====================================================================
-         * Menghasilkan instruksi sistem yang ketat agar model tidak langsung
-         * memberi solusi jadi, melainkan memandu guru secara bertahap.
          */
         function buildSocraticSystemPrompt() {
-            const styleInstructions = {
-                strict: 'Aturan KETAT: Jangan pernah memberikan saran langsung atau daftar solusi sebelum guru merumuskannya sendiri. Balas hanya dengan empati singkat dan 1 pertanyaan Sokratis yang tajam.',
-                balanced: 'Aturan SEIMBANG: Jangan langsung memberikan jawaban jadi. Pandu dengan 1-2 pertanyaan reflektif per giliran. Jika guru terlihat buntu, berikan sedikit petunjuk (scaffolding) atau analogi singkat, lalu kembalikan lagi dengan pertanyaan.',
-                gentle: 'Aturan LEMBUT: Tetap gunakan metode Sokratis bertahap tanpa menggurui. Berikan apresiasi hangat atas jawaban guru, lalu ajukan 1 pertanyaan pemantik yang mudah dijawab disertai 2-3 sudut pandang pemicu jika diperlukan.'
+            const styleRules = {
+                strict: 'Aturan KETAT: Jangan pernah langsung memberikan saran atau daftar solusi. Balas hanya dengan validasi empatik singkat (1 kalimat) diikuti 1 pertanyaan Sokratis yang tajam agar guru menemukan solusinya sendiri.',
+                balanced: 'Aturan SEIMBANG: Jangan langsung memberikan jawaban instan atau daftar tips panjang. Pandu secara bertahap dengan 1-2 pertanyaan reflektif per giliran. Berikan petunjuk kecil (scaffolding) hanya jika guru terlihat buntu, lalu kembalikan lagi dengan pertanyaan.',
+                gentle: 'Aturan LEMBUT: Tetap gunakan metode Sokratis bertahap tanpa menggurui. Apresiasi pandangan guru dengan hangat, tawarkan 1-2 sudut pandang singkat bila perlu, lalu tutup dengan 1 pertanyaan reflektif yang mudah dijawab.'
             };
 
-            const jenjangContext = config.jenjang && config.jenjang !== 'Umum'
-                ? `Konteks Jenjang Pendidikan saat ini: **${config.jenjang}**. Sesuaikan contoh dan pertanyaan refleksi dengan karakteristik perkembangan siswa di jenjang ini.`
-                : `Konteks Jenjang Pendidikan: Belum ditentukan (tanyakan secara alami jika relevan di awal klarifikasi).`;
+            const jenjangInfo = config.jenjang && config.jenjang !== 'Umum'
+                ? `Jenjang pendidikan guru saat ini: ${config.jenjang}. Sesuaikan konteks pertanyaan dengan perkembangan siswa pada jenjang tersebut.`
+                : 'Jenjang pendidikan belum disebutkan secara spesifik; tanyakan secara natural bila relevan.';
 
-            return `Anda adalah "Sokrates Edu", sebuah agen AI pendamping pedagogis yang hangat, empatik, dan bijaksana bagi para guru di Indonesia.
-Tugas utama Anda adalah membantu guru menyelesaikan permasalahan pendidikan dan pengajaran melalui **Metode Sokratis** secara bertahap.
+            return `Anda adalah "Sokrates Edu", agen AI pendamping refleksi pedagogis bagi guru di Indonesia yang bekerja menggunakan METODE SOKRATIS secara bertahap.
 
-PRINSIP UTAMA METODE SOKRATIS:
-1. **DILARANG LANGSUNG MENJAWAB / MEMBERI SOLUSI INSTAN:** Ketika guru menyampaikan masalah atau bertanya "bagaimana solusinya?", JANGAN langsung memberi daftar tips atau solusi panjang. Percayalah bahwa guru adalah ahli atas kelasnya sendiri dan Anda membantu mereka menggali solusi terbaiknya.
-2. **VALIDASI SINGKAT & HANGAT:** Awali setiap balasan dengan mengakui perasaan, usaha, atau pengamatan guru (maksimal 1-2 kalimat) agar guru merasa didengar dan dihargai.
-3. **PERTANYAAN BERTAHAP (MAKSIMAL 1-2 PERTANYAAN):** Ajukan hanya **1 hingga maksimal 2 pertanyaan terbuka** yang fokus dalam satu balasan. Jangan membanjiri guru dengan banyak pertanyaan sekaligus.
-4. **ALUR 5 TAHAP SOKRATIS (Lakukan bertahap antar giliran percakapan):**
-   - *Tahap 1 (Klarifikasi):* Gali konteks nyata di kelas (kapan terjadi, bagaimana reaksi siswa, apa yang sudah dicoba).
-   - *Tahap 2 (Analisis Akar Masalah & Sudut Pandang):* Ajak guru membedah asumsi atau melihat situasi dari kacamata siswa.
-   - *Tahap 3 (Eksplorasi Ide & Kekuatan):* Pancing guru memunculkan ide kecil berdasarkan sumber daya/kekuatan yang sudah dimiliki di kelas.
-   - *Tahap 4 (Uji Kelayakan):* Ajak guru membayangkan apa yang mungkin terjadi jika ide tersebut diterapkan besok dan potensi hambatannya.
-   - *Tahap 5 (Sintesis & Rencana Aksi):* Hanya setelah guru menemukan gagasan solusinya sendiri (atau secara eksplisit meminta rangkuman rencana aksi), bantu merangkum temuan guru tersebut menjadi langkah praktis yang sederhana dan terukur.
-5. **GAYA BAHASA:** Gunakan Bahasa Indonesia yang sopan, suportif, kolaboratif (sapa dengan "Bapak/Ibu" atau "Anda" yang ramah), ringkas, dan tidak kaku seperti buku teks.
+PRINSIP UTAMA:
+1. JANGAN LANGSUNG MENJAWAB ATAU MEMBERI SOLUSI JADI: Ketika guru mengajukan masalah kelas atau bertanya "bagaimana caranya?", tahan keinginan untuk langsung memberi daftar solusi. Bantu guru mengurai masalahnya selangkah demi selangkah.
+2. VALIDASI HANGAT & SINGKAT: Mulai setiap balasan dengan mengakui pengalaman atau perasaan guru dalam 1-2 kalimat singkat agar tercipta ruang aman.
+3. MAKSIMAL 1-2 PERTANYAAN FOKUS: Ajukan hanya 1 hingga maksimal 2 pertanyaan terbuka yang mendalam per giliran (tandai pertanyaan utama dengan huruf tebal **...**).
+4. ALUR 5 TAHAP SOKRATIS (Berjalan bertahap dari giliran ke giliran):
+   - Tahap 1 (Klarifikasi): Gali konteks nyata di kelas (kapan terjadi, situasi kelas, apa yang sudah pernah dicoba).
+   - Tahap 2 (Akar Masalah & Empati): Ajak guru melihat penyebab yang lebih dalam atau sudut pandang siswa.
+   - Tahap 3 (Eksplorasi Ide): Pancing guru memunculkan gagasan kecil dari kekuatan yang sudah dimiliki.
+   - Tahap 4 (Uji Opsi): Ajak guru membayangkan dampak dan antisipasi hambatan jika ide itu dicoba.
+   - Tahap 5 (Rencana Aksi): Hanya setelah guru merumuskan gagasannya sendiri (atau meminta rangkuman), bantu menyusun temuan guru menjadi 2-3 langkah praktis yang terukur.
+5. BAHASA & RINGKAS: Gunakan Bahasa Indonesia yang ramah, profesional, suportif (sapa "Bapak/Ibu"), dan jaga agar setiap respons ringkas (sekitar 2-4 kalimat pendek plus pertanyaan pemantik).
 
-${styleInstructions[config.socraticStyle] || styleInstructions.balanced}
-${jenjangContext}
-
-Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 paragraf ringkas plus pertanyaan pemantik yang ditandai jelas dengan huruf tebal pada pertanyaan utamanya) agar terasa seperti dialog reflektif yang nyaman, bukan kuliah panjang.`;
+${styleRules[config.socraticStyle] || styleRules.balanced}
+${jenjangInfo}`;
         }
 
         /**
@@ -739,21 +682,15 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
         function loadConfig() {
             try {
                 const saved = localStorage.getItem(STORAGE_KEY);
-                if (saved) {
-                    return { ...DEFAULT_CONFIG, ...JSON.parse(saved) };
-                }
-            } catch (e) {
-                console.warn('Gagal memuat konfigurasi dari localStorage:', e);
-            }
+                if (saved) return { ...DEFAULT_CONFIG, ...JSON.parse(saved) };
+            } catch (_) {}
             return { ...DEFAULT_CONFIG };
         }
 
         function saveConfigToStorage() {
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
-            } catch (e) {
-                console.warn('Gagal menyimpan konfigurasi:', e);
-            }
+            } catch (_) {}
         }
 
         function syncConfigToUI() {
@@ -763,8 +700,10 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             corsProxyInput.value = config.corsProxy || '';
             vercelProxyToggle.checked = Boolean(config.useVercelProxy);
             socraticStyleSelect.value = config.socraticStyle;
-            streamingToggle.checked = Boolean(config.streaming);
             demoModeToggle.checked = Boolean(config.demoMode);
+            jenjangSelect.value = config.jenjang;
+            jenjangSelectMobile.value = config.jenjang;
+
             if (config.demoMode) {
                 activeModelBadge.textContent = 'Mode Simulasi Offline';
             } else if (config.useVercelProxy) {
@@ -772,8 +711,6 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             } else {
                 activeModelBadge.textContent = config.model;
             }
-            jenjangSelect.value = config.jenjang;
-            jenjangSelectMobile.value = config.jenjang;
         }
 
         function initTheme() {
@@ -788,7 +725,7 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
 
         /**
          * ====================================================================
-         * UTILITAS UI, KEAMANAN HTML, MARKDOWN, & PROGRES TAHAP SOKRATIS
+         * UTILITAS UI, MARKDOWN & PROGRES TAHAPAN
          * ====================================================================
          */
         function escapeHtml(str) {
@@ -802,8 +739,6 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
 
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
-            if (!container) return;
-
             const colors = {
                 success: 'bg-emerald-600 text-white border-emerald-500',
                 error: 'bg-rose-600 text-white border-rose-500',
@@ -827,17 +762,13 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
         }
 
         function scrollToBottom() {
-            chatContainer.scrollTo({
-                top: chatContainer.scrollHeight,
-                behavior: 'smooth'
-            });
+            chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
         }
 
         function extractThinkingAndContent(rawContent, rawReasoning = '') {
             let text = String(rawContent || '');
             let reasoning = String(rawReasoning || '').trim();
 
-            // Ekstrak blok <think>...</think> bila model penalaran mengeluarkannya di dalam content
             const thinkMatches = [...text.matchAll(/<think>([\s\S]*?)<\/think>/gi)];
             if (thinkMatches.length > 0) {
                 const extracted = thinkMatches.map(m => m[1].trim()).filter(Boolean).join('\n\n');
@@ -845,15 +776,17 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
                 text = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
             }
 
-            // Tangani tag <think> yang belum tertutup saat streaming berjalan
-            const openThinkIdx = text.search(/<think>/i);
-            if (openThinkIdx !== -1) {
-                const partialThink = text.slice(openThinkIdx + 7).trim();
-                reasoning = reasoning ? `${reasoning}\n${partialThink}` : partialThink;
-                text = text.slice(0, openThinkIdx).trim();
-            }
-
             return { reasoning, content: text.trim() };
+        }
+
+        function normalizeMessageContent(rawContent) {
+            if (typeof rawContent === 'string') return rawContent;
+            if (Array.isArray(rawContent)) {
+                return rawContent
+                    .map(part => (typeof part === 'string' ? part : (part && typeof part.text === 'string' ? part.text : '')))
+                    .join('');
+            }
+            return '';
         }
 
         function renderMarkdown(text) {
@@ -880,7 +813,6 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
                     closeLists();
                     continue;
                 }
-
                 const ulMatch = line.match(/^[-*•]\s+(.*)$/);
                 const olMatch = line.match(/^\d+\.\s+(.*)$/);
                 const quoteMatch = line.match(/^&gt;\s?(.*)$/);
@@ -901,7 +833,6 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
                     html += `<p>${formatInline(line)}</p>`;
                 }
             }
-
             closeLists();
             return html;
         }
@@ -974,7 +905,7 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
                     <span class="typing-dot w-2 h-2 rounded-full bg-brand-500"></span>
                     <span class="typing-dot w-2 h-2 rounded-full bg-brand-500"></span>
                     <span class="typing-dot w-2 h-2 rounded-full bg-brand-500"></span>
-                    <span class="text-xs text-slate-400 ml-1.5">Merangkai pertanyaan refleksi...</span>
+                    <span class="text-xs text-slate-400 ml-1.5">Merangkai pertanyaan Sokratis...</span>
                 </div>
             `;
 
@@ -988,9 +919,16 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             return { wrapper: row, bubble, reasoningBox, reasoningTextEl };
         }
 
+        function setGeneratingState(generating) {
+            isGenerating = generating;
+            userInput.disabled = generating;
+            sendBtn.classList.toggle('hidden', generating);
+            stopBtn.classList.toggle('hidden', !generating);
+        }
+
         /**
          * ====================================================================
-         * HELPER URL & PARSING KONTEN FLEKSIBEL (STRING / CONTENT BLOCKS)
+         * ENGINE KOMUNIKASI XKIRO API (PERSIS FORMAT OPENAI / CURL)
          * ====================================================================
          */
         function buildTargetUrl(path) {
@@ -998,179 +936,82 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             const rawUrl = `${cleanBase}${path}`;
             const proxy = (config.corsProxy || '').trim();
             if (!proxy) return rawUrl;
-            // Jika proxy diakhiri '=' atau '?', langsung sambungkan URL ter-encode
             if (proxy.endsWith('?') || proxy.endsWith('=')) {
                 return `${proxy}${encodeURIComponent(rawUrl)}`;
             }
             return `${proxy.replace(/\/+$/, '')}/${rawUrl}`;
         }
 
-        function normalizeMessageContent(rawContent) {
-            if (typeof rawContent === 'string') return rawContent;
-            if (Array.isArray(rawContent)) {
-                return rawContent
-                    .map(part => {
-                        if (typeof part === 'string') return part;
-                        if (part && typeof part.text === 'string') return part.text;
-                        return '';
-                    })
-                    .join('');
-            }
-            return '';
-        }
-
-        /**
-         * ====================================================================
-         * ENGINE SIMULASI SOKRATIS OFFLINE (CADANGAN BILA CORS/JARINGAN BLOKIR)
-         * ====================================================================
-         */
-        function generateOfflineSocraticReply(userText, turnNumber, isSynthesize) {
-            const jenjangLabel = config.jenjang !== 'Umum' ? ` di jenjang ${config.jenjang}` : '';
-            if (isSynthesize || turnNumber >= 5) {
-                return `Apresiasi yang besar untuk refleksi mendalam Bapak/Ibu sepanjang diskusi ini! Berdasarkan hal-hal yang tadi Bapak/Ibu ungkapkan${jenjangLabel}, mari kita rangkum menjadi langkah aksi kecil untuk dicoba besok:\n\n1. **Langkah Pembuka (5 Menit Pertama):** Mulai kelas dengan rutinitas aman atau pertanyaan pemantik ringan agar siswa merasa nyaman terlibat.\n2. **Penyesuaian Bertahap:** Terapkan satu perubahan kecil yang paling realistis dari gagasan Bapak/Ibu tadi tanpa membebani seluruh jam pelajaran.\n3. **Cek Singkat di Akhir Kelas:** Minta umpan balik 1 kalimat dari siswa tentang bagian mana yang paling membantu mereka.\n\n**Dari ketiga langkah kecil ini, bagian mana yang menurut Bapak/Ibu paling mudah diuji coba pada pertemuan berikutnya, dan tanda keberhasilan sederhana apa yang ingin Bapak/Ibu lihat?**`;
-            }
-
-            const stageReplies = {
-                1: `Terima kasih Bapak/Ibu sudah berbagi situasi nyata${jenjangLabel} yang sedang dihadapi—tantangan seperti ini memang sering menguras energi sekaligus sangat penting untuk diurai pelan-pelan.\n\nAgar kita bisa melihat konteksnya lebih jernih, **pada momen spesifik seperti apa di dalam kelas permasalahan ini biasanya mulai muncul, dan bagaimana respons spontan siswa saat itu?**`,
-                2: `Pengamatan Bapak/Ibu tersebut memberikan petunjuk yang sangat menarik. Sering kali perilaku yang tampak di permukaan adalah cara siswa merespons sesuatu yang mereka rasakan.\n\n**Jika kita mencoba berdiri sejenak di posisi siswa tersebut, menurut Bapak/Ibu apa yang mungkin sedang mereka rasakan, khawatirkan, atau butuhkan saat momen itu terjadi?**`,
-                3: `Sudut pandang yang sangat empatik dan jeli, Bapak/Ibu. Melihat akar kebutuhan siswa biasanya membuka ruang solusi yang jauh lebih efektif daripada sekadar menegur.\n\n**Melihat kebiasaan positif atau kekuatan yang sudah Bapak/Ibu miliki di kelas saat ini, eksperimen kecil berdurasi 5–10 menit apa yang kira-kira bisa dicoba untuk menjawab kebutuhan siswa tersebut?**`,
-                4: `Gagasan tersebut terdengar sangat membumi dan kontekstual untuk kelas Bapak/Ibu!\n\nSebelum mencobanya, mari kita uji sejenak: **jika ide tersebut diterapkan besok, hambatan kecil apa yang mungkin muncul dari siswa, dan bagaimana cara sederhana Bapak/Ibu mengantisipasinya?**`
-            };
-
-            return stageReplies[turnNumber] || stageReplies[4];
-        }
-
-        /**
-         * ====================================================================
-         * PENGIRIMAN REQUEST KE XKIRO API DENGAN AUTO-FALLBACK
-         * ====================================================================
-         */
-        async function executeXkiroRequest(messagesPayload, useStreaming, omitTemperature = false) {
-            const endpoint = buildTargetUrl('/chat/completions');
-            const bodyObj = {
+        async function callXkiroChatCompletions(messagesPayload) {
+            const requestBody = JSON.stringify({
                 model: config.model.trim(),
-                messages: messagesPayload,
-                max_tokens: 2048,
-                stream: Boolean(useStreaming)
-            };
-
-            // Beberapa model reasoning menolak field temperature; tambahkan hanya jika tidak di-omit
-            if (!omitTemperature) {
-                bodyObj.temperature = 0.7;
-            }
-
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${config.apiKey.trim()}`
-                },
-                body: JSON.stringify(bodyObj),
-                signal: currentAbortController.signal
+                messages: messagesPayload
             });
 
-            if (!response.ok) {
-                let errorDetail = `HTTP ${response.status}`;
-                let rawBody = '';
-                try {
-                    rawBody = await response.text();
-                    const errJson = JSON.parse(rawBody);
-                    errorDetail = errJson?.error?.message || errJson?.message || errorDetail;
-                } catch (_) {
-                    if (rawBody) errorDetail = rawBody.slice(0, 220);
-                }
-                const err = new Error(errorDetail);
-                err.status = response.status;
-                err.endpoint = endpoint;
-                throw err;
-            }
-
-            return response;
-        }
-
-        /**
-         * ====================================================================
-         * PENGIRIMAN REQUEST KE XKIRO API DENGAN AUTO-FALLBACK VERCEL PROXY
-         * ====================================================================
-         */
-        async function executeXkiroRequest(messagesPayload, useStreaming, omitTemperature = false) {
-            const bodyObj = {
-                model: config.model.trim(),
-                messages: messagesPayload,
-                max_tokens: 2048,
-                stream: Boolean(useStreaming)
-            };
-
-            // Beberapa model reasoning menolak field temperature; tambahkan hanya jika tidak di-omit
-            if (!omitTemperature) {
-                bodyObj.temperature = 0.7;
-            }
-
-            const fetchFromEndpoint = async (endpointUrl) => {
-                const res = await fetch(endpointUrl, {
+            const doFetch = async (url) => {
+                const response = await fetch(url, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${config.apiKey.trim()}`
+                        'Authorization': `Bearer ${config.apiKey.trim()}`,
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(bodyObj),
+                    body: requestBody,
                     signal: currentAbortController.signal
                 });
 
-                if (!res.ok) {
-                    let errorDetail = `HTTP ${res.status}`;
-                    let rawBody = '';
-                    try {
-                        rawBody = await res.text();
-                        const errJson = JSON.parse(rawBody);
-                        errorDetail = errJson?.error?.message || errJson?.message || errorDetail;
-                    } catch (_) {
-                        if (rawBody) errorDetail = rawBody.slice(0, 220);
-                    }
-                    const err = new Error(errorDetail);
-                    err.status = res.status;
-                    err.endpoint = endpointUrl;
+                const rawText = await response.text();
+                let parsedJson = null;
+                try {
+                    parsedJson = JSON.parse(rawText);
+                } catch (_) {}
+
+                if (!response.ok) {
+                    const detail = parsedJson?.error?.message || parsedJson?.message || rawText.slice(0, 220) || `HTTP ${response.status}`;
+                    const err = new Error(detail);
+                    err.status = response.status;
                     throw err;
                 }
 
-                return res;
+                if (!parsedJson || !Array.isArray(parsedJson.choices) || !parsedJson.choices[0]) {
+                    throw new Error('Format respons dari server tidak sesuai standar OpenAI Chat Completions.');
+                }
+
+                return parsedJson;
             };
 
-            // Jalur 1: Mode Proxy Vercel Same-Origin (/api/chat) — 0% CORS
+            // 1. Jika user mengaktifkan Proxy Vercel (/api/chat)
             if (config.useVercelProxy) {
                 try {
-                    return await fetchFromEndpoint('/api/chat');
-                } catch (proxyErr) {
-                    if (proxyErr.status === 404) {
-                        proxyErr.isMissingVercelFile = true;
-                        proxyErr.message = 'Endpoint /api/chat belum ditemukan (404). Pastikan file api/chat.mjs sudah di-commit ke repository Vercel Anda.';
+                    return await doFetch('/api/chat');
+                } catch (err) {
+                    if (err.status === 404) {
+                        err.isMissingVercelFile = true;
+                        err.message = 'Endpoint /api/chat belum ditemukan (404). Tambahkan file api/chat.mjs di repository Vercel Anda.';
                     }
-                    throw proxyErr;
+                    throw err;
                 }
             }
 
-            // Jalur 2: Panggilan langsung (atau CORS proxy custom)
-            const directEndpoint = buildTargetUrl('/chat/completions');
+            // 2. Panggilan langsung ke https://api.xkiro.com/v1/chat/completions (atau custom proxy)
+            const directUrl = buildTargetUrl('/chat/completions');
             try {
-                return await fetchFromEndpoint(directEndpoint);
+                return await doFetch(directUrl);
             } catch (directErr) {
-                // Jika terblokir CORS di web yang berjalan di HTTP/HTTPS (mis. Vercel), coba auto-deteksi /api/chat sekali
                 const looksLikeCors = !directErr.status && directErr.name !== 'AbortError';
-                const canProbeSameOrigin = window.location.protocol.startsWith('http') && !config.corsProxy;
+                const isHttpOrigin = window.location.protocol.startsWith('http') && !config.corsProxy;
 
-                if (looksLikeCors && canProbeSameOrigin) {
+                // Auto-deteksi /api/chat jika berjalan di web server/Vercel dan akses langsung kena CORS
+                if (looksLikeCors && isHttpOrigin) {
                     try {
-                        const autoProxyRes = await fetchFromEndpoint('/api/chat');
+                        const proxyData = await doFetch('/api/chat');
                         config.useVercelProxy = true;
                         saveConfigToStorage();
                         syncConfigToUI();
                         showToast('Terhubung otomatis lewat Proxy Vercel (/api/chat)!', 'success');
-                        return autoProxyRes;
+                        return proxyData;
                     } catch (probeErr) {
-                        if (probeErr.status && probeErr.status !== 404) {
-                            throw probeErr;
-                        }
-                        directErr.isCorsNeedsVercelProxy = true;
+                        if (probeErr.status && probeErr.status !== 404) throw probeErr;
+                        directErr.isCorsBlocked = true;
                     }
                 }
                 throw directErr;
@@ -1178,26 +1019,119 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
         }
 
         /**
-         * Menampilkan kartu error diagnostik yang informatif + tombol pemulihan instan
+         * Engine Simulasi Sokratis Lokal (Cadangan Offline)
          */
+        function generateOfflineSocraticReply(turnNumber, isSynthesize) {
+            const jenjangLabel = config.jenjang !== 'Umum' ? ` di jenjang ${config.jenjang}` : '';
+            if (isSynthesize || turnNumber >= 5) {
+                return `Apresiasi besar untuk refleksi Bapak/Ibu sepanjang dialog ini! Berdasarkan hal-hal yang Bapak/Ibu gali tadi${jenjangLabel}, berikut rangkuman rencana aksi kecil untuk dicoba:\n\n1. **Pembuka Aman (5 Menit Pertama):** Awali pertemuan dengan pertanyaan pemantik ringan atau diskusi berpasangan agar siswa merasa nyaman berpartisipasi.\n2. **Eksperimen Satu Perubahan Kecil:** Terapkan satu penyesuaian paling realistis dari gagasan Bapak/Ibu tadi secara konsisten selama 1–2 pertemuan.\n3. **Refleksi Singkat Akhir Kelas:** Minta siswa menuliskan 1 kalimat umpan balik tentang bagian pembelajaran yang paling membantu mereka.\n\n**Dari ketiga langkah tersebut, bagian mana yang menurut Bapak/Ibu paling mudah diuji coba besok, dan tanda keberhasilan sederhana apa yang ingin Bapak/Ibu amati?**`;
+            }
+
+            const replies = {
+                1: `Terima kasih Bapak/Ibu sudah membagikan tantangan nyata${jenjangLabel} yang sedang dihadapi—situasi seperti ini memang sering membutuhkan ruang jeda untuk diurai pelan-pelan.\n\nAgar kita bisa melihat konteksnya lebih jernih, **pada momen spesifik seperti apa di kelas situasi ini paling sering terjadi, dan respons apa yang biasanya muncul dari siswa saat itu?**`,
+                2: `Pengamatan Bapak/Ibu tersebut memberikan petunjuk penting. Sering kali reaksi siswa di permukaan mencerminkan kebutuhan atau kekhawatiran tertentu yang belum terucapkan.\n\n**Jika Bapak/Ibu membayangkan diri berada di posisi siswa saat momen itu terjadi, menurut Bapak/Ibu apa yang mungkin sedang mereka rasakan atau khawatirkan?**`,
+                3: `Sudut pandang yang sangat empatik, Bapak/Ibu. Memahami kebutuhan di balik perilaku siswa biasanya membuka peluang solusi yang jauh lebih efektif.\n\n**Melihat kebiasaan positif atau kekuatan yang sudah Bapak/Ibu miliki di kelas saat ini, eksperimen kecil berdurasi 5–10 menit apa yang kira-kira bisa dicoba untuk menjawab kebutuhan siswa tersebut?**`,
+                4: `Gagasan tersebut terdengar sangat kontekstual dan membumi untuk kelas Bapak/Ibu!\n\nSebelum menerapkannya, mari kita uji sejenak: **jika ide tersebut dicoba pada pertemuan berikutnya, hambatan kecil apa yang mungkin muncul dan bagaimana cara sederhana Bapak/Ibu mengantisipasinya?**`
+            };
+
+            return replies[turnNumber] || replies[4];
+        }
+
+        /**
+         * ====================================================================
+         * FUNGSI UTAMA PENGIRIMAN CHAT SOKRATIS
+         * ====================================================================
+         */
+        async function sendMessageToSocraticAgent(userText, isSynthesize = false, isRetry = false) {
+            const cleanText = String(userText || '').trim();
+            if (!cleanText || isGenerating) return;
+
+            // Sembunyikan layar pembuka & tampilkan bar aksi cepat
+            welcomeState.classList.add('hidden');
+            quickActionsBar.classList.remove('hidden');
+
+            if (!isRetry) {
+                createUserMessageElement(cleanText);
+                conversationHistory.push({ role: 'user', content: cleanText });
+                userTurnsCount += 1;
+            }
+
+            updateSocraticStage(userTurnsCount, isSynthesize);
+            const assistantUI = createAssistantMessageElement();
+
+            setGeneratingState(true);
+            currentAbortController = new AbortController();
+
+            try {
+                // Mode Simulasi Lokal (Offline)
+                if (config.demoMode) {
+                    await new Promise((resolve, reject) => {
+                        const timer = setTimeout(resolve, 550);
+                        currentAbortController.signal.addEventListener('abort', () => {
+                            clearTimeout(timer);
+                            reject(Object.assign(new Error('Aborted'), { name: 'AbortError' }));
+                        }, { once: true });
+                    });
+
+                    const offlineText = generateOfflineSocraticReply(userTurnsCount, isSynthesize);
+                    assistantUI.bubble.innerHTML = renderMarkdown(offlineText);
+                    conversationHistory.push({ role: 'assistant', content: offlineText });
+                    scrollToBottom();
+                    return;
+                }
+
+                // Susun payload messages: [system, ...riwayat percakapan]
+                const messagesPayload = [
+                    { role: 'system', content: buildSocraticSystemPrompt() },
+                    ...conversationHistory
+                ];
+
+                const data = await callXkiroChatCompletions(messagesPayload);
+                const msg = data.choices[0].message || {};
+                const rawContent = normalizeMessageContent(msg.content);
+                const rawReasoning = msg.reasoning_content || msg.reasoning || '';
+
+                const { reasoning, content } = extractThinkingAndContent(rawContent, rawReasoning);
+
+                if (reasoning) {
+                    assistantUI.reasoningBox.classList.remove('hidden');
+                    assistantUI.reasoningTextEl.textContent = reasoning;
+                }
+
+                const finalReply = content || 'Maaf, respons model kosong. Silakan coba kirim ulang pertanyaan Bapak/Ibu.';
+                assistantUI.bubble.innerHTML = renderMarkdown(finalReply);
+                conversationHistory.push({ role: 'assistant', content: finalReply });
+                scrollToBottom();
+
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    assistantUI.bubble.innerHTML = `<p class="text-xs text-slate-500 italic">Permintaan dihentikan oleh pengguna.</p>`;
+                } else {
+                    renderDiagnosticErrorCard(assistantUI.bubble, error, cleanText, isSynthesize);
+                }
+            } finally {
+                setGeneratingState(false);
+                currentAbortController = null;
+                userInput.focus();
+            }
+        }
+
         function renderDiagnosticErrorCard(bubbleEl, error, failedText, wasSynthesize) {
-            const isNetworkOrCors = (!error.status && /fetch|network|load failed|cors/i.test(error.message || '')) || error.isCorsNeedsVercelProxy;
+            const isCorsError = (!error.status && /fetch|network|load failed|cors/i.test(error.message || '')) || error.isCorsBlocked;
             let diagnosis = '';
 
             if (error.isMissingVercelFile) {
-                diagnosis = '<strong>File <code>api/chat.mjs</code> belum ada di repository Vercel Anda (404).</strong> Klik tombol biru di bawah untuk menyalin kode <code>api/chat.mjs</code> lalu commit ke Vercel.';
-            } else if (isNetworkOrCors) {
-                diagnosis = '<strong>Diblokir CORS Browser!</strong> Meskipun sudah pakai <strong>HTTPS di Vercel</strong>, browser tetap memblokir panggilan langsung dari <code>*.vercel.app</code> ke <code>api.xkiro.com</code> karena server xKiro tidak membuka header CORS browser. Solusi permanen di Vercel: tambahkan 1 file proxy <code>api/chat.mjs</code> (klik tombol biru di bawah).';
+                diagnosis = '<strong>File <code>api/chat.mjs</code> belum ditemukan (404).</strong> Klik tombol biru di bawah untuk menyalin kode <code>api/chat.mjs</code> lalu commit ke repository Vercel Anda.';
+            } else if (isCorsError) {
+                diagnosis = '<strong>Diblokir kebijakan CORS Browser.</strong> Server <code>api.xkiro.com</code> tidak membuka header CORS untuk panggilan langsung dari browser (termasuk dari domain <code>*.vercel.app</code>). Untuk menjalankannya secara permanen di Vercel, tambahkan 1 file proxy <code>api/chat.mjs</code> atau aktifkan Mode Simulasi Offline untuk mencoba alur Sokratis sekarang.';
             } else if (error.status === 401) {
-                diagnosis = '<strong>API Key xKiro ditolak (401).</strong> Kemungkinan kunci salah, sudah dicabut, atau ada spasi berlebih.';
+                diagnosis = '<strong>API Key ditolak (401).</strong> Periksa kembali API Key xKiro Anda di menu Pengaturan.';
             } else if (error.status === 404) {
-                diagnosis = `<strong>Model atau endpoint tidak ditemukan (404).</strong> Model <code>${escapeHtml(config.model)}</code> mungkin sudah berubah nama atau tidak lagi aktif di xKiro.`;
+                diagnosis = `<strong>Model tidak ditemukan (404).</strong> Pastikan ID model <code>${escapeHtml(config.model)}</code> aktif di xKiro.`;
             } else if (error.status === 429) {
-                diagnosis = '<strong>Batas kuota harian / rate limit tercapai (429).</strong> Tunggu sebentar atau coba model gratis xKiro lainnya.';
-            } else if (error.status === 403) {
-                diagnosis = '<strong>Akses ditolak (403).</strong> Model ini mungkin memerlukan paket berbayar atau batas kuota gratis sudah habis.';
+                diagnosis = '<strong>Batas permintaan (Rate Limit 429).</strong> Tunggu beberapa saat atau coba ganti ke model gratis lain.';
             } else {
-                diagnosis = `Server mengembalikan kendala (Status: <strong>${error.status || 'Jaringan'}</strong>).`;
+                diagnosis = `Terjadi kendala saat menghubungi API xKiro (Status: <strong>${error.status || 'Jaringan'}</strong>).`;
             }
 
             bubbleEl.innerHTML = `
@@ -1205,7 +1139,7 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
                     <div class="flex items-start gap-2 text-rose-600 dark:text-rose-400">
                         <span class="text-base leading-none mt-0.5">⚠️</span>
                         <div class="space-y-1 min-w-0">
-                            <p class="font-semibold text-sm">Gagal terhubung ke Agen AI xKiro</p>
+                            <p class="font-semibold text-sm">Gagal mendapatkan balasan dari xKiro API</p>
                             <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">${diagnosis}</p>
                             <div class="mt-1.5 px-2.5 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200/70 dark:border-rose-900/50 font-mono text-[11px] break-all">
                                 Detail: ${escapeHtml(error.message || 'Unknown Error')}
@@ -1214,45 +1148,39 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
                     </div>
 
                     <div class="flex flex-wrap gap-2 pt-1">
-                        <button type="button" class="open-vercel-guide-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white transition-colors">
-                            🚀 Solusi Anti-CORS Vercel (api/chat.mjs)
-                        </button>
-                        <button type="button" class="retry-nonstream-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors">
+                        <button type="button" class="retry-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors">
                             🔄 Coba Lagi
                         </button>
-                        <button type="button" class="switch-model-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors">
-                            🔀 Coba Model qwen3.8-max:free
+                        <button type="button" class="vercel-guide-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white transition-colors">
+                            🚀 Solusi Anti-CORS Vercel
                         </button>
-                        <button type="button" class="enable-offline-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/40 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 transition-colors">
-                            📚 Coba Mode Simulasi Offline
+                        <button type="button" class="switch-model-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors">
+                            🔀 Coba Model Lain
+                        </button>
+                        <button type="button" class="offline-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/40 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 transition-colors">
+                            📚 Mode Simulasi Offline
                         </button>
                     </div>
                 </div>
             `;
 
-            bubbleEl.querySelector('.open-vercel-guide-btn').addEventListener('click', () => {
-                openVercelGuideModal();
-            });
-
-            bubbleEl.querySelector('.retry-nonstream-btn').addEventListener('click', () => {
-                config.streaming = false;
-                saveConfigToStorage();
-                syncConfigToUI();
+            bubbleEl.querySelector('.retry-btn').addEventListener('click', () => {
                 sendMessageToSocraticAgent(failedText, wasSynthesize, true);
             });
 
+            bubbleEl.querySelector('.vercel-guide-btn').addEventListener('click', openVercelGuideModal);
+
             bubbleEl.querySelector('.switch-model-btn').addEventListener('click', () => {
-                config.model = config.model === 'qwen/qwen3.8-max:free'
-                    ? 'qwen/qwen3.7-flash:free'
-                    : 'qwen/qwen3.8-max:free';
-                config.streaming = false;
+                config.model = config.model === 'qwen/qwen3.8-omni-flash:free'
+                    ? 'qwen/qwen3.8-max:free'
+                    : 'qwen/qwen3.8-omni-flash:free';
                 saveConfigToStorage();
                 syncConfigToUI();
                 showToast(`Beralih ke model: ${config.model}`, 'info');
                 sendMessageToSocraticAgent(failedText, wasSynthesize, true);
             });
 
-            bubbleEl.querySelector('.enable-offline-btn').addEventListener('click', () => {
+            bubbleEl.querySelector('.offline-btn').addEventListener('click', () => {
                 config.demoMode = true;
                 saveConfigToStorage();
                 syncConfigToUI();
@@ -1263,7 +1191,7 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
 
         /**
          * ====================================================================
-         * DIAGNOSTIK KONEKSI & AMBIL DAFTAR MODEL LIVE DARI XKIRO
+         * TES KONEKSI DI MODAL PENGATURAN
          * ====================================================================
          */
         async function runConnectionDiagnostics() {
@@ -1273,233 +1201,67 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             const tempKey = apiKeyInput.value.trim() || config.apiKey;
             const tempProxy = corsProxyInput.value.trim();
 
-            const resolveTestUrl = (path) => {
-                if (useVercel) return '/api/chat';
-                const raw = `${tempBase}${path}`;
-                if (!tempProxy) return raw;
-                if (tempProxy.endsWith('?') || tempProxy.endsWith('=')) return `${tempProxy}${encodeURIComponent(raw)}`;
-                return `${tempProxy.replace(/\/+$/, '')}/${raw}`;
-            };
+            let targetUrl = `${tempBase}/chat/completions`;
+            if (useVercel) {
+                targetUrl = '/api/chat';
+            } else if (tempProxy) {
+                targetUrl = (tempProxy.endsWith('?') || tempProxy.endsWith('='))
+                    ? `${tempProxy}${encodeURIComponent(targetUrl)}`
+                    : `${tempProxy.replace(/\/+$/, '')}/${targetUrl}`;
+            }
 
-            connectionStatusOutput.textContent = useVercel
-                ? '1/2 Menguji Proxy Vercel (GET /api/chat)...'
-                : '1/2 Menguji jangkauan server langsung (GET /v1/models)...';
+            connectionStatusOutput.textContent = `Menguji POST ke ${targetUrl} dengan model ${tempModel}...`;
 
             try {
-                const modelsRes = await fetch(resolveTestUrl('/models'), {
-                    headers: useVercel && tempKey ? { 'Authorization': `Bearer ${tempKey}` } : {}
-                });
-                if (!modelsRes.ok) {
-                    connectionStatusOutput.textContent = modelsRes.status === 404 && useVercel
-                        ? '❌ GET /api/chat mengembalikan 404.\nPastikan file api/chat.mjs sudah di-commit ke repository Vercel Anda.'
-                        : `❌ Cek katalog model gagal (HTTP ${modelsRes.status}).`;
-                    return;
-                }
-
-                const modelsJson = await modelsRes.json();
-                const allModels = Array.isArray(modelsJson?.data) ? modelsJson.data : [];
-                const modelExists = allModels.some(m => m.id === tempModel);
-
-                connectionStatusOutput.textContent = `✅ Jalur ${useVercel ? 'Proxy Vercel (/api/chat)' : 'xKiro'} terjangkau (${allModels.length} model).\n`
-                    + (modelExists
-                        ? `✅ Model "${tempModel}" ditemukan di katalog live.\n`
-                        : `⚠️ Model "${tempModel}" tidak terlihat di daftar /models.\n`)
-                    + `2/2 Menguji autentikasi API Key & chat singkat...`;
-
-                const chatRes = await fetch(resolveTestUrl('/chat/completions'), {
+                const res = await fetch(targetUrl, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${tempKey}`
+                        'Authorization': `Bearer ${tempKey}`,
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         model: tempModel,
-                        messages: [{ role: 'user', content: 'Balas singkat: OK' }],
-                        max_tokens: 30,
-                        stream: false
+                        messages: [{ role: 'user', content: 'Halo, balas singkat dengan kata: SIAP.' }]
                     })
                 });
 
-                if (chatRes.ok) {
-                    connectionStatusOutput.textContent = `✅ BERHASIL! Koneksi ${useVercel ? 'via Proxy Vercel ' : ''}dan model "${tempModel}" siap digunakan.\nKlik "Simpan Pengaturan" untuk mulai chat.`;
-                    showToast('Koneksi xKiro API berhasil!', 'success');
+                const txt = await res.text();
+                if (res.ok) {
+                    connectionStatusOutput.textContent = `✅ BERHASIL! Koneksi ke xKiro API dengan model "${tempModel}" siap digunakan.`;
+                    showToast('Tes koneksi berhasil!', 'success');
+                } else if (res.status === 404 && useVercel) {
+                    connectionStatusOutput.textContent = `❌ HTTP 404: File api/chat.mjs belum ada di deployment Vercel Anda.`;
                 } else {
-                    const errTxt = await chatRes.text();
-                    connectionStatusOutput.textContent = `❌ Gagal pada chat (HTTP ${chatRes.status}):\n${errTxt.slice(0, 220)}`;
+                    connectionStatusOutput.textContent = `❌ Gagal (HTTP ${res.status}):\n${txt.slice(0, 220)}`;
                 }
             } catch (err) {
-                connectionStatusOutput.textContent = `❌ Koneksi dari browser diblokir CORS (${err.message}).\n\nCatatan: HTTPS di Vercel tidak menonaktifkan CORS lintas domain.\nSolusi:\n1. Klik tombol "Lihat & Salin Kode api/chat.mjs" di atas lalu commit ke Vercel.\n2. Centang "Gunakan Proxy Vercel (/api/chat)" lalu Tes Koneksi lagi.`;
-            }
-        }
-
-        async function fetchLiveFreeModels() {
-            const useVercel = vercelProxyToggle.checked;
-            const tempBase = (apiBaseUrlInput.value.trim() || config.baseUrl).replace(/\/+$/, '');
-            const tempProxy = corsProxyInput.value.trim();
-            const raw = `${tempBase}/models`;
-            const url = useVercel
-                ? '/api/chat'
-                : (!tempProxy
-                    ? raw
-                    : (tempProxy.endsWith('?') || tempProxy.endsWith('=') ? `${tempProxy}${encodeURIComponent(raw)}` : `${tempProxy.replace(/\/+$/, '')}/${raw}`));
-
-            connectionStatusOutput.textContent = 'Mengambil daftar model gratis dari xKiro...';
-            try {
-                const res = await fetch(url);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const json = await res.json();
-                const list = (json?.data || []).filter(m => m.id && (m.id.includes(':free') || m.access_tier === 'free'));
-
-                if (list.length === 0) {
-                    connectionStatusOutput.textContent = 'Daftar model diterima, namun tidak ada label gratis yang cocok.';
-                    return;
-                }
-
-                const chipsContainer = document.getElementById('modelPresetChips');
-                chipsContainer.innerHTML = '';
-                list.slice(0, 8).forEach(m => {
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = 'model-chip px-2 py-1 rounded-lg text-[11px] font-mono bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 transition-colors';
-                    btn.setAttribute('data-model', m.id);
-                    btn.textContent = m.id;
-                    btn.addEventListener('click', () => {
-                        modelInput.value = m.id;
-                        showToast(`Model dipilih: ${m.id}`, 'info');
-                    });
-                    chipsContainer.appendChild(btn);
-                });
-
-                connectionStatusOutput.textContent = `✅ Berhasil memuat ${list.length} model gratis live dari xKiro. Klik salah satu chip di atas untuk memilih.`;
-            } catch (err) {
-                connectionStatusOutput.textContent = `❌ Gagal memuat katalog live (${err.message}). Aktifkan Proxy Vercel (/api/chat) agar bebas CORS.`;
-            }
-        }
-
-        async function fetchLiveFreeModels() {
-            const tempBase = (apiBaseUrlInput.value.trim() || config.baseUrl).replace(/\/+$/, '');
-            const tempProxy = corsProxyInput.value.trim();
-            const raw = `${tempBase}/models`;
-            const url = !tempProxy
-                ? raw
-                : (tempProxy.endsWith('?') || tempProxy.endsWith('=') ? `${tempProxy}${encodeURIComponent(raw)}` : `${tempProxy.replace(/\/+$/, '')}/${raw}`);
-
-            connectionStatusOutput.textContent = 'Mengambil daftar model gratis dari xKiro...';
-            try {
-                const res = await fetch(url);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const json = await res.json();
-                const list = (json?.data || []).filter(m => m.id && (m.id.includes(':free') || m.access_tier === 'free'));
-
-                if (list.length === 0) {
-                    connectionStatusOutput.textContent = 'Daftar model diterima, namun tidak ada label gratis yang cocok.';
-                    return;
-                }
-
-                const chipsContainer = document.getElementById('modelPresetChips');
-                chipsContainer.innerHTML = '';
-                list.slice(0, 8).forEach(m => {
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = 'model-chip px-2 py-1 rounded-lg text-[11px] font-mono bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 transition-colors';
-                    btn.setAttribute('data-model', m.id);
-                    btn.textContent = m.id;
-                    btn.addEventListener('click', () => {
-                        modelInput.value = m.id;
-                        showToast(`Model dipilih: ${m.id}`, 'info');
-                    });
-                    chipsContainer.appendChild(btn);
-                });
-
-                connectionStatusOutput.textContent = `✅ Berhasil memuat ${list.length} model gratis live dari xKiro. Klik salah satu chip di atas untuk memilih.`;
-            } catch (err) {
-                connectionStatusOutput.textContent = `❌ Gagal memuat katalog live (${err.message}). Kemungkinan diblokir CORS browser.`;
+                connectionStatusOutput.textContent = `❌ Diblokir CORS Browser (${err.message}).\n\nSolusi:\n- Di Vercel: tambahkan file api/chat.mjs lalu centang "Gunakan Proxy Vercel (/api/chat)".\n- Di Preview lokal: centang "Mode Simulasi Sokratis Lokal (Offline)" untuk mencoba dialog.`;
             }
         }
 
         /**
-         * Memperbarui tampilan gelembung balasan AI secara real-time
-         */
-        function updateAssistantBubble(assistantUI, rawContent, rawReasoning, isFinal = false) {
-            const { reasoning, content } = extractThinkingAndContent(rawContent, rawReasoning);
-
-            if (reasoning) {
-                assistantUI.reasoningBox.classList.remove('hidden');
-                assistantUI.reasoningTextEl.textContent = reasoning;
-            }
-
-            if (content) {
-                assistantUI.bubble.innerHTML = renderMarkdown(content);
-            } else if (isFinal) {
-                assistantUI.bubble.innerHTML = `<p class="text-slate-500 italic">Tidak ada teks balasan yang dihasilkan. Silakan coba lagi.</p>`;
-            }
-
-            scrollToBottom();
-        }
-
-        function setGeneratingState(generating) {
-            isGenerating = generating;
-            userInput.disabled = generating;
-            sendBtn.classList.toggle('hidden', generating);
-            stopBtn.classList.toggle('hidden', !generating);
-        }
-
-        /**
          * ====================================================================
-         * EVENT LISTENERS & INTERAKSI PENGGUNA
+         * HELPER MODAL & SALIN TEKS
          * ====================================================================
          */
-
-        // Auto-resize textarea
-        userInput.addEventListener('input', () => {
-            userInput.style.height = 'auto';
-            userInput.style.height = Math.min(userInput.scrollHeight, 144) + 'px';
-        });
-
-        // Enter untuk kirim, Shift+Enter untuk baris baru
-        userInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                chatForm.dispatchEvent(new Event('submit'));
+        function copyTextFallback(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                return navigator.clipboard.writeText(text).catch(() => legacyCopy(text));
             }
-        });
+            return Promise.resolve(legacyCopy(text));
+        }
 
-        // Submit form chat
-        chatForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const text = userInput.value.trim();
-            if (!text || isGenerating) return;
-            userInput.value = '';
-            userInput.style.height = 'auto';
-            sendMessageToSocraticAgent(text);
-        });
+        function legacyCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+        }
 
-        // Tombol Stop generasi
-        stopBtn.addEventListener('click', () => {
-            if (currentAbortController) {
-                currentAbortController.abort();
-            }
-        });
-
-        // Kartu Skenario Pembuka
-        document.querySelectorAll('.starter-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const prompt = card.getAttribute('data-prompt');
-                if (prompt) sendMessageToSocraticAgent(prompt);
-            });
-        });
-
-        // Tombol Aksi Cepat Sokratis
-        document.getElementById('hintBtn').addEventListener('click', () => {
-            sendMessageToSocraticAgent('Saya agak buntu memikirkannya. Bisakah beri saya 1 petunjuk kecil atau contoh sudut pandang, lalu bantu saya merefleksikannya lagi?');
-        });
-
-        document.getElementById('synthesizeBtn').addEventListener('click', () => {
-            sendMessageToSocraticAgent('Berdasarkan semua yang sudah kita diskusikan tadi, bisakah Anda membantu saya merangkum temuan saya menjadi 2-3 langkah rencana aksi konkret yang bisa saya coba di kelas besok?', true);
-        });
-
-        document.getElementById('perspectiveBtn').addEventListener('click', () => {
-        // Modal Pengaturan & Modal Panduan Vercel
         function openSettingsModal() {
             syncConfigToUI();
             settingsModal.classList.remove('hidden');
@@ -1522,49 +1284,101 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             vercelGuideModal.classList.remove('flex');
         }
 
-        function initVercelGuideCode() {
-            if (vercelCodePreview) {
-                vercelCodePreview.textContent = VERCEL_API_CHAT_CODE;
-            }
+        function closeResetModal() {
+            confirmResetModal.classList.add('hidden');
+            confirmResetModal.classList.remove('flex');
         }
 
+        /**
+         * ====================================================================
+         * EVENT LISTENERS
+         * ====================================================================
+         */
+        userInput.addEventListener('input', () => {
+            userInput.style.height = 'auto';
+            userInput.style.height = Math.min(userInput.scrollHeight, 144) + 'px';
+        });
+
+        userInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                chatForm.dispatchEvent(new Event('submit'));
+            }
+        });
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = userInput.value.trim();
+            if (!text || isGenerating) return;
+            userInput.value = '';
+            userInput.style.height = 'auto';
+            sendMessageToSocraticAgent(text);
+        });
+
+        stopBtn.addEventListener('click', () => {
+            if (currentAbortController) currentAbortController.abort();
+        });
+
+        // Sinkronisasi Jenjang Desktop & Mobile
+        jenjangSelect.addEventListener('change', (e) => {
+            config.jenjang = e.target.value;
+            jenjangSelectMobile.value = config.jenjang;
+            saveConfigToStorage();
+            showToast(`Konteks jenjang diatur ke: ${config.jenjang}`, 'info');
+        });
+
+        jenjangSelectMobile.addEventListener('change', (e) => {
+            config.jenjang = e.target.value;
+            jenjangSelect.value = config.jenjang;
+            saveConfigToStorage();
+            showToast(`Konteks jenjang diatur ke: ${config.jenjang}`, 'info');
+        });
+
+        // Toggle Tema Gelap / Terang
+        document.getElementById('themeToggleBtn').addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('sokrates_theme', isDark ? 'dark' : 'light');
+        });
+
+        // Salin Catatan Refleksi
+        document.getElementById('copyTranscriptBtn').addEventListener('click', () => {
+            if (conversationHistory.length === 0) {
+                showToast('Belum ada percakapan untuk disalin.', 'warning');
+                return;
+            }
+            const formatted = conversationHistory
+                .map(m => `${m.role === 'user' ? 'Guru' : 'Sokrates Edu'}:\n${m.content}`)
+                .join('\n\n---\n\n');
+            copyTextFallback(formatted).then(() => {
+                showToast('Catatan refleksi berhasil disalin ke clipboard!', 'success');
+            });
+        });
+
+        // Kartu Skenario Pembuka
+        document.querySelectorAll('.starter-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const prompt = card.getAttribute('data-prompt');
+                if (prompt) sendMessageToSocraticAgent(prompt);
+            });
+        });
+
+        // Tombol Aksi Cepat Sokratis
+        document.getElementById('hintBtn').addEventListener('click', () => {
+            sendMessageToSocraticAgent('Saya agak buntu memikirkannya. Bisakah beri saya 1 petunjuk kecil, lalu bantu saya merefleksikannya lagi?');
+        });
+
+        document.getElementById('perspectiveBtn').addEventListener('click', () => {
+            sendMessageToSocraticAgent('Bantu saya membedah situasi ini dari sudut pandang siswa melalui pertanyaan reflektif.');
+        });
+
+        document.getElementById('synthesizeBtn').addEventListener('click', () => {
+            sendMessageToSocraticAgent('Berdasarkan semua yang sudah kita diskusikan tadi, bisakah Anda membantu merangkum temuan saya menjadi 2-3 langkah rencana aksi konkret untuk saya coba di kelas besok?', true);
+        });
+
+        // Modal Pengaturan
         document.getElementById('openSettingsBtn').addEventListener('click', openSettingsModal);
         document.getElementById('closeSettingsBtn').addEventListener('click', closeSettingsModal);
         document.getElementById('cancelSettingsBtn').addEventListener('click', closeSettingsModal);
-
-        document.getElementById('openVercelGuideBtn').addEventListener('click', openVercelGuideModal);
-        document.getElementById('closeVercelGuideBtn').addEventListener('click', closeVercelGuideModal);
-        document.getElementById('doneVercelGuideBtn').addEventListener('click', closeVercelGuideModal);
-
-        vercelGuideModal.addEventListener('click', (e) => {
-            if (e.target === vercelGuideModal) closeVercelGuideModal();
-        });
-
-        document.getElementById('copyVercelCodeBtn').addEventListener('click', () => {
-            try {
-                const tempTextarea = document.createElement('textarea');
-                tempTextarea.value = VERCEL_API_CHAT_CODE;
-                tempTextarea.style.position = 'fixed';
-                tempTextarea.style.opacity = '0';
-                document.body.appendChild(tempTextarea);
-                tempTextarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(tempTextarea);
-                showToast('Kode api/chat.mjs berhasil disalin! Commit ke folder api/ di repo Vercel Anda.', 'success');
-            } catch (_) {
-                showToast('Gagal menyalin kode. Silakan blok dan salin manual.', 'error');
-            }
-        });
-
-        document.getElementById('activateVercelProxyNowBtn').addEventListener('click', () => {
-            config.useVercelProxy = true;
-            config.demoMode = false;
-            saveConfigToStorage();
-            syncConfigToUI();
-            closeVercelGuideModal();
-            showToast('Mode Proxy Vercel (/api/chat) aktif! Pastikan api/chat.mjs sudah di-deploy.', 'success');
-        });
-
         settingsModal.addEventListener('click', (e) => {
             if (e.target === settingsModal) closeSettingsModal();
         });
@@ -1573,29 +1387,23 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             apiKeyInput.type = apiKeyInput.type === 'password' ? 'text' : 'password';
         });
 
-        // Chip pilihan cepat model
         document.querySelectorAll('.model-chip').forEach(chip => {
             chip.addEventListener('click', () => {
-                const selectedModel = chip.getAttribute('data-model');
-                if (selectedModel) {
-                    modelInput.value = selectedModel;
-                    showToast(`Model dipilih: ${selectedModel}`, 'info');
-                }
+                modelInput.value = chip.getAttribute('data-model');
+                showToast(`Model dipilih: ${modelInput.value}`, 'info');
             });
         });
 
-        // Tombol Tes Koneksi & Muat Model Live
         document.getElementById('testConnectionBtn').addEventListener('click', runConnectionDiagnostics);
-        document.getElementById('fetchModelsBtn').addEventListener('click', fetchLiveFreeModels);
 
         document.getElementById('saveSettingsBtn').addEventListener('click', () => {
             const newUrl = apiBaseUrlInput.value.trim();
             const newModel = modelInput.value.trim();
             const newKey = apiKeyInput.value.trim();
             const isDemo = demoModeToggle.checked;
-            const isVercelProxy = vercelProxyToggle.checked;
+            const isVercel = vercelProxyToggle.checked;
 
-            if (!isDemo && !isVercelProxy && (!newUrl || !newModel || !newKey)) {
+            if (!isDemo && !isVercel && (!newUrl || !newModel || !newKey)) {
                 showToast('Base URL, Model ID, dan API Key wajib diisi.', 'warning');
                 return;
             }
@@ -1604,30 +1412,47 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             config.model = newModel || DEFAULT_CONFIG.model;
             config.apiKey = newKey;
             config.corsProxy = corsProxyInput.value.trim();
-            config.useVercelProxy = isVercelProxy;
+            config.useVercelProxy = isVercel;
             config.socraticStyle = socraticStyleSelect.value;
-            config.streaming = streamingToggle.checked;
             config.demoMode = isDemo;
 
             saveConfigToStorage();
             syncConfigToUI();
             closeSettingsModal();
-            showToast(
-                isDemo
-                    ? 'Mode Simulasi Sokratis Lokal diaktifkan!'
-                    : (isVercelProxy ? 'Pengaturan disimpan (Mode Proxy Vercel /api/chat)!' : 'Pengaturan API xKiro berhasil disimpan!'),
-                'success'
-            );
+            showToast('Pengaturan berhasil disimpan!', 'success');
         });
 
         document.getElementById('resetDefaultSettingsBtn').addEventListener('click', () => {
             config = { ...DEFAULT_CONFIG };
             saveConfigToStorage();
             syncConfigToUI();
-            showToast('Pengaturan dikembalikan ke konfigurasi xKiro default.', 'info');
+            showToast('Pengaturan dikembalikan ke default xKiro.', 'info');
         });
 
-        // Modal Reset Sesi Baru
+        // Modal Panduan Vercel
+        document.getElementById('openVercelGuideBtn').addEventListener('click', openVercelGuideModal);
+        document.getElementById('closeVercelGuideBtn').addEventListener('click', closeVercelGuideModal);
+        document.getElementById('doneVercelGuideBtn').addEventListener('click', closeVercelGuideModal);
+        vercelGuideModal.addEventListener('click', (e) => {
+            if (e.target === vercelGuideModal) closeVercelGuideModal();
+        });
+
+        document.getElementById('copyVercelCodeBtn').addEventListener('click', () => {
+            copyTextFallback(VERCEL_API_CHAT_CODE).then(() => {
+                showToast('Kode api/chat.mjs berhasil disalin!', 'success');
+            });
+        });
+
+        document.getElementById('activateVercelProxyNowBtn').addEventListener('click', () => {
+            config.useVercelProxy = true;
+            config.demoMode = false;
+            saveConfigToStorage();
+            syncConfigToUI();
+            closeVercelGuideModal();
+            showToast('Mode Proxy Vercel (/api/chat) aktif!', 'success');
+        });
+
+        // Modal Sesi Baru
         document.getElementById('newSessionBtn').addEventListener('click', () => {
             if (conversationHistory.length === 0) {
                 showToast('Anda sudah berada di sesi baru.', 'info');
@@ -1636,11 +1461,6 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             confirmResetModal.classList.remove('hidden');
             confirmResetModal.classList.add('flex');
         });
-
-        function closeResetModal() {
-            confirmResetModal.classList.add('hidden');
-            confirmResetModal.classList.remove('flex');
-        }
 
         document.getElementById('cancelResetBtn').addEventListener('click', closeResetModal);
         confirmResetModal.addEventListener('click', (e) => {
@@ -1653,7 +1473,6 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             userTurnsCount = 0;
             updateSocraticStage(1);
 
-            // Hapus semua pesan selain welcomeState
             Array.from(messagesWrapper.children).forEach(child => {
                 if (child.id !== 'welcomeState') child.remove();
             });
@@ -1665,16 +1484,12 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             userInput.focus();
         });
 
-        /**
-         * ====================================================================
-         * INISIALISASI SAAT HALAMAN DIMUAT
-         * ====================================================================
-         */
+        // Inisialisasi Awal
         window.addEventListener('DOMContentLoaded', () => {
             initTheme();
             syncConfigToUI();
             updateSocraticStage(1);
-            initVercelGuideCode();
+            vercelCodePreview.textContent = VERCEL_API_CHAT_CODE;
         });
     </script>
 </body>
