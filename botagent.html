@@ -423,18 +423,18 @@
                     </div>
                 </div>
 
-                <!-- API Key -->
-                <div>
-                    <label for="apiKeyInput" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">xKiro API Key</label>
-                    <div class="relative">
-                        <input id="apiKeyInput" type="password" class="w-full pl-3.5 pr-10 py-2.5 rounded-xl text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-brand-500 font-mono" placeholder="sk-xt-..." />
-                        <button type="button" id="toggleApiKeyVisBtn" class="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" title="Tampilkan/Sembunyikan API Key">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                        </button>
+                <!-- Mode Proxy Vercel Same-Origin (Solusi Anti-CORS 100%) -->
+                <div class="rounded-2xl bg-brand-50/80 dark:bg-brand-950/40 px-3.5 py-3 border border-brand-200/80 dark:border-brand-800/50 space-y-2.5">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <label for="vercelProxyToggle" class="block text-xs font-semibold text-brand-900 dark:text-brand-200 cursor-pointer">🚀 Gunakan Proxy Vercel (<code class="font-mono">/api/chat</code>)</label>
+                            <p class="text-[11px] text-brand-700/90 dark:text-brand-300/80">Wajib aktif saat deploy di Vercel agar bebas CORS (request lewat server Vercel).</p>
+                        </div>
+                        <input id="vercelProxyToggle" type="checkbox" class="w-4 h-4 accent-brand-600 rounded cursor-pointer shrink-0">
                     </div>
+                    <button type="button" id="openVercelGuideBtn" class="w-full py-1.5 px-3 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white transition-colors">
+                        📋 Lihat & Salin Kode <code>api/chat.mjs</code> untuk Repo Vercel
+                    </button>
                 </div>
 
                 <!-- CORS Proxy Opsional (jika browser/preview memblokir akses lintas domain) -->
@@ -502,27 +502,55 @@
     </div>
 
     <!-- ===================================================================== -->
-    <!-- MODAL KONFIRMASI SESI BARU (PENGGANTI confirm())                      -->
+    <!-- MODAL PANDUAN ANTI-CORS VERCEL (api/chat.mjs)                         -->
     <!-- ===================================================================== -->
-    <div id="confirmResetModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-        <div class="w-full max-w-sm bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-4">
-            <div class="w-11 h-11 rounded-2xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
+    <div id="vercelGuideModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+        <div class="w-full max-w-2xl max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="shrink-0 flex items-center justify-between px-6 py-4 border-b border-slate-200/80 dark:border-slate-800">
+                <div>
+                    <h3 class="font-bold text-base text-slate-900 dark:text-white">🚀 Solusi Anti-CORS di Vercel (1 File)</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">HTTPS tidak menghapus CORS—browser butuh proxy server di domain Vercel yang sama.</p>
+                </div>
+                <button type="button" id="closeVercelGuideBtn" class="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
-            <div>
-                <h3 class="font-bold text-base text-slate-900 dark:text-white">Mulai Sesi Refleksi Baru?</h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                    Riwayat percakapan saat ini akan dibersihkan agar Anda bisa mendiskusikan permasalahan kelas yang baru dari awal.
+
+            <div class="p-6 space-y-4 overflow-y-auto custom-scrollbar text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                <div class="rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/40 p-3.5 text-xs leading-relaxed text-amber-900 dark:text-amber-200">
+                    <strong>Mengapa tetap kena CORS meski sudah HTTPS di Vercel?</strong><br>
+                    Karena domain web Anda (<code class="font-mono">*.vercel.app</code>) berbeda asal dengan <code class="font-mono">api.xkiro.com</code>, dan server xKiro tidak membuka akses CORS langsung dari browser. Solusinya: panggil <code class="font-mono">/api/chat</code> di domain Vercel Anda sendiri agar server Vercel yang meneruskan request ke xKiro (<em>server-to-server</em>, 0% CORS).
+                </div>
+
+                <ol class="list-decimal pl-5 space-y-1.5 text-xs leading-relaxed">
+                    <li>Di root repository Git/Vercel Anda (sejajar dengan <code class="font-mono">index.html</code>), buat folder <code class="font-mono">api</code> lalu buat file baru bernama <strong class="font-mono text-slate-900 dark:text-white">api/chat.mjs</strong>.</li>
+                    <li>Tempelkan kode di bawah ini ke dalam <code class="font-mono">api/chat.mjs</code> (tidak perlu <code class="font-mono">npm install</code> apa pun).</li>
+                    <li>Commit &amp; push ke GitHub/Vercel. Setelah deploy selesai, aktifkan toggle <strong>Gunakan Proxy Vercel (<code class="font-mono">/api/chat</code>)</strong> di Pengaturan (atau klik tombol aktifkan di bawah).</li>
+                </ol>
+
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="font-mono text-xs font-semibold text-slate-700 dark:text-slate-200">api/chat.mjs</span>
+                        <button type="button" id="copyVercelCodeBtn" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white transition-colors">
+                            📋 Salin Kode
+                        </button>
+                    </div>
+                    <pre class="p-3.5 rounded-2xl bg-slate-900 text-slate-100 text-[11px] leading-relaxed overflow-x-auto custom-scrollbar font-mono"><code id="vercelCodePreview"></code></pre>
+                </div>
+
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                    💡 <strong>Tips Keamanan Opsional:</strong> Di Dashboard Vercel → <em>Settings → Environment Variables</em>, Anda bisa menambahkan <code class="font-mono">XKIRO_API_KEY</code> agar API Key tersimpan aman di server dan tidak perlu ditaruh di kode browser.
                 </p>
             </div>
-            <div class="flex items-center justify-end gap-2 pt-2">
-                <button type="button" id="cancelResetBtn" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                    Batal
+
+            <div class="shrink-0 flex items-center justify-end gap-2 px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200/80 dark:border-slate-800">
+                <button type="button" id="activateVercelProxyNowBtn" class="px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-colors">
+                    ✅ Aktifkan Mode Proxy Vercel (/api/chat)
                 </button>
-                <button type="button" id="confirmResetBtn" class="px-4 py-2 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white shadow-sm transition-colors">
-                    Ya, Mulai Baru
+                <button type="button" id="doneVercelGuideBtn" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200/70 dark:hover:bg-slate-700 transition-colors">
+                    Tutup
                 </button>
             </div>
         </div>
@@ -549,13 +577,78 @@
             model: 'qwen/qwen3.8-omni-flash:free',
             apiKey: 'sk-xt-6f4c3fa7f01ff0f2a5f8b38d89ba1ae89edff0706a87e61c',
             corsProxy: '',
+            useVercelProxy: false,
             socraticStyle: 'balanced',
             streaming: false,
             demoMode: false,
             jenjang: 'Umum'
         };
 
-        const STORAGE_KEY = 'sokrates_edu_config_v2';
+        const STORAGE_KEY = 'sokrates_edu_config_v3';
+
+        /**
+         * Kode Vercel Serverless Function siap-salin (api/chat.mjs)
+         * Memakai format ESM (.mjs) yang didukung langsung oleh Vercel tanpa package.json
+         */
+        const VERCEL_API_CHAT_CODE = `// Simpan di: api/chat.mjs (di root repository Vercel Anda)
+// Tanpa npm install — langsung jalan di Vercel Node.js Runtime!
+
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  try {
+    // Prioritaskan Environment Variable XKIRO_API_KEY di Vercel, atau pakai header Authorization
+    const envKey = process.env.XKIRO_API_KEY;
+    const authHeader = envKey
+      ? \`Bearer \${envKey}\`
+      : (req.headers.authorization || '');
+
+    // Endpoint GET /api/chat -> daftar model live xKiro
+    if (req.method === 'GET') {
+      const upstream = await fetch('https://api.xkiro.com/v1/models', {
+        method: 'GET',
+        headers: authHeader ? { Authorization: authHeader } : {}
+      });
+      const text = await upstream.text();
+      res.status(upstream.status);
+      res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/json');
+      return res.send(text);
+    }
+
+    // Endpoint POST /api/chat -> teruskan ke xKiro Chat Completions (server-to-server, 0% CORS)
+    if (req.method === 'POST') {
+      const payload = typeof req.body === 'string'
+        ? req.body
+        : JSON.stringify(req.body || {});
+
+      const upstream = await fetch('https://api.xkiro.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': authHeader
+        },
+        body: payload
+      });
+
+      const text = await upstream.text();
+      res.status(upstream.status);
+      res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/json');
+      return res.send(text);
+    }
+
+    return res.status(405).json({ error: { message: 'Method not allowed' } });
+  } catch (err) {
+    return res.status(500).json({
+      error: { message: 'Vercel Proxy Error: ' + (err?.message || 'Unknown error') }
+    });
+  }
+}`;
 
         /**
          * State Aplikasi
@@ -588,12 +681,15 @@
         const modelInput = document.getElementById('modelInput');
         const apiKeyInput = document.getElementById('apiKeyInput');
         const corsProxyInput = document.getElementById('corsProxyInput');
+        const vercelProxyToggle = document.getElementById('vercelProxyToggle');
         const socraticStyleSelect = document.getElementById('socraticStyleSelect');
         const streamingToggle = document.getElementById('streamingToggle');
         const demoModeToggle = document.getElementById('demoModeToggle');
         const connectionStatusOutput = document.getElementById('connectionStatusOutput');
 
-        // Modal Konfirmasi Reset
+        // Modal Panduan Vercel & Konfirmasi Reset
+        const vercelGuideModal = document.getElementById('vercelGuideModal');
+        const vercelCodePreview = document.getElementById('vercelCodePreview');
         const confirmResetModal = document.getElementById('confirmResetModal');
 
         /**
@@ -665,10 +761,17 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             modelInput.value = config.model;
             apiKeyInput.value = config.apiKey;
             corsProxyInput.value = config.corsProxy || '';
+            vercelProxyToggle.checked = Boolean(config.useVercelProxy);
             socraticStyleSelect.value = config.socraticStyle;
             streamingToggle.checked = Boolean(config.streaming);
             demoModeToggle.checked = Boolean(config.demoMode);
-            activeModelBadge.textContent = config.demoMode ? 'Mode Simulasi Offline' : config.model;
+            if (config.demoMode) {
+                activeModelBadge.textContent = 'Mode Simulasi Offline';
+            } else if (config.useVercelProxy) {
+                activeModelBadge.textContent = `${config.model} (Vercel Proxy)`;
+            } else {
+                activeModelBadge.textContent = config.model;
+            }
             jenjangSelect.value = config.jenjang;
             jenjangSelectMobile.value = config.jenjang;
         }
@@ -681,6 +784,208 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             } else {
                 document.documentElement.classList.remove('dark');
             }
+        }
+
+        /**
+         * ====================================================================
+         * UTILITAS UI, KEAMANAN HTML, MARKDOWN, & PROGRES TAHAP SOKRATIS
+         * ====================================================================
+         */
+        function escapeHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const colors = {
+                success: 'bg-emerald-600 text-white border-emerald-500',
+                error: 'bg-rose-600 text-white border-rose-500',
+                warning: 'bg-amber-600 text-white border-amber-500',
+                info: 'bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 border-slate-700 dark:border-slate-300'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `pointer-events-auto px-4 py-2.5 rounded-2xl text-xs font-medium shadow-lg border transition-all duration-300 opacity-0 translate-y-2 ${colors[type] || colors.info}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('opacity-0', 'translate-y-2');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        function scrollToBottom() {
+            chatContainer.scrollTo({
+                top: chatContainer.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+
+        function extractThinkingAndContent(rawContent, rawReasoning = '') {
+            let text = String(rawContent || '');
+            let reasoning = String(rawReasoning || '').trim();
+
+            // Ekstrak blok <think>...</think> bila model penalaran mengeluarkannya di dalam content
+            const thinkMatches = [...text.matchAll(/<think>([\s\S]*?)<\/think>/gi)];
+            if (thinkMatches.length > 0) {
+                const extracted = thinkMatches.map(m => m[1].trim()).filter(Boolean).join('\n\n');
+                reasoning = reasoning ? `${reasoning}\n\n${extracted}` : extracted;
+                text = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+            }
+
+            // Tangani tag <think> yang belum tertutup saat streaming berjalan
+            const openThinkIdx = text.search(/<think>/i);
+            if (openThinkIdx !== -1) {
+                const partialThink = text.slice(openThinkIdx + 7).trim();
+                reasoning = reasoning ? `${reasoning}\n${partialThink}` : partialThink;
+                text = text.slice(0, openThinkIdx).trim();
+            }
+
+            return { reasoning, content: text.trim() };
+        }
+
+        function renderMarkdown(text) {
+            if (!text) return '';
+            const safe = escapeHtml(text);
+            const lines = safe.split(/\r?\n/);
+            let html = '';
+            let inUl = false;
+            let inOl = false;
+
+            const formatInline = (line) => line
+                .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-mono text-[12px]">$1</code>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+            const closeLists = () => {
+                if (inUl) { html += '</ul>'; inUl = false; }
+                if (inOl) { html += '</ol>'; inOl = false; }
+            };
+
+            for (const rawLine of lines) {
+                const line = rawLine.trim();
+                if (!line) {
+                    closeLists();
+                    continue;
+                }
+
+                const ulMatch = line.match(/^[-*•]\s+(.*)$/);
+                const olMatch = line.match(/^\d+\.\s+(.*)$/);
+                const quoteMatch = line.match(/^&gt;\s?(.*)$/);
+
+                if (ulMatch) {
+                    if (inOl) { html += '</ol>'; inOl = false; }
+                    if (!inUl) { html += '<ul>'; inUl = true; }
+                    html += `<li>${formatInline(ulMatch[1])}</li>`;
+                } else if (olMatch) {
+                    if (inUl) { html += '</ul>'; inUl = false; }
+                    if (!inOl) { html += '<ol>'; inOl = true; }
+                    html += `<li>${formatInline(olMatch[1])}</li>`;
+                } else if (quoteMatch) {
+                    closeLists();
+                    html += `<blockquote>${formatInline(quoteMatch[1])}</blockquote>`;
+                } else {
+                    closeLists();
+                    html += `<p>${formatInline(line)}</p>`;
+                }
+            }
+
+            closeLists();
+            return html;
+        }
+
+        function updateSocraticStage(turnCount, forceFinal = false) {
+            const activeStage = forceFinal ? 5 : Math.min(Math.max(1, turnCount), 5);
+            const pills = document.querySelectorAll('#socraticStagesBar .stage-pill');
+
+            pills.forEach(pill => {
+                const stageNum = parseInt(pill.getAttribute('data-stage'), 10);
+                const badge = pill.querySelector('span:first-child');
+
+                pill.classList.remove(
+                    'bg-brand-100', 'text-brand-700', 'dark:bg-brand-900/50', 'dark:text-brand-300',
+                    'bg-emerald-50', 'text-emerald-700', 'dark:bg-emerald-900/30', 'dark:text-emerald-300',
+                    'text-slate-500', 'dark:text-slate-400'
+                );
+                badge.classList.remove(
+                    'bg-brand-600', 'bg-emerald-500', 'text-white',
+                    'bg-slate-200', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-400'
+                );
+
+                if (stageNum === activeStage) {
+                    pill.classList.add('bg-brand-100', 'text-brand-700', 'dark:bg-brand-900/50', 'dark:text-brand-300');
+                    badge.classList.add('bg-brand-600', 'text-white');
+                } else if (stageNum < activeStage) {
+                    pill.classList.add('bg-emerald-50', 'text-emerald-700', 'dark:bg-emerald-900/30', 'dark:text-emerald-300');
+                    badge.classList.add('bg-emerald-500', 'text-white');
+                } else {
+                    pill.classList.add('text-slate-500', 'dark:text-slate-400');
+                    badge.classList.add('bg-slate-200', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-400');
+                }
+            });
+        }
+
+        function createUserMessageElement(text) {
+            const row = document.createElement('div');
+            row.className = 'flex justify-end';
+
+            const bubble = document.createElement('div');
+            bubble.className = 'max-w-[85%] sm:max-w-[78%] rounded-3xl rounded-br-lg px-4 py-3 bg-brand-600 text-white shadow-sm text-sm sm:text-[15px] leading-relaxed whitespace-pre-wrap break-words';
+            bubble.textContent = text;
+
+            row.appendChild(bubble);
+            messagesWrapper.appendChild(row);
+            scrollToBottom();
+            return row;
+        }
+
+        function createAssistantMessageElement() {
+            const row = document.createElement('div');
+            row.className = 'flex items-start gap-3';
+
+            const avatar = document.createElement('div');
+            avatar.className = 'w-8 h-8 rounded-2xl bg-gradient-to-br from-brand-500 to-amber-500 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5 text-xs font-bold';
+            avatar.textContent = 'SE';
+
+            const contentCol = document.createElement('div');
+            contentCol.className = 'flex-1 min-w-0 max-w-[88%] sm:max-w-[82%] space-y-2';
+
+            const reasoningBox = document.createElement('details');
+            reasoningBox.className = 'hidden rounded-2xl bg-slate-100/80 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700/70 px-3.5 py-2 text-xs text-slate-500 dark:text-slate-400';
+            reasoningBox.innerHTML = `<summary class="cursor-pointer font-medium select-none">💭 Proses refleksi agen</summary><div class="reasoning-text mt-2 whitespace-pre-wrap leading-relaxed font-mono text-[11px] opacity-90"></div>`;
+            const reasoningTextEl = reasoningBox.querySelector('.reasoning-text');
+
+            const bubble = document.createElement('div');
+            bubble.className = 'msg-content rounded-3xl rounded-tl-lg px-4 py-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm text-sm sm:text-[15px] text-slate-800 dark:text-slate-100 break-words';
+            bubble.innerHTML = `
+                <div class="flex items-center gap-1.5 py-1">
+                    <span class="typing-dot w-2 h-2 rounded-full bg-brand-500"></span>
+                    <span class="typing-dot w-2 h-2 rounded-full bg-brand-500"></span>
+                    <span class="typing-dot w-2 h-2 rounded-full bg-brand-500"></span>
+                    <span class="text-xs text-slate-400 ml-1.5">Merangkai pertanyaan refleksi...</span>
+                </div>
+            `;
+
+            contentCol.appendChild(reasoningBox);
+            contentCol.appendChild(bubble);
+            row.appendChild(avatar);
+            row.appendChild(contentCol);
+            messagesWrapper.appendChild(row);
+            scrollToBottom();
+
+            return { wrapper: row, bubble, reasoningBox, reasoningTextEl };
         }
 
         /**
@@ -785,167 +1090,90 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
 
         /**
          * ====================================================================
-         * KOMUNIKASI UTAMA DENGAN AGEN SOKRATIS
+         * PENGIRIMAN REQUEST KE XKIRO API DENGAN AUTO-FALLBACK VERCEL PROXY
          * ====================================================================
          */
-        async function sendMessageToSocraticAgent(userText, isSynthesizeTrigger = false, isRetry = false) {
-            if (isGenerating || !userText.trim()) return;
+        async function executeXkiroRequest(messagesPayload, useStreaming, omitTemperature = false) {
+            const bodyObj = {
+                model: config.model.trim(),
+                messages: messagesPayload,
+                max_tokens: 2048,
+                stream: Boolean(useStreaming)
+            };
 
-            // Validasi konfigurasi dasar (kecuali sedang di Mode Simulasi Offline)
-            if (!config.demoMode && !config.apiKey.trim()) {
-                showToast('API Key xKiro belum diisi. Silakan atur di menu Pengaturan.', 'warning');
-                openSettingsModal();
-                return;
+            // Beberapa model reasoning menolak field temperature; tambahkan hanya jika tidak di-omit
+            if (!omitTemperature) {
+                bodyObj.temperature = 0.7;
             }
 
-            lastFailedUserMessage = userText;
+            const fetchFromEndpoint = async (endpointUrl) => {
+                const res = await fetch(endpointUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${config.apiKey.trim()}`
+                    },
+                    body: JSON.stringify(bodyObj),
+                    signal: currentAbortController.signal
+                });
 
-            // Sembunyikan welcome screen dan tampilkan quick actions
-            if (welcomeState && !welcomeState.classList.contains('hidden')) {
-                welcomeState.classList.add('hidden');
-            }
-            quickActionsBar.classList.remove('hidden');
-
-            // Tampilkan pesan pengguna (hindari duplikasi visual saat tombol Coba Lagi diklik)
-            if (!isRetry) {
-                createUserMessageElement(userText);
-            }
-            conversationHistory.push({ role: 'user', content: userText });
-            userTurnsCount++;
-            updateSocraticStage(userTurnsCount, isSynthesizeTrigger);
-
-            setGeneratingState(true);
-            const assistantUI = createAssistantMessageElement();
-
-            // Jika Mode Simulasi Offline aktif
-            if (config.demoMode) {
-                await new Promise(resolve => setTimeout(resolve, 650));
-                const offlineReply = generateOfflineSocraticReply(userText, userTurnsCount, isSynthesizeTrigger);
-                updateAssistantBubble(assistantUI, offlineReply, 'Mode Simulasi Sokratis Offline aktif (tanpa panggilan API xKiro).', true);
-                conversationHistory.push({ role: 'assistant', content: offlineReply });
-                setGeneratingState(false);
-                userInput.focus();
-                return;
-            }
-
-            currentAbortController = new AbortController();
-            const fullMessages = [
-                { role: 'system', content: buildSocraticSystemPrompt() },
-                ...conversationHistory
-            ];
-
-            let accumulatedContent = '';
-            let accumulatedReasoning = '';
-
-            try {
-                let useStream = Boolean(config.streaming);
-                let response;
-
-                try {
-                    response = await executeXkiroRequest(fullMessages, useStream, false);
-                } catch (firstErr) {
-                    // Jika HTTP 400 menolak parameter temperature atau streaming, coba ulang secara otomatis
-                    if (firstErr.status === 400 || (useStream && firstErr.name !== 'AbortError' && firstErr.status >= 500)) {
-                        useStream = false;
-                        response = await executeXkiroRequest(fullMessages, false, true);
-                    } else {
-                        throw firstErr;
-                    }
-                }
-
-                const contentType = (response.headers.get('content-type') || '').toLowerCase();
-                const isActuallySSE = useStream && response.body && !contentType.includes('application/json');
-
-                if (isActuallySSE) {
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder('utf-8');
-                    let buffer = '';
-
-                    while (true) {
-                        const { done, value } = await reader.read();
-                        if (done) break;
-
-                        buffer += decoder.decode(value, { stream: true });
-                        const lines = buffer.split(/\r?\n/);
-                        buffer = lines.pop() || '';
-
-                        for (const line of lines) {
-                            const trimmed = line.trim();
-                            if (!trimmed || !trimmed.startsWith('data:')) continue;
-
-                            const dataStr = trimmed.slice(5).trim();
-                            if (dataStr === '[DONE]') continue;
-
-                            try {
-                                const parsed = JSON.parse(dataStr);
-                                const delta = parsed?.choices?.[0]?.delta;
-                                if (!delta) continue;
-
-                                const rChunk = delta.reasoning_content || delta.reasoning || '';
-                                const cChunk = normalizeMessageContent(delta.content);
-
-                                if (rChunk) accumulatedReasoning += rChunk;
-                                if (cChunk) accumulatedContent += cChunk;
-
-                                updateAssistantBubble(assistantUI, accumulatedContent, accumulatedReasoning);
-                            } catch (_) {
-                                // Abaikan chunk parsial yang belum lengkap
-                            }
-                        }
-                    }
-                } else {
-                    // Mode JSON Non-Streaming
-                    const rawText = await response.text();
-                    let data;
+                if (!res.ok) {
+                    let errorDetail = `HTTP ${res.status}`;
+                    let rawBody = '';
                     try {
-                        data = JSON.parse(rawText);
+                        rawBody = await res.text();
+                        const errJson = JSON.parse(rawBody);
+                        errorDetail = errJson?.error?.message || errJson?.message || errorDetail;
                     } catch (_) {
-                        throw new Error(`Respons server bukan JSON valid: ${rawText.slice(0, 140)}`);
+                        if (rawBody) errorDetail = rawBody.slice(0, 220);
                     }
-
-                    const choice = data?.choices?.[0];
-                    const msg = choice?.message;
-                    accumulatedContent = normalizeMessageContent(msg?.content);
-                    accumulatedReasoning = msg?.reasoning_content || msg?.reasoning || '';
-
-                    // Jika respons kosong karena model hanya mengembalikan reasoning
-                    if (!accumulatedContent && accumulatedReasoning) {
-                        accumulatedContent = accumulatedReasoning;
-                        accumulatedReasoning = '';
-                    }
-
-                    updateAssistantBubble(assistantUI, accumulatedContent, accumulatedReasoning);
+                    const err = new Error(errorDetail);
+                    err.status = res.status;
+                    err.endpoint = endpointUrl;
+                    throw err;
                 }
 
-                const finalParsed = extractThinkingAndContent(accumulatedContent, accumulatedReasoning);
-                const finalReply = finalParsed.content || 'Maaf, model tidak mengembalikan teks balasan. Silakan coba kirim ulang atau ganti ke model cadangan di Pengaturan.';
+                return res;
+            };
 
-                updateAssistantBubble(assistantUI, accumulatedContent, accumulatedReasoning, true);
-                conversationHistory.push({ role: 'assistant', content: finalReply });
-
-            } catch (error) {
-                if (error.name === 'AbortError') {
-                    const partial = extractThinkingAndContent(accumulatedContent, accumulatedReasoning).content;
-                    if (partial) {
-                        conversationHistory.push({ role: 'assistant', content: partial });
-                        showToast('Respons dihentikan.', 'info');
-                    } else {
-                        assistantUI.bubble.innerHTML = `<p class="text-slate-400 italic text-xs">Respons dibatalkan oleh pengguna.</p>`;
-                        conversationHistory.pop();
-                        userTurnsCount = Math.max(0, userTurnsCount - 1);
+            // Jalur 1: Mode Proxy Vercel Same-Origin (/api/chat) — 0% CORS
+            if (config.useVercelProxy) {
+                try {
+                    return await fetchFromEndpoint('/api/chat');
+                } catch (proxyErr) {
+                    if (proxyErr.status === 404) {
+                        proxyErr.isMissingVercelFile = true;
+                        proxyErr.message = 'Endpoint /api/chat belum ditemukan (404). Pastikan file api/chat.mjs sudah di-commit ke repository Vercel Anda.';
                     }
-                } else {
-                    console.error('xKiro API Error:', error);
-                    conversationHistory.pop();
-                    userTurnsCount = Math.max(0, userTurnsCount - 1);
-
-                    renderDiagnosticErrorCard(assistantUI.bubble, error, userText, isSynthesizeTrigger);
-                    showToast('Gagal menghubungi xKiro API. Lihat detail penyebab pada kotak pesan.', 'error');
+                    throw proxyErr;
                 }
-            } finally {
-                setGeneratingState(false);
-                currentAbortController = null;
-                userInput.focus();
+            }
+
+            // Jalur 2: Panggilan langsung (atau CORS proxy custom)
+            const directEndpoint = buildTargetUrl('/chat/completions');
+            try {
+                return await fetchFromEndpoint(directEndpoint);
+            } catch (directErr) {
+                // Jika terblokir CORS di web yang berjalan di HTTP/HTTPS (mis. Vercel), coba auto-deteksi /api/chat sekali
+                const looksLikeCors = !directErr.status && directErr.name !== 'AbortError';
+                const canProbeSameOrigin = window.location.protocol.startsWith('http') && !config.corsProxy;
+
+                if (looksLikeCors && canProbeSameOrigin) {
+                    try {
+                        const autoProxyRes = await fetchFromEndpoint('/api/chat');
+                        config.useVercelProxy = true;
+                        saveConfigToStorage();
+                        syncConfigToUI();
+                        showToast('Terhubung otomatis lewat Proxy Vercel (/api/chat)!', 'success');
+                        return autoProxyRes;
+                    } catch (probeErr) {
+                        if (probeErr.status && probeErr.status !== 404) {
+                            throw probeErr;
+                        }
+                        directErr.isCorsNeedsVercelProxy = true;
+                    }
+                }
+                throw directErr;
             }
         }
 
@@ -953,11 +1181,13 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
          * Menampilkan kartu error diagnostik yang informatif + tombol pemulihan instan
          */
         function renderDiagnosticErrorCard(bubbleEl, error, failedText, wasSynthesize) {
-            const isNetworkOrCors = !error.status && /fetch|network|load failed|cors/i.test(error.message || '');
+            const isNetworkOrCors = (!error.status && /fetch|network|load failed|cors/i.test(error.message || '')) || error.isCorsNeedsVercelProxy;
             let diagnosis = '';
 
-            if (isNetworkOrCors) {
-                diagnosis = 'Permintaan diblokir oleh kebijakan <strong>CORS browser / lingkungan Preview iframe</strong> atau jaringan tidak dapat menjangkau <code>api.xkiro.com</code> secara langsung dari browser.';
+            if (error.isMissingVercelFile) {
+                diagnosis = '<strong>File <code>api/chat.mjs</code> belum ada di repository Vercel Anda (404).</strong> Klik tombol biru di bawah untuk menyalin kode <code>api/chat.mjs</code> lalu commit ke Vercel.';
+            } else if (isNetworkOrCors) {
+                diagnosis = '<strong>Diblokir CORS Browser!</strong> Meskipun sudah pakai <strong>HTTPS di Vercel</strong>, browser tetap memblokir panggilan langsung dari <code>*.vercel.app</code> ke <code>api.xkiro.com</code> karena server xKiro tidak membuka header CORS browser. Solusi permanen di Vercel: tambahkan 1 file proxy <code>api/chat.mjs</code> (klik tombol biru di bawah).';
             } else if (error.status === 401) {
                 diagnosis = '<strong>API Key xKiro ditolak (401).</strong> Kemungkinan kunci salah, sudah dicabut, atau ada spasi berlebih.';
             } else if (error.status === 404) {
@@ -984,14 +1214,14 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
                     </div>
 
                     <div class="flex flex-wrap gap-2 pt-1">
-                        <button type="button" class="retry-nonstream-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white transition-colors">
-                            🔄 Coba Lagi (Non-Streaming)
+                        <button type="button" class="open-vercel-guide-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white transition-colors">
+                            🚀 Solusi Anti-CORS Vercel (api/chat.mjs)
+                        </button>
+                        <button type="button" class="retry-nonstream-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors">
+                            🔄 Coba Lagi
                         </button>
                         <button type="button" class="switch-model-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors">
                             🔀 Coba Model qwen3.8-max:free
-                        </button>
-                        <button type="button" class="open-diag-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors">
-                            🧪 Tes Koneksi / Pengaturan
                         </button>
                         <button type="button" class="enable-offline-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/40 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 transition-colors">
                             📚 Coba Mode Simulasi Offline
@@ -999,6 +1229,10 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
                     </div>
                 </div>
             `;
+
+            bubbleEl.querySelector('.open-vercel-guide-btn').addEventListener('click', () => {
+                openVercelGuideModal();
+            });
 
             bubbleEl.querySelector('.retry-nonstream-btn').addEventListener('click', () => {
                 config.streaming = false;
@@ -1018,11 +1252,6 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
                 sendMessageToSocraticAgent(failedText, wasSynthesize, true);
             });
 
-            bubbleEl.querySelector('.open-diag-btn').addEventListener('click', () => {
-                openSettingsModal();
-                runConnectionDiagnostics();
-            });
-
             bubbleEl.querySelector('.enable-offline-btn').addEventListener('click', () => {
                 config.demoMode = true;
                 saveConfigToStorage();
@@ -1038,26 +1267,32 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
          * ====================================================================
          */
         async function runConnectionDiagnostics() {
-            // Baca nilai terbaru yang sedang diketik di form modal
+            const useVercel = vercelProxyToggle.checked;
             const tempBase = (apiBaseUrlInput.value.trim() || config.baseUrl).replace(/\/+$/, '');
             const tempModel = modelInput.value.trim() || config.model;
             const tempKey = apiKeyInput.value.trim() || config.apiKey;
             const tempProxy = corsProxyInput.value.trim();
 
             const resolveTestUrl = (path) => {
+                if (useVercel) return '/api/chat';
                 const raw = `${tempBase}${path}`;
                 if (!tempProxy) return raw;
                 if (tempProxy.endsWith('?') || tempProxy.endsWith('=')) return `${tempProxy}${encodeURIComponent(raw)}`;
                 return `${tempProxy.replace(/\/+$/, '')}/${raw}`;
             };
 
-            connectionStatusOutput.textContent = '1/2 Menguji jangkauan server (GET /v1/models)...';
+            connectionStatusOutput.textContent = useVercel
+                ? '1/2 Menguji Proxy Vercel (GET /api/chat)...'
+                : '1/2 Menguji jangkauan server langsung (GET /v1/models)...';
 
             try {
-                // Langkah 1: Tes endpoint publik /v1/models (sesuai panduan xKiro)
-                const modelsRes = await fetch(resolveTestUrl('/models'));
+                const modelsRes = await fetch(resolveTestUrl('/models'), {
+                    headers: useVercel && tempKey ? { 'Authorization': `Bearer ${tempKey}` } : {}
+                });
                 if (!modelsRes.ok) {
-                    connectionStatusOutput.textContent = `❌ GET /models gagal (HTTP ${modelsRes.status}). Periksa Base URL.`;
+                    connectionStatusOutput.textContent = modelsRes.status === 404 && useVercel
+                        ? '❌ GET /api/chat mengembalikan 404.\nPastikan file api/chat.mjs sudah di-commit ke repository Vercel Anda.'
+                        : `❌ Cek katalog model gagal (HTTP ${modelsRes.status}).`;
                     return;
                 }
 
@@ -1065,13 +1300,12 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
                 const allModels = Array.isArray(modelsJson?.data) ? modelsJson.data : [];
                 const modelExists = allModels.some(m => m.id === tempModel);
 
-                connectionStatusOutput.textContent = `✅ Server xKiro terjangkau (${allModels.length} model tersedia).\n`
+                connectionStatusOutput.textContent = `✅ Jalur ${useVercel ? 'Proxy Vercel (/api/chat)' : 'xKiro'} terjangkau (${allModels.length} model).\n`
                     + (modelExists
                         ? `✅ Model "${tempModel}" ditemukan di katalog live.\n`
                         : `⚠️ Model "${tempModel}" tidak terlihat di daftar /models.\n`)
                     + `2/2 Menguji autentikasi API Key & chat singkat...`;
 
-                // Langkah 2: Tes autentikasi POST /v1/chat/completions
                 const chatRes = await fetch(resolveTestUrl('/chat/completions'), {
                     method: 'POST',
                     headers: {
@@ -1087,14 +1321,58 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
                 });
 
                 if (chatRes.ok) {
-                    connectionStatusOutput.textContent = `✅ BERHASIL! Koneksi, API Key, dan model "${tempModel}" siap digunakan.\nKlik "Simpan Pengaturan" untuk mulai chat.`;
+                    connectionStatusOutput.textContent = `✅ BERHASIL! Koneksi ${useVercel ? 'via Proxy Vercel ' : ''}dan model "${tempModel}" siap digunakan.\nKlik "Simpan Pengaturan" untuk mulai chat.`;
                     showToast('Koneksi xKiro API berhasil!', 'success');
                 } else {
                     const errTxt = await chatRes.text();
-                    connectionStatusOutput.textContent = `❌ Gagal pada /chat/completions (HTTP ${chatRes.status}):\n${errTxt.slice(0, 220)}`;
+                    connectionStatusOutput.textContent = `❌ Gagal pada chat (HTTP ${chatRes.status}):\n${errTxt.slice(0, 220)}`;
                 }
             } catch (err) {
-                connectionStatusOutput.textContent = `❌ Koneksi dari browser diblokir (${err.message}).\n\nPenyebab paling umum:\n• Server api.xkiro.com tidak mengizinkan CORS langsung dari browser/iframe Preview.\n\nSolusi:\n1. Jalankan lewat backend proxy lokal/CORS proxy, ATAU\n2. Aktifkan "Mode Simulasi Sokratis Lokal" di atas untuk mencoba alur Sokratis langsung di Preview.`;
+                connectionStatusOutput.textContent = `❌ Koneksi dari browser diblokir CORS (${err.message}).\n\nCatatan: HTTPS di Vercel tidak menonaktifkan CORS lintas domain.\nSolusi:\n1. Klik tombol "Lihat & Salin Kode api/chat.mjs" di atas lalu commit ke Vercel.\n2. Centang "Gunakan Proxy Vercel (/api/chat)" lalu Tes Koneksi lagi.`;
+            }
+        }
+
+        async function fetchLiveFreeModels() {
+            const useVercel = vercelProxyToggle.checked;
+            const tempBase = (apiBaseUrlInput.value.trim() || config.baseUrl).replace(/\/+$/, '');
+            const tempProxy = corsProxyInput.value.trim();
+            const raw = `${tempBase}/models`;
+            const url = useVercel
+                ? '/api/chat'
+                : (!tempProxy
+                    ? raw
+                    : (tempProxy.endsWith('?') || tempProxy.endsWith('=') ? `${tempProxy}${encodeURIComponent(raw)}` : `${tempProxy.replace(/\/+$/, '')}/${raw}`));
+
+            connectionStatusOutput.textContent = 'Mengambil daftar model gratis dari xKiro...';
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const json = await res.json();
+                const list = (json?.data || []).filter(m => m.id && (m.id.includes(':free') || m.access_tier === 'free'));
+
+                if (list.length === 0) {
+                    connectionStatusOutput.textContent = 'Daftar model diterima, namun tidak ada label gratis yang cocok.';
+                    return;
+                }
+
+                const chipsContainer = document.getElementById('modelPresetChips');
+                chipsContainer.innerHTML = '';
+                list.slice(0, 8).forEach(m => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'model-chip px-2 py-1 rounded-lg text-[11px] font-mono bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 transition-colors';
+                    btn.setAttribute('data-model', m.id);
+                    btn.textContent = m.id;
+                    btn.addEventListener('click', () => {
+                        modelInput.value = m.id;
+                        showToast(`Model dipilih: ${m.id}`, 'info');
+                    });
+                    chipsContainer.appendChild(btn);
+                });
+
+                connectionStatusOutput.textContent = `✅ Berhasil memuat ${list.length} model gratis live dari xKiro. Klik salah satu chip di atas untuk memilih.`;
+            } catch (err) {
+                connectionStatusOutput.textContent = `❌ Gagal memuat katalog live (${err.message}). Aktifkan Proxy Vercel (/api/chat) agar bebas CORS.`;
             }
         }
 
@@ -1221,57 +1499,7 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
         });
 
         document.getElementById('perspectiveBtn').addEventListener('click', () => {
-            sendMessageToSocraticAgent('Bantu saya melihat permasalahan ini dari sudut pandang dan perasaan siswa di kelas saya.');
-        });
-
-        // Sinkronisasi pemilih jenjang (Desktop & Mobile)
-        function handleJenjangChange(value) {
-            config.jenjang = value;
-            jenjangSelect.value = value;
-            jenjangSelectMobile.value = value;
-            saveConfigToStorage();
-            showToast(`Konteks jenjang diatur ke: ${value}`, 'info');
-        }
-        jenjangSelect.addEventListener('change', (e) => handleJenjangChange(e.target.value));
-        jenjangSelectMobile.addEventListener('change', (e) => handleJenjangChange(e.target.value));
-
-        // Toggle Tema Gelap / Terang
-        document.getElementById('themeToggleBtn').addEventListener('click', () => {
-            const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.setItem('sokrates_theme', isDark ? 'dark' : 'light');
-        });
-
-        // Salin Catatan Refleksi ke Clipboard (menggunakan document.execCommand agar aman di iframe)
-        document.getElementById('copyTranscriptBtn').addEventListener('click', () => {
-            if (conversationHistory.length === 0) {
-                showToast('Belum ada percakapan untuk disalin.', 'warning');
-                return;
-            }
-
-            const header = `=== CATATAN REFLEKSI SOKRATIS (Sokrates Edu) ===\nJenjang: ${config.jenjang}\nTanggal: ${new Date().toLocaleDateString('id-ID', { dateStyle: 'full' })}\n\n`;
-            const body = conversationHistory.map(m => {
-                const speaker = m.role === 'user' ? 'Guru' : 'Sokrates Edu';
-                return `[${speaker}]\n${m.content}`;
-            }).join('\n\n---\n\n');
-
-            const fullTranscript = header + body;
-
-            try {
-                const tempTextarea = document.createElement('textarea');
-                tempTextarea.value = fullTranscript;
-                tempTextarea.style.position = 'fixed';
-                tempTextarea.style.opacity = '0';
-                document.body.appendChild(tempTextarea);
-                tempTextarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(tempTextarea);
-                showToast('Catatan diskusi berhasil disalin!', 'success');
-            } catch (err) {
-                showToast('Gagal menyalin catatan ke clipboard.', 'error');
-            }
-        });
-
-        // Modal Pengaturan
+        // Modal Pengaturan & Modal Panduan Vercel
         function openSettingsModal() {
             syncConfigToUI();
             settingsModal.classList.remove('hidden');
@@ -1283,9 +1511,59 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             settingsModal.classList.remove('flex');
         }
 
+        function openVercelGuideModal() {
+            closeSettingsModal();
+            vercelGuideModal.classList.remove('hidden');
+            vercelGuideModal.classList.add('flex');
+        }
+
+        function closeVercelGuideModal() {
+            vercelGuideModal.classList.add('hidden');
+            vercelGuideModal.classList.remove('flex');
+        }
+
+        function initVercelGuideCode() {
+            if (vercelCodePreview) {
+                vercelCodePreview.textContent = VERCEL_API_CHAT_CODE;
+            }
+        }
+
         document.getElementById('openSettingsBtn').addEventListener('click', openSettingsModal);
         document.getElementById('closeSettingsBtn').addEventListener('click', closeSettingsModal);
         document.getElementById('cancelSettingsBtn').addEventListener('click', closeSettingsModal);
+
+        document.getElementById('openVercelGuideBtn').addEventListener('click', openVercelGuideModal);
+        document.getElementById('closeVercelGuideBtn').addEventListener('click', closeVercelGuideModal);
+        document.getElementById('doneVercelGuideBtn').addEventListener('click', closeVercelGuideModal);
+
+        vercelGuideModal.addEventListener('click', (e) => {
+            if (e.target === vercelGuideModal) closeVercelGuideModal();
+        });
+
+        document.getElementById('copyVercelCodeBtn').addEventListener('click', () => {
+            try {
+                const tempTextarea = document.createElement('textarea');
+                tempTextarea.value = VERCEL_API_CHAT_CODE;
+                tempTextarea.style.position = 'fixed';
+                tempTextarea.style.opacity = '0';
+                document.body.appendChild(tempTextarea);
+                tempTextarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempTextarea);
+                showToast('Kode api/chat.mjs berhasil disalin! Commit ke folder api/ di repo Vercel Anda.', 'success');
+            } catch (_) {
+                showToast('Gagal menyalin kode. Silakan blok dan salin manual.', 'error');
+            }
+        });
+
+        document.getElementById('activateVercelProxyNowBtn').addEventListener('click', () => {
+            config.useVercelProxy = true;
+            config.demoMode = false;
+            saveConfigToStorage();
+            syncConfigToUI();
+            closeVercelGuideModal();
+            showToast('Mode Proxy Vercel (/api/chat) aktif! Pastikan api/chat.mjs sudah di-deploy.', 'success');
+        });
 
         settingsModal.addEventListener('click', (e) => {
             if (e.target === settingsModal) closeSettingsModal();
@@ -1315,8 +1593,9 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             const newModel = modelInput.value.trim();
             const newKey = apiKeyInput.value.trim();
             const isDemo = demoModeToggle.checked;
+            const isVercelProxy = vercelProxyToggle.checked;
 
-            if (!isDemo && (!newUrl || !newModel || !newKey)) {
+            if (!isDemo && !isVercelProxy && (!newUrl || !newModel || !newKey)) {
                 showToast('Base URL, Model ID, dan API Key wajib diisi.', 'warning');
                 return;
             }
@@ -1325,6 +1604,7 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             config.model = newModel || DEFAULT_CONFIG.model;
             config.apiKey = newKey;
             config.corsProxy = corsProxyInput.value.trim();
+            config.useVercelProxy = isVercelProxy;
             config.socraticStyle = socraticStyleSelect.value;
             config.streaming = streamingToggle.checked;
             config.demoMode = isDemo;
@@ -1332,7 +1612,12 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             saveConfigToStorage();
             syncConfigToUI();
             closeSettingsModal();
-            showToast(isDemo ? 'Mode Simulasi Sokratis Lokal diaktifkan!' : 'Pengaturan API xKiro berhasil disimpan!', 'success');
+            showToast(
+                isDemo
+                    ? 'Mode Simulasi Sokratis Lokal diaktifkan!'
+                    : (isVercelProxy ? 'Pengaturan disimpan (Mode Proxy Vercel /api/chat)!' : 'Pengaturan API xKiro berhasil disimpan!'),
+                'success'
+            );
         });
 
         document.getElementById('resetDefaultSettingsBtn').addEventListener('click', () => {
@@ -1389,6 +1674,7 @@ Ingat: Jaga agar setiap respons tetap padat (sekitar 2-4 kalimat pendek atau 1 p
             initTheme();
             syncConfigToUI();
             updateSocraticStage(1);
+            initVercelGuideCode();
         });
     </script>
 </body>
